@@ -48,6 +48,12 @@
 			<email>makar.lavrov.1@iliauni.edu.ge</email>
 			<url>https://github.com/kirooshii</url>
 		</developer>
+
+		<developer>
+			<name>Domingo</name>
+			<email>domruibel@alum.us.es</email>
+			<url>https://github.com/domingoruizb</url>
+		</developer>
 	</developers>
 
 	<dependencies>
