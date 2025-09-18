@@ -53,7 +53,7 @@ import es.us.dp1.lx_xy_24_25.your_game_name.configuration.services.UserDetailsSe
 <span class="fc" id="L53">		http</span>
 <span class="fc" id="L54">            .cors(withDefaults())</span>
             // Si usas H2, conviene ignorar su CSRF:
-<span class="fc" id="L56">            .csrf(csrf -&gt; csrf.ignoringRequestMatchers(PathRequest.toH2Console()))</span>
+<span class="fc" id="L56">            .csrf(AbstractHttpConfigurer::disable)</span>
 <span class="fc" id="L57">            .sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
 <span class="fc" id="L58">            .headers(headers -&gt; headers.frameOptions(frame -&gt; frame.disable()))</span>
 <span class="fc" id="L59">            .exceptionHandling(ex -&gt; ex.authenticationEntryPoint(unauthorizedHandler))</span>

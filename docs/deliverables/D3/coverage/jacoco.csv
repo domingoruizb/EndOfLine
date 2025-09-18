@@ -21,7 +21,7 @@ DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.user,UserService,9,107,0,
 DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.user,User,37,3,4,0,6,1,4,1,2,1
 DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.user,UserRestController,0,116,0,4,0,20,0,9,0,7
 DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.configuration,ExceptionHandlerConfiguration,19,0,0,0,5,0,2,0,2,0
-DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.configuration,SecurityConfiguration,0,172,0,0,0,24,0,11,0,11
+DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.configuration,SecurityConfiguration,0,162,0,0,0,24,0,10,0,10
 DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.configuration,OpenApiConfiguration,0,3,0,0,0,1,0,1,0,1
 DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.configuration,WebConfig,8,0,0,0,3,0,2,0,2,0
 DP1 Game Template,es.us.dp1.lx_xy_24_25.your_game_name.configuration,GenericIdToEntityConverter,51,34,10,0,10,7,7,3,2,3
