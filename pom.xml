@@ -54,6 +54,12 @@
 			<email>domruibel@alum.us.es</email>
 			<url>https://github.com/domingoruizb</url>
 		</developer>
+
+    <developer>
+      <name>Angelo</name>
+      <email>angmoraschi@gmail.com</email>
+      <url>https://github.com/amoraschi</url>
+    </developer>
 	</developers>
 
 	<dependencies>
