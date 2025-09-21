@@ -60,6 +60,12 @@
       <email>angmoraschi@gmail.com</email>
       <url>https://github.com/amoraschi</url>
     </developer>
+
+	<developer>
+			<name>Alejandro</name>
+			<email>aleurbtam@alum.us.es</email>
+			<url>https://github.com/aurbinat</url>
+		</developer>
 	</developers>
 
 	<dependencies>
