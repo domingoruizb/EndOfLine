@@ -42,6 +42,11 @@
 			<email>japarejo@us.es</email>
 			<url>https://github.com/japarejo</url>
 		</developer>
+		<developer>
+			<name>Alejandro Urbina Tamayo</name>
+			<email>aleurbtam@us.es</email>
+			<url>https://github.com/aurbinat</url>
+		</developer>
 	</developers>
 
 	<dependencies>
