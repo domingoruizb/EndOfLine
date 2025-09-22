@@ -13,6 +13,7 @@ import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import SwaggerDocs from "./public/swagger";
+import DeveloperList from "./developers";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -47,6 +48,7 @@ function App() {
         <>
           <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
+           <Route path="/developers" element={<DeveloperList />} />
         </>)
     }
     if (role === "PLAYER") {
