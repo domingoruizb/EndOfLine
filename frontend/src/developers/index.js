@@ -1,12 +1,13 @@
 import {
         Table
     } from "reactstrap";
-    
+    import useFetchState from "../util/useFetchState";
 export default function DeveloperList() {
-    const developers = [
-        {name: "Makar", email:"makar.lavrov.1@iliauni.edu.ge", url:"https://github.com/kirooshii", picUrl:"https://avatars.githubusercontent.com/u/120464003?v=4"},
-        {name: "JAParejo", email:"japarejo@us.es", url:"https://github.com/japarejo"}
-    ]
+    const [developers, setDevelopers] = useFetchState(
+        [],
+        '/api/v1/developers'
+    );
+    const imgnotfound = "https://cdn-icons-png.flaticon.com/512/48/48639.png";
     const developerList =
     developers.map((d) => {
         return (
@@ -14,7 +15,9 @@ export default function DeveloperList() {
                 <td className="text-center">{d.name}</td>
                 <td className="text-center"> {d.email} </td>
                 <td className="text-center"> <a href={d.url}>{d.url}</a> </td>
-                <td className="text-center"> <img src={d.picUrl} alt={d.name} width="50px"/>
+                <td className="text-center">
+                  <img src={d.properties.picUrl ? d.properties.picUrl : imgnotfound }
+alt={d.name} width="50px"/>
                 </td>
             </tr>
         );
