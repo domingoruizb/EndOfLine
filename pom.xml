@@ -50,9 +50,28 @@
 		</developer>
 
 		<developer>
+			<name>Fernando</name>
+			<email>ferferfer@alum.us.es</email>
+			<url>https://github.com/FdoJFdezFdez</url>
+		</developer>
+
+
+		<developer>
 			<name>Domingo</name>
 			<email>domruibel@alum.us.es</email>
 			<url>https://github.com/domingoruizb</url>
+		</developer>
+
+    <developer>
+      <name>Angelo</name>
+      <email>angmoraschi@gmail.com</email>
+      <url>https://github.com/amoraschi</url>
+    </developer>
+
+	<developer>
+			<name>Alejandro</name>
+			<email>aleurbtam@alum.us.es</email>
+			<url>https://github.com/aurbinat</url>
 		</developer>
 	</developers>
 
