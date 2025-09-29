@@ -1,11 +1,15 @@
 # Documentación del Uso de IA en el Proyecto
 **Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** <!-- p.ej., 2025/2026 -->  
-**Grupo/Equipo:** <!-- p.ej., L4-03 Equipo 33 -->  
-**Nombre del proyecto:** <!-- p. ej. Petris -->  
-**Repositorio:** <!-- URL del repo -->  
-**Integrantes (máx. 6):** <!-- Nombre Apellidos (US-Id / correo @us.es) -->
-
+**Curso académico:** 2025/2026 
+**Grupo/Equipo:** LI-04 
+**Nombre del proyecto:** End of Line  
+**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4
+**Integrantes (máx. 6):** 
+    - Fernando José Fernández Fernández (HNR0360 / ferferfer@alum.us.es).
+    - Angelo Sho Moraschi (FLX0814 / angmor@alum.us.es).
+    - Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es).
+    - Makar Lavrov (RRP9465 / maklav@alum.us.es).
+    - Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
 ## 1. Introducción
 
 Este documento describe el uso que se ha echo de la IA en el proyecto. El objetivo es ser transparentes sobre el uso de IA realizado. Como recordatorio, al alumnado incluimos un resumen de lo indicado en el Syllabus de la asignatura:
