@@ -1,10 +1,10 @@
 # Documento de análisis de requisitos del sistema
 **Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** <!-- p.ej., 2025/2026 -->  
-**Grupo/Equipo:** <!-- p.ej., L4-03 Equipo 33 -->  
-**Nombre del proyecto:** <!-- p. ej. Petris -->  
-**Repositorio:** <!-- URL del repo -->  
-**Integrantes (máx. 6):** <!-- Nombre Apellidos (US-Id / correo @us.es) -->
+**Curso académico:** 2025/2026 
+**Grupo/Equipo:** LI-04  
+**Nombre del proyecto:** End of Line  
+**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4
+**Integrantes (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
 
 _Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
 
@@ -12,7 +12,7 @@ _Esta es una plantilla que sirve como guía para realizar este entregable. Por f
 
 _En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
 
-[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](http://youtube.com)
+[Link to the video explaining the rules and playing a game](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/blob/main/docs/Video.mp4)
 
 ## Tipos de Usuarios / Roles
 
