@@ -10,31 +10,35 @@ _Esta es una plantilla que sirve como guía para realizar este entregable. Por f
 
 ## Introducción
 
-_En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
+The project focuses on the implementation of the board game End of Line which is a strategic card-based board game where the main objective is simple: cut your opponent’s line before they cut yours. Players build paths by placing Line Cards on a shared grid, managing both placement and limited Energy Points to alter the flow of the game.
+
+The game supports between 2 and 8 players. In a two-player match, the playing area is a 7x7 grid, and more players expand the grid size accordingly.
+
+A typical match unfolds in rounds, each consisting of drawing cards and placing them to extend your line, always respecting directional connections. From the third round onward, players may spend energy to gain advantages such as speeding up, slowing down, or redirecting their line.
+
+Games usually last between 15 and 40 minutes, depending on the number of players and their choices. The match ends immediately when a player cannot continue their line on their turn — that player loses, and the opponent is declared the winner.
 
 [Link to the video explaining the rules and playing a game](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/blob/main/docs/Video.mp4)
 
 ## Tipos de Usuarios / Roles
 
-< Nombre Rol >: < Breve descripción del rol >
-
-_Ej1: Propietario: Dueño de una o varias mascota que viene a la clínica para mantenerla sana y cuidar de su salud._
-
-_Ej2: Veterinario: Profesional de la salud animal con titulación universitaria homologada, está registrado en la clínica y se encarga de realizar diagnósticos y recetar tratamientos. Además mantiene actualizado el vademécum._
-
-_Ej3: Administrador: Dueño de la clínica que se encarga de dar de alta veterinarios y gestionar la información registrada en la aplicación de la clínica._
-
-
+- Player: a user registered on the platform who can join matches, manage their profile, view statistics and his/her list of games, and actively participate in games.
+ - Administrator: A user with platform management privileges who can view a list of ongoing games (including the creator and participating users), a list of completed games and their participants and maintain platform operation as needed.
 
 ## Historias de Usuario
 
-A continuación se definen  todas las historias de usuario a implementar:
-_Os recomentamos usar la siguiente plantilla de contenidos que usa un formato tabular:_
- ### HU-(ISSUE#ID): Nombre ([Enlace a la Issue asociada a la historia de usuario]()
-|Descripción de la historia siguiendo el esquema:  "Como <rol> quiero que el sistema <funcionalidad>  para poder <objetivo/beneficio>."| 
-|-----|
+Next, they are defined all user story to be implemented.
+
+ ### US-(ISSUE#01): Create a new match ([Link to the issue associated with this user story]()
+ As a player, I want to create a new match so that I can invite other players and start a game.
+
 |Mockups (prototipos en formato imagen de baja fidelidad) de la interfaz de usuario del sistema|
-|Decripción de las interacciones concretas a realizar con la interfaz de usuario del sistema para lleva a cabo la historia. |
+
+Interactions with the user interface:
+    1. Player clicks "Create a game" on the dashboard.
+    2. Player sets the match parameters (number of players).
+    3. Player sends invitations to other registered users (by a code or just sending a notification to them).
+    4. Player clicks "Start game" to initialize the game once participants have joined.
 
 
 
