@@ -75,14 +75,12 @@ _Puede usar la herramienta de modelado que desee para generar sus diagramas de c
 _Si deseais usar esta herramienta para generar vuestro(s) diagramas con esta herramienta os proporcionamos un [enlace a la documentación oficial de la sintaxis de diagramas de clases de _ermaid](https://mermaid.js.org/syntax/classDiagram.html)_
 
 ## Reglas de Negocio
-### R-< X > < Nombre Regla de negocio >
-_< Descripción de la restricción a imponer >_
 
-_Ej:_ 
-### R1 – Diagnósticos imposibles
-El diagnóstico debe estar asociado a una enfermedad que es compatible con el tipo de mascota de su visita relacionada. Por ejemplo, no podemos establecer como enfermedad diagnosticada una otitis cuando la visita está asociada a una mascota que es un pez, porque éstos no tienen orejas ni oídos (y por tanto no será uno de los tipos de mascota asociados a la enfermedad otitis en el vademecum).
+### R1 - Player count
+The game will be played by two players, one against the other. For example, a game cannot start if there are less than two players in the lobby.
 
-…
+### R2 - Game over
+The game will end once the line of a player is cut (the player cannot continue placing cards). For example, if the line of a player intersects with the line of another player and the first one cannot advance anymore.
 
 _Muchas de las reglas del juego se transformarán en nuestro caso en reglas de negocio, por ejemplo, “la carta X solo podrá jugarse en la ronda Y si en la ronda anterior se jugó la carta Z”, o “en caso de que un jugador quede eliminado el turno cambia de sentido”_
 
