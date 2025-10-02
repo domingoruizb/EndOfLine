@@ -30,7 +30,7 @@ Games usually last between 15 and 40 minutes, depending on their choices. The ma
 
 Next, they are defined all user story to be implemented.
 
-### US#1-(ISSUE#nn): Login ([Issue]())
+### US#1-(ISSUE#33): Login ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/33))
 
 | "As a guest, I want to sign in to my account so that I can view my information and start playing"|
 | ------------------------------------------------------------------------- |
@@ -39,7 +39,7 @@ Next, they are defined all user story to be implemented.
 |2. The Login page is displayed, where the user provides their credentials (username and password).  |
 |3. After clicking the “Log In” button, if the credentials are valid, the user is taken to the Dashboard page.  |
 
-### US#2-(ISSUE#nn): Register ([Issue]())
+### US#2-(ISSUE#36): Register ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/36))
 
 | "As a guest, I want to create a new account so that I can start playing."|
 | ------------------------------------------------------------------------- |
@@ -47,7 +47,7 @@ Next, they are defined all user story to be implemented.
 |1. The user clicks the “Register” button on the initial screen, which opens the Registration page.  |
 |2. To complete the registration, the user provides their name, surname, username, password, email, and date of birth.  |
 
-### US#3-(ISSUE#nn): Logout ([Issue]())
+### US#3-(ISSUE#37): Logout ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/37))
 
 | "As a player/administrator, I want to log out of my account so that no one else can access it from the same device."|
 | ------------------------------------------------------------------------- |
@@ -56,7 +56,7 @@ Next, they are defined all user story to be implemented.
 |2. A confirmation modal is shown just to ask if the player/administrator is sure about logging out.  |
 |3. After clicking on "Yes", the user is signed out of the system.  |
 
-### US#4-(ISSUE#nn): Delete my profile ([Issue]())
+### US#4-(ISSUE#38): Delete my profile ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/38))
 
 | "As a player/administrator, I want to remove my account so that all my data is erased from the system."|
 | ------------------------------------------------------------------------- |
@@ -66,7 +66,7 @@ Next, they are defined all user story to be implemented.
 |3. The player selects "Edit Profile", which takes them to the "My Profile" screen.  |
 |4. From there, if the player clicks the "Delete Profile" button and confirms by selecting "Yes" on the confirmation modal, their profile will be removed from the system.  |
 
-### US#5-(ISSUE#nn): Edit my profile ([Issue]())
+### US#5-(ISSUE#39): Edit my profile ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/39))
 
 | "As a player/administrator, I want to edit my profile so that I can update my personal information."|
 | ------------------------------------------------------------------------- |
@@ -77,7 +77,7 @@ Next, they are defined all user story to be implemented.
 |4. From there, clicking on the "Edit profile" button takes them to the "Edit profile" screen. |
 |5. Once typed all the changes, the player/administrator will save them by clicking the "Save changes" button. |
 
-### US#6-(ISSUE#nn): Add a friend ([Issue]())
+### US#6-(ISSUE#40): Add a friend ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/40))
 
 | "As a player, I want to add a friend so that I can play with him/her."|
 | ------------------------------------------------------------------------- |
@@ -88,7 +88,7 @@ Next, they are defined all user story to be implemented.
 |4. From there, there is a "Create" button and pressing it, the player is taken to "Create Friendship" screen.  |
 |5. From there, the player can type the username of their new friend and send the invitation.  |
 
-### US#7-(ISSUE#nn): Delete a friend ([Issue]())
+### US#7-(ISSUE#41): Delete a friend ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/41))
 
 | "As a player, I want to delete a friend so that I don't want to play more with him/her."|
 | ------------------------------------------------------------------------- |
@@ -99,7 +99,7 @@ Next, they are defined all user story to be implemented.
 |4. From there, the player can see the list of his friends and can press the "Delete" button of the friendship the player wants to remove.  |
 |5. A confirmation modal will appear asking if the player is sure about the deletion, pressing "Yes", the friendship will be deleted.  |
 
-### US#8-(ISSUE#nn): Accept a friendship ([Issue]())
+### US#8-(ISSUE#42): Accept a friendship ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/42))
 
 | "As a player, I want to accept a friendship so that I can play with the friend requester."|
 | ------------------------------------------------------------------------- |
@@ -110,7 +110,7 @@ Next, they are defined all user story to be implemented.
 |4. From there, the player press the "Pending" button and takes them to the "Pending Invites" screen. |
 |5. From there, the player can view any pending invitations and accept them using the "Accept" button.  |
 
-### US#9-(ISSUE#nn): Reject a friendship ([Issue]())
+### US#9-(ISSUE#43): Reject a friendship ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/43))
 
 | "As a player, I want to reject a friendship so that I don't want to play with the friend requester."|
 | ------------------------------------------------------------------------- |
@@ -121,7 +121,7 @@ Next, they are defined all user story to be implemented.
 |4. From there, the player press the "Pending" button and takes them to the "Pending Invites" screen. |
 |5. From there, the player can view any pending invitations and reject them using the "Reject" button.  |
 
-### US#10-(ISSUE#nn): Create a game ([Issue]())
+### US#10-(ISSUE#44): Create a game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/44))
 
 | "As a player, I want to create a new game so that other players can join it."|
 | ------------------------------------------------------------------------- |
@@ -130,7 +130,7 @@ Next, they are defined all user story to be implemented.
 |2. The player has to select which one of their friends wants to play with and which colour card are going to play with. |
 |3. When pressing the "Continue" button, the game starts.  |
 
-### US#11-(ISSUE#nn): Join a game ([Issue]())
+### US#11-(ISSUE#45): Join a game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/45))
 
 | "As a player, I want to enter a game so that I can play alongside the another player who has invited me."|
 | ------------------------------------------------------------------------- |
@@ -139,14 +139,14 @@ Next, they are defined all user story to be implemented.
 |2. The player has to click on the "Accept" button to start the game. |
 |3. The player is taken to the "Game" screen and the game starts.  |
 
-### US#12-(ISSUE#nn): Change deck ([Issue]())
+### US#12-(ISSUE#46): Change deck ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/46))
 
 | "As a player, I want to change my initial deck so that I can play with different cards. "|
 | ------------------------------------------------------------------------- |
 |![Mockup]()|
 |1. The player clicks on the "Change deck" button, which is on the left-down corner, and the deck will be automatically changed.  |
 
-### US#13-(ISSUE#nn): Place a card ([Issue]())
+### US#13-(ISSUE#47): Place a card ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/47))
 
 | "As a player, I want to place a card so that I can take an action during my turn. "|
 | ------------------------------------------------------------------------- |
@@ -154,7 +154,7 @@ Next, they are defined all user story to be implemented.
 |1. During their turn, the player clicks on any of the 5 cards in the left panel of the screen.  |
 |2. The player then clicks on any of the available cells on the board (highlighted in their color), and the card is placed.  |
 
-### US#14-(ISSUE#nn): Use "Speed Up" ([Issue]())
+### US#14-(ISSUE#48): Use "Speed Up" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/48))
 
 | "As a player, I want to spend one energy point using a "speed up" so that I can place three cards instead of two "|
 | ------------------------------------------------------------------------- |
@@ -162,7 +162,7 @@ Next, they are defined all user story to be implemented.
 |1. During their turn, the player clicks on the "Speed Up" button (located in the right panel of the screen).  |
 |2. The player can now place three cards instead of the usual two. The energy card is rotated clockwise.  |
 
-### US#15-(ISSUE#nn): Use "Reverse" ([Issue]())
+### US#15-(ISSUE#49): Use "Reverse" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/49))
 
 | "As a player, I want to spend one energy point using a "reverse" so that I can continue my path through any available exit on my second-to-last card "|
 | ------------------------------------------------------------------------- |
@@ -170,7 +170,7 @@ Next, they are defined all user story to be implemented.
 |1. During their turn, the player clicks on the "Reverse" button (located in the right panel of the screen).  |
 |2. The player can now place their next card on any available exit of their second-to-last-card. The energy card is rotated clockwise.  |
 
-### US#16-(ISSUE#nn): Use "Brake" ([Issue]())
+### US#16-(ISSUE#50): Use "Brake" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/50))
 
 | "As a player, I want to spend one energy point using a "brake" so that I can place one card instead of the usual two "|
 | ------------------------------------------------------------------------- |
@@ -178,7 +178,7 @@ Next, they are defined all user story to be implemented.
 |1. During their turn, the player clicks on the "Brake" button (located in the right panel of the screen).  |
 |2. The player can now place just one card in their turn. The energy card is rotated clockwise.  |
 
-### US#17-(ISSUE#nn): Use "Extra Gas" ([Issue]())
+### US#17-(ISSUE#51): Use "Extra Gas" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/51))
 
 | "As a player, I want to spend one energy point using an "Extra Gas" so that I can draw one more card "|
 | ------------------------------------------------------------------------- |
@@ -186,7 +186,7 @@ Next, they are defined all user story to be implemented.
 |1. During their turn, the player clicks on the "Extra Gas" button (located in the right panel of the screen).  |
 |2. The player has now one more card in their hand. The energy card is rotated clockwise.  |
 
-### US#18-(ISSUE#nn): Surrender ([Issue]())
+### US#18-(ISSUE52): Surrender ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/52))
 
 | "As a player, I want to be able to end the game early so that I can surrender if I choose."|
 | ------------------------------------------------------------------------- |
@@ -194,21 +194,21 @@ Next, they are defined all user story to be implemented.
 |1. The player can click the "Surrender" button (located in the top-right corner) and a confirmation modal appears.  |
 |2. After the player clicks that he/she is sure, the game ends.  |
 
-### US#19-(ISSUE#nn): View rules during game ([Issue]())
+### US#19-(ISSUE#53): View rules during game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/53))
 
 | "As a player, I want to view the rules so that I can follow the game correctly "|
 | ------------------------------------------------------------------------- |
 |![Mockup]()|
 |1. The player can click the "Rules" button (located in the top-right corner) and the rules screen is shown.  |
 
-### US#19-(ISSUE#nn): Return to the game after viewing rules ([Issue]())
+### US#19-(ISSUE#54): Return to the game after viewing rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/54))
 
 | "As a player, I want to return to the game after viewing the rules so that I can continue playing. "|
 | ------------------------------------------------------------------------- |
 |![Mockup]()|
 |1. On the "Rules" screen, the player clicks the "Game" button (located in the top-right corner) and the "Game" screen is shown.  |
 
-### US#20-(ISSUE#nn): Chat with the opponent ([Issue]())
+### US#20-(ISSUE#55): Chat with the opponent ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/55))
 
 | "As a player, I want to chat with my opponent so that I can communicate during the game. "|
 | ------------------------------------------------------------------------- |
@@ -217,14 +217,14 @@ Next, they are defined all user story to be implemented.
 |2. The player types their message and clicks "Send".  |
 |3. The sent message appears in the conversation window above the input field.  |
 
-### US#20-(ISSUE#nn): Notify the player when they win or lose ([Issue]())
+### US#20-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
 
 | "As a player, I want to be notified when the game ends so that I know whether I won or lost "|
 | ------------------------------------------------------------------------- |
 |![Mockup]()|
 |1. When the game ends, a popup will be shown notifying the player who has won.  |
 
-### US#21-(ISSUE#nn): List player games ([Issue]())
+### US#21-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
 
 | "As a player, I want to view a list of my games so that I can see who I have played against."|
 | ------------------------------------------------------------------------- |
@@ -234,7 +234,7 @@ Next, they are defined all user story to be implemented.
 |3. The player selects "My Games", which takes them to the "My Games" screen. |
 |4. From there, the player can view the list of games showing information about the game number, winner and players of each game.  |
 
-### US#22-(ISSUE#nn): View player achievements ([Issue]())
+### US#22-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
 
 | "As a player, I want to view my achievements so that I can track my progress in the game. "|
 | ------------------------------------------------------------------------- |
@@ -244,7 +244,7 @@ Next, they are defined all user story to be implemented.
 |3. The player selects "Achievements", which takes them to the "Achievements" screen. |
 |4. From there, the player can view the achievements earned and when, which not, and the description of each one. |
 
-### US#23-(ISSUE#nn): View player stats ([Issue]())
+### US#23-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
 
 | "As a player, I want to see my statistics so that I can track my performance in the game. "|
 | ------------------------------------------------------------------------- |
@@ -254,7 +254,7 @@ Next, they are defined all user story to be implemented.
 |3. The player selects "Stats", which takes them to the "My Stats" screen. |
 |4. From there, the player can view their statistics, including games played, durations, wins... |
 
-### US#24-(ISSUE#nn): View current games ([Issue]())
+### US#24-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
 
 | "As an administrator, I want to see a list of all ongoing games so that I can manage them and assure their good functioning. "|
 | ------------------------------------------------------------------------- |
@@ -264,7 +264,7 @@ Next, they are defined all user story to be implemented.
 |3. The administrator selects "Games", which takes them to the "Games history" screen. |
 |4. A list with all ongoing games is shown, showing for each game the players that are playing it and its creator. |
 
-### US#25-(ISSUE#nn): View past games ([Issue]())
+### US#25-(ISSUE#60): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
 
 | "As an administrator, I want to see a list of all past games so that I can manage them. "|
 | ------------------------------------------------------------------------- |
@@ -274,7 +274,7 @@ Next, they are defined all user story to be implemented.
 |3. The administrator selects "Games", which takes them to the "Games history" screen. |
 |4. A list with all past games is shown, showing for each game the players that played it and its creator. |
 
-### US#26-(ISSUE#nn): View all users ([Issue]())
+### US#26-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
 
 | "As an administrator, I want to see a list of all registered users so that I can manage them. "|
 | ------------------------------------------------------------------------- |
@@ -284,7 +284,7 @@ Next, they are defined all user story to be implemented.
 |3. The administrator selects "Users", which takes them to the "Users" screen. |
 |4. A list with all users is shown, where the administrator can see for each user the username and the authority. |
 
-### US#27-(ISSUE#nn): Creation of user ([Issue]())
+### US#27-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
 
 | "As an administrator, I want to create a user so that I can add a new profile to the system "|
 | ------------------------------------------------------------------------- |
@@ -296,7 +296,7 @@ Next, they are defined all user story to be implemented.
 |5. From there, the administrator fills the necessary information to create the user.  |
 |6. Once the administrator clicks on "Save", the user is created.  |
 
-### US#28-(ISSUE#nn): Deletion of user ([Issue]())
+### US#28-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
 
 | "As an administrator, I want to delete a user so that I can delete a profile from the system "|
 | ------------------------------------------------------------------------- |
@@ -307,7 +307,7 @@ Next, they are defined all user story to be implemented.
 |4. From there, the administrator can delete any user clicking on their "Delete" button. |
 |5. After clicking "Yes" on the confirmation modal, the user will be deleted. If the administrator click "No", the user won't be deleted.  |
 
-### US#29-(ISSUE#nn): Edition of user ([Issue]())
+### US#29-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
 
 | "As an administrator, I want to edit a user so that I can update their information on the system "|
 | ------------------------------------------------------------------------- |
@@ -319,7 +319,7 @@ Next, they are defined all user story to be implemented.
 |5. From there, the administrator updates the necessary information to edit the user.  |
 |6. Once the administrator clicks on "Save", the user is updated.  |
 
-### US#30-(ISSUE#nn): View rules ([Issue]())
+### US#30-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
 
 | "As a player/administrator, I want to view the rules of the games so that I can understand how to play "|
 | ------------------------------------------------------------------------- |
