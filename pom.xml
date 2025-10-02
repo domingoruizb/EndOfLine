@@ -37,12 +37,7 @@
 	</properties>
 
 	<developers>
-		<developer>
-			<name>JAParejo</name>
-			<email>japarejo@us.es</email>
-			<url>https://github.com/japarejo</url>
-		</developer>
-
+	
 		<developer>
 			<name>Makar</name>
 			<email>makar.lavrov.1@iliauni.edu.ge</email>
