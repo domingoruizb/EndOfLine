@@ -367,9 +367,19 @@ The game will be played by two players, one against the other. For example, a ga
 
 ### R2 - Game over
 The game will end once the line of a player is cut (the player cannot continue placing cards). For example, if the line of a player intersects with the line of another player and the first one cannot advance anymore.
+If a player leaves during a match, they will be declared as having forfeited.
 
 ### R3 - Game area
 The playable area is a 7x7 grid of potential card placements, and the lines can wrap around the borders. This means that if a line reaches the leftmost grid spot, it will continue on the rightmost grid spot.
 
 ### R4 - Turn order
 For the first round, the player who revealed the card with the lowest number plays first. From the second round, the player with the lowest number on their last placed card plays. In the event of a tie, the comparison extends to the previously placed cards.
+
+### R5 - Card placement
+The card must be placed in an empty grid spot where the entry points of a card must align with one of the exit points of the player's previously placed cards. The players place 1 card on the first round and 2 cards on later rounds unless modified by energy effects.
+
+### R6 - Energy constraints
+Each player begins with 3 energy points. A player may consume only 1 energy point per round starting from round 3.
+
+### R7 - Users and authentication
+The user must be registered and logged in to create or play a game.
