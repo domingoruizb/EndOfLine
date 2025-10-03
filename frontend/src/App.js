@@ -15,6 +15,7 @@ import UserEditAdmin from "./admin/users/UserEditAdmin";
 import SwaggerDocs from "./public/swagger";
 import DeveloperList from "./developers";
 import AchievementList from "./achievements/achievementList";
+import AchievementEdit from './achievements/achievementEdit';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -56,6 +57,7 @@ function App() {
       ownerRoutes = (
         <>
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
+              <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} /> 
         </>)
     }    
   })

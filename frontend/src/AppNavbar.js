@@ -24,6 +24,7 @@ function AppNavbar() {
     let userLinks = <></>;
     let userLogout = <></>;
     let publicLinks = <></>;
+    let playerLinks = <></>;
 
     roles.forEach((role) => {
         if (role === "ADMIN") {
@@ -37,7 +38,16 @@ function AppNavbar() {
                     </NavItem>
                 </>
             )
-        }        
+        }
+        if (role === "PLAYER") {
+            playerLinks = (
+                <>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/achievements">Achievements</NavLink>
+                    </NavItem>
+                </>
+            )
+        } 
     })
 
     if (!jwt) {
@@ -95,6 +105,7 @@ function AppNavbar() {
                         {userLinks}
                         {adminLinks}
                         {ownerLinks}
+                        {playerLinks}
                     </Nav>
                     <Nav className="ms-auto mb-2 mb-lg-0" navbar>
                         {publicLinks}
