@@ -34,7 +34,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a guest, I want to sign in to my account so that I can view my information and start playing"|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 1 Start.png>)|
 |1. The user selects the “Log In” option on the initial screen.  |
 |2. The Login page is displayed, where the user provides their credentials (username and password).  |
 |3. After clicking the “Log In” button, if the credentials are valid, the user is taken to the Dashboard page.  |
@@ -43,7 +43,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a guest, I want to create a new account so that I can start playing."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. The user clicks the “Register” button on the initial screen, which opens the Registration page.  |
 |2. To complete the registration, the user provides their name, surname, username, password, email, and date of birth.  |
 
@@ -51,7 +50,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a player/administrator, I want to log out of my account so that no one else can access it from the same device."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 2 Player.png>)|
 |1. On the home screen, the player/administrator clicks the "Logout" button located at the top-right corner.  |
 |2. A confirmation modal is shown just to ask if the player/administrator is sure about logging out.  |
 |3. After clicking on "Yes", the user is signed out of the system.  |
@@ -60,7 +59,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player/administrator, I want to remove my account so that all my data is erased from the system."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player/administrator clicks their profile button (top-right corner).  |
 |2. A menu will appear showing several options, including the "Edit Profile" feature.  |
 |3. The player selects "Edit Profile", which takes them to the "My Profile" screen.  |
@@ -70,7 +68,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player/administrator, I want to edit my profile so that I can update my personal information."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player/administrator clicks their profile button (top-right corner).  |
 |2. A menu will appear showing several options, including the "Edit Profile" feature.  |
 |3. The player select "Edit Profile," which takes them to the "My Profile" screen.  |
@@ -81,7 +78,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to add a friend so that I can play with him/her."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "Friendships" feature. |
 |3. The player selects "Friendships", which takes them to the "Friendships" screen. |
@@ -92,7 +88,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to delete a friend so that I don't want to play more with him/her."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "Friendships" feature. |
 |3. The player selects "Friendships", which takes them to the "Friendships" screen. |
@@ -103,7 +98,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to accept a friendship so that I can play with the friend requester."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "Friendships" feature. |
 |3. The player selects "Friendships", which takes them to the "Friendships" screen. |
@@ -114,7 +108,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to reject a friendship so that I don't want to play with the friend requester."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "Friendships" feature. |
 |3. The player selects "Friendships", which takes them to the "Friendships" screen. |
@@ -125,7 +118,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to create a new game so that other players can join it."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 3 New Game.png>)|
 |1. On the home screen, the player clicks has to click the "Play now!" button and the "Create Game" screen game will be opened.  |
 |2. The player has to select which one of their friends wants to play with and which colour card are going to play with. |
 |3. When pressing the "Continue" button, the game starts.  |
@@ -134,7 +127,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to enter a game so that I can play alongside the another player who has invited me."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 4 Accept Game.png>)|
 |1. On the header of the home screen, an invitation message will appear showing that a friend invited the player to a game.  |
 |2. The player has to click on the "Accept" button to start the game. |
 |3. The player is taken to the "Game" screen and the game starts.  |
@@ -143,14 +136,13 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to change my initial deck so that I can play with different cards. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. The player clicks on the "Change deck" button, which is on the left-down corner, and the deck will be automatically changed.  |
 
 ### US#13-(ISSUE#47): Place a card ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/47))
 
 | "As a player, I want to place a card so that I can take an action during my turn. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 5 Gameplay.png>)|
 |1. During their turn, the player clicks on any of the 5 cards in the left panel of the screen.  |
 |2. The player then clicks on any of the available cells on the board (highlighted in their color), and the card is placed.  |
 
@@ -158,7 +150,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to spend one energy point using a "speed up" so that I can place three cards instead of two "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. During their turn, the player clicks on the "Speed Up" button (located in the right panel of the screen).  |
 |2. The player can now place three cards instead of the usual two. The energy card is rotated clockwise.  |
 
@@ -166,7 +157,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to spend one energy point using a "reverse" so that I can continue my path through any available exit on my second-to-last card "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. During their turn, the player clicks on the "Reverse" button (located in the right panel of the screen).  |
 |2. The player can now place their next card on any available exit of their second-to-last-card. The energy card is rotated clockwise.  |
 
@@ -174,7 +164,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to spend one energy point using a "brake" so that I can place one card instead of the usual two "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. During their turn, the player clicks on the "Brake" button (located in the right panel of the screen).  |
 |2. The player can now place just one card in their turn. The energy card is rotated clockwise.  |
 
@@ -182,7 +171,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to spend one energy point using an "Extra Gas" so that I can draw one more card "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. During their turn, the player clicks on the "Extra Gas" button (located in the right panel of the screen).  |
 |2. The player has now one more card in their hand. The energy card is rotated clockwise.  |
 
@@ -190,7 +178,6 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to be able to end the game early so that I can surrender if I choose."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. The player can click the "Surrender" button (located in the top-right corner) and a confirmation modal appears.  |
 |2. After the player clicks that he/she is sure, the game ends.  |
 
@@ -198,97 +185,88 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to view the rules so that I can follow the game correctly "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. The player can click the "Rules" button (located in the top-right corner) and the rules screen is shown.  |
 
 ### US#19-(ISSUE#54): Return to the game after viewing rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/54))
 
 | "As a player, I want to return to the game after viewing the rules so that I can continue playing. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the "Rules" screen, the player clicks the "Game" button (located in the top-right corner) and the "Game" screen is shown.  |
 
 ### US#20-(ISSUE#55): Chat with the opponent ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/55))
 
 | "As a player, I want to chat with my opponent so that I can communicate during the game. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. The player clicks on the input field in the Chat component (right panel of the screen).  |
 |2. The player types their message and clicks "Send".  |
 |3. The sent message appears in the conversation window above the input field.  |
 
-### US#20-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
+### US#21-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
 
 | "As a player, I want to be notified when the game ends so that I know whether I won or lost "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 6 Game Ending.png>)|
 |1. When the game ends, a popup will be shown notifying the player who has won.  |
 
-### US#21-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
+### US#22-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
 
 | "As a player, I want to view a list of my games so that I can see who I have played against."|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "My Games" feature. |
 |3. The player selects "My Games", which takes them to the "My Games" screen. |
 |4. From there, the player can view the list of games showing information about the game number, winner and players of each game.  |
 
-### US#22-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
+### US#23-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
 
 | "As a player, I want to view my achievements so that I can track my progress in the game. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "Achievements" feature. |
 |3. The player selects "Achievements", which takes them to the "Achievements" screen. |
 |4. From there, the player can view the achievements earned and when, which not, and the description of each one. |
 
-### US#23-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
+### US#24-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
 
 | "As a player, I want to see my statistics so that I can track my performance in the game. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player has to click their profile button. |
 |2. A menu will appear showing several options, including the "Stats" feature. |
 |3. The player selects "Stats", which takes them to the "My Stats" screen. |
 |4. From there, the player can view their statistics, including games played, durations, wins... |
 
-### US#24-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
+### US#25-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
 
 | "As an administrator, I want to see a list of all ongoing games so that I can manage them and assure their good functioning. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
+|![alt text](<Mockups/Mockup 7 Admin.png>)|
 |1. On the home screen, the administrator has to click on their profile button. |
 |2. A menu will appear showing several options, including the "Games" feature. |
 |3. The administrator selects "Games", which takes them to the "Games history" screen. |
 |4. A list with all ongoing games is shown, showing for each game the players that are playing it and its creator. |
 
-### US#25-(ISSUE#60): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
+### US#26-(ISSUE#60): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
 
 | "As an administrator, I want to see a list of all past games so that I can manage them. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the administrator has to click on their profile button. |
 |2. A menu will appear showing several options, including the "Games" feature. |
 |3. The administrator selects "Games", which takes them to the "Games history" screen. |
 |4. A list with all past games is shown, showing for each game the players that played it and its creator. |
 
-### US#26-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
+### US#27-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
 
 | "As an administrator, I want to see a list of all registered users so that I can manage them. "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the administrator has to click on their profile button. |
 |2. A menu will appear showing several options, including the "Users" feature. |
 |3. The administrator selects "Users", which takes them to the "Users" screen. |
 |4. A list with all users is shown, where the administrator can see for each user the username and the authority. |
 
-### US#27-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
+### US#28-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
 
 | "As an administrator, I want to create a user so that I can add a new profile to the system "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the administrator has to click on their profile button. |
 |2. A menu will appear showing several options, including the "Users" feature. |
 |3. The administrator selects "Users", which takes them to the "Users" screen. |
@@ -296,22 +274,20 @@ Next, they are defined all user story to be implemented.
 |5. From there, the administrator fills the necessary information to create the user.  |
 |6. Once the administrator clicks on "Save", the user is created.  |
 
-### US#28-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
+### US#29-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
 
 | "As an administrator, I want to delete a user so that I can delete a profile from the system "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the administrator has to click on their profile button. |
 |2. A menu will appear showing several options, including the "Users" feature. |
 |3. The administrator selects "Users", which takes them to the "Users" screen. |
 |4. From there, the administrator can delete any user clicking on their "Delete" button. |
 |5. After clicking "Yes" on the confirmation modal, the user will be deleted. If the administrator click "No", the user won't be deleted.  |
 
-### US#29-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
+### US#30-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
 
 | "As an administrator, I want to edit a user so that I can update their information on the system "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the administrator has to click on their profile button. |
 |2. A menu will appear showing several options, including the "Users" feature. |
 |3. The administrator selects "Users", which takes them to the "Users" screen. |
@@ -319,11 +295,10 @@ Next, they are defined all user story to be implemented.
 |5. From there, the administrator updates the necessary information to edit the user.  |
 |6. Once the administrator clicks on "Save", the user is updated.  |
 
-### US#30-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
+### US#31-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
 
 | "As a player/administrator, I want to view the rules of the games so that I can understand how to play "|
 | ------------------------------------------------------------------------- |
-|![Mockup]()|
 |1. On the home screen, the player/administrator has to click on the "Rules" button, taking them to the "Rules" screen. |
 
 
