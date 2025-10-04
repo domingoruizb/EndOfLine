@@ -383,3 +383,18 @@ Each player begins with 3 energy points. A player may consume only 1 energy poin
 
 ### R7 - Users and authentication
 The user must be registered and logged in to create or play a game.
+
+### R8 – Deck & shuffling
+At the start of each game the deck is shuffled randomly and each player receives a fixed initial hand (5 cards). When the deck runs out, the discard pile is reshuffled to form a new draw deck.
+
+### R9 – Card uniqueness & limits
+The number of copies of each card type in a deck is limited to a predefined value (e.g., max 4 copies per card type). Deck composition rules must be enforced by the server when generating or changing decks.
+
+### R10 – Energy recharging & cap
+Players have a maximum energy cap of 5. At the end of every round (after both players act) each player recovers 1 energy point until the cap is reached. Energy expenditure and current energy are persisted in the game state.
+
+### R11 - Turn timer & inactivity
+Each player has a maximum turn time (e.g., 90 seconds). If the player exceeds this time without action, they receive a warning; after a configurable number of consecutive timeouts (e.g., 2), they automatically forfeit the match.
+
+### R12 - Achievements & stat recording
+All finished matches update a player’s statistics and achievements (wins, duration, special achievements). Achievements are only awarded once and recorded with timestamp. Administrators can correct stats in exceptional cases.
