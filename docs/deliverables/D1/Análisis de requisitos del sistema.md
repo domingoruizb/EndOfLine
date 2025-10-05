@@ -336,15 +336,25 @@ _Puede usar la herramienta de modelado que desee para generar sus diagramas de c
 _Si deseais usar esta herramienta para generar vuestro(s) diagramas con esta herramienta os proporcionamos un [enlace a la documentación oficial de la sintaxis de diagramas de clases de _ermaid](https://mermaid.js.org/syntax/classDiagram.html)_
 
 ## Reglas de Negocio
-### R-< X > < Nombre Regla de negocio >
-_< Descripción de la restricción a imponer >_
 
-_Ej:_ 
-### R1 – Diagnósticos imposibles
-El diagnóstico debe estar asociado a una enfermedad que es compatible con el tipo de mascota de su visita relacionada. Por ejemplo, no podemos establecer como enfermedad diagnosticada una otitis cuando la visita está asociada a una mascota que es un pez, porque éstos no tienen orejas ni oídos (y por tanto no será uno de los tipos de mascota asociados a la enfermedad otitis en el vademecum).
+### R1 - Player count
+The game will be played by two players, one against the other. For example, a game cannot start if there are less than two players in the lobby.
 
-…
+### R2 - Game over
+The game will end once the line of a player is cut (the player cannot continue placing cards). For example, if the line of a player intersects with the line of another player and the first one cannot advance anymore.
+If a player leaves during a match, they will be declared as having forfeited.
 
-_Muchas de las reglas del juego se transformarán en nuestro caso en reglas de negocio, por ejemplo, “la carta X solo podrá jugarse en la ronda Y si en la ronda anterior se jugó la carta Z”, o “en caso de que un jugador quede eliminado el turno cambia de sentido”_
+### R3 - Game area
+The playable area is a 7x7 grid of potential card placements, and the lines can wrap around the borders. This means that if a line reaches the leftmost grid spot, it will continue on the rightmost grid spot.
 
+### R4 - Turn order
+For the first round, the player who revealed the card with the lowest number plays first. From the second round, the player with the lowest number on their last placed card plays. In the event of a tie, the comparison extends to the previously placed cards.
 
+### R5 - Card placement
+The card must be placed in an empty grid spot where the entry points of a card must align with one of the exit points of the player's previously placed cards. The players place 1 card on the first round and 2 cards on later rounds unless modified by energy effects.
+
+### R6 - Energy constraints
+Each player begins with 3 energy points. A player may consume only 1 energy point per round starting from round 3.
+
+### R7 - Users and authentication
+The user must be registered and logged in to create or play a game.
