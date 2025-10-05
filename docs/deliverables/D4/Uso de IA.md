@@ -29,29 +29,29 @@ Este documento describe el uso que se ha echo de la IA en el proyecto. El objeti
 **Rellenar este documento es Obligatorio:** La **documentación del uso de IA** es un **entregable** del proyecto.
 
 ## Resumen por Sprint (1–4)
-### Sprint X — Resumen de uso de IA
+### Sprint 1 — Resumen de uso de IA
 
-Usos registrados: <!-- nº -->
+Usos registrados: No se han registrado usos de herramientas de inteligencia artificial durante el sprint 1.
 
-Ámbitos principales: <!-- p.ej., generación de pruebas, esqueletos de código, análisis y resolución de errores -->
+Ámbitos principales: No se ha empleado IA en este sprint, dado que las tareas fueron principalmente narrativas, de documentación y planificación, con muy poca carga de desarrollo técnico o programación.
 
-Valor aportado: <!-- síntesis -->
+Valor aportado: Debido a la naturaleza narrativa del sprint, no se consideró necesario el uso de IA.
 
-Riesgos relevantes y mitigaciones: <!-- síntesis -->
+Riesgos relevantes y mitigaciones: No se identifican riesgos relacionados con el uso de IA, ya que no se utilizó.
 
-Lecciones aprendidas: <!-- síntesis -->
+Lecciones aprendidas: Debido a no poder utilizar la IA para la narrativa, no se ha utilizado.
 
 Checklist de cumplimiento de uso ético de la IA del sprint X:
 
-- [ ] Toda interacción significativa está en el Registro Detallado con enlace a conversación.
+- [✓] Toda interacción significativa está en el Registro Detallado con enlace a conversación.
 
-- [ ] No se usó IA para narrativa (o hay autorización documentada).
+- [✓] No se usó IA para narrativa (o hay autorización documentada).
 
-- [ ] Toda pieza aceptada fue comprendida y verificada por humanos (tests/revisión).
+- [✓] Toda pieza aceptada fue comprendida y verificada por humanos (tests/revisión).
 
-- [ ] Citas/Atribuciones incluidas cuando corresponde.
+- [✓] Citas/Atribuciones incluidas cuando corresponde.
 
-- [ ] Se usó la IA sin dar datos personales/sensibles que puedieran quedar expuestos a herramientas externas.
+- [✓] Se usó la IA sin dar datos personales/sensibles que puedieran quedar expuestos a herramientas externas.
 
 Repita esta subsección para Sprints 2, 3 y 4.
 
