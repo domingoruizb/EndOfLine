@@ -70,7 +70,11 @@ export default function AchievementList () {
 		<div>
 			<div className="admin-page-container">
 				<h1 className="text-center">Achievements</h1>
-				<div>
+				<div style ={{
+					display: 'flex',
+    				flexDirection: 'column',     // Para apilar tabla y botón verticalmente
+    				alignItems: 'center',        // Centra horizontalmente
+    				gap: '20px', }}>
 					<Table aria-label="achievements" className="mt-4">
 						<thead>
 						<tr>
@@ -83,15 +87,15 @@ export default function AchievementList () {
 						</tr>
 						</thead>
 						<tbody>{achievementList}</tbody>
-							<Button outline color="success" >
+					</Table>
+					<Button outline color="success" >
 								<Link
 									to={`/achievements/new`} className="btn sm"
 									style={{ textDecoration: "none" }}
 								>
 									Create achievement
 								</Link>
-							</Button>
-					</Table>
+					</Button>
 				</div>
 			</div>
 		</div>
