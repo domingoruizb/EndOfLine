@@ -3,6 +3,7 @@ import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, 
 import { Link } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
+import logo from './static/images/SmallLogo.png';
 
 function AppNavbar() {
     const [roles, setRoles] = useState([]);
@@ -96,8 +97,31 @@ function AppNavbar() {
         <div>
             <Navbar expand="md" dark color="black">
                 <NavbarBrand href="/">
-                    <img alt="logo" src="/eofLogo.png" style={{ height: 40, width: 40 }} />
-                    End Of Line
+                    <img
+                        alt="logo"
+                        src={logo}
+                        style={{
+                            height: 40,
+                            width: 40,
+                            marginRight: 10
+                        }}
+                    />
+                    <span
+                        style={{
+                            color: "#b1d12d",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        ENDOF
+                    </span>
+                    <span
+                        style={{
+                            color: "#ff5c00",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        LINE
+                    </span>
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>
