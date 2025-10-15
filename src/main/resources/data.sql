@@ -20,6 +20,10 @@ INSERT INTO appusers(id,username,password,authority) VALUES (16,'FLX0814','$2a$1
 INSERT INTO appusers(id,username,password,authority) VALUES (17,'HNR0360','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (18,'VMC1155','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 
-INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (1,'Principiante','Si juegas 5 partidas',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
-INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (2,'Explorador','Si juegas 25 partidas',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
-INSERT INTO achievement(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas',20.0,'VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,metric) VALUES (1,'Principiante','Si juegas 5 partidas',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,metric) VALUES (2,'Explorador','Si juegas 25 partidas',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas',20.0,'VICTORIES');
+
+INSERT INTO games(id,round,started_at,ended_at) VALUES (1,0, NULL, NULL);
+INSERT INTO games(id,round,started_at,ended_at) VALUES (2,3, '2025-10-15 14:30:00', NULL);
+INSERT INTO games(id,round,started_at,ended_at) VALUES (3,10, '2025-10-12 14:30:00', '2025-10-13 14:30:00');

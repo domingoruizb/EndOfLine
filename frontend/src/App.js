@@ -17,6 +17,7 @@ import SwaggerDocs from "./public/swagger";
 import DeveloperList from "./developers";
 import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
+import GamesList from './games';
 import UserStats from './stats/UserStats';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
           <Route path="/developers" element={<DeveloperList />} />
+          <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
         </>)
     }
     if (role === "PLAYER") {
