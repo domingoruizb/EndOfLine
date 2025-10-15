@@ -148,7 +148,7 @@ function AppNavbar() {
                         Achievements
                     </DropdownItem>
                     <DropdownItem tag={Link} 
-                                to="/achievements"
+                                to="/stats"
                                 style={{
                                     color: "#b1d12d",
                                     fontWeight: "500",
