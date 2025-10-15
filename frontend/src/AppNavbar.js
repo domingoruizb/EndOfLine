@@ -95,7 +95,7 @@ function AppNavbar() {
 
     return (
         <div>
-            <Navbar expand="md" dark color="dark">
+            <Navbar expand="md" dark color="black">
                 <NavbarBrand href="/">
                     <img
                         alt="logo"
