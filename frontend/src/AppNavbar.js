@@ -94,10 +94,10 @@ function AppNavbar() {
 
     return (
         <div>
-            <Navbar expand="md" dark color="dark">
+            <Navbar expand="md" dark color="black">
                 <NavbarBrand href="/">
-                    <img alt="logo" src="/logo1-recortado.png" style={{ height: 40, width: 40 }} />
-                    Your Game
+                    <img alt="logo" src="/eofLogo.png" style={{ height: 40, width: 40 }} />
+                    End Of Line
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>

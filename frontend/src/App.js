@@ -50,14 +50,14 @@ function App() {
         <>
           <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
-           <Route path="/developers" element={<DeveloperList />} />
+          <Route path="/developers" element={<DeveloperList />} />
         </>)
     }
     if (role === "PLAYER") {
       ownerRoutes = (
         <>
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
-              <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} /> 
+          <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} /> 
         </>)
     }    
   })
