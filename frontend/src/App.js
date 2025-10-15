@@ -17,6 +17,7 @@ import SwaggerDocs from "./public/swagger";
 import DeveloperList from "./developers";
 import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
+import UserStats from './stats/UserStats';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -87,6 +88,7 @@ function App() {
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/plans" element={<PlanList />} />
           <Route path="/rules" element={<RulesPage />} />
+          <Route path="/stats" element={<UserStats />} />
           <Route path="/docs" element={<SwaggerDocs />} />
           {publicRoutes}
           {userRoutes}
