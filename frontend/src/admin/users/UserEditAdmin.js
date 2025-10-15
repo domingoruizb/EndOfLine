@@ -14,7 +14,11 @@ export default function UserEditAdmin() {
   const emptyItem = {
     id: null,
     username: "",
+    name: "",
+    surname: "",
     password: "",
+    birthdate: "", 
+    email: "",
     authority: null,
   };
   const id = getIdFromUrl(2);
@@ -90,6 +94,49 @@ export default function UserEditAdmin() {
             />
           </div>
           <div className="custom-form-input">
+            <Label for="username" className="custom-form-input-label">
+              Name
+            </Label>
+            <Input
+              type="text"
+              required
+              name="name"
+              id="name"
+              value={user.name || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="username" className="custom-form-input-label">
+              Surname
+            </Label>
+            <Input
+              type="text"
+              required
+              name="surname"
+              id="surname"
+              value={user.surname || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="username" className="custom-form-input-label">
+              Email
+            </Label>
+            <Input
+              type="text"
+              required
+              name="email"
+              id="email"
+              value={user.email || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+
+          {/*<div className="custom-form-input">
             <Label for="lastName" className="custom-form-input-label">
               Password
             </Label>
@@ -102,7 +149,23 @@ export default function UserEditAdmin() {
               onChange={handleChange}
               className="custom-input"
             />
+          </div>  */}
+          
+          <div className="custom-form-input">
+            <Label for="username" className="custom-form-input-label">
+              BirthDate
+            </Label>
+            <Input
+              type="date"
+              required
+              name="birthdate"
+              id="birthdate"
+              value={user.birthdate || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
           </div>
+          <div className="custom-form-input">
           <Label for="authority" className="custom-form-input-label">
             Authority
           </Label>
@@ -134,6 +197,7 @@ export default function UserEditAdmin() {
                 {authOptions}
               </Input>
             )}
+          </div>
           </div>
           <div className="custom-button-row">
             <button className="auth-button">Save</button>
