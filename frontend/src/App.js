@@ -9,6 +9,7 @@ import Register from "./auth/register";
 import Login from "./auth/login";
 import Logout from "./auth/logout";
 import PlanList from "./public/plan";
+import RulesPage from "./public/rules";
 import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
@@ -17,6 +18,7 @@ import DeveloperList from "./developers";
 import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
 import GamesList from './games';
+import UserStats from './stats/UserStats';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -87,6 +89,8 @@ function App() {
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/plans" element={<PlanList />} />
+          <Route path="/rules" element={<RulesPage />} />
+          <Route path="/stats" element={<UserStats />} />
           <Route path="/docs" element={<SwaggerDocs />} />
           {publicRoutes}
           {userRoutes}
