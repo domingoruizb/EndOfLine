@@ -27,7 +27,7 @@ public class Achievement extends NamedEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    Metric metric;
+    Category category;
 
     public String getActualDescription() {
         return description.replace("<THRESHOLD>", String.valueOf(threshold));
