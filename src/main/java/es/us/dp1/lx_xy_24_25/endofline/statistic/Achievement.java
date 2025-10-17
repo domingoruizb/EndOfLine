@@ -4,6 +4,7 @@ import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "achievements")
 public class Achievement extends NamedEntity {
 
     @NotBlank
@@ -25,7 +27,7 @@ public class Achievement extends NamedEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    Metric metric;
+    Category category;
 
     public String getActualDescription() {
         return description.replace("<THRESHOLD>", String.valueOf(threshold));

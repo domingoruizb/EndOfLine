@@ -15,7 +15,7 @@ export default function AchievementEdit () {
         description: "",
         badgeImage: "",
         threshold: 1,
-        metric: "GAMES_PLAYED",
+        category: "GAMES_PLAYED",
         actualDescription: ""
     };
 
@@ -122,15 +122,15 @@ export default function AchievementEdit () {
                         />
                     </div>
                     <div className="custom-form-input">
-                        <Label for="metric" className="custom-form-input-label">
-                            Metric
+                        <Label for="category" className="custom-form-input-label">
+                            Category
                         </Label>
                         <Input
                             type="select"
                             required
-                            name="metric"
-                            id="metric"
-                            value={achievement.metric || ""}
+                            name="category"
+                            id="category"
+                            value={achievement.category || ""}
                             onChange={handleChange}
                             className="custom-input"
                         >

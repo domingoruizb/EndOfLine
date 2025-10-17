@@ -34,7 +34,7 @@ export default function AchievementList () {
 					width="50px" />
 				</td>
 				<td className="text-center"> {a.threshold} </td>
-				<td className="text-center"> {a.metric} </td>
+				<td className="text-center"> {a.category} </td>
 				<td className="text-center">
 					<Button outline color="warning" >
 						<Link
@@ -82,7 +82,7 @@ export default function AchievementList () {
 							<th className="text-center">Description</th>
 							<th className="text-center">Image</th>
 							<th className="text-center">Threshold</th>
-							<th className="text-center">Metric</th>
+							<th className="text-center">Category</th>
 							<th className="text-center">Actions</th>
 						</tr>
 						</thead>

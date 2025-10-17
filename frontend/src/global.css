@@ -9,12 +9,12 @@
 }
 
 @font-face {
-    font-family: 'name-smile';
-    src: url('./static/fonts/Name\ Smile.otf');
+    font-family: 'josefinsans';
+    src: url('./static/fonts/JosefinSans.ttf');
 }
 
 * {
-    font-family: 'name-smile';
+    font-family: 'josefinsans';
 }
 
 /* div {
