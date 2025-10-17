@@ -21,7 +21,7 @@ import getDeleteAlertsOrModal from "./getDeleteAlertsOrModal";
  * deleteFromList('/api/items/123', '123', [items, setItems], [alerts, setAlerts], setMessage, setVisible);
  */
 
-export default function deleteFromList(url, id, [state, setState], [alerts, setAlerts], setMessage, setVisible, options = {}) {
+export default function deleteMyself(url, id, [alerts, setAlerts], setMessage, setVisible, options = {}) {
     const jwt = tokenService.getLocalAccessToken();
     fetch(url, {
         method: "DELETE",
@@ -33,14 +33,6 @@ export default function deleteFromList(url, id, [state, setState], [alerts, setA
     })
         .then((response) => {
             if (response.status === 200 || response.status === 204) {
-                if (options.date)
-                    setState(state.filter((i) => i.id !== id && i.creationDate < options.date));
-                else if (options.filtered && options.setFiltered) {
-                    setState(state.filter((i) => i.id !== id));
-                    options.setFiltered(options.filtered.filter((i) => i.id !== id));
-                }
-                else
-                    setState(state.filter((i) => i.id !== id));
             }
             return response.text();
         })

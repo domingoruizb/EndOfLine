@@ -18,7 +18,7 @@
   transition: transform 0.5s, color 0.3s;
   transform: translateY(-15px) scale(0.7);
   transform-origin: top left;
-  color: #23c483;
+  color: #b1d12d;
   cursor: pointer;
 }
 
@@ -41,7 +41,7 @@
 
 .custom-input{
   border: none !important;
-  border-bottom: 1px solid var(--main-button-hover-dark-color) !important;
+  border-bottom: 1px solid var(--main-orange-color) !important;
 }
 
 .custom-input:disabled{

@@ -19,6 +19,7 @@ import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
 import GamesList from './games';
 import UserStats from './stats/UserStats';
+import MyProfile from './myprofile/myProfile';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -78,6 +79,7 @@ function App() {
         {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/myprofile" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
       </>
     )
   }

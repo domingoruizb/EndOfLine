@@ -1,8 +1,9 @@
 :root{
     --main-red-color: #c42323;
     --main-blue-color: #2333c4;
-    --main-green-color: #23c483;
-    --green-shadow-color: rgba(46, 229, 157, 0.4);
+    --main-green-color: #b1d12d;
+    --main-orange-color: #FE5B02;
+    --green-shadow-color: rgba(166, 217, 26, 0.4);
     --blue-shadow-color: rgba(46, 92, 229, 0.4);
     --red-shadow-color: rgba(229, 46, 46, 0.4);
 }

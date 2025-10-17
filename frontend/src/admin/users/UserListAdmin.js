@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Table } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup, Table } from "reactstrap";
 import tokenService from "../../services/token.service";
 import "../../static/css/admin/adminPage.css";
 import deleteFromList from "../../util/deleteFromList";
@@ -20,6 +20,28 @@ export default function UserListAdmin() {
     setVisible
   );
   const [alerts, setAlerts] = useState([]);
+  const [confirmUserId, setConfirmUserId] = useState(null);
+
+  const handleDeleteClick = (userId) => {
+    setConfirmUserId(userId); 
+  };
+
+  const confirmDelete = () => {
+    deleteFromList(
+      `/api/v1/users/${confirmUserId}`,
+      confirmUserId,
+      [users, setUsers],
+      [alerts, setAlerts],
+      setMessage,
+      setVisible
+    );
+    setConfirmUserId(null);
+  };
+
+  const cancelDelete = () => {
+    setConfirmUserId(null);
+  };
+
 
   const userList = users.map((user) => {
     return (
@@ -41,17 +63,10 @@ export default function UserListAdmin() {
               size="sm"
               color="danger"
               aria-label={"delete-" + user.id}
-              onClick={() =>
-                deleteFromList(
-                  `/api/v1/users/${user.id}`,
-                  user.id,
-                  [users, setUsers],
-                  [alerts, setAlerts],
-                  setMessage,
-                  setVisible
-                )
+              onClick={() => 
+                handleDeleteClick(user.id)
               }
-            >
+            > 
               Delete
             </Button>
           </ButtonGroup>
@@ -59,6 +74,7 @@ export default function UserListAdmin() {
       </tr>
     );
   });
+  
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
@@ -81,6 +97,22 @@ export default function UserListAdmin() {
           <tbody>{userList}</tbody>
         </Table>
       </div>
+      {confirmUserId !== null && (
+        <Modal isOpen={confirmUserId !== null} toggle={cancelDelete}>
+          <ModalHeader toggle={cancelDelete}>Confirm Deletion</ModalHeader>
+          <ModalBody>
+            Are you sure you want to delete this user?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={cancelDelete}>
+              Cancel
+            </Button>
+            <Button color="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
     </div>
   );
 }

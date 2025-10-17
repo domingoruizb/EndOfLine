@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Form, Input, Label } from "reactstrap";
-import tokenService from "../../services/token.service";
-import "../../static/css/admin/adminPage.css";
-import getErrorModal from "../../util/getErrorModal";
-import getIdFromUrl from "../../util/getIdFromUrl";
-import useFetchData from "../../util/useFetchData";
-import useFetchState from "../../util/useFetchState";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, Modal, ModalHeader, ModalBody, Button, Input, Label, ModalFooter } from "reactstrap";
+import tokenService from "../services/token.service";
+import "../static/css/admin/adminPage.css";
+import getErrorModal from "../util/getErrorModal";
+import getIdFromUrl from "../util/getIdFromUrl";
+import deleteMyself from "../util/deleteMyself";
+import useFetchData from "../util/useFetchData";
+import useFetchState from "../util/useFetchState";
 
 const jwt = tokenService.getLocalAccessToken();
+const currentUser = tokenService.getUser();
 
-export default function UserEditAdmin() {
+export default function MyProfile() {
   const emptyItem = {
     id: null,
     username: "",
@@ -24,31 +26,31 @@ export default function UserEditAdmin() {
   const id = getIdFromUrl(2);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [alerts, setAlerts] = useState([]);
+  const [deleteProfile, setDeleteProfile] = useState(false);
+  const navigate = useNavigate();
   const [user, setUser] = useFetchState(
     emptyItem,
-    `/api/v1/users/${id}`,
+    `/api/v1/users/myself`,
     jwt,
     setMessage,
     setVisible,
     id
   );
-  const auths = useFetchData(`/api/v1/users/authorities`, jwt);
+  // const auths = useFetchData(`/api/v1/users/authorities`, jwt);
 
   function handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    if (name === "authority") {
-      const auth = auths.find((a) => a.id === Number(value));
-      setUser({ ...user, authority: auth });
-    } else setUser({ ...user, [name]: value });
+    setUser({ ...user, [name]: value });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    fetch("/api/v1/users" + (user.id ? "/" + user.id : ""), {
-      method: user.id ? "PUT" : "POST",
+    fetch("/api/v1/users/myself", {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
@@ -61,21 +63,39 @@ export default function UserEditAdmin() {
         if (json.message) {
           setMessage(json.message);
           setVisible(true);
-        } else window.location.href = "/users";
+        } else window.location.href = "/myprofile";
       })
       .catch((message) => alert(message));
   }
 
+  const handleDeleteClick = () => {
+    setDeleteProfile(true); 
+  };
+
+  const cancelDelete = () => {
+    setDeleteProfile(false);
+  };
+
+  const confirmDelete = () => {
+      const success = deleteMyself(
+        `/api/v1/users/${currentUser.id}`,
+        currentUser.id,
+        [alerts, setAlerts],
+        setMessage,
+        setVisible
+      );
+      setDeleteProfile(false);
+
+      if (success) {
+        navigate("/");
+      }
+    };
+
   const modal = getErrorModal(setVisible, visible, message);
-  const authOptions = auths.map((auth) => (
-    <option key={auth.id} value={auth.id}>
-      {auth.authority}
-    </option>
-  ));
 
   return (
     <div className="auth-page-container">
-      {<h2>{user.id ? "Edit User" : "Add User"}</h2>}
+      {<h2>{"My Profile"}</h2>}
       {modal}
       <div className="auth-form-container">
         <Form onSubmit={handleSubmit}>
@@ -135,8 +155,7 @@ export default function UserEditAdmin() {
               className="custom-input"
             />
           </div>
-
-          {/*<div className="custom-form-input">
+          <div className="custom-form-input">
             <Label for="lastName" className="custom-form-input-label">
               Password
             </Label>
@@ -149,8 +168,7 @@ export default function UserEditAdmin() {
               onChange={handleChange}
               className="custom-input"
             />
-          </div>  */}
-          
+          </div>          
           <div className="custom-form-input">
             <Label for="username" className="custom-form-input-label">
               BirthDate
@@ -165,36 +183,30 @@ export default function UserEditAdmin() {
               className="custom-input"
             />
           </div>
-          <div className="custom-form-input">
-          <Label for="authority" className="custom-form-input-label">
-            Authority
-          </Label>
-          <div className="custom-form-input">
-              <Input
-                type="select"
-                required
-                name="authority"
-                id="authority"
-                value={user.authority?.id || ""}
-                onChange={handleChange}
-                className="custom-input"
-              >
-                {authOptions}
-              </Input>
-          </div>
-          </div>
           <div className="custom-button-row">
-            <button className="auth-button">Save</button>
-            <Link
-              to={`/users`}
-              className="auth-button"
-              style={{ textDecoration: "none" }}
-            >
-              Cancel
-            </Link>
+            <button color="danger" type="button" onClick={handleDeleteClick} className="auth-button danger">
+              Delete profile
+            </button>
+            <button className="auth-button">Save changes</button>
           </div>
         </Form>
       </div>
+      {deleteProfile && (
+        <Modal isOpen={deleteProfile} toggle={cancelDelete}>
+          <ModalHeader toggle={cancelDelete}>Confirm Deletion</ModalHeader>
+          <ModalBody>
+            Are you sure you want to delete your profile?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={cancelDelete}>
+              Cancel
+            </Button>
+            <Button color="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
     </div>
   );
 }
