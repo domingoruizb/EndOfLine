@@ -1,14 +1,12 @@
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import es.us.dp1.lx_xy_24_25.endofline.playerachievement.PlayerAchievement;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +39,9 @@ public class User extends NamedEntity {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "authority")
 	Authorities authority;
+
+    @OneToMany(mappedBy = "user")
+    Set<PlayerAchievement> achievements;
 
 	public Boolean hasAuthority(String auth) {
 		return authority.getAuthority().equals(auth);
