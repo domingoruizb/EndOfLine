@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Table } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup, Table } from "reactstrap";
 import tokenService from "../../services/token.service";
 import "../../static/css/admin/adminPage.css";
 import deleteFromList from "../../util/deleteFromList";
@@ -63,7 +63,7 @@ export default function UserListAdmin() {
               size="sm"
               color="danger"
               aria-label={"delete-" + user.id}
-              onClick={() =>
+              onClick={() => 
                 handleDeleteClick(user.id)
               }
             > 
@@ -74,6 +74,7 @@ export default function UserListAdmin() {
       </tr>
     );
   });
+  
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
@@ -97,21 +98,20 @@ export default function UserListAdmin() {
         </Table>
       </div>
       {confirmUserId !== null && (
-        <div className="auth-page-container">
-          <div className="auth-form-container">
-            <h2 className="text-center text-md">
-              Are you sure you want to delete this user?
-            </h2>
-            <div className="options-row">
-              <button className="auth-button" onClick={cancelDelete}>
-                No
-              </button>
-              <button className="auth-button" onClick={confirmDelete}>
-                Yes
-              </button>
-            </div>
-          </div>
-    </div>
+        <Modal isOpen={confirmUserId !== null} toggle={cancelDelete}>
+          <ModalHeader toggle={cancelDelete}>Confirm Deletion</ModalHeader>
+          <ModalBody>
+            Are you sure you want to delete this user?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={cancelDelete}>
+              Cancel
+            </Button>
+            <Button color="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </Modal>
       )}
     </div>
   );

@@ -90,6 +90,23 @@ public class UserService {
 	}
 
 	@Transactional
+	public User updateCurrentUser(@Valid User user) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null) {
+			throw new ResourceNotFoundException("Nobody authenticated!");
+		} else {
+			User currentUser = userRepository.findByUsername(auth.getName())
+					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
+			User toUpdate = findUser(currentUser.getId());
+			BeanUtils.copyProperties(user, toUpdate, "id");
+			userRepository.save(toUpdate);
+			
+			return toUpdate;
+		}
+
+	}
+
+	@Transactional
 	public void deleteUser(Integer id) {
 		User toDelete = findUser(id);
 		this.userRepository.delete(toDelete);

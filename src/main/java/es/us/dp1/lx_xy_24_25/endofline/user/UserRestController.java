@@ -73,6 +73,11 @@ class UserRestController {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
+	@GetMapping(value = "myself")
+	public ResponseEntity<User> findMySelf() {
+		return new ResponseEntity<>(userService.findCurrentUser(), HttpStatus.OK);
+	}
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<User> create(@RequestBody @Valid User user) {
@@ -87,15 +92,18 @@ class UserRestController {
 		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
 	}
 
+	@PutMapping(value = "myself")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<User> updateMyself(@RequestBody @Valid User user) {
+		return new ResponseEntity<>(this.userService.updateCurrentUser(user), HttpStatus.OK);
+	}
+
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
 		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-		if (userService.findCurrentUser().getId() != id) {
-			userService.deleteUser(id);
-			return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
-		} else
-			throw new AccessDeniedException("You can't delete yourself!");
+		userService.deleteUser(id);
+		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
 	}
 
 }
