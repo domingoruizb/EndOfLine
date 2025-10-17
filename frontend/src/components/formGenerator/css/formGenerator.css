@@ -5,8 +5,8 @@
   --color-error: #cc0033;
   --color-error-background: #fce4e4;
   --color-border-disabled: #706c6c;
-  --main-button-hover-dark-color: #23c483;
-  --main-button-hover-light-color: #23c483;
+  --main-button-hover-dark-color: #b1d12d;
+  --main-button-hover-light-color: #FE5B02;
   --main-button-shadow-hover-color: rgba(0,0,0,0.4);
   --main-black: #111;
 }
@@ -60,7 +60,7 @@ select.class-form-input {
   padding: 0.6em 0.3em;
   border: none;
   outline: none;
-  border-bottom: 1px solid var(--main-button-hover-dark-color);
+  border-bottom: 1px solid var(--main-button-hover-light-color);
   background-color: transparent;
 }
 

@@ -20,6 +20,28 @@ export default function UserListAdmin() {
     setVisible
   );
   const [alerts, setAlerts] = useState([]);
+  const [confirmUserId, setConfirmUserId] = useState(null);
+
+  const handleDeleteClick = (userId) => {
+    setConfirmUserId(userId); 
+  };
+
+  const confirmDelete = () => {
+    deleteFromList(
+      `/api/v1/users/${confirmUserId}`,
+      confirmUserId,
+      [users, setUsers],
+      [alerts, setAlerts],
+      setMessage,
+      setVisible
+    );
+    setConfirmUserId(null);
+  };
+
+  const cancelDelete = () => {
+    setConfirmUserId(null);
+  };
+
 
   const userList = users.map((user) => {
     return (
@@ -42,16 +64,9 @@ export default function UserListAdmin() {
               color="danger"
               aria-label={"delete-" + user.id}
               onClick={() =>
-                deleteFromList(
-                  `/api/v1/users/${user.id}`,
-                  user.id,
-                  [users, setUsers],
-                  [alerts, setAlerts],
-                  setMessage,
-                  setVisible
-                )
+                handleDeleteClick(user.id)
               }
-            >
+            > 
               Delete
             </Button>
           </ButtonGroup>
@@ -81,6 +96,23 @@ export default function UserListAdmin() {
           <tbody>{userList}</tbody>
         </Table>
       </div>
+      {confirmUserId !== null && (
+        <div className="auth-page-container">
+          <div className="auth-form-container">
+            <h2 className="text-center text-md">
+              Are you sure you want to delete this user?
+            </h2>
+            <div className="options-row">
+              <button className="auth-button" onClick={cancelDelete}>
+                No
+              </button>
+              <button className="auth-button" onClick={confirmDelete}>
+                Yes
+              </button>
+            </div>
+          </div>
+    </div>
+      )}
     </div>
   );
 }
