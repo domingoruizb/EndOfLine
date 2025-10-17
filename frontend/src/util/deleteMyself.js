@@ -21,26 +21,34 @@ import getDeleteAlertsOrModal from "./getDeleteAlertsOrModal";
  * deleteFromList('/api/items/123', '123', [items, setItems], [alerts, setAlerts], setMessage, setVisible);
  */
 
-export default function deleteMyself(url, id, [alerts, setAlerts], setMessage, setVisible, options = {}) {
+export default async function deleteMyself(url, id, [alerts, setAlerts], setMessage, setVisible, options = {}) {
     const jwt = tokenService.getLocalAccessToken();
-    fetch(url, {
-        method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${jwt}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-    })
-        .then((response) => {
-            if (response.status === 200 || response.status === 204) {
-            }
-            return response.text();
-        })
-        .then(text => {if(text!=='')
-                    getDeleteAlertsOrModal(JSON.parse(text), id, alerts, setAlerts, setMessage, setVisible);
-        })
-        .catch((err) => {
-            console.log(err);
-            alert("Error deleting entity")
+    
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
         });
+
+        if (response.status === 200 || response.status === 204) {
+            tokenService.removeUser(); 
+            return true;
+        }
+
+        const text = await response.text();
+        if (text !== '') {
+             getDeleteAlertsOrModal(JSON.parse(text), id, alerts, setAlerts, setMessage, setVisible);
+        }
+        
+        return false; 
+        
+    } catch (err) {
+        console.error("Error deleting entity:", err);
+        alert("Error deleting entity");
+        return false; 
+    }
 }

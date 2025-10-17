@@ -37,11 +37,14 @@ public class UserService {
 	@Autowired
 	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-
 	}
 
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {
+		final String DEFAULT_AVATAR_URL = "/images/logo.png";
+		if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
+        user.setAvatar(DEFAULT_AVATAR_URL);
+    }
 		userRepository.save(user);
 		return user;
 	}
@@ -109,6 +112,13 @@ public class UserService {
 	@Transactional
 	public void deleteUser(Integer id) {
 		User toDelete = findUser(id);
+		this.userRepository.delete(toDelete);
+	}
+
+	@Transactional
+	public void deleteCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User toDelete = findUser(auth.getName());
 		this.userRepository.delete(toDelete);
 	}
 

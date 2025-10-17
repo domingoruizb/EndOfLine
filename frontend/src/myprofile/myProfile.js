@@ -21,7 +21,7 @@ export default function MyProfile() {
     password: "",
     birthdate: "", 
     email: "",
-    authority: null,
+    avatar: "",
   };
   const id = getIdFromUrl(2);
   const [message, setMessage] = useState(null);
@@ -29,6 +29,7 @@ export default function MyProfile() {
   const [alerts, setAlerts] = useState([]);
   const [deleteProfile, setDeleteProfile] = useState(false);
   const navigate = useNavigate();
+  const [selectedFile, setSelectedFile] = useState(null);
   const [user, setUser] = useFetchState(
     emptyItem,
     `/api/v1/users/myself`,
@@ -41,29 +42,54 @@ export default function MyProfile() {
 
   function handleChange(event) {
     const target = event.target;
-    const value = target.value;
     const name = target.name;
-    setUser({ ...user, [name]: value });
+    if (target.type === "file" && target.files && target.files.length > 0) {
+      const av = target.files[0];
+      setSelectedFile(av);
+
+      const avUrl = URL.createObjectURL(av);
+
+      setUser({ ...user, avatar: avUrl}); // Maneja el archivo
+  } else {
+    setUser({ ...user, [name]: target.value }); // Maneja texto u otros valores
+  }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
+    const formData = new FormData();
+
+    if(selectedFile) {
+      formData.append("avatar", selectedFile);
+    }
+    formData.append('username', user.username);
+    formData.append('name', user.name);
+    formData.append('surname', user.surname);
+    formData.append('password', user.password);
+    formData.append('birthdate', user.birthdate);
+    formData.append('email', user.email);
+
+    formData.append('id', user.id);
+
     fetch("/api/v1/users/myself", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        //Accept: "application/json",
+        // "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: formData,
     })
       .then((response) => response.json())
       .then((json) => {
         if (json.message) {
           setMessage(json.message);
           setVisible(true);
-        } else window.location.href = "/myprofile";
+        } else {
+          if (selectedFile) URL.revokeObjectURL(user.avatar);
+          window.location.href = "/myprofile";
+        }
       })
       .catch((message) => alert(message));
   }
@@ -76,9 +102,9 @@ export default function MyProfile() {
     setDeleteProfile(false);
   };
 
-  const confirmDelete = () => {
-      const success = deleteMyself(
-        `/api/v1/users/${currentUser.id}`,
+  const confirmDelete = async () => {
+      const success = await deleteMyself(
+        `/api/v1/users/myself`,
         currentUser.id,
         [alerts, setAlerts],
         setMessage,
@@ -114,7 +140,7 @@ export default function MyProfile() {
             />
           </div>
           <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
+            <Label for="name" className="custom-form-input-label">
               Name
             </Label>
             <Input
@@ -128,7 +154,7 @@ export default function MyProfile() {
             />
           </div>
           <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
+            <Label for="surname" className="custom-form-input-label">
               Surname
             </Label>
             <Input
@@ -142,7 +168,7 @@ export default function MyProfile() {
             />
           </div>
           <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
+            <Label for="email" className="custom-form-input-label">
               Email
             </Label>
             <Input
@@ -156,7 +182,7 @@ export default function MyProfile() {
             />
           </div>
           <div className="custom-form-input">
-            <Label for="lastName" className="custom-form-input-label">
+            <Label for="password" className="custom-form-input-label">
               Password
             </Label>
             <Input
@@ -170,7 +196,7 @@ export default function MyProfile() {
             />
           </div>          
           <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
+            <Label for="birthdate" className="custom-form-input-label">
               BirthDate
             </Label>
             <Input
@@ -179,6 +205,27 @@ export default function MyProfile() {
               name="birthdate"
               id="birthdate"
               value={user.birthdate || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="avatar" className="custom-form-input-label">
+              Avatar
+            </Label>
+            {user.avatar && (
+              <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'center' }}>
+                <img 
+                    src={user.avatar} 
+                    alt="Current avatar" 
+                    style={{width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              </div>
+           )}
+            <Input
+              type="file"
+              name="avatar"
+              id="avatar"
               onChange={handleChange}
               className="custom-input"
             />
@@ -209,4 +256,4 @@ export default function MyProfile() {
       )}
     </div>
   );
-}
+  }

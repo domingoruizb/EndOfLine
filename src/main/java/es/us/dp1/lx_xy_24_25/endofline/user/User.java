@@ -2,16 +2,22 @@ package es.us.dp1.lx_xy_24_25.endofline.user;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.URL;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Builder.Default;
 
 @Getter
 @Setter
@@ -19,28 +25,24 @@ import lombok.Setter;
 @Table(name = "appusers")
 public class User extends NamedEntity {
 
-	@NotNull
-	String name;
-
-	@NotNull
 	String surname;
 
-	@NotNull
 	LocalDate birthdate;
 
-	@NotNull
 	String email;
 
 	@Column(unique = true)
 	String username;
 
-	@NotNull
 	String password;
 
 	@NotNull
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "authority")
 	Authorities authority;
+
+	@URL
+	String avatar;
 
 	public Boolean hasAuthority(String auth) {
 		return authority.getAuthority().equals(auth);
