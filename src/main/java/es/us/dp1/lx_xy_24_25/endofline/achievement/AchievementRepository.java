@@ -1,4 +1,4 @@
-package es.us.dp1.lx_xy_24_25.endofline.statistic;
+package es.us.dp1.lx_xy_24_25.endofline.achievement;
 
 import java.util.List;
 
