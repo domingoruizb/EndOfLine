@@ -26,7 +26,7 @@ public class GameRestController {
 
     @GetMapping
     public ResponseEntity<List<Game>> findAll() {
-        return new ResponseEntity<>((List<Game>) this.gameService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.gameService.findAll(), HttpStatus.OK);
     }
 
 }

@@ -17,7 +17,7 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Game> findAll() {
+    public List<Game> findAll() {
         return repo.findAll();
     }
 

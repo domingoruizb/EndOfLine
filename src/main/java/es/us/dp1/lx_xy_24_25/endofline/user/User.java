@@ -1,7 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 import org.hibernate.validator.constraints.URL;
 
@@ -9,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
-import es.us.dp1.lx_xy_24_25.endofline.playerachievement.PlayerAchievement;
-import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -43,9 +40,6 @@ public class User extends NamedEntity {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "authority")
 	Authorities authority;
-
-    @OneToMany(mappedBy = "user")
-    Set<PlayerAchievement> achievements;
 
 	@URL
 	String avatar;
