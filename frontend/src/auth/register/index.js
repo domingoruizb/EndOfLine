@@ -6,6 +6,7 @@ import { registerFormOwnerInputs } from "./form/registerFormOwnerInputs";
 import { registerFormVetInputs } from "./form/registerFormVetInputs";
 import { registerFormClinicOwnerInputs } from "./form/registerFormClinicOwnerInputs";
 import { useEffect, useRef, useState } from "react";
+import { Container } from 'reactstrap';
 
 export default function Register() {
   let [type, setType] = useState(null);
@@ -96,29 +97,55 @@ export default function Register() {
     );
   } else {
     return (
-      <div className="auth-page-container">
-        <div className="auth-form-container">
-          <h1>Register</h1>
-          <h2 className="text-center text-md">
-            What type of user will you be?
-          </h2>
-          <div className="options-row">
-            <button
-              className="auth-button"
-              value="Owner"
-              onClick={handleButtonClick}
-            >
-              Player
-            </button>
-            <button
-              className="auth-button"
-              value="Vet"
-              onClick={handleButtonClick}
-            >
-              Admin
-            </button>            
+      <div
+        style={{
+          backgroundColor: "black",
+          color: "white",
+          minHeight: "100vh",
+          padding: "2rem 0",
+          fontFamily: "Inter, Arial, sans-serif",
+        }}
+      >
+        <Container
+          className="auth-page-container"
+          style={{
+            padding: "0 1rem",
+            maxWidth: 900,
+            background: "none",
+            borderRadius: "1rem",
+            boxShadow: "none",
+          }}
+        >
+          <h1 className="text-center" style={{
+            fontWeight: 800,
+            letterSpacing: "2px",
+            color: "#FE5B02",
+            textShadow: "0 2px 8px #000"
+          }}>
+            Register
+          </h1>
+          <div className="auth-form-container">
+            <h2 className="text-center text-md">
+              What type of user will you be?
+            </h2>
+            <div className="options-row">
+              <button
+                className="auth-button"
+                value="Owner"
+                onClick={handleButtonClick}
+              >
+                Player
+              </button>
+              <button
+                className="auth-button orange-button"
+                value="Vet"
+                onClick={handleButtonClick}
+              >
+                Admin
+              </button>            
+            </div>
           </div>
-        </div>
+        </Container>
       </div>
     );
   }

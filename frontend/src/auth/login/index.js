@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert } from "reactstrap";
+import { Alert, Container } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import "../../static/css/auth/authButton.css";
@@ -34,16 +34,41 @@ export default function Login() {
   }
 
   
-    return (
-      <div className="auth-page-container">
-        {message ? (
-          <Alert color="primary">{message}</Alert>
-        ) : (
-          <></>
-        )}
-
-        <h1>Login</h1>
-
+  return (
+    <div
+      style={{
+        backgroundColor: "black",
+        color: "white",
+        minHeight: "100vh",
+        padding: "2rem 0",
+        fontFamily: "Inter, Arial, sans-serif",
+      }}
+    >
+      <Container
+        className="auth-page-container"
+        style={{
+          padding: "0 1rem",
+          maxWidth: 900,
+          background: "none",
+          borderRadius: "1rem",
+          boxShadow: "none",
+        }}
+      >
+        {
+          message != null && (
+            <Alert color="primary">
+              {message}
+            </Alert>
+          )
+        }
+        <h1 className="text-center" style={{
+          fontWeight: 800,
+          letterSpacing: "2px",
+          color: "#FE5B02",
+          textShadow: "0 2px 8px #000"
+        }}>
+          Login
+        </h1>
         <div className="auth-form-container">
           <FormGenerator
             ref={loginFormRef}
@@ -52,9 +77,10 @@ export default function Login() {
             numberOfColumns={1}
             listenEnterKey
             buttonText="Login"
-            buttonClassName="auth-button"
+            buttonClassName="auth-button orange-button"
           />
         </div>
-      </div>
-    );  
+      </Container>
+    </div>
+  );  
 }
