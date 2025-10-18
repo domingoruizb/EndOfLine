@@ -5,9 +5,9 @@ VALUES (1,'admin1','$2a$10$nMmTWAhPTqXqLDJTag3prumFrAJpsYtroxf0ojesFYq0k4PmcbWUS
         1,'1990-01-15','El Super','Admin','admin1@endofline.com');
 
 -- Diez jugadores
-INSERT INTO appusers(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO appusers(id,username,password,authority,birthdate,name,surname,email,avatar)
 VALUES (4,'player1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2000-03-12','Liam','Torres','liam.torres@email.com');
+        2,'2000-03-12','Liam','Torres','liam.torres@email.com','https://static.vecteezy.com/system/resources/previews/002/275/847/non_2x/male-avatar-profile-icon-of-smiling-caucasian-man-vector.jpg');
 
 INSERT INTO appusers(id,username,password,authority,birthdate,name,surname,email)
 VALUES (5,'player2','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',

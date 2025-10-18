@@ -16,6 +16,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder.Default;
 
@@ -24,16 +25,21 @@ import lombok.Builder.Default;
 @Entity
 @Table(name = "appusers")
 public class User extends NamedEntity {
-
+	
+	@NotNull
 	String surname;
 
+	@NotNull
 	LocalDate birthdate;
 
+	@NotNull
 	String email;
 
+	@NotNull
 	@Column(unique = true)
 	String username;
 
+	@NotNull
 	String password;
 
 	@NotNull
@@ -41,7 +47,6 @@ public class User extends NamedEntity {
 	@JoinColumn(name = "authority")
 	Authorities authority;
 
-	@URL
 	String avatar;
 
 	public Boolean hasAuthority(String auth) {

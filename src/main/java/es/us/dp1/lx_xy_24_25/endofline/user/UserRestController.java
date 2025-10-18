@@ -106,4 +106,13 @@ class UserRestController {
 		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
 	}
 
+	@DeleteMapping(value = "myself")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<MessageResponse> deleteMyself() {
+		User currentUser = userService.findCurrentUser();
+		Integer id = currentUser.getId();
+		userService.deleteUser(id);
+		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
+	}
+
 }

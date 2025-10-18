@@ -41,10 +41,6 @@ public class UserService {
 
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {
-		final String DEFAULT_AVATAR_URL = "/images/logo.png";
-		if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
-        user.setAvatar(DEFAULT_AVATAR_URL);
-    }
 		userRepository.save(user);
 		return user;
 	}
@@ -106,7 +102,6 @@ public class UserService {
 			
 			return toUpdate;
 		}
-
 	}
 
 	@Transactional

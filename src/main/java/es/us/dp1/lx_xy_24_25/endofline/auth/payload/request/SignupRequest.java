@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.auth.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,25 +13,26 @@ public class SignupRequest {
 	// User
 	@NotBlank
 	private String username;
-	
-	@NotBlank
-	private String authority;
 
 	@NotBlank
 	private String password;
-	
-	//Both
+
 	@NotBlank
-	private String firstName;
+	private String name;
 	
 	@NotBlank
-	private String lastName;
-		
-	
-	//Owner
-	private String city;
-	private String address;
-	private String telephone;
+	private String surname;
+
+	@NotBlank 
+	private String email;
+
+	@NotBlank 
+	private String birthdate;
+
+	@NotBlank
+	private String authority;
+
+	private String avatar;
 
 
 }
