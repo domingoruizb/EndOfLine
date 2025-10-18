@@ -11,8 +11,6 @@ export default function Home(){
             <div className="hero-div">
                 <h1>END OF LINE</h1>
                 <img src={logo} alt="Logo" style={{ width: '500px', height: 'auto', borderRadius: '50px' }} />
-                <h3>---</h3>
-                <h3>Do you want to play?</h3>                
             </div>
         </div>
     );

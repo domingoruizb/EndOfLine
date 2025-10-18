@@ -1,9 +1,9 @@
 :root{
-  --color-input: #303030;
-  --color-label: #5e5e5e;
+  --color-input: #ffffff;
+  --color-label: #878787;
   --color-btn-disabled: #5757577e;
   --color-error: #cc0033;
-  --color-error-background: #fce4e4;
+  --color-error-background: #000;
   --color-border-disabled: #706c6c;
   --main-button-hover-dark-color: #b1d12d;
   --main-button-hover-light-color: #FE5B02;
