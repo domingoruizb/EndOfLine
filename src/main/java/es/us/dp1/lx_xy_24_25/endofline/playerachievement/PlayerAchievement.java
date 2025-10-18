@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.us.dp1.lx_xy_24_25.endofline.achievement.Achievement;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
@@ -19,11 +20,13 @@ public class PlayerAchievement extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "achievement_id")
     @NotNull
+    @JsonIgnore
     private Achievement achievement;
 
     @Column(name = "achieved_at")
