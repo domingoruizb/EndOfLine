@@ -74,7 +74,14 @@ export default function UserEditAdmin() {
   ));
 
   return (
-    <div className="auth-page-container">
+    <div style={{
+          backgroundColor: "black",
+          color: "white",
+          minHeight: "100vh",
+          padding: "2rem 0",
+          fontFamily: "Inter, Arial, sans-serif",
+        }}>
+      <div className="auth-page-container">
       {<h2>{user.id ? "Edit User" : "Add User"}</h2>}
       {modal}
       <div className="auth-form-container">
@@ -177,7 +184,7 @@ export default function UserEditAdmin() {
                 id="authority"
                 value={user.authority?.id || ""}
                 onChange={handleChange}
-                className="custom-input"
+                className="custom-input black-select"
               >
                 {authOptions}
               </Input>
@@ -196,5 +203,7 @@ export default function UserEditAdmin() {
         </Form>
       </div>
     </div>
+    </div>
+    
   );
 }

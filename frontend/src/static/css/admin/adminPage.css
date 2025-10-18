@@ -58,3 +58,14 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+.black-select {
+  background-color: #000;   /* negro */
+  color: #fff;              /* texto blanco */
+  border: 1px solid #333;   /* opcional */
+}
+
+.black-select option {
+  background-color: #000;   /* fondo del menú */
+  color: #fff;              /* texto del menú */
+}

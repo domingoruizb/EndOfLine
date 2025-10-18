@@ -29,6 +29,26 @@ function AppNavbar() {
     let publicLinks = <></>;
     let playerLinks = <></>;
 
+    if (!jwt) {
+        publicLinks = (
+            <>
+                <NavItem>
+                    <NavLink style={{ color: "white" }} id="register" tag={Link} to="/register">Register</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink style={{ color: "white" }} id="login" tag={Link} to="/login">Login</NavLink>
+                </NavItem>
+            </>
+        )
+    } else {
+        userLinks = (
+            <>
+                <NavItem>
+                    <NavLink style={{ color: "white" }} tag={Link} to="/dashboard">Dashboard</NavLink>
+                </NavItem>
+            </>
+        )
+    
     roles.forEach((role) => {
         if (role === "ADMIN") {
             adminLinks = (   
@@ -165,27 +185,7 @@ function AppNavbar() {
             )
         } 
     })
-
-    if (!jwt) {
-        publicLinks = (
-            <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="register" tag={Link} to="/register">Register</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="login" tag={Link} to="/login">Login</NavLink>
-                </NavItem>
-            </>
-        )
-    } else {
-        userLinks = (
-            <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to="/dashboard">Dashboard</NavLink>
-                </NavItem>
-            </>
-        )
-    }
+}
 
     return (
         <div>

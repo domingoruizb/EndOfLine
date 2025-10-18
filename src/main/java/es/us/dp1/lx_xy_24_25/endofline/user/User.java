@@ -1,12 +1,13 @@
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
 import java.time.LocalDate;
-import java.util.Set;
 
-import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
-import es.us.dp1.lx_xy_24_25.endofline.playerachievement.PlayerAchievement;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "appusers")
 public class User extends NamedEntity {
-
-	@NotNull
-	String name;
-
+	
 	@NotNull
 	String surname;
 
@@ -29,6 +27,7 @@ public class User extends NamedEntity {
 	@NotNull
 	String email;
 
+	@NotNull
 	@Column(unique = true)
 	String username;
 
@@ -40,8 +39,7 @@ public class User extends NamedEntity {
 	@JoinColumn(name = "authority")
 	Authorities authority;
 
-    @OneToMany(mappedBy = "user")
-    Set<PlayerAchievement> achievements;
+	String avatar;
 
 	public Boolean hasAuthority(String auth) {
 		return authority.getAuthority().equals(auth);

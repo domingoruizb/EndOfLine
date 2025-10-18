@@ -1,6 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.auth;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -46,22 +46,18 @@ public class AuthService {
 		case "admin":
 			role = authoritiesService.findByAuthority("ADMIN");
 			user.setAuthority(role);
-			userService.saveUser(user);
 			break;
 		default:
 			role = authoritiesService.findByAuthority("PLAYER");
 			user.setAuthority(role);
-			userService.saveUser(user);
-			/*Player player = new Player();
-			player.setFirstName(request.getFirstName());
-			player.setLastName(request.getLastName());
-			player.setAddress(request.getAddress());
-			player.setCity(request.getCity());
-			player.setTelephone(request.getTelephone());
-			player.setUser(user);
-			playerService.savePlayer(player);
-			*/
 		}
+		user.setAvatar(request.getAvatar());
+		user.setEmail(request.getEmail());
+		LocalDate birthdate = LocalDate.parse(request.getBirthdate());
+		user.setBirthdate(birthdate);
+		user.setName(request.getName());
+		user.setSurname(request.getSurname());
+		userService.saveUser(user);
 	}
 
 }

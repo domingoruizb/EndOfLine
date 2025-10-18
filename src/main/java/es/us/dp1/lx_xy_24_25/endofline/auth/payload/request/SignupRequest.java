@@ -12,25 +12,26 @@ public class SignupRequest {
 	// User
 	@NotBlank
 	private String username;
-	
-	@NotBlank
-	private String authority;
 
 	@NotBlank
 	private String password;
-	
-	//Both
+
 	@NotBlank
-	private String firstName;
+	private String name;
 	
 	@NotBlank
-	private String lastName;
-		
-	
-	//Owner
-	private String city;
-	private String address;
-	private String telephone;
+	private String surname;
+
+	@NotBlank 
+	private String email;
+
+	@NotBlank 
+	private String birthdate;
+
+	@NotBlank
+	private String authority;
+
+	private String avatar;
 
 
 }
