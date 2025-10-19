@@ -11,6 +11,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+
 @Entity
 @Getter
 @Setter
@@ -21,12 +23,14 @@ public class PlayerAchievement extends BaseEntity {
     @JoinColumn(name = "user_id")
     @NotNull
     @JsonIgnore
+    @OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "achievement_id")
     @NotNull
     @JsonIgnore
+    @OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Achievement achievement;
 
     @Column(name = "achieved_at")

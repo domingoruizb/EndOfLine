@@ -14,6 +14,7 @@ import es.us.dp1.lx_xy_24_25.endofline.user.UserRepository;
 @Service
 public class GameService {
 
+    @Autowired
     private GameRepository gameRepository;
 
     @Autowired

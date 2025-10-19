@@ -194,7 +194,7 @@ export default function MyProfile() {
       setDeleteProfile(false);
 
       if (success) {
-        navigate("/");
+         navigate("/", { state: { message: "Your account has been successfully deleted" } });
       }
     };
 

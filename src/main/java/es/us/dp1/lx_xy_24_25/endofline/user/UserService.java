@@ -15,6 +15,7 @@
  */
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
@@ -28,11 +29,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
+import es.us.dp1.lx_xy_24_25.endofline.game.GameRepository;
 
 @Service
 public class UserService {
 
+	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private GameRepository gameRepository;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
@@ -109,6 +116,21 @@ public class UserService {
 	@Transactional
 	public void deleteUser(Integer id) {
 		User toDelete = findUser(id);
+
+		User deletedUser = userRepository.findByUsername("Deleted user").get();
+		 List<Game> hostedGames = gameRepository.findByHost(toDelete);
+    	for (Game g : hostedGames) {
+        	g.setHost(deletedUser);
+    	}
+
+		List<Game> wonGames = gameRepository.findByWinner(toDelete);
+    	for (Game g : wonGames) {
+        	g.setWinner(deletedUser);
+    	}
+
+		gameRepository.saveAll(hostedGames);
+    	gameRepository.saveAll(wonGames);
+
 		this.userRepository.delete(toDelete);
 	}
 

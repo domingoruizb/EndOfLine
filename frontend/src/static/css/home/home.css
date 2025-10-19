@@ -5,7 +5,7 @@
     right: 0;
     bottom: 0;
     z-index: -1;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../../images/home_background.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../../images/home_background.png');
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -33,4 +33,21 @@
 
 .hero-div h3{
     text-align: center;
+}
+
+.message {
+    background-color: var(--main-green-color);
+    position: fixed;
+    z-index: 9999;
+    top: 20px;
+    transform: translateX(-50%);
+    left: 50%;
+    color: black;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }

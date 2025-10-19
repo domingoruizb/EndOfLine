@@ -4,6 +4,7 @@ import tokenService from "../../services/token.service";
 import { Input, Label } from "reactstrap";
 import "../../static/css/admin/adminPage.css";
 import getErrorModal from "../../util/getErrorModal";
+import "../../static/css/auth/login.css";
 
 export default function Register() {
 const jwt = tokenService.getLocalAccessToken();
@@ -165,13 +166,7 @@ const jwt = tokenService.getLocalAccessToken();
   };
 
   return (
-    <div style={{
-          backgroundColor: "black",
-          color: "white",
-          minHeight: "100vh",
-          padding: "2rem 0",
-          fontFamily: "Inter, Arial, sans-serif",
-        }}>
+    <div className="login-page-container">
 <div className="auth-page-container">
       {<h2>{"Register"}</h2>}
       {modal}

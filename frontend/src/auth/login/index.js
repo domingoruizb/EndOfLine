@@ -3,6 +3,7 @@ import { Alert, Container } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import "../../static/css/auth/authButton.css";
+import "../../static/css/auth/login.css";
 import { loginFormInputs } from "./form/loginFormInputs";
 
 export default function Login() {
@@ -35,15 +36,7 @@ export default function Login() {
 
   
   return (
-    <div
-      style={{
-        backgroundColor: "black",
-        color: "white",
-        minHeight: "100vh",
-        padding: "2rem 0",
-        fontFamily: "Inter, Arial, sans-serif",
-      }}
-    >
+    <div className={"login-page-container"}>
       <Container
         className="auth-page-container"
         style={{
