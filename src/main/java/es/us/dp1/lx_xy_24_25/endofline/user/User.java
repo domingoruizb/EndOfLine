@@ -2,12 +2,10 @@ package es.us.dp1.lx_xy_24_25.endofline.user;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +38,10 @@ public class User extends NamedEntity {
 	Authorities authority;
 
 	String avatar;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private GamePlayer gamePlayer;
 
 	public Boolean hasAuthority(String auth) {
 		return authority.getAuthority().equals(auth);

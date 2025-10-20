@@ -21,6 +21,7 @@ export default function GamesList () {
       <td className="text-center">{d.round > 0 ? d.round : 'In Lobby'}</td>
       <td className="text-center">{d.round > 0 ? new Date(d.startedAt).toLocaleString() : 'N/A'}</td>
       <td className="text-center">{d.host.username}</td>
+      <td className="text-center">{d.gamePlayers.map((gp) => gp.user.username).join(' VS ')}</td>
     </tr>
   ))
   
@@ -30,8 +31,11 @@ export default function GamesList () {
       <td className="text-center">{new Date(d.startedAt).toLocaleString()}</td>
       <td className="text-center">{new Date(d.endedAt).toLocaleString()}</td>
       <td className="text-center">{d.host.username}</td>
+			<td className="text-center">{d.gamePlayers.map((gp) => gp.user.username).join(' VS ')}</td>
     </tr>
   ))
+
+  console.log(games)
   
   return (
     <div>
