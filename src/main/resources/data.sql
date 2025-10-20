@@ -73,9 +73,23 @@ INSERT INTO achievements(id,name,description,threshold,badge_image,category) VAL
 INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Explorador','Si juegas 25 partidas',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
 INSERT INTO achievements(id,name,description,threshold,category) VALUES (3,'Experto','Si ganas 20 partidas',20.0,'VICTORIES');
 
-INSERT INTO games(id,round,started_at,ended_at,host_id) VALUES (1,0, NULL, NULL,4);
-INSERT INTO games(id,round,started_at,ended_at,host_id) VALUES (2,3, '2025-10-15 14:30:00', NULL,5);
-INSERT INTO games(id,round,started_at,ended_at,host_id) VALUES (3,10, '2025-10-12 14:30:00', '2025-10-13 14:30:00',6);
+INSERT INTO games(id, round, started_at, ended_at, host_id) VALUES
+    (1, 0, NULL, NULL, 4),
+    (2, 3, '2025-10-15 14:30:00', NULL, 5),
+    (3, 10, '2025-10-12 14:30:00', '2025-10-13 14:30:00', 6),
+    (4, 0, NULL, NULL, 7),
+    (5, 5, '2025-10-16 09:00:00', NULL, 8),
+    (6, 8, '2025-10-10 10:15:00', '2025-10-10 11:45:00', 9),
+    (7, 0, NULL, NULL, 10),
+    (8, 12, '2025-10-08 13:20:00', '2025-10-09 15:00:00', 11),
+    (9, 1, '2025-10-17 16:00:00', NULL, 12),
+    (10, 0, NULL, NULL, 13),
+    (11, 4, '2025-10-14 19:30:00', NULL, 14),
+    (12, 0, NULL, NULL, 15),
+    (13, 9, '2025-10-11 11:45:00', '2025-10-12 09:00:00', 16),
+    (14, 2, '2025-10-18 14:00:00', NULL, 17),
+    (15, 0, NULL, NULL, 18),
+    (16, 6, '2025-10-09 12:30:00', '2025-10-09 13:15:00', 19);
 
 INSERT INTO playerachievements (id, user_id, achievement_id, achieved_at) VALUES
    (1, 4, 1, '2024-02-05 14:30:00'),
@@ -103,3 +117,22 @@ INSERT INTO playerachievements (id, user_id, achievement_id, achieved_at) VALUES
    (23, 16, 1, '2024-05-15 10:30:00'),
    (24, 18, 1, '2024-06-10 11:15:00'),
    (25, 6, 2, '2024-02-10 13:40:00');
+
+INSERT INTO gameplayers (id, energy, game_id, user_id) VALUES
+   (1, 3, 1, 4),
+   (2, 3, 1, 5),
+   (3, 3, 2, 6),
+   (4, 3, 2, 7),
+   (5, 3, 3, 8),
+   (6, 3, 3, 9),
+   (7, 3, 4, 10),
+   (8, 3, 4, 11),
+   (9, 3, 5, 12),
+   (10, 3, 5, 13),
+   (11, 3, 6, 14),
+   (12, 3, 6, 15),
+   (13, 3, 7, 16),
+   (14, 3, 7, 17),
+   (15, 3, 8, 18),
+   (16, 3, 8, 19);
+

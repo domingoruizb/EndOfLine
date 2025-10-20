@@ -1,17 +1,15 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +34,9 @@ public class Game extends BaseEntity {
 
     @ManyToOne(optional = false)
     private User host;
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    private List<GamePlayer> gamePlayers;
 
     // Method to end a game and declare a winner
     public void endGame(User winner) {
