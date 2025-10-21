@@ -1,6 +1,3 @@
-import {
-  Table
-} from "reactstrap";
 import useFetchState from "../util/useFetchState";
 import tokenService from '../services/token.service';
 
