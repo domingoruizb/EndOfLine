@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
@@ -39,9 +40,9 @@ public class User extends NamedEntity {
 
 	String avatar;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private GamePlayer gamePlayer;
+    private List<GamePlayer> gamePlayer;
 
 	public Boolean hasAuthority(String auth) {
 		return authority.getAuthority().equals(auth);

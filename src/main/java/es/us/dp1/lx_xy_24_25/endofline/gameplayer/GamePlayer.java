@@ -27,7 +27,7 @@ public class GamePlayer extends BaseEntity {
     @JsonIgnore
     private Game game;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 }
