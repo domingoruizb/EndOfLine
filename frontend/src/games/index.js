@@ -1,6 +1,3 @@
-import {
-  Table
-} from "reactstrap";
 import useFetchState from "../util/useFetchState";
 import tokenService from '../services/token.service';
 
@@ -16,6 +13,7 @@ export default function GamesList () {
   );
   
   const ongoingGamesList = games.filter(game => game.endedAt === null && game.round >= 0)
+  .sort((a, b) => a.round - b.round)
   .map((d) => (
     <tr key={d.id}>
       <td className="text-center">{d.round > 0 ? d.round : 'In Lobby'}</td>
@@ -26,6 +24,7 @@ export default function GamesList () {
   ))
   
   const pastGamesList = games.filter(game => game.endedAt !== null && game.round > 0)
+  .sort((a, b) => new Date(b.endedAt) - new Date(a.endedAt))
   .map((d) => (
     <tr key={d.id}>
       <td className="text-center">{new Date(d.startedAt).toLocaleString()}</td>
@@ -38,13 +37,39 @@ export default function GamesList () {
   console.log(games)
   
   return (
-    <div>
-      <div className="admin-page-container mt-4">
-        <h1 className="text-center">Ongoing Games</h1>
+    <div
+      style={{
+        backgroundColor: '#000',
+        minHeight: '100vh',
+        paddingTop: '2rem',
+      }}
+    >
+      <div
+        className="admin-page-container"
+        style={{
+          marginTop: '2rem',
+          paddingBottom: '2rem',
+          borderBottom: '2px solid #FE5B02',
+        }}
+      >
+        <h1
+          className="text-center"
+          style={{
+            fontSize: '5em',
+            fontWeight: 'bold',
+            color: "#FE5B02",
+          }}
+        >
+          Ongoing Games
+        </h1>
         <div>
-          <Table
+          <table
             aria-label="ongoing games"
-            className="mt-4"
+            className="mt-4 text-white"
+            style={{
+              borderCollapse: 'separate',
+              borderSpacing: '2em 1em',
+            }}
           >
             <thead>
               <tr>
@@ -55,13 +80,29 @@ export default function GamesList () {
               </tr>
             </thead>
             <tbody>{ongoingGamesList}</tbody>
-          </Table>
+          </table>
         </div>
       </div>
       <div className="admin-page-container mt-4">
-        <h1 className="text-center">Past Games</h1>
+        <h1
+          className="text-center"
+          style={{
+            fontSize: '5em',
+            fontWeight: 'bold',
+            color: "#FE5B02",
+          }}
+        >
+          Past Games
+        </h1>
         <div>
-          <Table aria-label="past games" className="mt-4">
+          <table
+            aria-label="past games"
+            className="mt-4 text-white"
+            style={{
+              borderCollapse: 'separate',
+              borderSpacing: '2em 1em',
+            }}
+          >
             <thead>
               <tr>
                 <th className="text-center">Started at</th>
@@ -71,7 +112,7 @@ export default function GamesList () {
               </tr>
             </thead>
             <tbody>{pastGamesList}</tbody>
-          </Table>
+          </table>
         </div>
       </div>
     </div>
