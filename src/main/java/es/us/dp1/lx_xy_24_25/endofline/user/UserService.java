@@ -78,6 +78,10 @@ public class UserService {
 		return userRepository.existsByUsername(username);
 	}
 
+	public Boolean existsUser(Integer id) {
+		return userRepository.existsUserById(id);
+	}
+
 	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
