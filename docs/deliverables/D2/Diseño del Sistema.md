@@ -169,56 +169,74 @@ Describir porqué era interesante aplicar el patrón.
 ## Decisiones de diseño
 _En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
 
-### Decisión X
-#### Descripción del problema:*
+### Decision 1: Use JsonIgnore to transfer data
+#### Problem description:
 
-Describir el problema de diseño que se detectó, o el porqué era necesario plantearse las posibilidades de diseño disponibles para implementar la funcionalidad asociada a esta decisión de diseño.
+Some entities in our project contain many properties, some of which are not necessary. Furthermore, they have a bidirectional association with the other entities, which would create loops upon serialization.
 
-#### Alternativas de solución evaluadas:
-Especificar las distintas alternativas que se evaluaron antes de seleccionar el diseño concreto implementado finalmente en el sistema. Si se considera oportuno se pude incluir las ventajas e inconvenientes de cada alternativa
+#### Evaluated solution:
 
-#### Justificación de la solución adoptada
+Use `@JsonIgnore` to ignore some associations when serializing.
 
-Describir porqué se escogió la solución adoptada. Si se considera oportuno puede hacerse en función de qué  ventajas/inconvenientes de cada una de las soluciones consideramos más importantes.
-Os recordamos que la decisión sobre cómo implementar las distintas reglas de negocio, cómo informar de los errores en el frontend, y qué datos devolver u obtener a través de las APIs y cómo personalizar su representación en caso de que sea necesario son decisiones de diseño relevantes.
+*Advantages:*
+- Simple, as it only requires us to annotate a property.
 
-_Ejemplos de uso de la plantilla con otras decisiones de diseño:_
+*Drawbacks:*
+- Fields need to be manually excluded with the annotation.
 
-### Decisión 1: Importación de datos reales para demostración
-#### Descripción del problema:
+#### Justification of the adopted solution:
+We decided on the `@JsonIgnore` as the solution for this problem, as it is a simple annotation to exclude the property from being transferred.
 
-Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suficientes, porque resulta más motivador. El problema es al incluir todos esos datos como parte del script de inicialización de la base de datos, el arranque del sistema para desarrollo y pruebas resulta muy tedioso.
+### Decision 2: Use custom pop-ups for errors
+#### Problem description:
 
-#### Alternativas de solución evaluadas:
+We need a clear way to show the error message to the user when an error occurs (form validation, server side error, ...).
 
-*Alternativa 1.a*: Incluir los datos en el propio script de inicialización de la BD (data.sql).
+#### Evaluated solution alternatives:
 
-*Ventajas:*
-•	Simple, no requiere nada más que escribir el SQL que genere los datos.
-*Inconvenientes:*
-•	Ralentiza todo el trabajo con el sistema para el desarrollo. 
-•	Tenemos que buscar nosotros los datos reales
+*Alternative 2.a*: Use native web alerts.
 
-*Alternativa 1.b*: Crear un script con los datos adicionales a incluir (extra-data.sql) y un controlador que se encargue de leerlo y lanzar las consultas a petición cuando queramos tener más datos para mostrar.
-*Ventajas:*
-•	Podemos reutilizar parte de los datos que ya tenemos especificados en (data.sql).
-•	No afecta al trabajo diario de desarrollo y pruebas de la aplicación
-*Inconvenientes:*
-•	Puede suponer saltarnos hasta cierto punto la división en capas si no creamos un servicio de carga de datos. 
-•	Tenemos que buscar nosotros los datos reales adicionales
+*Advantages*:
 
-*Alternativa 1.c*: Crear un controlador que llame a un servicio de importación de datos, que a su vez invoca a un cliente REST de la API de datos oficiales de XXXX para traerse los datos, procesarlos y poder grabarlos desde el servicio de importación.
+- Supported by default by browsers
 
-*Ventajas:*
-•	No necesitamos inventarnos ni buscar nosotros lo datos.
-•	Cumple 100% con la división en capas de la aplicación.
-•	No afecta al trabajo diario de desarrollo y pruebas de la aplicación
-*Inconvenientes:*
-•	Supone mucho más trabajo. 
-•	Añade cierta complejidad al proyecto
+*Drawbacks*:
 
-*Justificación de la solución adoptada*
-Como consideramos que la división en capas es fundamental y no queremos renunciar a un trabajo ágil durante el desarrollo de la aplicación, seleccionamos la alternativa de diseño 1.c.
+- Visually ugly
+
+*Alternative 2.b*: Use custom pop-ups.
+
+*Advantages*:
+
+- Visually appealing
+
+*Drawbacks*:
+
+- Might have to modify in order to work with different browser view types or sizes
+
+#### Justification of the adopted solution
+
+We decided to use custom pop-ups for showing error messages to the user as they are visually more appealing and in general the risk of the pop-up breaking is minimal.
+
+### Decision 3: Use of generalization for card types
+
+There are three types of `Card`s in this project, `InHand`, `InDeck`, and `OnBoard`, which represent the cards in each area of the game. We need a clear way of differentiating them.
+
+#### Evaluated solution:
+
+Use of generalization.
+
+*Advantages*:
+
+- You can treat all subclasses (`InHand`, `OnBoard`) as the same base `Card` type, allowing you to manage them together in a single list or function.
+
+*Drawbacks*:
+
+- The subclasses become highly dependent on the parent class. A change in the `Card` class could potentially break the functionality of the subclasses.
+
+#### Justification of the adopted solution
+
+We chose generalization because `InHand`, `InDeck`, and `OnBoard` all represent specific types of a `Card`. This "is-a" relationship is the perfect use case for generalization. By creating a general `Card` superclass, these subclasses can inherit all the common properties.
 
 ## Refactorizaciones aplicadas
 
