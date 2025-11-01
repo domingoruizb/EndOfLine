@@ -37,8 +37,8 @@ public class FriendshipRestController {
     
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Friendship create(@RequestBody @Valid Friendship friendship) {
-        return friendshipService.create(friendship);
+    public Friendship create(@RequestBody @Valid Integer sender_id, Integer receiver_id) {
+        return friendshipService.create(sender_id, receiver_id);
     }
 
     @PutMapping("/{id}")
