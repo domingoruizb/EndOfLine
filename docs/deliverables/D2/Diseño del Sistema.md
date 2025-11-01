@@ -1,18 +1,24 @@
 # Documento de diseño del sistema
 **Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** <!-- p.ej., 2025/2026 -->  
-**Grupo/Equipo:** <!-- p.ej., L4-03 Equipo 33 -->  
-**Nombre del proyecto:** <!-- p. ej. Petris -->  
-**Repositorio:** <!-- URL del repo -->  
-**Integrantes (máx. 6):** <!-- Nombre Apellidos (US-Id / correo @us.es) -->
+**Curso académico:** 2025/2026 <!-- p.ej., 2025/2026 -->  
+**Grupo/Equipo:** LI-04 <!-- p.ej., L4-03 Equipo 33 -->  
+**Nombre del proyecto:** EndOfLine <!-- p. ej. Petris -->  
+**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4/ <!-- URL del repo -->  
+**Integrantes (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
 
 _Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
 
 ## Introducción
 
-_En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
+The project focuses on the implementation of the board game End of Line which is a strategic card-based board game where the main objective is simple: cut your opponent’s line before they cut yours. Players build paths by placing Line Cards on a shared grid, managing both placement and limited Energy Points to alter the flow of the game.
 
-[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](http://youtube.com)
+The game supports 2 players. The playing area is a 7x7 grid.
+
+A typical match unfolds in rounds, each consisting of drawing cards and placing them to extend your line, always respecting directional connections. From the third round onward, players may spend energy to gain advantages such as speeding up, slowing down, or redirecting their line.
+
+Games usually last between 15 and 40 minutes, depending on their choices. The match ends immediately when a player cannot continue their line on their turn — that player loses, and the opponent is declared the winner.
+
+[Link to the video explaining the rules and playing a game](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/blob/main/docs/Video.mp4)
 
 ## Diagrama(s) UML:
 
@@ -68,20 +74,79 @@ _En este caso, como mermaid no soporta la definición de paquetes, hemos usado u
 
 ## Descomposición del mockups del tablero de juego en componentes
 
-En esta sección procesaremos el mockup del tablero de juego (o los mockups si el tablero cambia en las distintas fases del juego). Etiquetaremos las zonas de cada una de las pantallas para identificar componentes a implementar. Para cada mockup se especificará el árbol de jerarquía de componentes, así como, para cada componente el estado que necesita mantener, las llamadas a la API que debe realizar y los parámetros de configuración global que consideramos que necesita usar cada componente concreto. 
-Por ejemplo, para la pantalla de visualización de métricas del usuario en un hipotético módulo de juego social:
+En esta sección procesaremos el mockup del tablero de juego (o los mockups si el tablero cambia en las distintas fases del juego). Etiquetaremos las zonas de cada una de las pantallas para identificar componentes a implementar. Para cada mockup se especificará el árbol de jerarquía de componentes, así como, para cada componente el estado que necesita mantener, las llamadas a la API que debe realizar y los parámetros de configuración global que consideramos que necesita usar cada componente concreto.
 
-![Descomposición en componentes de la interfaz de estadísticas](https://github.com/gii-is-DP1/react-petclinic/assets/756431/12b36c37-39ed-422e-b8d9-56c94753cbdc)
+### Decomposition 1
 
-  - App – Componente principal de la aplicación
-    - $\color{orange}{\textsf{NavBar – Barra de navegación lateral}}$
-      - $\color{darkred}{\textsf{[ NavButton ]. Muestra un botón de navegación con un icono asociado.}}$
-    - $\color{darkblue}{\textsf{UserNotificationArea – Área de notificaciones e identificación del usuario actual}}$
-    - $\color{blue}{\textsf{MetricsBar – En este componente se muestran las métricas principales del juego. Se mostrarán 4 métricas: partidas jugadas, puntos logrados, tiempo total, y cartas jugadas.}}$
-      - $\color{darkgreen}{\textsf{[ MetricWell ] – Proporciona el valor y el incremento semanal de una métrica concreta. }}$
-    - $\color{purple}{\textsf{GamesEvolutionChart – Muestra la tendencia de evolución en ellos últimos 4 meses en cuanto a partida jugadas, ganadas, perdidas y abandonadas.}}$
-    - $\color{yellow}{\textsf{PopularCardsChart – Muestra la proporción de las N (parámetro de configuración) cartas más jugadas en el juego por el jugador.}}$
-    - $\color{red}{\textsf{FrequentCoPlayersTable – Muestra los jugadores  con los que más se  ha jugado (de M en M donde M es un parámetro definido por la configuración del componente). Concretamente, se mostrarán la el nombre, la fecha de la última partida, la localización del jugador el porcentaje de partidas jugadas por ambos en las que el usuario ha ganado y si el jugador es amigo o no del usuario.}}$
+![Decomposition 1](./Decompositions/Decomposition%203%20New%20Game.png)
+
+- App - Main component of the application
+    - $\color{#FFDFD3}{\textsf{NavBar - Lateral navigation bar}}$
+        - $\color{yellow}{\textsf{NavButton - Shows a navigation button associated with an icon}}$
+    - $\color{red}{\textsf{FriendsList - List of friends}}$
+    - $\color{blue}{\textsf{ColorList - List of available card colors}}$
+
+### Decomposition 2
+
+![Decomposition 2](./Decompositions/Decomposition%205%20Gameplay.png)
+
+- App - Main component of the application
+    - $\color{#FFDFD3}{\textsf{NavBar - Lateral navigation bar}}$
+        - $\color{yellow}{\textsf{NavButton - Shows a navigation button associated with an icon}}$
+    - $\color{red}{\textsf{EnergyList - List of energy skills}}$
+    - $\color{blue}{\textsf{EnergyDisplay - Remaining energy points display}}$
+    - $\color{brown}{\textsf{CardDisplay - In-hand and on-board cards display}}$
+    - $\color{magenta}{\textsf{ChatDisplay - Chat display}}$
+        - $\color{lime}{\textsf{MessageDisplay - Chat message display}}$
+
+### Decomposition 3
+
+![Decomposition 3](./Decompositions/Decomposition%206%20Game%20Ending.png)
+
+- App - Main component of the application
+    - $\color{red}{\textsf{ResultDisplay - Pop-up displaying win status}}$
+
+### Decomposition 1
+
+- NavButton
+    - Should hold information to the session of the player to display its username
+
+- FriendsList
+    - Should hold information of the player's friendships to display them
+    - Once clicked, they will call the predefined API endpoint for sending a friend invite request
+
+- ColorList
+    - Should hold information of the list of available colors
+    - Once clicked, they will call the predefined API endpoint for selecting a color
+
+### Decomposition 2
+
+- NavButton
+    - Once clicked, they will call the predefined API endpoint for surrendering in a game, if its the correspoding button
+
+- EnergyList
+    - Should hold information of the list of skills that are available
+    - Once clicked, they will call the predefined API endpoint for activating a skill
+
+- EnergyDisplay
+    - Should hold information of the amount of energy points that are still available
+    - They will call the predefined API endpoint for reading the remaining skill points of a player
+
+- CardDisplay
+    - Should hold information of what card it is, and if its an in-hand card, or an on-deck card
+    - Once clicked, they will call the predefined API endpoint for placing a card on the board, if its an in-hand card
+
+- ChatDisplay
+    - They will call the predefined API endpoint for reading the chat messages
+
+- MessageDisplay
+    - Should hold information of the content of the message and its sender
+
+### Decomposition 3
+
+- ResultDisplay
+    - Should hold information of the winner of the game
+    - They will call the predefined API endpoint for reading the winner
 
 ## Patrones de diseño y arquitectónicos aplicados
 En esta sección de especificar el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto. Para especificar la aplicación de cada patrón puede usar la siguiente plantilla:
