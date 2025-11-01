@@ -60,23 +60,229 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
     - $\color{yellow}{\textsf{PopularCardsChart – Muestra la proporción de las N (parámetro de configuración) cartas más jugadas en el juego por el jugador.}}$
     - $\color{red}{\textsf{FrequentCoPlayersTable – Muestra los jugadores  con los que más se  ha jugado (de M en M donde M es un parámetro definido por la configuración del componente). Concretamente, se mostrarán la el nombre, la fecha de la última partida, la localización del jugador el porcentaje de partidas jugadas por ambos en las que el usuario ha ganado y si el jugador es amigo o no del usuario.}}$
 
-## Patrones de diseño y arquitectónicos aplicados
-En esta sección de especificar el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto. Para especificar la aplicación de cada patrón puede usar la siguiente plantilla:
+## Design and architectural patterns designed
+In this section, specify the set of design and architectural patterns applied during the project. To specify the application of each pattern, you can use the following template:
 
-### Patrón: < Nombre del patrón >
-*Tipo*: Arquitectónico | de Diseño
+### Pattern: Single Page Application
+*Tipo*: Design
 
-*Contexto de Aplicación*
+*Application context*
 
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+The SPA pattern was applied in the frontend, specifically using the React library to manage component-based views and state, concerning all source files in the src/frontend directory.
 
-*Clases o paquetes creados*
+*Classes or packages created*
 
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
+To implement the pattern, the code residing in the src/frontend directory was created, including key components such as the Router component (e.g., using React Router).
 
-*Ventajas alcanzadas al aplicar el patrón*
+*Advantages achieved by applying the pattern*
 
-Describir porqué era interesante aplicar el patrón.
+The pattern constitutes an advantage when building web applications, as it allows for more fluid response times, an overall better user experience and a cleaner separation of concerns between frontend (presentation/logic) and backend (API/data).
+
+### Pattern: Model View Controller (MVC)
+*Tipo*: Architectural
+
+*Application context*
+
+The MVC pattern was applied as a layered architecture across the project. In the Backend, it structures the API logic and data access. In the Frontend (SPA), it structures the presentation layer, separating the UI (View) from the application's state management (Model).
+
+*Classes or packages created*
+
+The project is structured in two main areas:
+
+- Backend (src/main/java/...): Includes the Controllers (e.g., UserRestController.java) and the Model/Logic layer via Service and Repository classes (e.g., UserService.java, UserRepository.java), which manage the in-memory data.
+
+- Frontend (frontend/src): Implements the View component through UI components.
+
+*Advantages achieved by applying the pattern*
+
+The MVC pattern allows us to easily separate the implemented functionality, achieving high cohesion and low coupling:
+
+- Business logic (residing in the Services and Model).
+
+- Presentation (residing in the View).
+
+- User interface event handling (residing in the Controller).
+
+### Pattern: Container/Presentational components
+*Tipo*: Design
+
+*Application context*
+
+This design pattern was implemented across the entire frontend application (SPA) to clearly separate logic and data fetching from UI rendering. The MyProfile component serves as a prime example of this pattern.
+
+*Classes or packages created*
+
+The structure clearly separates the concerns:
+
+- Container Component (Logic): The MyProfile.js file itself acts as the Container (Smart Component). It handles:
+
+  - State management (useState, useFetchState).
+
+  - Business logic (input validations, handleSaveChanges).
+
+  - Data fetching (useEffect).
+
+  - API communication (fetch calls).
+
+  - It uses external Service (tokenService) and Utility (getErrorModal, deleteMyself) functions to keep its own logic clean.
+
+- Presentational Components (UI/View): The component delegates the pure rendering responsibilities to reusable UI components, such  as the imported Modal, Container, Input, and Button components from reactstrap.
+
+*Advantages achieved by applying the pattern*
+
+The pattern enforces Separation of Concerns by dividing component roles, resulting in:
+
+- Improved Reusability: Presentational components can be reused anywhere, as they are decoupled from the application's specific state.
+
+- Easier Maintenance: Logic changes (Container) are separated from UI changes (Presentational), simplifying debugging and updates.
+
+- Clarity: It clearly defines what the application does (Container) versus how it looks (Presentational).
+
+### Pattern: Dependency Injection
+*Tipo*: Design
+
+*Application context*
+
+The Dependency Injection (DI) pattern is fundamental to the Backend (Java/Spring Boot) architecture, specifically ensuring loose coupling between the application's layers (Controllers, Services, and Repositories). It is applied universally to manage the dependencies between the application's components, known as Beans.
+
+*Classes or packages created*
+
+The pattern's application is evident in how components are structured to receive dependencies, rather than create them:
+
+- The UserRestController.java file is a concrete example, where the UserService and AuthoritiesService dependencies are requested via the constructor.
+
+- The framework automatically provides instances of components like the Services (Service.java) and Repositories (Repository.java) wherever they are needed.
+
+*Advantages achieved by applying the pattern*
+
+The application of DI results in significant architectural benefits for the backend:
+
+- Loose Coupling: Components only declare what dependencies they need, without knowing how those dependencies are instantiated.
+
+- Easier Maintenance and Testing: It allows for easy substitution of mock components during unit testing.
+
+### Pattern: Proxy pattern
+*Tipo*: Design
+
+*Application context*
+
+The Proxy pattern is used implicitly by the Spring Framework in the Backend (Java/Spring Boot) architecture. This pattern is essential for adding transactional behavior, security checks, and other cross-cutting concerns to the Service layer without modifying the original code.
+
+*Classes or packages created*
+
+No code was manually created. The Spring framework automatically generates a Proxy object that wraps the Service components (like UserService) when features like database transactions (@Transactional) need to be applied.
+
+*Advantages achieved by applying the pattern*
+
+The pattern allows the framework to create a placeholder that adds functionality transparently:
+
+- Transparent Functionality: Adds features (e.g., managing a database transaction) before and after a method runs, keeping your core business logic clean.
+
+- Separation of Concerns: Separates the infrastructure logic (Proxy) from the business logic (Service).
+
+### Pattern: Front Controller
+*Tipo*: Design
+
+*Application context*
+
+The pattern is used in the Backend (Spring Boot) to ensure all incoming web requests are handled by a single, central component.
+
+*Classes or packages created*
+
+No classes were manually created. The pattern is implemented automatically by the Spring component, the DispatcherServlet.
+
+*Advantages achieved by applying the pattern*
+
+- Centralization: All requests pass through one point, making it easy to apply cross-cutting logic like security or logging globally.
+
+- Simple Routing: Decouples request receiving from request processing.
+
+### Pattern: Domain Model
+*Tipo*: Design
+
+*Application context*
+
+The pattern is used in the Backend to define the core business logic and data structures.
+
+*Classes or packages created*
+
+The Entity classes (such as User.java and PlayerAchievement.java) and all domain packages (e.g., game/, friendship/) are the direct implementation of this pattern.
+
+*Advantages achieved by applying the pattern*
+
+- Single Source of Truth: Entities define the application's rules and relationships.
+
+- Separation from Persistence: It keeps business logic separate from the data access layer (Repository Pattern).
+
+### Pattern: Service Layer
+*Tipo*: Design
+
+*Application context*
+
+The Service Layer pattern is used in the Backend to encapsulate the core business logic and isolate it from Controllers and Repositories.
+
+*Classes or packages created*
+
+The pattern is implemented by the Service classes (e.g., UserService.java, AuthoritiesService.java), which reside in the service layer of your domain packages.
+
+*Advantages achieved by applying the pattern*
+
+- Decoupling: Separates complex business rules from the user interface and API handling.
+
+- Transaction Management: It is the centralized location for applying transaction boundaries, ensuring data consistency.
+
+- Reusability: Business logic can be reused across different parts of the application.
+
+### Pattern: Data Mapper
+*Tipo*: Architectural
+
+*Application context*
+
+The pattern is used in the Backend to separate the Domain Model (Entities) from the database.
+
+*Classes or packages created*
+
+It is implemented through the Repository interfaces (e.g., UserRepository.java), which act as gateways to the database.
+
+*Advantages achieved by applying the pattern*
+
+- Domain Purity: Keeps business logic clean of data access code.
+
+- Independence: Allows the database technology to be changed without affecting the application core.
+
+### Pattern: Repository
+*Tipo*: Design
+
+*Application context*
+
+The pattern is used in the Backend to handle all data access. It lets the application work with data as if it were a simple collection of objects.
+
+*Classes or packages created*
+
+It is implemented by the Repository interfaces (e.g., UserRepository.java). These interfaces contain all the methods needed to save, find, or delete data.
+
+*Advantages achieved by applying the pattern*
+
+- Simple Data Access: Business logic doesn't need to know how the data is stored.
+
+- Decoupling: Clearly separates the business logic (Service Layer) from the data storage specifics.
+
+### Pattern: Hooks
+*Tipo*: Design
+
+*Application context*
+
+This pattern is used in the Frontend to manage state and logic within functional components (instead of classes).
+
+*Classes or packages created*
+
+It is implemented through core React functions like useState, useEffect, and useNavigate. It is also used to create Custom Hooks (e.g., useFetchState) for reusing logic.
+
+*Advantages achieved by applying the pattern*
+
+- Organization: Allows grouping related logic (e.g., data fetching) into a single reusable function.
+
+- Simplicity: Makes components shorter and easier to read and maintain.
 
 ## Decisiones de diseño
 _En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
