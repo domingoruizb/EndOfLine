@@ -12,7 +12,7 @@ _Esta es una plantilla que sirve como guía para realizar este entregable. Por f
 
 _En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
 
-[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](http://youtube.com)
+[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/blob/main/docs/Video.mp4)
 
 ## Diagrama(s) UML:
 
@@ -28,30 +28,7 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 
 _Un ejemplo de diagrama para los ejercicios planteados en los boletines de laboratorio sería (hemos omitido las generalizaciones hacia BaseEntity para simplificar el diagrama):_
 
-
-_Ej:_
-
-```mermaid
-classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
-    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : age
-    Animal : gender
-    class Duck{
-        beakColor        
-    }
-    class Fish{
-       sizeInFeet
-    }
-    class Zebra{
-        is_wild
-        
-    }
-```
-_En este caso hemos vuelto a usar mermaid para crear el diagrama de dominio/diseño, pero recuerda que puedes usar cualquier otra herramienta que consideres oportuno para crear tus diagramas e inclurlos en este document como imagen tal y como se explica en [este tutorial](https://www.baeldung.com/ops/github-readme-insert-image)_
+![Domain diagram](../../diagrams/domainDiagram_v1.png)
 
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 _En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
