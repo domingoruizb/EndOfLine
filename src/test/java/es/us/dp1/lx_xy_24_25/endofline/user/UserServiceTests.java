@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -58,7 +59,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindAllUsers() {
 		List<User> users = (List<User>) this.userService.findAll();
-		assertEquals(11, users.size());
+		assertEquals(17, users.size());
 	}
 
 	@Test
@@ -70,7 +71,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindUsersByAuthority() {
 		List<User> owners = (List<User>) this.userService.findAllByAuthority("PLAYER");
-		assertEquals(10, owners.size());
+		assertEquals(16, owners.size());
 
 		List<User> admins = (List<User>) this.userService.findAllByAuthority("ADMIN");
 		assertEquals(1, admins.size());
@@ -125,6 +126,12 @@ class UserServiceTests {
 		User user = new User();
 		user.setUsername("Sam");
 		user.setPassword("password");
+		user.setName("Sammy");
+		user.setSurname("Smith");
+		user.setEmail("sammy@gmail.com");
+		user.setBirthdate(LocalDate.parse("1990-01-01"));
+		user.setAvatar("avatar");
+
 		user.setAuthority(authService.findByAuthority("ADMIN"));
 
 		this.userService.saveUser(user);

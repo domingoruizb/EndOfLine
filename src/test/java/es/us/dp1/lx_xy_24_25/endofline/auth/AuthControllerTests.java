@@ -94,6 +94,9 @@ class AuthControllerTests {
 		signupRequest.setSurname("Test");
 		signupRequest.setName("Test");
 		signupRequest.setAuthority("OWNER");
+		signupRequest.setEmail("test");
+		signupRequest.setBirthdate("2000-01-01");
+		signupRequest.setAvatar("avatar");
 
 		userDetails = new UserDetailsImpl(1, loginRequest.getUsername(), loginRequest.getPassword(),
 				List.of(new SimpleGrantedAuthority("OWNER")));

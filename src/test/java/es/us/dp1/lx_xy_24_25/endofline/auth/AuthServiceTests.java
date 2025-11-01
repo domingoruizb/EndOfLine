@@ -2,6 +2,7 @@ package es.us.dp1.lx_xy_24_25.endofline.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
@@ -49,9 +50,11 @@ public class AuthServiceTests {
 		SignupRequest request = createRequest("PLAYER", "playertest");
 		int userFirstCount = ((Collection<User>) this.userService.findAll()).size();
 		//int playerFirstCount = ((Collection<Player>) this.playerService.findAll()).size();
+		System.out.println("first number of users: " + userFirstCount);
 		this.authService.createUser(request);
 		int userLastCount = ((Collection<User>) this.userService.findAll()).size();
 		//int playerLastCount = ((Collection<Player>) this.playerService.findAll()).size();
+		System.out.println("last number of users: " + userLastCount);
 		assertEquals(userFirstCount + 1, userLastCount);
 		//assertEquals(playFirstCount + 1, playerLastCount);
 	}
@@ -63,11 +66,19 @@ public class AuthServiceTests {
 		request.setSurname("prueba");
 		request.setPassword("prueba");
 		request.setUsername(username);
+		request.setEmail("prueba");
+		request.setBirthdate("2000-01-01");
+		request.setAvatar("avatar");
 
 		if(auth == "PLAYER") {
 			User playerUser = new User();
 			playerUser.setUsername("clinicOwnerTest");
 			playerUser.setPassword("clinicOwnerTest");
+			playerUser.setName("clinicOwnerTest");
+			playerUser.setSurname("clinicOwnerTest");
+			playerUser.setEmail("clinicOwnerTest");
+			playerUser.setBirthdate(LocalDate.parse("1990-01-01"));
+			playerUser.setAvatar("avatar");
 			playerUser.setAuthority(authoritiesService.findByAuthority("PLAYER"));
 			userService.saveUser(playerUser);
 		}
