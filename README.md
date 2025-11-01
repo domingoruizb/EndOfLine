@@ -1,5 +1,5 @@
-# React Petclinic
-Small project based on spring-petclinic for teaching SPA architectures with react, java and spring developer for teaching DP1 at the Software Engineering degree of University of Sevilla.
+# End Of Line
+Small project based on End Of Line game.
 
 This is a fork of https://github.com/spring-projects/spring-petclinic  The main changes that have been performed were:
 - Trimming several parts of the application to keep the example low
