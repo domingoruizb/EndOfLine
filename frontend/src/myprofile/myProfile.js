@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Modal, ModalHeader, ModalBody, Button, Input, Label, ModalFooter } from "reactstrap";
+import { Modal, ModalHeader, Container, ModalBody, Button, Input, Label, ModalFooter } from "reactstrap";
 import tokenService from "../services/token.service";
 import "../static/css/admin/adminPage.css";
+import '../static/css/myProfile/myProfile.css'; 
+import '../static/css/home/home.css'; 
 import getErrorModal from "../util/getErrorModal";
 import deleteMyself from "../util/deleteMyself";
 import useFetchState from "../util/useFetchState";
@@ -199,15 +201,23 @@ export default function MyProfile() {
     };
 
   return (
-    <div style={{
-          backgroundColor: "black",
-          color: "white",
-          minHeight: "100vh",
-          padding: "2rem 0",
-          fontFamily: "Inter, Arial, sans-serif",
+    <div className="login-page-container">
+    <Container className="auth-page-container"
+    style={{
+          padding: "0 1rem",
+          maxWidth: 900,
+          background: "none",
+          borderRadius: "1rem",
+          boxShadow: "none",
         }}>
-    <div className="auth-page-container">
-      {<h2>{"My Profile"}</h2>}
+      <h1 className="text-center" style={{
+          fontWeight: 800,
+          letterSpacing: "2px",
+          color: "#FE5B02",
+          textShadow: "0 2px 8px #000"
+        }}>
+          My Profile
+        </h1>
       {modal}
       <div className="auth-form-container">
         <div>
@@ -320,8 +330,7 @@ export default function MyProfile() {
           </ModalFooter>
         </Modal>
       )}
-    </div>
-    </div>
-    
+    </Container>
+    </div>  
   );
   }

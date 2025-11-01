@@ -1,10 +1,10 @@
 import { useState } from "react";
-import "../../static/css/admin/adminPage.css";
 import tokenService from "../../services/token.service";
-import { Input, Label } from "reactstrap";
-import "../../static/css/admin/adminPage.css";
+import { Input, Label, Container } from "reactstrap";
 import getErrorModal from "../../util/getErrorModal";
 import "../../static/css/auth/login.css";
+import "../../static/css/auth/authPage.css"
+import "../../static/css/myProfile/myProfile.css"
 
 export default function Register() {
 const jwt = tokenService.getLocalAccessToken();
@@ -166,9 +166,23 @@ const jwt = tokenService.getLocalAccessToken();
   };
 
   return (
-    <div className="login-page-container">
-<div className="auth-page-container">
-      {<h2>{"Register"}</h2>}
+    <div className={"login-page-container"}>
+      <Container className="auth-page-container"
+        style={{
+          padding: "0 1rem",
+          maxWidth: 900,
+          background: "none",
+          borderRadius: "1rem",
+          boxShadow: "none",
+        }}>
+      <h1 className="text-center" style={{
+          fontWeight: 800,
+          letterSpacing: "2px",
+          color: "#FE5B02",
+          textShadow: "0 2px 8px #000"
+        }}>
+          Register
+        </h1>
       {modal}
       <div className="auth-form-container">
         <div>
@@ -270,7 +284,7 @@ const jwt = tokenService.getLocalAccessToken();
           </div>
         </div>
       </div>
-    </div>
+    </Container>
     </div>
   );
 }
