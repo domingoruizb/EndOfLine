@@ -31,30 +31,6 @@ Este documento describe el uso que se ha echo de la IA en el proyecto. El objeti
 ## Resumen por Sprint (1–4)
 ### Sprint 1 — Resumen de uso de IA
 
-Usos registrados: No se han registrado usos de herramientas de inteligencia artificial durante el sprint 1.
-
-Ámbitos principales: No se ha empleado IA en este sprint, dado que las tareas fueron principalmente narrativas, de documentación y planificación, con muy poca carga de desarrollo técnico o programación.
-
-Valor aportado: Debido a la naturaleza narrativa del sprint, no se consideró necesario el uso de IA.
-
-Riesgos relevantes y mitigaciones: No se identifican riesgos relacionados con el uso de IA, ya que no se utilizó.
-
-Lecciones aprendidas: Debido a no poder utilizar la IA para la narrativa, no se ha utilizado.
-
-Checklist de cumplimiento de uso ético de la IA del sprint X:
-
-- [✓] Toda interacción significativa está en el Registro Detallado con enlace a conversación.
-
-- [✓] No se usó IA para narrativa (o hay autorización documentada).
-
-- [✓] Toda pieza aceptada fue comprendida y verificada por humanos (tests/revisión).
-
-- [✓] Citas/Atribuciones incluidas cuando corresponde.
-
-- [✓] Se usó la IA sin dar datos personales/sensibles que puedieran quedar expuestos a herramientas externas.
-
-### Sprint 2 — AI Usage Summary
-
 Recorded Uses: No use of artificial intelligence tools was recorded during Sprint 1.
 
 Main Areas: AI was not used in this sprint, as the tasks were primarily narrative, documentation, and planning-related, with very little technical development or programming workload.
@@ -64,6 +40,42 @@ Value Added: Due to the narrative nature of the sprint, the use of AI was not de
 Relevant Risks and Mitigations: No risks related to AI use were identified, as it was not used.
 
 Lessons Learned: Because AI could not be used for narrative purposes, it was not used.
+
+Sprint X AI Ethical Use Compliance Checklist:
+
+- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+
+- [✓] AI was not used for narrative purposes (or there is documented authorization).
+
+- [✓] Every accepted piece was understood and verified by humans (testing/review).
+
+- [✓] Citations/Attributions included where applicable.
+
+- [✓] AI was used without providing personal/sensitive data that could be exposed to external tools.
+
+### Sprint 2 — AI Usage Summary
+
+Recorded Uses: Controlled use of Artificial Intelligence (AI) tools Gemini and ChatGPT was recorded for code debugging, backend testing assistance, and CSS style correction.
+
+Main Areas: AI was primarily used in technical assistance and debugging areas:
+
+
+* CSS/Frontend: Assistance in identifying selectors, style inheritance issues, and adapting classes between React components.
+
+
+* Backend Debugging (Java/Spring): Guidance in interpreting Hibernate logs and 500 Internal Server Error issues, including handling ambiguous REST endpoints.
+
+* Business Logic (React): Help in structuring pagination functions.
+
+Value Added: The use of AI allowed for significant acceleration in debugging and resolving roadblocks (Uncaught ReferenceError, Ambiguous Handler). AI acted as an expert co-pilot, enabling the team to understand the root cause of errors rather than just patching them, which improved code quality.
+
+Relevant Risks and Mitigations:
+
+* No risks
+
+* Mitigation: All suggested code, especially backend logic (controllers, services), was manually verified, adapted, and integrated by the developers to ensure consistency with the project's architecture (use of Streams, existing endpoint names).
+
+Lessons Learned: AI is an extremely valuable tool for debugging complex errors and interpreting stack traces, saving significant time in troubleshooting. However, the need to always verify the output of generated code remains essential to prevent compatibility or logic issues.
 
 Sprint X AI Ethical Use Compliance Checklist:
 
