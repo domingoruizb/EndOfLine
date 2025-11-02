@@ -20,6 +20,8 @@ import AchievementEdit from './achievements/achievementEdit';
 import GamesList from './games';
 import UserStats from './stats/UserStats';
 import MyProfile from './myprofile/myProfile';
+import Friends from './friendships/friendsList';
+import FriendshipCreation from './friendships/createFriendship'
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -63,6 +65,8 @@ function App() {
         <>
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
           <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} /> 
+          <Route path="/friends" exact={true} element={<PrivateRoute><Friends /></PrivateRoute>} />
+          <Route path="/friends/create" exact={true} element={<PrivateRoute><FriendshipCreation /></PrivateRoute>} />
         </>)
     }    
   })

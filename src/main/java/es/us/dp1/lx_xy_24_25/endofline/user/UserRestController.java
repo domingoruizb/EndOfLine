@@ -73,6 +73,11 @@ class UserRestController {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
+	@GetMapping(value = "username/{username}")
+	public ResponseEntity<User> findByUsername(@PathVariable("username") String username) {
+		return new ResponseEntity<>(userService.findUser(username), HttpStatus.OK);
+	}
+
 	@GetMapping(value = "myself")
 	public ResponseEntity<User> findMySelf() {
 		return new ResponseEntity<>(userService.findCurrentUser(), HttpStatus.OK);

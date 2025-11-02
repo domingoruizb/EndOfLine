@@ -72,7 +72,7 @@ public class GameService {
     public void deleteGame(Integer id) {
         gameRepository.deleteById(id);
     }
-
+/*
     @Transactional
     public Game nextTurn(Integer id) {
         Game game = getGameById(id);
@@ -86,5 +86,5 @@ public class GameService {
         game.nextRound();
         return gameRepository.save(game);
     }
-
+*/
 }

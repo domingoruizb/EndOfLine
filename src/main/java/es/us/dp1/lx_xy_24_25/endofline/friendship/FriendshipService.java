@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
+import static org.junit.Assert.fail;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,6 +11,8 @@ import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,19 +52,18 @@ public class FriendshipService {
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findAcceptedFriendshipsOf(Integer id) throws DataAccessException {
-        Iterable<Friendship> allFriendships = friendshipRepository.findFriendshipsByUserId(id);
-        return StreamSupport.stream(allFriendships.spliterator(), false)
-            .filter(friendship -> friendship.getFriendState().equals(FriendStatus.ACCEPTED))
-            .collect(Collectors.toList());
+    public Iterable<Friendship> findFriendshipsOf(Integer id) throws DataAccessException {
+        return friendshipRepository.findFriendshipsByUserId(id);
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findPendingFriendshipsOf(Integer id) throws DataAccessException {
-        Iterable<Friendship> allFriendships = friendshipRepository.findFriendshipsByUserId(id);
-        return StreamSupport.stream(allFriendships.spliterator(), false)
-            .filter(friendship -> friendship.getFriendState().equals(FriendStatus.PENDING))
-            .collect(Collectors.toList());
+    public Iterable<Friendship> findReceivedIterableFriendships(Integer id) throws DataAccessException {
+        return friendshipRepository.findFriendshipsByUserId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Iterable<Friendship> findPendingReceivedFriendships(@Param("userId") Integer userId){
+        return friendshipRepository.findPendingReceivedFriendships(userId);
     }
 
     @Transactional(readOnly = true)

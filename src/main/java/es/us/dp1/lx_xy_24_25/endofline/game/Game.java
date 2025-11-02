@@ -42,23 +42,23 @@ public class Game extends BaseEntity {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GamePlayer> gamePlayers;
 
-    @ManyToOne
+    // @ManyToOne
     @JoinColumn(name = "turn_user_id")
     private Integer turn;
-
+/*
     // Method to end a game and declare a winner
     public void startGame() {
         this.startedAt = LocalDateTime.now();
         this.round = 1;
         this.turn = determineFirstTurn();
     }
-
+*/
     // Method to start a match
     public void endGame(User winner) {
         this.winner = winner;
         this.endedAt = LocalDateTime.now();
     }
-
+/*
     // Method to move to next round
     public void nextRound() {
         if (this.round == null) {
@@ -68,7 +68,8 @@ public class Game extends BaseEntity {
         }
         this.turn = determineFirstTurn();
     }
-
+        */
+/*
     // Determine the player who drafted the card with the lowest initiative
     private Integer determineFirstTurn() {
         if (gamePlayers == null || gamePlayers.isEmpty()) {
@@ -81,17 +82,19 @@ public class Game extends BaseEntity {
         return firstPlayer.map(x -> x.getUser().getId())
                 .orElseThrow(() -> new IllegalStateException("First turn couldn't be decided."));
     }
-
+                */
+/*
     public void nextTurn() {
         if (gamePlayers == null || gamePlayers.isEmpty()) {
             throw new IllegalStateException("There are no players in the match.");
         }
-
+ 
         // Order players by lowest initiative
         List<GamePlayer> orderedPlayers = gamePlayers.stream()
                 .sorted(Comparator.comparingInt(this::getInitiativeOfMostRecentCard))
                 .toList();
-
+    */
+/* 
         int currentIndex = -1;
         for (int i = 0; i < orderedPlayers.size(); i++) {
             if (orderedPlayers.get(i).getUser().getId().equals(this.turn)) {
@@ -104,7 +107,8 @@ public class Game extends BaseEntity {
         int nextIndex = (currentIndex + 1) % orderedPlayers.size();
         this.turn = orderedPlayers.get(nextIndex).getUser().getId();
     }
-
+    */
+/*
     // Obtains the initiative of the most recently updated card of the player.
     // If he has no cards, returns a high value to leave him at the end.
     private Integer getInitiativeOfMostRecentCard(GamePlayer player) {
@@ -120,4 +124,5 @@ public class Game extends BaseEntity {
         // If there is no date, we return a high value
         return mostRecentCard.map(Card::getInitiative).orElse(Integer.MAX_VALUE);
     }
+        */
 }
