@@ -59,32 +59,32 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    @Transactional
-    public Game endGame(Integer gameId, Integer winnerId) {
-        Game game = getGameById(gameId);
-        User winner = userRepository.findById(winnerId)
-                .orElseThrow(() -> new RuntimeException("Winner not found"));
-        game.endGame(winner);
-        return gameRepository.save(game);
-    }
+//    @Transactional
+//    public Game endGame(Integer gameId, Integer winnerId) {
+//        Game game = getGameById(gameId);
+//        User winner = userRepository.findById(winnerId)
+//                .orElseThrow(() -> new RuntimeException("Winner not found"));
+//        game.endGame(winner);
+//        return gameRepository.save(game);
+//    }
 
-    @Transactional
-    public void deleteGame(Integer id) {
-        gameRepository.deleteById(id);
-    }
-/*
-    @Transactional
-    public Game nextTurn(Integer id) {
-        Game game = getGameById(id);
-        game.nextTurn();
-        return gameRepository.save(game);
-    }
+//    @Transactional
+//    public void deleteGame(Integer id) {
+//        gameRepository.deleteById(id);
+//    }
 
-    @Transactional
-    public Game nextRound(Integer id) {
-        Game game = getGameById(id);
-        game.nextRound();
-        return gameRepository.save(game);
-    }
-*/
+//    @Transactional
+//    public Game nextTurn(Integer id) {
+//        Game game = getGameById(id);
+//        game.nextTurn();
+//        return gameRepository.save(game);
+//    }
+
+//    @Transactional
+//    public Game nextRound(Integer id) {
+//        Game game = getGameById(id);
+//        game.nextRound();
+//        return gameRepository.save(game);
+//    }
+
 }

@@ -64,7 +64,8 @@ function App() {
       ownerRoutes = (
         <>
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
-          <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} /> 
+          <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} />
+          <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
           <Route path="/friends" exact={true} element={<PrivateRoute><Friends /></PrivateRoute>} />
           <Route path="/friends/create" exact={true} element={<PrivateRoute><FriendshipCreation /></PrivateRoute>} />
         </>)

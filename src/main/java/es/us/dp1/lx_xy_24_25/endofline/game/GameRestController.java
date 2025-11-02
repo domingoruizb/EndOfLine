@@ -52,15 +52,15 @@ public class GameRestController {
         return ResponseEntity.ok(game);
     }
 
-    @PostMapping("/{id}/end/{winnerId}")
-    public ResponseEntity<Game> endGame(@PathVariable Integer id, @PathVariable Integer winnerId) {
-        Game game = gameService.endGame(id, winnerId);
-        return ResponseEntity.ok(game);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
-        gameService.deleteGame(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PostMapping("/{id}/end/{winnerId}")
+//    public ResponseEntity<Game> endGame(@PathVariable Integer id, @PathVariable Integer winnerId) {
+//        Game game = gameService.endGame(id, winnerId);
+//        return ResponseEntity.ok(game);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
+//        gameService.deleteGame(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }
