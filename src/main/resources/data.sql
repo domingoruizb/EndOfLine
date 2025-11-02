@@ -132,7 +132,6 @@ INSERT INTO gameplayers (id, energy, game_id, user_id) VALUES
     (12, 3, 6, 15),
     (13, 3, 7, 16),
     (14, 3, 7, 17),
-
     (15, 3, 8, 4),
     (16, 3, 8, 5),
     (17, 3, 9, 6),
@@ -146,3 +145,20 @@ INSERT INTO gameplayers (id, energy, game_id, user_id) VALUES
     (25, 3, 13, 14),
     (26, 3, 13, 15);
 
+INSERT INTO friendships (id, sender_id, receiver_id, friend_state) VALUES
+    (1, 1, 4, 'ACCEPTED'),
+    (2, 4, 5, 'PENDING'),
+    (3, 6, 4, 'ACCEPTED'),
+    (4, 7, 8, 'ACCEPTED'),
+    (5, 9, 10, 'PENDING'),
+    (6, 11, 12, 'ACCEPTED'),
+    (7, 1, 10, 'ACCEPTED'),
+    (8, 1, 7, 'ACCEPTED'),
+    (9, 7, 9, 'PENDING'),
+    (10, 4, 6, 'ACCEPTED'),
+    (11, 5, 7, 'PENDING'),
+    (12, 8, 9, 'ACCEPTED');
+
+
+/*INSERT INTO friendships (id, sender_id, receiver_id, friend_state) VALUES
+    (1, 1, 10, 'ACCEPTED');*/

@@ -13,6 +13,7 @@ import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserRepository;
+import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 
 @Service
 public class FriendshipService {
@@ -20,6 +21,8 @@ public class FriendshipService {
     FriendshipRepository friendshipRepository;
 
     UserRepository userRepository;
+
+    UserService userService;
 
     @Autowired
     public FriendshipService(FriendshipRepository friendshipRepository, UserRepository userRepository) {
@@ -69,13 +72,13 @@ public class FriendshipService {
     }
 
     @Transactional
-    public Friendship create(Friendship friendship) throws DataAccessException {
-        checkFriendship(friendship.sender.getId(), friendship.receiver.getId());
+    public Friendship create(Integer sender_id, Integer receiver_id) throws DataAccessException {
+        checkFriendship(sender_id, receiver_id);
+        userService.existsUser(sender_id);
+        userService.existsUser(receiver_id);
         Friendship newFriendship = new Friendship();
-        newFriendship.setSender(userRepository.findById(friendship.sender.getId()).orElseThrow(
-                () -> new BadRequestException("User with id " + friendship.sender + " does not exist.")));
-        newFriendship.setReceiver(userRepository.findById(friendship.receiver.getId()).orElseThrow(
-                () -> new BadRequestException("User with id " + friendship.receiver + " does not exist.")));
+        newFriendship.setSender(userService.findUser(sender_id));
+        newFriendship.setReceiver(userService.findUser(receiver_id));
         newFriendship.setFriendState(FriendStatus.PENDING);
         return friendshipRepository.save(newFriendship);
     }

@@ -19,17 +19,17 @@ public class Friendship extends BaseEntity {
     @JsonManagedReference("sentFriendships")
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "sender")
+    @JoinColumn(name = "sender_id")
     User sender;
 
     @JsonManagedReference("receivedFriendships")
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "receiver")
+    @JoinColumn(name = "receiver_id")
     User receiver;
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "friend_state")
     FriendStatus friendState;
-
 }
