@@ -55,7 +55,7 @@ En esta sección procesaremos el mockup del tablero de juego (o los mockups si e
 
 ### Decomposition 1
 
-![Decomposition 1](./Decompositions/Decomposition%203%20New%20Game.png)
+![Decomposition 1](./Decompositions/Decomposition%201%20New%20Game.png)
 
 - App - Main component of the application
     - $\color{#FFDFD3}{\textsf{NavBar - Lateral navigation bar}}$
@@ -65,7 +65,7 @@ En esta sección procesaremos el mockup del tablero de juego (o los mockups si e
 
 ### Decomposition 2
 
-![Decomposition 2](./Decompositions/Decomposition%205%20Gameplay.png)
+![Decomposition 2](./Decompositions/Decomposition%202%20Gameplay.png)
 
 - App - Main component of the application
     - $\color{#FFDFD3}{\textsf{NavBar - Lateral navigation bar}}$
@@ -78,7 +78,7 @@ En esta sección procesaremos el mockup del tablero de juego (o los mockups si e
 
 ### Decomposition 3
 
-![Decomposition 3](./Decompositions/Decomposition%206%20Game%20Ending.png)
+![Decomposition 3](./Decompositions/Decomposition%203%20Game%20Ending.png)
 
 - App - Main component of the application
     - $\color{red}{\textsf{ResultDisplay - Pop-up displaying win status}}$
