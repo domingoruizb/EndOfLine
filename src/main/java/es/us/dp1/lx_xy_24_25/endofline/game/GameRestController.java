@@ -29,7 +29,7 @@ public class GameRestController {
         this.gameService = gameService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Game>> findAll() {
         return new ResponseEntity<>((List<Game>) this.gameService.findAll(), HttpStatus.OK);
     }
