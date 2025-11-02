@@ -46,19 +46,20 @@ public class Game extends BaseEntity {
     @JoinColumn(name = "turn_user_id")
     private Integer turn;
 
-    // Method to end a game and declare a winner
+    // Method to start a game and declare a winner
     public void startGame() {
         this.startedAt = LocalDateTime.now();
         this.round = 1;
         this.turn = determineFirstTurn();
     }
 
-    // Method to start a match
+    // Method to end a match
     public void endGame(User winner) {
         this.winner = winner;
         this.endedAt = LocalDateTime.now();
     }
 
+    
     // Method to move to next round
     public void nextRound() {
         if (this.round == null) {
@@ -82,6 +83,7 @@ public class Game extends BaseEntity {
                 .orElseThrow(() -> new IllegalStateException("First turn couldn't be decided."));
     }
 
+    
     public void nextTurn() {
         if (gamePlayers == null || gamePlayers.isEmpty()) {
             throw new IllegalStateException("There are no players in the match.");
@@ -105,6 +107,7 @@ public class Game extends BaseEntity {
         this.turn = orderedPlayers.get(nextIndex).getUser().getId();
     }
 
+    
     // Obtains the initiative of the most recently updated card of the player.
     // If he has no cards, returns a high value to leave him at the end.
     private Integer getInitiativeOfMostRecentCard(GamePlayer player) {
