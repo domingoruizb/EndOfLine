@@ -55,7 +55,7 @@ En esta sección procesaremos el mockup del tablero de juego (o los mockups si e
 
 ### Decomposition 1
 
-![Decomposition 1](./Decompositions/Decomposition%203%20New%20Game.png)
+![Decomposition 1](./Decompositions/Decomposition%201%20New%20Game.png)
 
 - App - Main component of the application
     - $\color{#FFDFD3}{\textsf{NavBar - Lateral navigation bar}}$
@@ -65,7 +65,7 @@ En esta sección procesaremos el mockup del tablero de juego (o los mockups si e
 
 ### Decomposition 2
 
-![Decomposition 2](./Decompositions/Decomposition%205%20Gameplay.png)
+![Decomposition 2](./Decompositions/Decomposition%202%20Gameplay.png)
 
 - App - Main component of the application
     - $\color{#FFDFD3}{\textsf{NavBar - Lateral navigation bar}}$
@@ -78,7 +78,7 @@ En esta sección procesaremos el mockup del tablero de juego (o los mockups si e
 
 ### Decomposition 3
 
-![Decomposition 3](./Decompositions/Decomposition%206%20Game%20Ending.png)
+![Decomposition 3](./Decompositions/Decomposition%203%20Game%20Ending.png)
 
 - App - Main component of the application
     - $\color{red}{\textsf{ResultDisplay - Pop-up displaying win status}}$
@@ -352,23 +352,27 @@ It is implemented through core React functions like useState, useEffect, and use
 ## Decisiones de diseño
 _En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
 
-### Decision 1: Use JsonIgnore to transfer data
+### Decision 1: Use DTOs to transfer data
 #### Problem description:
 
-Some entities in our project contain many properties, some of which are not necessary. Furthermore, they have a bidirectional association with the other entities, which would create loops upon serialization.
+Some entities in our project contain many properties, some of which are not necessary for certain operations. Furthermore, they have bidirectional associations with other entities, which can create loops upon serialization.
 
 #### Evaluated solution:
 
-Use `@JsonIgnore` to ignore some associations when serializing.
+Use DTOs (Data Transfer Objects) to define exactly which fields are transferred over the network, instead of sending the full entity. 
 
-*Advantages:*
-- Simple, as it only requires us to annotate a property.
+*Advantages*:
 
-*Drawbacks:*
-- Fields need to be manually excluded with the annotation.
+- Avoids serialization loops without annotations.
+- Can include only relevant fields for each use case.
+
+*Drawbacks*:
+
+- Requires additional classes for each DTO.
+- Mapping between entities and DTOs adds some boilerplate code.
 
 #### Justification of the adopted solution:
-We decided on the `@JsonIgnore` as the solution for this problem, as it is a simple annotation to exclude the property from being transferred.
+We decided to adopt DTOs as the solution for this problem because they allow us to transfer only the necessary data, avoid infinite serialization loops, and provide a clearer separation between the persistence layer and the API layer.
 
 ### Decision 2: Use custom pop-ups for errors
 #### Problem description:
