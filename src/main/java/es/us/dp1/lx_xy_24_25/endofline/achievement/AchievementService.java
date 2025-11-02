@@ -3,6 +3,7 @@ package es.us.dp1.lx_xy_24_25.endofline.achievement;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +28,19 @@ public class AchievementService {
     @Transactional(readOnly = true)
     public Achievement getById(int id) {
         Optional<Achievement> result = repo.findById(id);
-        return result.isPresent() ? result.get() : null;
+        return result.orElseThrow(() -> new es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException("Achievement with id " + id + " not found"));
     }
 
     @Transactional
     public Achievement saveAchievement(@Valid Achievement newAchievement) {
         return repo.save(newAchievement);
+    }
+
+    @Transactional
+    public Achievement updateAchievement(Integer id, Achievement achievement) {
+        Achievement achievementToUpdate = getById(id);
+        BeanUtils.copyProperties(achievement, achievementToUpdate, "id");
+        return repo.save(achievementToUpdate);
     }
 
     @Transactional
