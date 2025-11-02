@@ -92,6 +92,10 @@ public class SecurityConfiguration {
                 // API restringida para jugadores
 			    .requestMatchers("/api/v1/friendships/**").hasAuthority(PLAYER)
 
+                .requestMatchers(HttpMethod.GET, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
+                .requestMatchers(HttpMethod.POST, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
+
                 // API restringida para administradores
                 .requestMatchers("/api/v1/users/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.POST,"/api/v1/achievements/**").hasAuthority(ADMIN)

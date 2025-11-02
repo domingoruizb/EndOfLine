@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import es.us.dp1.lx_xy_24_25.endofline.achievement.Achievement;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
