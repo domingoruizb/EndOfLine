@@ -9,15 +9,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import javax.smartcardio.Card;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,12 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import jakarta.transaction.Transactional;
-import net.bytebuddy.asm.Advice.Exit;
-import es.us.dp1.lx_xy_24_25.endofline.enums.CardStatus;
-import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
-import es.us.dp1.lx_xy_24_25.endofline.enums.Orientation;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
 import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
@@ -75,19 +61,6 @@ public class GameRestControllerTests {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
-
-    private Game createGame(Integer id, Integer id2, Color color, Color color2) {
-        Game game = new Game();
-        game.setId(id);
-        game.setRound(1);
-        game.setWinner(null);
-        game.setStartedAt(java.time.LocalDateTime.now());
-        game.setEndedAt(null);
-        game.setGamePlayers(null);
-        return game;
-    }
-
-
 
     @BeforeEach
     void setUp() { 
