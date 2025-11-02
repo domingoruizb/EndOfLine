@@ -43,7 +43,7 @@ public class GameService {
         Game game = new Game();
         game.setRound(0);
         game.setHost(host);
-        game.setStartedAt(null);
+        game.setStartedAt(LocalDateTime.now());
         game.setEndedAt(null);
         return gameRepository.save(game);
     }
