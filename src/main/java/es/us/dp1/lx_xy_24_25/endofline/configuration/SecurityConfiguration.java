@@ -82,6 +82,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/plan").permitAll()
 
                 // API restringida para usuarios autenticados
+                .requestMatchers("/api/v1/games/**").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/v1/achievements").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/v1/achievements/**").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/v1/users/myself").authenticated()
@@ -97,7 +98,6 @@ public class SecurityConfiguration {
 
                 // API restringida para administradores
                 .requestMatchers("/api/v1/users/**").hasAuthority(ADMIN)
-                .requestMatchers("/api/v1/games/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.POST,"/api/v1/achievements/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.PUT,"/api/v1/achievements/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/achievements/**").hasAuthority(ADMIN)

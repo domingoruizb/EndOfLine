@@ -59,6 +59,7 @@ public class Game extends BaseEntity {
 //        this.endedAt = LocalDateTime.now();
 //    }
 
+    
     // Method to move to next round
 //    public void nextRound() {
 //        if (this.round == null) {
@@ -105,6 +106,7 @@ public class Game extends BaseEntity {
 //        this.turn = orderedPlayers.get(nextIndex).getUser().getId();
 //    }
 
+    
     // Obtains the initiative of the most recently updated card of the player.
     // If he has no cards, returns a high value to leave him at the end.
 //    private Integer getInitiativeOfMostRecentCard(GamePlayer player) {
