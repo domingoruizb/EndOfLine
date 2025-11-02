@@ -1,7 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 import java.util.stream.StreamSupport;
 
@@ -13,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import jakarta.transaction.Transactional;
 import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -22,12 +20,7 @@ class FriendshipServiceTests {
     @Autowired
     private FriendshipService friendshipService;
 
-    @Autowired
-    private UserService userService;
-
     private Friendship createFriendship(){
-        Integer sender_id = 6;
-        Integer receiver_id = 11;
         FriendshipDTO friendShipDTO = new FriendshipDTO(6, 11);
         return this.friendshipService.create(friendShipDTO);
     }
