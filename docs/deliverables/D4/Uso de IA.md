@@ -41,7 +41,7 @@ Relevant Risks and Mitigations: No risks related to AI use were identified, as i
 
 Lessons Learned: Because AI could not be used for narrative purposes, it was not used.
 
-Sprint X AI Ethical Use Compliance Checklist:
+Sprint 1 AI Ethical Use Compliance Checklist:
 
 - [✓] All significant interactions are in the Detailed Log with a link to the conversation.
 
@@ -77,7 +77,7 @@ Relevant Risks and Mitigations:
 
 Lessons Learned: AI is an extremely valuable tool for debugging complex errors and interpreting stack traces, saving significant time in troubleshooting. However, the need to always verify the output of generated code remains essential to prevent compatibility or logic issues.
 
-Sprint X AI Ethical Use Compliance Checklist:
+Sprint 2 AI Ethical Use Compliance Checklist:
 
 - [✓] All significant interactions are in the Detailed Log with a link to the conversation.
 
