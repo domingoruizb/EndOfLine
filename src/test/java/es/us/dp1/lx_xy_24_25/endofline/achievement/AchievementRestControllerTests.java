@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ import es.us.dp1.lx_xy_24_25.endofline.user.User;
     type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
 
 class AchievementControllerTests {
-    
+
     private static final String BASE_URL = "/api/v1/achievements";
     public static final Integer TEST_ACHIEVEMENT_ID = 1;
     private static final String avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
@@ -52,6 +53,9 @@ class AchievementControllerTests {
     @MockBean
     private AchievementService achievementService;
 
+    @MockBean
+    private UserService userService;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -60,7 +64,7 @@ class AchievementControllerTests {
 
     private Achievement achievement;
     private Achievement achievement2;
-    private User admin, player; 
+    private User admin, player;
     private Authorities authority, authority2;
 
     private User createUser(Integer id, Boolean isAdmin) {
@@ -111,6 +115,7 @@ class AchievementControllerTests {
     }
 
     @Test
+    @WithMockUser("admin")
     void adminFindAllAchievementsTest() throws Exception {
         when(this.achievementService.getAchievements()).thenReturn(List.of(achievement, achievement2));
 
@@ -120,7 +125,8 @@ class AchievementControllerTests {
     }
 
     @Test
-    void userFindAllAchievementsTest() throws Exception {
+    @WithMockUser("player")
+    void playerFindAllAchievementsTest() throws Exception {
         when(this.achievementService.getAchievements()).thenReturn(List.of(achievement, achievement2));
 
         mockMvc.perform(get(BASE_URL)).andExpect(status().isOk()).andExpect(jsonPath("$.size()").value(2))
@@ -129,6 +135,7 @@ class AchievementControllerTests {
     }
 
     @Test
+    @WithMockUser("admin")
     void adminFindAchievementByIdTest() throws Exception {
         when(this.achievementService.getById(TEST_ACHIEVEMENT_ID)).thenReturn(achievement);
 
@@ -137,6 +144,7 @@ class AchievementControllerTests {
     }
 
     @Test
+    @WithMockUser("player")
     void playerFindAchievementByIdTest() throws Exception {
         when(this.achievementService.getById(TEST_ACHIEVEMENT_ID)).thenReturn(achievement);
 
@@ -145,6 +153,7 @@ class AchievementControllerTests {
     }
 
     @Test
+    @WithMockUser("admin")
     void adminCreateAchievementTest() throws Exception {
         Achievement achievement3 = new Achievement();
         achievement3.setId(3);
@@ -159,6 +168,7 @@ class AchievementControllerTests {
     }
 
     @Test
+    @WithMockUser("admin")
     void adminUpdateAchievementTest() throws Exception {
         achievement.setName("UPDATED");
         achievement.setDescription("DESCRIPTION UPDATED");
@@ -173,13 +183,14 @@ class AchievementControllerTests {
     }
 
     @Test
+    @WithMockUser("admin")
     void adminDeleteAchievementTest() throws Exception {
         when(this.achievementService.getById(TEST_ACHIEVEMENT_ID)).thenReturn(achievement);
-        
+
         doNothing().when(this.achievementService).deleteAchievementById(TEST_ACHIEVEMENT_ID);
         mockMvc.perform(delete(BASE_URL + "/{id}", TEST_ACHIEVEMENT_ID).with(csrf()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andExpect(jsonPath("$.message").value("Achievement deleted!"));
     }
-    
+
 }
 

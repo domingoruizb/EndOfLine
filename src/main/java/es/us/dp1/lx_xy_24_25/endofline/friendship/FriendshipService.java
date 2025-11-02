@@ -2,8 +2,11 @@ package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,13 @@ import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 @Service
 public class FriendshipService {
 
+    @Autowired
     FriendshipRepository friendshipRepository;
 
+    @Autowired
     UserRepository userRepository;
 
+    @Autowired
     UserService userService;
 
     @Autowired
@@ -39,6 +45,22 @@ public class FriendshipService {
     @Transactional(readOnly = true)
     public Iterable<Friendship> findAll() throws DataAccessException {
         return friendshipRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Iterable<Friendship> findAcceptedFriendshipsOf(Integer id) throws DataAccessException {
+        Iterable<Friendship> allFriendships = friendshipRepository.findFriendshipsByUserId(id);
+        return StreamSupport.stream(allFriendships.spliterator(), false)
+            .filter(friendship -> friendship.getFriendState().equals(FriendStatus.ACCEPTED))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Iterable<Friendship> findPendingFriendshipsOf(Integer id) throws DataAccessException {
+        Iterable<Friendship> allFriendships = friendshipRepository.findFriendshipsByUserId(id);
+        return StreamSupport.stream(allFriendships.spliterator(), false)
+            .filter(friendship -> friendship.getFriendState().equals(FriendStatus.PENDING))
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -72,26 +94,54 @@ public class FriendshipService {
     }
 
     @Transactional
-    public Friendship create(Integer sender_id, Integer receiver_id) throws DataAccessException {
-        checkFriendship(sender_id, receiver_id);
-        userService.existsUser(sender_id);
-        userService.existsUser(receiver_id);
+    public Friendship create(FriendshipDTO friendshipDTO) throws DataAccessException {
+        checkFriendship(friendshipDTO.sender, friendshipDTO.receiver);
+        userService.existsUser(friendshipDTO.sender);
+        userService.existsUser(friendshipDTO.receiver);
         Friendship newFriendship = new Friendship();
-        newFriendship.setSender(userService.findUser(sender_id));
-        newFriendship.setReceiver(userService.findUser(receiver_id));
+        newFriendship.setSender(userService.findUser(friendshipDTO.sender));
+        newFriendship.setReceiver(userService.findUser(friendshipDTO.receiver));
         newFriendship.setFriendState(FriendStatus.PENDING);
         return friendshipRepository.save(newFriendship);
     }
 
     @Transactional
-    public Friendship update(Integer id, Friendship friendship) throws DataAccessException {
+    public Friendship acceptFriendShip(Integer id) throws DataAccessException {
+        Friendship friendshipToAccept = findById(id);
+        User currentUser = userService.findCurrentUser();
+        if (friendshipToAccept.getFriendState() != FriendStatus.PENDING) {
+            throw new BadRequestException("The friendship has already been accepted.");
+        }
+
+        if (!currentUser.getId().equals(friendshipToAccept.getReceiver().getId())) {
+            throw new AccessDeniedException("Only the receiver can accept the friendship.");
+        }
+
+        friendshipToAccept.setFriendState(FriendStatus.ACCEPTED);
+        return friendshipRepository.save(friendshipToAccept);
+
+    }
+
+    @Transactional
+    public void rejectFriendShip(Integer id) throws DataAccessException {
+        Friendship friendshipToReject = findById(id);
+        User currentUser = userService.findCurrentUser();
+        if (!currentUser.getId().equals(friendshipToReject.getReceiver().getId())) {
+            throw new AccessDeniedException("Only the receiver can reject the friendship.");
+        }
+        friendshipRepository.delete(friendshipToReject);
+    }
+
+
+    @Transactional
+    public Friendship update(Integer id, FriendshipDTO friendshipDTO) throws DataAccessException {
         Friendship friendshipToUpdate = findById(id);
-        friendshipToUpdate.setFriendState(friendship.getFriendState());
+        friendshipToUpdate.setFriendState(friendshipDTO.getFriendship_state());
         return friendshipRepository.save(friendshipToUpdate);
     }
 
     @Transactional
     public void delete(Integer id) throws DataAccessException {
-        friendshipRepository.deleteById(id);
+            friendshipRepository.deleteById(id);
     }
 }
