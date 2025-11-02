@@ -2,7 +2,7 @@
 
 **Subject:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
 **Academic course:** 2025/2026 
-**Group/Team:** LI-4  
+**Group/Team:** LI-04  
 **Name of the project:** End Of Line  
 **Repository:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4  
 **Members (máx. 6):** 
