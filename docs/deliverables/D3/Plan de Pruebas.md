@@ -1,59 +1,64 @@
-# Plan de Pruebas
+# Test Plan
 
-**Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** 2025/2026 
-**Grupo/Equipo:** LI-04  
-**Nombre del proyecto:** End of Line  
-**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4
-**Integrantes (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
+**Subject:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
+**Academic course:** 2025/2026 
+**Group/Team:** LI-04  
+**Name of the project:** End Of Line  
+**Repository:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4  
+**Members (máx. 6):** 
+Fernando José Fernández Fernández (HNR0360, ferferfer@alum.us.es),
+Makar Lavrov (RRP9465, makar.lavrov.1@iliauni.edu.ge),
+Angelo Sho Morachi (FLX0814, angmoraschi@gmail.com),
+Domingo Ruiz Bellido (DYS4321, domruibel@alum.us.es),
+Alejandro Urbina Tamayo (VMC1155, aleurbtam@alum.us.es)
 
 
-## 1. Introducción
+## 1. Introduction
 
-Este documento describe el plan de pruebas para el proyecto **EndOfLine** desarrollado en el marco de la asignatura **Diseño y Pruebas 1** por el grupo **LI-04**. El objetivo del plan de pruebas es garantizar que el software desarrollado cumple con los requisitos especificados en las historias de usuario y que se han realizado las pruebas necesarias para validar su funcionamiento.
+This document describes the test plan for the project **End Of Line** developed under the subject **Design and Testing 1** by the group **LI-4**. The objective of the test plan is to ensure that the software developed meets the requirements specified in the user histories and that the necessary tests have been carried out to validate its operation.
 
-## 2. Alcance
+## 2. Scope
 
-El alcance de este plan de pruebas incluye:
+The scope of this test plan includes:
 
-- Pruebas unitarias.
-  - Pruebas unitarias de backend incluyendo pruebas servicios o repositorios
-  - Pruebas unitarias de frontend: pruebas de las funciones javascript creadas en frontend.
-  - Pruebas unitarias de interfaz de usuario. Usan la interfaz de  usuario de nuestros componentes frontend.
-- Pruebas de integración.  En nuestro caso principalmente son pruebas de controladores que también se ejecutarán mediante JUnit.
+- Unit tests.
+  - Backend unit tests including testing services or repositories
+  - Frontend unit tests: tests of the javascript functions created in frontend.
+  - User interface unit tests. Use the user interface of our frontend components.
+- Integration tests.  In our case they are mainly driver tests that will also be run by JUnit.
 
-## 3. Estrategia de Pruebas
+## 3. Testing Strategy
 
-### 3.1 Tipos de Pruebas
+### 3.1 Types of Tests
 
-#### 3.1.1 Pruebas Unitarias
-Las pruebas unitarias se realizarán para verificar el correcto funcionamiento de los componentes individuales del software. Se utilizarán herramientas de automatización de pruebas como **JUnit** en backend y jest en frontend.
+#### 3.1.1 Unit Tests
+Unit tests shall be performed to verify the correct functioning of individual software components. Test automation tools such as **JUnit** in backend and jest in frontend will be used.
 
-#### 3.1.2 Pruebas de Integración
-Las pruebas de integración se enfocarán en evaluar la interacción entre los distintos módulos o componentes del sistema, nosotros las realizaremos a nivel de API, probando nuestros controladores Spring.
+#### 3.1.2 Integration Testing
+Integration tests will focus on evaluating the interaction between different modules or components of the system, we will perform them at API level, testing our Spring controllers.
 
-## 4. Herramientas y Entorno de Pruebas
+## 4. Tools and Testing Environment
 
-### 4.1 Herramientas
-- **Maven**: Gestión de dependencias y ejecución de las pruebas.
-- **JUnit**: Framework de pruebas unitarias.
-- **Jacoco**: Generación de informes de cobertura de código. Si se ejecuta el comando de maven install, se copiará el informe de cobertura a la subcarpeta del repositorio /docs/deliverables/D3/coverage (puede visualizarse pulsando en el fichero index.html de dicho directorio).
-- **Allure**: Generación de informes de estado de las últimas ejecuciones de las pruebas. Permite agrupar las pruebas por módulo/épica y feature. Si se ejecuta el comando de maven install, se copiará el informe de estado a la subcarpeta del repositorio /docs/deliverables/D3/status (puede visualizarse pulsando en el fichero index.html de dicho directorio).
-- **Jest**: Framework para pruebas unitarias en javascript.
-- **React-test**: Librería para la creación de pruebas unitarias de componentes React.
+### 4.1 Tools
+- **Maven**: Dependency management and test execution.
+- **JUnit**: Unitary testing framework.
+- **Jacoco**: Generation of code coverage reports. If you run the maven install command, the coverage report will be copied to the/docs/deliverables/D3/coverage repository subfolder (can be viewed by clicking on the index.html file in that directory).
+- **Allure**: Generation of status reports of the latest test runs. Allows grouping tests by module/epic and feature. If the maven install command is executed, the status report will be copied to the/docs/deliverables/D3/status repository subfolder (can be viewed by clicking on the index.html file in that directory).
+- **Jest**: Framework for unit tests in javascript.
+- **React-test**: Library for creating unit tests of React components.
 
-### 4.2 Entorno de Pruebas
-Las pruebas se ejecutarán en el entorno de desarrollo y, eventualmente, en el entorno de pruebas del servidor de integración continua.
+### 4.2 Test Environment
+The tests will run in the development environment and eventually in the test environment of the continuous integration server.
 
-## 5. Planificación de Pruebas
-### 5.1 Estado y trazadibilidad de Pruebas por Módulo y Épica
+## 5. Test Planning
+### 5.1 Status and Traceability of Tests by Module and Epic
 
-El informe de estado de las pruebas (con trazabilidad de éstas hacia los módulos y las épicas/historias de usaurio) se encuentra [aquí](
+The test status report (with traceability of tests to modules and epic/user stories) can be found [here](
 https://gii-is-dp1.github.io/group-project-seed/deliverables/D3/status/#behaviors).
 
-### 5.2 Cobertura de Pruebas
+### 5.2 Test Coverage
 
-El informe de cobertura de pruebas se puede consultar [aquí](
+The test coverage report can be consulted [here](
 https://gii-is-dp1.github.io/group-project-seed/deliverables/D3/coverage/).
 
 
@@ -66,12 +71,12 @@ https://gii-is-dp1.github.io/group-project-seed/deliverables/D3/coverage/).
 | HU-01: Iniciar sesión | [UTB-1:TestLogin](https://github.com//gii-is-DP1/group-project-seed/blob/main/src/test/java/es/us/dp1/lx_xy_24_25/your_game_name/auth/AuthControllerTest.java) | Verifica que un usuario puede iniciar sesión con credenciales válidas. | Implementada | Unitaria en backend de controlador aislaada |
 | HU-02: Registrar usuario | [UTB-2:TestRegister](https://github.com//gii-is-DP1/group-project-seed/blob/main/src/test/java/es/us/dp1/lx_xy_24_25/your_game_name/auth/AuthServiceTest.java) | Verifica que un nuevo usuario puede registrarse en el sistema. | Implementada |Unitaria en backend a nivel de Servicio, prueba social incluyendo a la BD y los repositorios. |
 
-## 6. Criterios de Aceptación
+## 6. Acceptance Criteria
 
-- Todas las pruebas unitarias deben pasar con éxito antes de la entrega final del proyecto.
-- La cobertura de código debe ser al menos del 70%.
-- No debe haber fallos críticos en las pruebas de integración y en la funcionalidad.
+- All unit tests must pass successfully before the final project delivery.
+- Code coverage should be at least 70%.
+- There must be no critical failures in integration testing and functionality.
 
-## 7. Conclusión
+## 7. Conclusion
 
-Este plan de pruebas establece la estructura y los criterios para asegurar la calidad del software desarrollado. Es responsabilidad del equipo de desarrollo y pruebas seguir este plan para garantizar la entrega de un producto funcional y libre de errores.
+This test plan sets out the structure and criteria to ensure the quality of the software developed. It is the responsibility of the development and testing team to follow this plan to ensure a functional and error-free product delivery.

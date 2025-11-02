@@ -39,18 +39,18 @@ public class FriendshipRestController {
 
      */
 
-    @GetMapping("/myAcceptedFriendships")
+    @GetMapping("/myFriendships")
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Friendship> findAcceptedFriendships() throws Exception {
         Integer id = userService.findCurrentUser().getId();
-        return friendshipService.findAcceptedFriendshipsOf(id);
+        return friendshipService.findFriendshipsOf(id);
     }
 
-    @GetMapping("/myPendingFriendships")
+    @GetMapping("/myPendingReceivedFriendships")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Friendship> findPendingFriendships() throws Exception {
+    public Iterable<Friendship> findPendingReceivedFriendships() throws Exception {
         Integer id = userService.findCurrentUser().getId();
-        return friendshipService.findPendingFriendshipsOf(id);
+        return friendshipService.findPendingReceivedFriendships(id);
     }
 
     @PutMapping("/{id}/acceptFriendship")

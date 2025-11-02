@@ -10,9 +10,19 @@ class TokenService {
     // }
 
     getLocalAccessToken() {
-        const jwt = JSON.parse(localStorage.getItem("jwt"));
-        return jwt ? jwt : null;
+    const jwtString = localStorage.getItem("jwt");
+
+    if (!jwtString || jwtString === "undefined") {
+        return null; 
     }
+    try {
+        const jwt = JSON.parse(jwtString);
+        return jwt; 
+    } catch (e) {
+        console.error("Error al parsear el token JWT:", e);
+        return null;
+    }
+}
 
     updateLocalAccessToken(token) {
         window.localStorage.setItem("jwt", JSON.stringify(token));

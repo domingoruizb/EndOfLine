@@ -279,7 +279,7 @@ const jwt = tokenService.getLocalAccessToken();
             </div>
             )}
             <div className="custom-button-row" style={{marginBottom: "20px" }}>
-              <button className="auth-button" type="button" onClick={handleSaveChanges} >Register</button>
+              <button className="auth-button orange-button" type="button" onClick={handleSaveChanges} >Register</button>
             </div>
           </div>
         </div>

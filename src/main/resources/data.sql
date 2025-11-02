@@ -155,9 +155,11 @@ INSERT INTO friendships (id, sender_id, receiver_id, friend_state) VALUES
     (7, 1, 10, 'ACCEPTED'),
     (8, 1, 7, 'ACCEPTED'),
     (9, 7, 9, 'PENDING'),
-    (10, 4, 6, 'ACCEPTED'),
+    (10, 4, 7, 'ACCEPTED'),
     (11, 5, 7, 'PENDING'),
-    (12, 8, 9, 'ACCEPTED');
+    (12, 8, 9, 'ACCEPTED'),
+    (13, 8, 4, 'ACCEPTED'),
+    (14, 11, 4, 'PENDING');
 
 
 /*INSERT INTO friendships (id, sender_id, receiver_id, friend_state) VALUES

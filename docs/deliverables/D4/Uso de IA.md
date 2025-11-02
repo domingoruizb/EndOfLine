@@ -53,7 +53,31 @@ Checklist de cumplimiento de uso ético de la IA del sprint X:
 
 - [✓] Se usó la IA sin dar datos personales/sensibles que puedieran quedar expuestos a herramientas externas.
 
-Repita esta subsección para Sprints 2, 3 y 4.
+### Sprint 2 — AI Usage Summary
+
+Recorded Uses: No use of artificial intelligence tools was recorded during Sprint 1.
+
+Main Areas: AI was not used in this sprint, as the tasks were primarily narrative, documentation, and planning-related, with very little technical development or programming workload.
+
+Value Added: Due to the narrative nature of the sprint, the use of AI was not deemed necessary.
+
+Relevant Risks and Mitigations: No risks related to AI use were identified, as it was not used.
+
+Lessons Learned: Because AI could not be used for narrative purposes, it was not used.
+
+Sprint X AI Ethical Use Compliance Checklist:
+
+- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+
+- [✓] AI was not used for narrative purposes (or there is documented authorization).
+
+- [✓] Every accepted piece was understood and verified by humans (testing/review).
+
+- [✓] Citations/Attributions included where applicable.
+
+- [✓] AI was used without providing personal/sensitive data that could be exposed to external tools.
+
+Repita esta subsección para Sprints 3 y 4.
 
 ## Registro detallado de uso de AI por Sprint
 
