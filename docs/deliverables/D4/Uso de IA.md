@@ -85,6 +85,8 @@ Repita esta subsección para Sprints 3 y 4.
 
 ### Sprint 1 registro detallado de uso de IA por sprint
 
+AI was not used in this sprint.
+
 | # | Fecha y hora | Sprint | Integrante(s) | **Herramienta & versión** | **Acceso** | **Enlace a conversación / Prompt** | **Finalidad** | **Artefactos afectados** | **Verificación humana** | **Riesgos & mitigaciones** | **Resultado** |
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
 | 1.1 | <!-- 04/09/2025 18:40 --> | 1 | <!-- Nombre --> | <!-- p.ej., ChatGPT (GPT-5, OpenAI, 2025) --> | <!-- web/plugin/integración --> | <!-- URL al chat o prompt resumido --> | <!-- idea / código / depuración / pruebas / documentación técnica* --> | <!-- ficheros, issue, PR, commit --> | <!-- pruebas, revisión por pares, reasoning propio --> | <!-- plagio, licencias, datos personales; mitigación --> | <!-- aceptado / rechazado / aceptado con cambios parciales --> |
@@ -94,7 +96,7 @@ Repita esta subsección para Sprints 3 y 4.
 
 | # | Fecha y hora | Sprint | Integrante(s) | **Herramienta & versión** | **Acceso** | **Enlace a conversación / Prompt** | **Finalidad** | **Artefactos afectados** | **Verificación humana** | **Riesgos & modificaciones** | **Resultado** |
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
-| 2.1 | <!-- 04/09/2025 18:40 --> | 2 | <!-- Nombre --> | <!-- p.ej., ChatGPT (GPT-5, OpenAI, 2025) --> | <!-- web/plugin/integración --> | <!-- URL al chat o prompt resumido --> | <!-- idea / código / depuración / pruebas / documentación técnica* --> | <!-- ficheros, issue, PR, commit --> | <!-- pruebas, revisión por pares, reasoning propio --> | <!-- plagio, licencias, datos personales; mitigación --> | <!-- aceptado / rechazado / aceptado con cambios parciales --> |
+| 2.1 | 01/11/2025 | 2 | Alejandro / Domingo / Fernando / Angelo | ChatGPT-5 Mini | Web | Circular dependency JPA explanation / CSS property for styling | Code / Debugging | PlayerAchievement.java / myProfile.css / ... | Testing / Self-revision | Ambiguity between variable/function names | Accepted with changes |
 
 ### Sprint 3
 
@@ -114,6 +116,7 @@ Aqui debéis reflexionar sobre el papel que ha tenido la IA en la realización d
 ## Anexo A) Inventario de Herramientas de IA
 |Herramienta|Versión/Modelo|Proveedor|Acceso (web/plugin/API)| Licencia/Plan | Observaciones|
 |-----------|--------------|---------|-----------------------|---------------|--------------|
+|ChatGPT|GPT-5 Mini|OpenAI|Web|Free||
 |<!-- p.ej., ChatGPT (GPT-5) -->|<!-- 5 (2025)-->|<!-- OpenAI -->|<!-- web -->|<!-- pro -->|<!-- ... -->|
 
 ## Anexo B) Glosario de Finalidades
