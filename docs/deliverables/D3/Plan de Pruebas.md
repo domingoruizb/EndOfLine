@@ -1,16 +1,16 @@
 # Plan de Pruebas
 
 **Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** <!-- p.ej., 2025/2026 -->  
-**Grupo/Equipo:** <!-- p.ej., L4-03 Equipo 33 -->  
-**Nombre del proyecto:** <!-- p. ej. Petris -->  
-**Repositorio:** <!-- URL del repo -->  
-**Integrantes (máx. 6):** <!-- Nombre Apellidos (US-Id / correo @us.es) -->
+**Curso académico:** 2025/2026 
+**Grupo/Equipo:** LI-04  
+**Nombre del proyecto:** End of Line  
+**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4
+**Integrantes (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
 
 
 ## 1. Introducción
 
-Este documento describe el plan de pruebas para el proyecto **[Nombre del Proyecto]** desarrollado en el marco de la asignatura **Diseño y Pruebas 1** por el grupo **LX-XY**. El objetivo del plan de pruebas es garantizar que el software desarrollado cumple con los requisitos especificados en las historias de usuario y que se han realizado las pruebas necesarias para validar su funcionamiento.
+Este documento describe el plan de pruebas para el proyecto **EndOfLine** desarrollado en el marco de la asignatura **Diseño y Pruebas 1** por el grupo **LI-04**. El objetivo del plan de pruebas es garantizar que el software desarrollado cumple con los requisitos especificados en las historias de usuario y que se han realizado las pruebas necesarias para validar su funcionamiento.
 
 ## 2. Alcance
 
