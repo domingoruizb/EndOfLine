@@ -89,9 +89,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/users/myself").authenticated()
 
                 // API restringida para jugadores
-			    .requestMatchers(HttpMethod.POST,"/api/v1/achievements/**").hasAuthority(PLAYER)
-                .requestMatchers(HttpMethod.PUT,"/api/v1/achievements/**").hasAuthority(PLAYER)
-                .requestMatchers(HttpMethod.DELETE,"/api/v1/achievements/**").hasAuthority(PLAYER)
+			    .requestMatchers("/api/v1/friendships/**").hasAuthority(PLAYER)
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
                 .requestMatchers(HttpMethod.POST, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
@@ -100,6 +98,9 @@ public class SecurityConfiguration {
                 // API restringida para administradores
                 .requestMatchers("/api/v1/users/**").hasAuthority(ADMIN)
                 .requestMatchers("/api/v1/games/**").hasAuthority(ADMIN)
+                .requestMatchers(HttpMethod.POST,"/api/v1/achievements/**").hasAuthority(ADMIN)
+                .requestMatchers(HttpMethod.PUT,"/api/v1/achievements/**").hasAuthority(ADMIN)
+                .requestMatchers(HttpMethod.DELETE,"/api/v1/achievements/**").hasAuthority(ADMIN)
 
                 // El resto denegado
                 .anyRequest().denyAll()

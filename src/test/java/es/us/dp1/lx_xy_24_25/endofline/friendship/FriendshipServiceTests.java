@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.stream.StreamSupport;
 
@@ -27,7 +28,8 @@ class FriendshipServiceTests {
     private Friendship createFriendship(){
         Integer sender_id = 6;
         Integer receiver_id = 11;
-        return this.friendshipService.create(sender_id, receiver_id);
+        FriendshipDTO friendShipDTO = new FriendshipDTO(6, 11);
+        return this.friendshipService.create(friendShipDTO);
     }
 
     @Test
@@ -71,15 +73,11 @@ class FriendshipServiceTests {
     @Test
     @Transactional
     void shouldUpdateFriendship(){
-        Friendship friendship1 = new Friendship();
-        friendship1.setSender(userService.findUser(1));
-        friendship1.setReceiver(userService.findUser(6));
-        Integer sender_id = 1;
-        Integer receiver_id = 6;
-        Friendship friendship2 = this.friendshipService.create(sender_id, receiver_id);
-        assertEquals(friendship2.getFriendState(), FriendStatus.PENDING);
-        friendship1.setFriendState(FriendStatus.ACCEPTED);
-        Friendship updatedFriendship = this.friendshipService.update(friendship2.getId(), friendship1);
+        FriendshipDTO friendshipDTO = new FriendshipDTO(1, 6);
+        Friendship friendship = this.friendshipService.create(friendshipDTO);
+        assertEquals(friendship.getFriendState(), FriendStatus.PENDING);
+        friendshipDTO.setFriendship_state(FriendStatus.ACCEPTED);
+        Friendship updatedFriendship = this.friendshipService.update(friendship.getId(), friendshipDTO);
         assertEquals(updatedFriendship.getFriendState(), FriendStatus.ACCEPTED);
     }
 

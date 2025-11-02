@@ -2,6 +2,8 @@ package es.us.dp1.lx_xy_24_25.endofline.achievement;
 
 import java.util.List;
 
+import es.us.dp1.lx_xy_24_25.endofline.auth.payload.response.MessageResponse;
+import org.aspectj.bridge.Message;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,7 +62,7 @@ public class AchievementRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> modifyAchievement(@RequestBody @Valid Achievement newAchievement, BindingResult br,
+    public ResponseEntity<Achievement> modifyAchievement(@RequestBody @Valid Achievement newAchievement, BindingResult br,
             @PathVariable("id") int id) {
         Achievement achievementToUpdate = this.findAchievement(id).getBody();
         if (br.hasErrors())
@@ -71,13 +73,13 @@ public class AchievementRestController {
             BeanUtils.copyProperties(newAchievement, achievementToUpdate, "id");
             achievementService.saveAchievement(achievementToUpdate);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(achievementToUpdate, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAchievement(@PathVariable("id") int id) {
+    public ResponseEntity<MessageResponse> deleteAchievement(@PathVariable("id") int id) {
         findAchievement(id);
         achievementService.deleteAchievementById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new MessageResponse("Achievement deleted!"), HttpStatus.OK);
     }
 }

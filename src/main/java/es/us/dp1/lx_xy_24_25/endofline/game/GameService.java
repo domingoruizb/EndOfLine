@@ -73,4 +73,18 @@ public class GameService {
         gameRepository.deleteById(id);
     }
 
+    @Transactional
+    public Game nextTurn(Integer id) {
+        Game game = getGameById(id);
+        game.nextTurn();
+        return gameRepository.save(game);
+    }
+
+    @Transactional
+    public Game nextRound(Integer id) {
+        Game game = getGameById(id);
+        game.nextRound();
+        return gameRepository.save(game);
+    }
+
 }
