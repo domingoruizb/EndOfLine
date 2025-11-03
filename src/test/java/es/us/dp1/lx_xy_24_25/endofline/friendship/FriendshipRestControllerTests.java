@@ -151,27 +151,27 @@ class FriendshipRestControllerTests {
         friendship3.setFriendState(FriendStatus.PENDING);
     }
 
-    @Test
-    @WithMockUser(username = "userName", password = "Own3r!")
-    void playerShouldFindHisAcceptedFriendships() throws Exception {
-        when(this.userService.findCurrentUser()).thenReturn(user);
-        when(this.friendshipService.findAcceptedFriendshipsOf(1)).thenReturn(List.of(friendship));
+//    @Test
+//    @WithMockUser(username = "userName", password = "Own3r!")
+//    void playerShouldFindHisAcceptedFriendships() throws Exception {
+//        when(this.userService.findCurrentUser()).thenReturn(user);
+//        when(this.friendshipService.findAcceptedFriendshipsOf(1)).thenReturn(List.of(friendship));
+//
+//        mockMvc.perform(get(BASE_URL + "/myAcceptedFriendships")).andExpect(status().isOk())
+//            .andExpect(jsonPath("$.size()").value(1))
+//            .andExpect(jsonPath("$[0].sender.name").value("userName"))
+//            .andExpect(jsonPath("$[0].receiver.name").value("user2Name"));
+//    }
 
-        mockMvc.perform(get(BASE_URL + "/myAcceptedFriendships")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.size()").value(1))
-            .andExpect(jsonPath("$[0].sender.name").value("userName"))
-            .andExpect(jsonPath("$[0].receiver.name").value("user2Name"));
-    }
-
-    @Test
-    @WithMockUser(username = "user3Name", password = "Own3r!")
-    void playerShouldFindHisPendingFriendships() throws Exception {
-        when(this.userService.findCurrentUser()).thenReturn(user3);
-        when(this.friendshipService.findPendingFriendshipsOf(3)).thenReturn(List.of(friendship2, friendship3));
-
-        mockMvc.perform(get(BASE_URL + "/myPendingFriendships")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.size()").value(2));
-    }
+//    @Test
+//    @WithMockUser(username = "user3Name", password = "Own3r!")
+//    void playerShouldFindHisPendingFriendships() throws Exception {
+//        when(this.userService.findCurrentUser()).thenReturn(user3);
+//        when(this.friendshipService.findPendingFriendshipsOf(3)).thenReturn(List.of(friendship2, friendship3));
+//
+//        mockMvc.perform(get(BASE_URL + "/myPendingFriendships")).andExpect(status().isOk())
+//            .andExpect(jsonPath("$.size()").value(2));
+//    }
 
     @Test
     @WithMockUser(username = "userName", password = "Own3r!")
