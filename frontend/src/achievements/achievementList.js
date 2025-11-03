@@ -1,7 +1,5 @@
 import {
-	Button,
   	Container,
-  	Table
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -10,7 +8,7 @@ import useFetchState from "../util/useFetchState";
 import deleteFromList from '../util/deleteFromList';
 import { useState } from "react";
 import getErrorModal from "./../util/getErrorModal"; 
-import "../static/css/achievements/achievementList.css";
+import "./achievementList.css";
 
 const imgnotfound = "https://cdn-icons-png.flaticon.com/512/5778/5778223.png";
 const jwt = tokenService.getLocalAccessToken();
