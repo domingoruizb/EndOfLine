@@ -1,0 +1,89 @@
+.game-page-container {
+    display: grid;
+    /* Header height is 66px */
+    height: calc(100vh - 66px);
+    background-color: #121212;
+    grid-template-columns: 2fr 3fr 2fr;
+}
+
+.game-board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.game-cell {
+    width: 100px;
+    height: 100px;
+    background-color: #333;
+    border: none;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    user-select: none;
+    outline: none;
+    transition: ease-in-out 0.1s;
+}
+
+.game-cell:hover {
+    background-color: #555;
+    transform: scale(1.05);
+}
+
+.card-button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: 5px solid transparent;
+    border-radius: 10px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: ease-in-out 0.1s;
+}
+
+.card-button:hover {
+    background-color: #0056b3;
+}
+
+.side-container, .cards-container, .skills-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px;
+    gap: 20px;
+    color: white;
+}
+
+.skill-button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: 5px solid transparent;
+    border-radius: 10px;
+    background-color: #218838;
+    color: white;
+    cursor: pointer;
+    transition: ease-in-out 0.1s;
+}
+
+.skill-button:hover {
+    background-color: #19692c;
+}

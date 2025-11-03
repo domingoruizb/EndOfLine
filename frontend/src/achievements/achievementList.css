@@ -1,0 +1,52 @@
+.edit-button {
+    border: 2.5px solid #D4A017;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+    background: none;
+    margin: 0 5px;
+    padding: 14px;
+    transition: ease-in-out 0.1s;
+}
+
+.edit-button:hover {
+    background-color: #D4A017;
+    color: black;
+}
+
+.delete-button {
+    border: 2.5px solid #FF4C4C;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+    background: none;
+    margin: 0 5px;
+    padding: 10px;
+    transition: ease-in-out 0.1s;
+}
+
+.delete-button:hover {
+    background-color: #FF4C4C;
+    color: black;
+}
+
+.create-button {
+    border: 2.5px solid #4CAF50;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+    background: none;
+    margin: 20px 0;
+    padding: 14px 28px;
+    font-size: 16px;
+    transition: ease-in-out 0.1s;
+}
+
+.create-button:hover {
+    background-color: #4CAF50;
+    color: black;
+}
+
+td {
+    padding: 15px 20px;
+}
