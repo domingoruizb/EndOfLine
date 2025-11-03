@@ -1,5 +1,6 @@
 import {
 	Button,
+  	Container,
   	Table
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -9,6 +10,7 @@ import useFetchState from "../util/useFetchState";
 import deleteFromList from '../util/deleteFromList';
 import { useState } from "react";
 import getErrorModal from "./../util/getErrorModal"; 
+import "../static/css/achievements/achievementList.css";
 
 const imgnotfound = "https://cdn-icons-png.flaticon.com/512/5778/5778223.png";
 const jwt = tokenService.getLocalAccessToken();
@@ -36,18 +38,17 @@ export default function AchievementList () {
 				<td className="text-center"> {a.threshold} </td>
 				<td className="text-center"> {a.category} </td>
 				<td className="text-center">
-					<Button outline color="warning" >
-						<Link
-							to={`/achievements/` + a.id}
-							className="btn sm"
-							style={{ textDecoration: "none" }}
-						>
-							Edit
-						</Link>
-					</Button>
+                    <Link
+                        to={`/achievements/` + a.id}
+                        className="edit-button"
+                        style={{ textDecoration: "none" }}
+                    >
+                        Edit
+                    </Link>
 				</td>
 				<td className="text-center">
-					<Button outline color="danger"
+					<button
+                        className="delete-button"
 						onClick={() =>
 							deleteFromList(
 								`/api/v1/achievements/${a.id}`,
@@ -58,7 +59,7 @@ export default function AchievementList () {
 								setVisible
 							)}>
 						Delete
-					</Button>
+					</button>
 				</td>
 			</tr>
 		);
@@ -66,16 +67,40 @@ export default function AchievementList () {
 
 	const modal = getErrorModal(setVisible, visible, message); 
 
-	return (
-		<div>
-			<div className="admin-page-container">
-				<h1 className="text-center">Achievements</h1>
+    return (
+        <div
+            style={{
+                backgroundColor: "black",
+                color: "white",
+                minHeight: "100vh",
+                padding: "2rem 0",
+                fontFamily: "Inter, Arial, sans-serif",
+            }}
+        >
+            <Container
+                className="auth-page-container"
+                style={{
+                    padding: "0 1rem",
+                    maxWidth: 900,
+                    background: "none",
+                    borderRadius: "1rem",
+                    boxShadow: "none",
+                }}
+            >
+                <h1 className="text-center" style={{
+                    fontWeight: 800,
+                    letterSpacing: "2px",
+                    color: "#FE5B02",
+                    textShadow: "0 2px 8px #000"
+                }}>
+                    Achievements
+                </h1>
 				<div style ={{
 					display: 'flex',
     				flexDirection: 'column',     // Para apilar tabla y botón verticalmente
     				alignItems: 'center',        // Centra horizontalmente
     				gap: '20px', }}>
-					<Table aria-label="achievements" className="mt-4">
+					<table aria-label="achievements" className="mt-4">
 						<thead>
 						<tr>
 							<th className="text-center">Name</th>
@@ -87,17 +112,16 @@ export default function AchievementList () {
 						</tr>
 						</thead>
 						<tbody>{achievementList}</tbody>
-					</Table>
-					<Button outline color="success" >
-								<Link
-									to={`/achievements/new`} className="btn sm"
-									style={{ textDecoration: "none" }}
-								>
-									Create achievement
-								</Link>
-					</Button>
+					</table>
+                    <Link
+                        to={`/achievements/new`}
+                        className="create-button"
+                        style={{ textDecoration: "none" }}
+                    >
+                        Create achievement
+                    </Link>
 				</div>
-			</div>
+			</Container>
 		</div>
 	);
 } 
