@@ -23,9 +23,9 @@ import MyProfile from './myprofile/myProfile';
 import Friends from './friendships/friendsList';
 import FriendshipCreation from './friendships/createFriendship'
 import GamePage from './game';
-import CreateGame from './lobby/index'
-import LobbyGame from './lobby/lobbyGame'
-import JoinGame from './lobby/joinGame'
+import CreateGame from './lobby/index';
+import LobbyGame from './lobby/lobbyGame';
+import JoinGame from './lobby/joinGame';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
