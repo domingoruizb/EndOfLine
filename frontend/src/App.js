@@ -22,6 +22,9 @@ import UserStats from './stats/UserStats';
 import MyProfile from './myprofile/myProfile';
 import Friends from './friendships/friendsList';
 import FriendshipCreation from './friendships/createFriendship'
+import CreateGame from './lobby/index'
+import LobbyGame from './lobby/lobbyGame'
+import JoinGame from './lobby/joinGame'
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -63,6 +66,9 @@ function App() {
     if (role === "PLAYER") {
       ownerRoutes = (
         <>
+          <Route path="/creategame" exact={true} element={<PrivateRoute><CreateGame /></PrivateRoute>} />
+          <Route path="/lobby/:gameId" exact={true} element={<PrivateRoute><LobbyGame /></PrivateRoute>} />
+          <Route path="/joingame" exact={true} element={<PrivateRoute><JoinGame /></PrivateRoute>} />
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
           <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} />
           <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />

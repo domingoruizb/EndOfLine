@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
@@ -20,7 +21,7 @@ public class GamePlayer extends BaseEntity {
     @Max(3)
     private Integer energy = 3;
 
-    // TODO: Implement color
+    private Color color;
 
     @ManyToOne
     @JoinColumn(name = "game_id")

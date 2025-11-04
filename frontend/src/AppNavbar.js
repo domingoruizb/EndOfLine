@@ -43,9 +43,6 @@ function AppNavbar() {
     } else {
         userLinks = (
             <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to="/dashboard">Dashboard</NavLink>
-                </NavItem>
             </>
         )
     
@@ -116,6 +113,9 @@ function AppNavbar() {
         if (role === "PLAYER") {
             playerLinks = (
                 <>
+                    <NavItem>
+                    <NavLink style={{ color: "white" }} id="creategame" tag={Link} to="/creategame">Play now!</NavLink>
+                    </NavItem>
                     <NavItem>
                     <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
                     </NavItem>

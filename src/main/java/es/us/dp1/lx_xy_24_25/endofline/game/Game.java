@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -24,6 +26,9 @@ public class Game extends BaseEntity {
     // Round 0 if in "Lobby"
     @Min(0)
     private Integer round;
+
+    @Column(length = 6, unique = true)
+    private String code;
 
     // Not available if in "Lobby"
     @Column
@@ -66,7 +71,7 @@ public class Game extends BaseEntity {
 //        this.endedAt = LocalDateTime.now();
 //    }
 
-    
+
     public void endGame(User winner) {
         this.winner = winner;
         this.endedAt = LocalDateTime.now();
@@ -128,7 +133,7 @@ public class Game extends BaseEntity {
 //        this.turn = orderedPlayers.get(nextIndex).getUser().getId();
 //    }
 
-    
+
     private Integer determineFirstTurn() {
         if (gamePlayers == null || gamePlayers.isEmpty()) {
             throw new IllegalStateException("There are no players in the match.");
@@ -146,13 +151,13 @@ public class Game extends BaseEntity {
         if (gamePlayers == null || gamePlayers.isEmpty()) {
             throw new IllegalStateException("There are no players in the match.");
         }
- 
+
         // Order players by lowest initiative
         List<GamePlayer> orderedPlayers = gamePlayers.stream()
                 .sorted(Comparator.comparingInt(this::getInitiativeOfMostRecentCard))
                 .toList();
     */
-/* 
+/*
         int currentIndex = -1;
         for (int i = 0; i < orderedPlayers.size(); i++) {
             if (orderedPlayers.get(i).getUser().getId().equals(this.turn)) {

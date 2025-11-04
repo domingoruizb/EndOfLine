@@ -1,0 +1,31 @@
+package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
+
+import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class GamePlayerService {
+
+    @Autowired
+    GamePlayerRepository gamePlayerRepository;
+
+    @Autowired
+    public GamePlayerService(GamePlayerRepository gamePlayerRepository) {
+        this.gamePlayerRepository = gamePlayerRepository;
+    }
+
+    @Transactional
+    public GamePlayer updatePlayerColor(Integer gameId, Integer userId, String newColor) {
+        GamePlayer gamePlayer = gamePlayerRepository.findByGameIdAndUserId(gameId, userId)
+            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));
+
+        gamePlayer.setColor(Color.valueOf(newColor));
+
+        return gamePlayerRepository.save(gamePlayer);
+    }
+
+
+}
