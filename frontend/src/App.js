@@ -22,6 +22,7 @@ import UserStats from './stats/UserStats';
 import MyProfile from './myprofile/myProfile';
 import Friends from './friendships/friendsList';
 import FriendshipCreation from './friendships/createFriendship'
+import GamePage from './game';
 import CreateGame from './lobby/index'
 import LobbyGame from './lobby/lobbyGame'
 import JoinGame from './lobby/joinGame'
@@ -74,6 +75,7 @@ function App() {
           <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
           <Route path="/friends" exact={true} element={<PrivateRoute><Friends /></PrivateRoute>} />
           <Route path="/friends/create" exact={true} element={<PrivateRoute><FriendshipCreation /></PrivateRoute>} />
+          <Route path="/game" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
         </>)
     }    
   })
