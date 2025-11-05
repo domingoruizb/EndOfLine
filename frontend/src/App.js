@@ -69,7 +69,7 @@ function App() {
           <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
           <Route path="/friends" exact={true} element={<PrivateRoute><Friends /></PrivateRoute>} />
           <Route path="/friends/create" exact={true} element={<PrivateRoute><FriendshipCreation /></PrivateRoute>} />
-          <Route path="/game" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
+          <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
         </>)
     }    
   })
