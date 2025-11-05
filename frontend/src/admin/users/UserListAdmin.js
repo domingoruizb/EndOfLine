@@ -191,7 +191,7 @@ export default function UserListAdmin() {
                 Cancel
               </Button>
               <Button color="danger" onClick={confirmDelete} style={{
-                background: "linear-gradient(90deg, #FE5B02 40%, #B1D12D 80%)",
+                background: "#FE5B02",
                 color: "#fff", border: "none"
               }}>
                 Delete
