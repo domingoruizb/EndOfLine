@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup, Table } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup, Table, Container } from "reactstrap";
 import tokenService from "../../services/token.service";
 import "../../static/css/admin/adminPage.css";
 import deleteFromList from "../../util/deleteFromList";
@@ -42,7 +42,6 @@ export default function UserListAdmin() {
     setConfirmUserId(null);
   };
 
-
   const userList = users.map((user) => {
     return (
       <tr key={user.id}>
@@ -56,6 +55,13 @@ export default function UserListAdmin() {
               aria-label={"edit-" + user.id}
               tag={Link}
               to={"/users/" + user.id}
+              style={{
+                background: "#B1D12D",
+                marginRight: "0.5rem",
+                color: "#fff",
+                fontWeight: 600,
+                border: "none"
+              }}
             >
               Edit
             </Button>
@@ -63,9 +69,14 @@ export default function UserListAdmin() {
               size="sm"
               color="danger"
               aria-label={"delete-" + user.id}
-              onClick={() => 
-                handleDeleteClick(user.id)
-              }
+              onClick={() => handleDeleteClick(user.id)}
+              style={{
+                background: "#FE5B02",
+                
+                color: "#fff",
+                fontWeight: 600,
+                border: "none"
+              }}
             > 
               Delete
             </Button>
@@ -74,45 +85,121 @@ export default function UserListAdmin() {
       </tr>
     );
   });
-  
+
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
-    <div className="admin-page-container">
-      <h1 className="text-center">Users</h1>
-      {alerts.map((a) => a.alert)}
-      {modal}
-      <Button color="success" tag={Link} to="/users/new">
-        Add User
-      </Button>
-      <div>
-        <Table aria-label="users" className="mt-4">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Authority</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{userList}</tbody>
-        </Table>
-      </div>
-      {confirmUserId !== null && (
-        <Modal isOpen={confirmUserId !== null} toggle={cancelDelete}>
-          <ModalHeader toggle={cancelDelete}>Confirm Deletion</ModalHeader>
-          <ModalBody>
-            Are you sure you want to delete this user?
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={cancelDelete}>
-              Cancel
-            </Button>
-            <Button color="danger" onClick={confirmDelete}>
-              Delete
-            </Button>
-          </ModalFooter>
-        </Modal>
-      )}
+    <div
+      style={{
+        backgroundColor: "#000",
+        color: "#fff",
+        minHeight: "100vh",
+        padding: "2rem 0",
+        fontFamily: "Inter, Arial, sans-serif",
+      }}
+    >
+      <Container
+        className="admin-page-container"
+        style={{
+          padding: "0 1rem",
+          maxWidth: 900,
+          background: "none",
+          borderRadius: "1rem",
+          boxShadow: "none",
+        }}
+      >
+        <h1 className="text-center" style={{
+          fontWeight: 800,
+          letterSpacing: "2px",
+          marginBottom: "2rem",
+          color: "#FE5B02",
+          textShadow: "0 2px 8px #000"
+        }}>
+          Users
+        </h1>
+        {alerts.map((a) => a.alert)}
+        {modal}
+        <Button
+          color="success"
+          tag={Link}
+          to="/users/new"
+          style={{
+            background: "linear-gradient(90deg, #FE5B02 60%, #B1D12D 100%)",
+            color: "#fff",
+            fontWeight: 700,
+            border: "none",
+            marginBottom: "1.5rem",
+            borderRadius: "0.4em"
+          }}
+        >
+          Add User
+        </Button>
+        <div>
+          <Table
+            aria-label="users"
+            className="mt-4"
+            style={{
+              background: "#181818",
+              borderRadius: "0.6rem",
+              overflow: "hidden",
+              boxShadow: "0 2px 16px #222",
+              color: "#fff"
+            }}
+            dark
+            hover
+          >
+            <thead>
+              <tr style={{ background: "linear-gradient(90deg, #FE5B02 40%, #111 60%, #B1D12D 100%)"}}>
+                <th style={{
+                  color: "#FE5B02",
+                  fontWeight: 700,
+                  padding: "0.85em"
+                }}>Username</th>
+                <th style={{
+                  color: "#B1D12D",
+                  fontWeight: 700,
+                  padding: "0.85em"
+                }}>Authority</th>
+                <th style={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  padding: "0.85em"
+                }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>{userList}</tbody>
+          </Table>
+        </div>
+        {confirmUserId !== null && (
+          <Modal isOpen={confirmUserId !== null} toggle={cancelDelete}>
+            <ModalHeader
+              toggle={cancelDelete}
+              style={{
+                color: "#FE5B02",
+                background: "#111"
+              }}
+            >
+              Confirm Deletion
+            </ModalHeader>
+            <ModalBody style={{ background: "#111", color: "#fff" }}>
+              Are you sure you want to delete this user?
+            </ModalBody>
+            <ModalFooter style={{ background: "#111" }}>
+              <Button color="secondary" onClick={cancelDelete} style={{
+                background: "#323232", color: "#fff", border: "none"
+              }}>
+                Cancel
+              </Button>
+              <Button color="danger" onClick={confirmDelete} style={{
+                background: "linear-gradient(90deg, #FE5B02 40%, #B1D12D 80%)",
+                color: "#fff", border: "none"
+              }}>
+                Delete
+              </Button>
+            </ModalFooter>
+          </Modal>
+        )}
+      </Container>
     </div>
   );
 }
