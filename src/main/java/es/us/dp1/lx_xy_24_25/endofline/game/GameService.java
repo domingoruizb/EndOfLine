@@ -83,10 +83,12 @@ public class GameService {
     @Transactional
     public Game startGame(Integer id) {
         Game game = getGameById(id);
-        if (game.getStartedAt() != null)
-            throw new IllegalStateException("Game already started");
-
-        game.setStartedAt(LocalDateTime.now());
+        if (game.getGamePlayers().size() != 2) {
+            throw new IllegalStateException("Game needs to have 2 players");
+        }
+        if (game.getRound() != 0) {
+            throw new IllegalStateException("Round needs to be 0");
+        }
         game.setRound(1);
         return gameRepository.save(game);
     }

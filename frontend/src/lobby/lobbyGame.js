@@ -58,9 +58,7 @@ export default function LobbyGame(){
         }
 
         setSelectedColor1(color);
-        setVisible(false);
-        
-        // fetchGameData(); 
+        setVisible(false); 
         
     } catch (error) {
         console.error('Error updating color:', error);
@@ -245,7 +243,7 @@ const copyGameCode = async () => {
         const response = await fetch(
             `/api/v1/games/${gameId}/start`,
             {
-                method: "PUT",
+                method: "POST",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                     "Content-Type": "application/json",
@@ -258,9 +256,7 @@ const copyGameCode = async () => {
             throw new Error(errorText || "Failed to start the game.");
         }
 
-        // window.location.href = no se cual es la ruta, se está implementando todavia
-        //por ahora pondre la ruta hacia la pagina home
-        window.location.href = '/';
+        navigate("/game/" + gameId);
 
     } catch (error) {
         console.error('Error starting game:', error);
