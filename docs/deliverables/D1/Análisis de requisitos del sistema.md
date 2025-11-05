@@ -306,7 +306,7 @@ Next, they are defined all user story to be implemented.
 ## Conceptual diagram of the system
 In this section, a UML class diagram that describes the data model to be implemented in the application is provided.
 
-![System diagram](../../diagrams/dp1_project_v4.png)
+![System diagram](../../diagrams/dp1_project_v5.png)
 
 ## Reglas de Negocio
 

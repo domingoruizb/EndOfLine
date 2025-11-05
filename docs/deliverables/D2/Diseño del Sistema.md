@@ -34,7 +34,7 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 
 _Un ejemplo de diagrama para los ejercicios planteados en los boletines de laboratorio sería (hemos omitido las generalizaciones hacia BaseEntity para simplificar el diagrama):_
 
-![Domain diagram](../../diagrams/domainDiagram_v1.png)
+![Domain diagram](../../diagrams/domainDiagram_v2.png)
 
 ### Layers diagram
 ![Layers diagram](../../diagrams/layersDiagram.png)
