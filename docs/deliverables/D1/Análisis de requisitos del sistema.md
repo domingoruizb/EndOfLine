@@ -34,7 +34,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a guest, I want to sign in to my account so that I can view my information and start playing"|
 | ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 1 Start.png>)|
+|![alt text](<Mockups/Mockup Login.png>)|
 |1. The user selects the “Log In” option on the initial screen.  |
 |2. The Login page is displayed, where the user provides their credentials (username and password).  |
 |3. After clicking the “Log In” button, if the credentials are valid, the user is taken to the Dashboard page.  |
@@ -43,6 +43,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a guest, I want to create a new account so that I can start playing."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup Register.png>)|
 |1. The user clicks the “Register” button on the initial screen, which opens the Registration page.  |
 |2. To complete the registration, the user provides their name, surname, username, password, email, and date of birth.  |
 
@@ -50,7 +51,7 @@ Next, they are defined all user story to be implemented.
 
 | "As a player/administrator, I want to log out of my account so that no one else can access it from the same device."|
 | ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 2 Player.png>)|
+|![alt text](<Mockups/Mockup Logout.png>)|
 |1. On the home screen, the player/administrator clicks the "Logout" button located at the top-right corner.  |
 |2. A confirmation modal is shown just to ask if the player/administrator is sure about logging out.  |
 |3. After clicking on "Yes", the user is signed out of the system.  |
@@ -59,48 +60,52 @@ Next, they are defined all user story to be implemented.
 
 | "As a player/administrator, I want to remove my account so that all my data is erased from the system."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup My Profile.png>)|
 |1. On the home screen, the player/administrator clicks their profile button (top-right corner).  |
 |2. A menu will appear showing several options, including the "Edit Profile" feature.  |
 |3. The player selects "Edit Profile", which takes them to the "My Profile" screen.  |
-|4. From there, if the player clicks the "Delete Profile" button and confirms by selecting "Yes" on the confirmation modal, their profile will be removed from the system.  |
+|4. From there, if the player clicks the "Delete Profile" button and confirms by selecting "Delete" on the confirmation modal, their profile will be removed from the system.  |
 
 ### US#5-(ISSUE#39): Edit my profile ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/39))
 
 | "As a player/administrator, I want to edit my profile so that I can update my personal information."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup My Profile.png>)|
 |1. On the home screen, the player/administrator clicks their profile button (top-right corner).  |
-|2. A menu will appear showing several options, including the "Edit Profile" feature.  |
-|3. The player select "Edit Profile," which takes them to the "My Profile" screen.  |
-|4. From there, clicking on the "Edit profile" button takes them to the "Edit profile" screen. |
+|2. A menu will appear showing several options, including the "Profile" feature.  |
+|3. The player select "Profile," which takes them to the "My Profile" screen.  |
 |5. Once typed all the changes, the player/administrator will save them by clicking the "Save changes" button. |
 
 ### US#6-(ISSUE#40): Add a friend ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/40))
 
 | "As a player, I want to add a friend so that I can play with him/her."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup Request Friendship.png>)|
+|![alt text](<Mockups/Mockup Send Friendship.png>)|
 |1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friendships" feature. |
-|3. The player selects "Friendships", which takes them to the "Friendships" screen. |
+|2. A menu will appear showing several options, including the "Friends" feature. |
+|3. The player selects "Friends", which takes them to the "Friendships" screen. |
 |4. From there, there is a "Create" button and pressing it, the player is taken to "Create Friendship" screen.  |
-|5. From there, the player can type the username of their new friend and send the invitation.  |
+|5. From there, the player can type the username of their new friend and send the request.  |
 
 ### US#7-(ISSUE#41): Delete a friend ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/41))
 
 | "As a player, I want to delete a friend so that I don't want to play more with him/her."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup Delete Friend.png>)|
 |1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friendships" feature. |
-|3. The player selects "Friendships", which takes them to the "Friendships" screen. |
+|2. A menu will appear showing several options, including the "Friends" feature. |
+|3. The player selects "Friends", which takes them to the "Friendships" screen. |
 |4. From there, the player can see the list of his friends and can press the "Delete" button of the friendship the player wants to remove.  |
-|5. A confirmation modal will appear asking if the player is sure about the deletion, pressing "Yes", the friendship will be deleted.  |
 
 ### US#8-(ISSUE#42): Accept a friendship ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/42))
 
 | "As a player, I want to accept a friendship so that I can play with the friend requester."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup Accept Friendship.png>)|
 |1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friendships" feature. |
-|3. The player selects "Friendships", which takes them to the "Friendships" screen. |
+|2. A menu will appear showing several options, including the "Friends" feature. |
+|3. The player selects "Friends", which takes them to the "Friendships" screen. |
 |4. From there, the player press the "Pending" button and takes them to the "Pending Invites" screen. |
 |5. From there, the player can view any pending invitations and accept them using the "Accept" button.  |
 
@@ -108,9 +113,10 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to reject a friendship so that I don't want to play with the friend requester."|
 | ------------------------------------------------------------------------- |
+|![alt text](<Mockups/Mockup Reject Friendship.png>)|
 |1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friendships" feature. |
-|3. The player selects "Friendships", which takes them to the "Friendships" screen. |
+|2. A menu will appear showing several options, including the "Friends" feature. |
+|3. The player selects "Friends", which takes them to the "Friendships" screen. |
 |4. From there, the player press the "Pending" button and takes them to the "Pending Invites" screen. |
 |5. From there, the player can view any pending invitations and reject them using the "Reject" button.  |
 
@@ -118,19 +124,21 @@ Next, they are defined all user story to be implemented.
 
 | "As a player, I want to create a new game so that other players can join it."|
 | ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 3 New Game.png>)|
-|1. On the home screen, the player clicks has to click the "Play now!" button and the "Create Game" screen game will be opened.  |
-|2. The player has to select which one of their friends wants to play with and which colour card are going to play with. |
+|![alt text](<Mockups/Mockup 3 Create Game.png>)|
+|![alt text](<Mockups/Mockup Lobby.png>)|
+|1. On the home screen, the player has to click the "Play now!" button and then the button 'Create Game' to open Lobby screen.
+|2. In the lobby, the host waits for a friend to join (he/she needs to share the code with the friend he/she wants to play with) and selects the color of the cards of each player. |
 |3. When pressing the "Continue" button, the game starts.  |
 
 ### US#11-(ISSUE#45): Join a game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/45))
 
-| "As a player, I want to enter a game so that I can play alongside the another player who has invited me."|
+| "As a player, I want to enter a game so that I can play alongside the another player who has shared a code with me."|
 | ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 4 Accept Game.png>)|
-|1. On the header of the home screen, an invitation message will appear showing that a friend invited the player to a game.  |
-|2. The player has to click on the "Accept" button to start the game. |
-|3. The player is taken to the "Game" screen and the game starts.  |
+|![alt text](<Mockups/Mockup 4 Join Game.png>)|
+|![alt text](<Mockups/Mockup Friend Lobby.png>)|
+|1. On the home screen, the player clicks the "Play now!" button and then the button 'Join Game'. |
+|2. On the Join Game screen, the players type the code that host has shared with him and clicks on 'Join'. |
+|3. The player is taken to the 'friend' lobby screen to wait for the host to start the game.  |
 
 ### US#12-(ISSUE#46): Change deck ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/46))
 

@@ -202,6 +202,11 @@ const copyGameCode = async () => {
                 
                 setGameData(data);
 
+                if (data.round > 0) { 
+                    navigate("/game/" + gameId); 
+                    return; 
+                }
+
                 const hostPlayer = data.gamePlayers.find(gp => gp.user.id === user.id);
                 const friendPlayer = data.gamePlayers.find(gp => gp.user.id !== user.id);
 
