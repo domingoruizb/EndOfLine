@@ -2,6 +2,7 @@ package es.us.dp1.lx_xy_24_25.endofline.game;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
@@ -90,6 +91,9 @@ public class GameService {
             throw new IllegalStateException("Round needs to be 0");
         }
         game.setRound(1);
+        game.setStartedAt(LocalDateTime.now());
+        // Simple first turn: host starts
+        game.setTurn(game.getHost().getId());
         return gameRepository.save(game);
     }
 
@@ -118,18 +122,35 @@ public class GameService {
         gameRepository.deleteById(id);
     }
 
-//    @Transactional
-//    public Game nextTurn(Integer id) {
-//        Game game = getGameById(id);
-//        game.nextTurn();
-//        return gameRepository.save(game);
-//    }
+    @Transactional
+    public Game nextTurn(Integer id) {
+        Game game = getGameById(id);
+        List<GamePlayer> players = game.getGamePlayers();
+        if (players == null || players.isEmpty()) {
+            throw new IllegalStateException("There are no players in the match.");
+        }
+        // Find index of current turn
+        Integer currentTurnUserId = game.getTurn();
+        int index = -1;
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getUser().getId().equals(currentTurnUserId)) {
+                index = i;
+                break;
+            }
+        }
+        int nextIndex = (index + 1) % players.size();
+        game.setTurn(players.get(nextIndex).getUser().getId());
+        return gameRepository.save(game);
+    }
 
-//    @Transactional
-//    public Game nextRound(Integer id) {
-//        Game game = getGameById(id);
-//        game.nextRound();
-//        return gameRepository.save(game);
-//    }
+    @Transactional
+    public Game endGame(Integer gameId, Integer winnerId) {
+        Game game = getGameById(gameId);
+        User winner = userRepository.findById(winnerId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", winnerId));
+        game.setWinner(winner);
+        game.setEndedAt(LocalDateTime.now());
+        return gameRepository.save(game);
+    }
 
 }
