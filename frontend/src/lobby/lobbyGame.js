@@ -89,7 +89,7 @@ export default function LobbyGame(){
                 Authorization: `Bearer ${jwt}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(color) 
+            body: JSON.stringify(color)
         });
 
         if (!response.ok) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { boardArray, checkPlacementValid, getCards, getCoordinates, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
+import { boardArray, checkPlacementValid, getCoordinates, getCards, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 
@@ -12,12 +12,16 @@ export default function GamePage () {
     const { gameId } = useParams()
     const navigate = useNavigate()
     const [selectedCard, setSelectedCard] = useState(null)
-    const [cards] = useState(getCards())
     const [board, setBoard] = useState(boardArray)
     const [lastPlacedCard, setLastPlacedCard] = useState(null)
     const [nextValidIndexes, setNextValidIndexes] = useState(getInitialValidIndexes(isHost))
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
+    const [currentUser, setCurrentUser] = useState(tokenService.getUser());
+    const [gamePlayer, setGamePlayer] = useState(null);
+    const [color, setColor] = useState(null);
+    const [cards, setCards] = useState([]);
+    const [randomCards, setRandomCards] = useState([]);
 
     if (gameData != null && gameData.startedAt == null) {
         navigate(`/lobby/${gameId}`)
@@ -74,13 +78,28 @@ export default function GamePage () {
             .then((res) => res.json())
             .then(data => {
                 setGameData(data)
-                console.log(data)
             })
             .catch((message) => alert(message))
 
         if (gameData?.startedAt == null) {
             return
         }
+
+        fetch(
+            `/api/v1/gameplayers/${gameId}/${currentUser.id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((res) => res.json())
+            .then(data => {
+                setGamePlayer(data)
+                setColor(data.color)
+            })
+            .catch((message) => alert(message))
+
 
         const startedAt = new Date(gameData.startedAt).getTime()
 
@@ -92,7 +111,28 @@ export default function GamePage () {
             clearInterval(interval)
             abortController.abort('Component unmounted')
         }
-    }, [gameData?.startedAt, gameId])
+    }, [gameData?.startedAt, gameId, currentUser.id, jwt])
+
+    useEffect(() => {
+        if (color != null && cards.length === 0) {
+            fetch(
+            `/api/v1/cards/color/${color}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((res) => res.json())
+            .then(data => {
+                setCards(data)
+                console.log(data)
+            })
+            .catch((message) => alert(message))
+        }
+
+        setRandomCards(getCards(cards));
+    }, [color, cards]);
 
     const seconds = Math.floor(elapsed / 1000) % 60
     const minutes = Math.floor(elapsed / 60000) % 60
@@ -156,8 +196,9 @@ export default function GamePage () {
                     className='cards-container'
                 >
                     {
-                        cards.map((card) => {
-                            const bits = nameToBinary(card)
+                        randomCards.map((card) => {
+                            const cardName = card.image.split('/').pop().replace('.png', '');
+                            const bits = nameToBinary(cardName)
 
                             return (
                                 <button
@@ -174,7 +215,11 @@ export default function GamePage () {
                                         transform: selectedCard === card && 'scale(1.05)'
                                     }}
                                 >
-                                    {card.toUpperCase()}
+                                    <img 
+                                        src={card.image} 
+                                        alt={`Card ${cardName}`} 
+                                        className='card-image'
+                                    />
                                 </button>
                             )
                         })

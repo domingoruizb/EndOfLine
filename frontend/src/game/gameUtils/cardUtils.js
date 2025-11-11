@@ -27,11 +27,6 @@ function getInitialValidIndexes (isHost) {
     ]
 }
 
-function getCards () {
-    const shuffled = exampleCards.sort(() => 0.5 - Math.random())
-    return shuffled.slice(0, 5)
-}
-
 function getCoordinates (index) {
     const row = index % boardLength
     const col = Math.floor(index / boardLength)
@@ -39,6 +34,11 @@ function getCoordinates (index) {
         row,
         col
     }
+}
+
+function getCards (cards) {
+    const shuffled = cards.sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, 5)
 }
 
 function nameToBinary (cardName) {
