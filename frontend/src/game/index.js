@@ -14,7 +14,7 @@ export default function GamePage () {
     const [selectedCard, setSelectedCard] = useState(null)
     const [cards] = useState(getCards())
     const [board, setBoard] = useState(boardArray)
-    const [lastPlacedCard, setLastPlacedCard] = useState(null)
+    const [lastPlacedCards, setLastPlacedCards] = useState([])
     const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
@@ -38,7 +38,7 @@ export default function GamePage () {
             return
         }
 
-        if (lastPlacedCard == null) {
+        if (lastPlacedCards.length === 0) {
             if (isHost == null) {
                 return
             }
@@ -48,6 +48,7 @@ export default function GamePage () {
             }
         }
 
+        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (!checkPlacementValid(board, selectedCard, index, lastPlacedCard)) {
             return
         }
@@ -65,11 +66,11 @@ export default function GamePage () {
             rotation
         }
 
-        setLastPlacedCard(lastPlaced)
+        setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
+        console.log('Placed card:', [...lastPlacedCards, lastPlaced])
 
         const nextIndexes = getValidIndexes(lastPlaced, board)
         setNextValidIndexes(nextIndexes)
-        console.log('Next valid indexes:', nextIndexes)
 
         if (nextIndexes.length === 0) {
             console.log('Game Over!')
@@ -99,11 +100,12 @@ export default function GamePage () {
     }, [gameData?.startedAt, gameId])
 
     useEffect(() => {
+        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)
             setNextValidIndexes(initialIndexes)
         }
-    }, [isHost, lastPlacedCard])
+    }, [isHost, lastPlacedCards])
 
     useEffect(() => {
         if (gameData?.startedAt == null) {
