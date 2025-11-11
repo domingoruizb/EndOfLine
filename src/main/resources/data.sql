@@ -117,7 +117,7 @@ INSERT INTO playerachievements (id, user_id, achievement_id, achieved_at) VALUES
     (24, 18, 1, '2024-06-10 11:15:00'),
     (25, 6, 2, '2024-02-10 13:40:00');
 
-INSERT INTO gameplayers (id, energy, game_id, user_id) VALUES
+INSERT INTO game_players (id, energy, game_id, user_id) VALUES
     (1, 3, 1, 4),
     (2, 3, 1, 5),
     (3, 3, 2, 6),

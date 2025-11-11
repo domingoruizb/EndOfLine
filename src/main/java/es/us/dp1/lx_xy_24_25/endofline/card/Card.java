@@ -6,6 +6,7 @@ import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,5 +28,8 @@ public class Card extends BaseEntity {
 	@JoinColumn(name = "gameplayer_id")
 	@JsonIgnore
 	private GamePlayer gamePlayer;
+
+	@NotNull
+	private Boolean onBoard = false;
 
 }
