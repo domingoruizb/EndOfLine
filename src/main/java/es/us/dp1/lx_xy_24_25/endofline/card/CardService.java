@@ -23,36 +23,28 @@ public class CardService {
 				.orElseThrow(() -> new ResourceNotFoundException("Card with id " + id + " not found"));
 	}
 
-	@Transactional
-	public Card saveCard(Card card) {
-		card.setUpdatedAt(LocalDateTime.now());
-		return cardRepository.save(card);
-	}
-
-	@Transactional
-	public Card updateCard(Integer id, Card card) {
-		Card existing = getById(id);
-		BeanUtils.copyProperties(card, existing, "id", "gamePlayer");
-		existing.setUpdatedAt(LocalDateTime.now());
-		return cardRepository.save(existing);
-	}
-
-	@Transactional
-	public void deleteById(Integer id) {
-		if (!cardRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Card with id " + id + " not found");
-		}
-		cardRepository.deleteById(id);
-	}
-
-	@Transactional(readOnly = true)
-	public List<Card> findByGamePlayerId(Integer gamePlayerId) {
-		return cardRepository.findByGamePlayer_Id(gamePlayerId);
-	}
-
 	@Transactional(readOnly = true)
 	public List<Card> findAll() {
 		return (List<Card>) cardRepository.findAll();
 	}
+
+
+	@Transactional(readOnly = true)
+	public List<Card> getCardsByGamePlayer(Integer gamePlayerId) {
+        return cardRepository.findByGamePlayerId(gamePlayerId);
+    }
+
+	@Transactional(readOnly = true)
+	public List<Card> getOnBoardCards(Integer gameId) {
+		return cardRepository.findOnBoardByGameId(gameId);
+	}
+
+	@Transactional(readOnly = true)
+	public List<Card> getVisibleCards(Integer gameId, Integer viewerGamePlayerId) {
+		// Visible cards for a player are the player's own cards plus those on the board
+        List<Card> visibleCards = cardRepository.findOnBoardByGameId(gameId);
+        visibleCards.addAll(cardRepository.findByGamePlayerId(viewerGamePlayerId));
+        return visibleCards;
+    }
 
 }
