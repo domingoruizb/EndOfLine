@@ -154,7 +154,7 @@ public class GameService {
     }
 
     @Transactional
-    public Game giveUp(Integer gameId, Integer userId) {
+    public Game giveUpOrLose(Integer gameId, Integer userId) {
         Game game = getGameById(gameId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

@@ -70,7 +70,13 @@ public class GameRestController {
 
     @PutMapping("/{gameId}/{userId}/giveup")
     public ResponseEntity<Game> giveUp(@PathVariable Integer gameId, @PathVariable Integer userId) {
-        Game game = gameService.giveUp(gameId, userId);
+        Game game = gameService.giveUpOrLose(gameId, userId);
+        return ResponseEntity.ok(game);
+    }
+
+    @PutMapping("/{gameId}/{userId}/lose")
+    public ResponseEntity<Game> lose(@PathVariable Integer gameId, @PathVariable Integer userId) {
+        Game game = gameService.giveUpOrLose(gameId, userId);
         return ResponseEntity.ok(game);
     }
 }

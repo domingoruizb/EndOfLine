@@ -9,7 +9,9 @@ import { postCardPlacement } from './gameUtils/apiUtils'
 import GameInfo from './gameComponents/gameInfo'
 import SkillButton from './gameComponents/skillButton'
 import HandCard from './gameComponents/handCard'
-import GiveUpModal from './gameUtils/giveUpModal'
+import GiveUpModal from './gameComponents/giveUpModal'
+import WinnerModal from './gameComponents/winnerModal'
+import LoserModal from './gameComponents/loserModal'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
@@ -31,6 +33,7 @@ export default function GamePage () {
     const [secondCards, setSecondCards] = useState([]);
     const [randomCards, setRandomCards] = useState([]);
     const [isGiveUpModalOpen, setIsGiveUpModalOpen] = useState(false);
+    const [hasLost, setHasLost] = useState(false);
 
     const toggleGiveUpModal = () => setIsGiveUpModalOpen(!isGiveUpModalOpen);
 
@@ -75,7 +78,7 @@ export default function GamePage () {
             setNextValidIndexes(nextIndexes)
 
             if (nextIndexes.length === 0) {
-                console.log('Game Over!')
+                setHasLost(true);
             }
 
             setSelectedCard(null)
@@ -133,9 +136,7 @@ export default function GamePage () {
             const data = await res.json()
             setGameData(data)
 
-            if (gameData?.endedAt != null) {
-                navigate(`/creategame`);
-            }
+            console.log('Fetched game data:', data);
 
             const hostPlayer = data?.gamePlayers?.find(player => player.user.id === data.host.id);
             const secondPlayer = data?.gamePlayers?.find(player => player.user.id !== data.host.id);
@@ -212,6 +213,27 @@ export default function GamePage () {
         }
     }, [jwt, hostColor, secondColor])
 
+    async function loseAndEndGame() {
+        try {
+            const res = await fetch(`/api/v1/games/${gameId}/${user.id}/lose`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!res.ok) throw new Error('Failed to lose the game');
+        } catch (error) {
+            console.error("Error losing the game:", error);
+        }
+    }
+
+    useEffect(() => {
+        if (hasLost) {
+            loseAndEndGame()
+        }
+    }, [hasLost]);
 
     useEffect(() => {
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
@@ -289,6 +311,18 @@ export default function GamePage () {
                 isOpen={isGiveUpModalOpen}
                 toggle={toggleGiveUpModal}
                 onConfirm={handleGiveUp} 
+            />
+            <WinnerModal 
+                isOpen={gameData?.endedAt != null && gameData.winner?.id === user?.id}
+                onConfirm={() => navigate('/creategame')} 
+            />
+            <LoserModal 
+                isOpen={hasLost}
+                onConfirm={
+                     () => {
+                        navigate('/creategame');
+                    }
+                } 
             />
             {isGameActive && (
                 <div className='floating-game-actions'>

@@ -206,7 +206,7 @@ function AppNavbar() {
     return (
         <div>
             <Navbar expand="md" dark color="black">
-                <NavbarBrand href="/">
+                <NavbarBrand href={isInGame || isInLobby ? null : "/"}>
                     <img
                         alt="logo"
                         src={logo}
