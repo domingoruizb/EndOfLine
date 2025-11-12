@@ -1,93 +1,40 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.validation.constraints.NotNull;
-
 
 public class GamePlayerCardDTO {
 
-    @JsonProperty("id")
-    private Integer id;
-    
-    @NotNull
-    @JsonProperty("card_id")
-    private Integer cardId;
-    
-    @NotNull
-    @JsonProperty("card_name")
-    private String cardName;
+    @JsonProperty("image")
+    private String image;
 
-    @NotNull
-    @JsonProperty("initiative")
-    private Integer initiative;
-
-    @NotNull
     @JsonProperty("position_x")
     private Integer positionX;
 
-    @NotNull
     @JsonProperty("position_y")
     private Integer positionY;
 
-    @NotNull
-    @JsonProperty("on_board")
-    private Boolean onBoard;
+    @JsonProperty("rotation")
+    private Integer rotation;
 
-    @NotNull
-    @JsonProperty("placed_at")
-    private LocalDateTime placedAt;
-
-    // Constructor vacío
     public GamePlayerCardDTO() {}
-
-    
-    public GamePlayerCardDTO(Integer id, Integer cardId, String cardName, Integer initiative,
-                             Integer positionX, Integer positionY,
-                             Boolean onBoard, LocalDateTime placedAt) {
-        this.id = id;
-        this.cardId = cardId;
-        this.cardName = cardName;
-        this.initiative = initiative;
+    public GamePlayerCardDTO(
+        String image,
+        Integer positionX,
+        Integer positionY,
+        Integer rotation
+    ) {
+        this.image = image;
         this.positionX = positionX;
         this.positionY = positionY;
-        this.onBoard = onBoard;
-        this.placedAt = placedAt;
+        this.rotation = rotation;
     }
 
-
-    public Integer getId() {
-        return id;
+    public String getImage() {
+        return image;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(Integer cardId) {
-        this.cardId = cardId;
-    }
-
-    public String getCardName() {
-        return cardName;
-    }
-
-    public void setCardName(String cardName) {
-        this.cardName = cardName;
-    }
-
-    public Integer getInitiative() {
-        return initiative;
-    }
-
-    public void setInitiative(Integer initiative) {
-        this.initiative = initiative;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Integer getPositionX() {
@@ -106,19 +53,11 @@ public class GamePlayerCardDTO {
         this.positionY = positionY;
     }
 
-    public Boolean getOnBoard() {
-        return onBoard;
+    public Integer getRotation() {
+        return rotation;
     }
 
-    public void setOnBoard(Boolean onBoard) {
-        this.onBoard = onBoard;
-    }
-
-    public LocalDateTime getPlacedAt() {
-        return placedAt;
-    }
-
-    public void setPlacedAt(LocalDateTime placedAt) {
-        this.placedAt = placedAt;
+    public void setRotation(Integer rotation) {
+        this.rotation = rotation;
     }
 }
