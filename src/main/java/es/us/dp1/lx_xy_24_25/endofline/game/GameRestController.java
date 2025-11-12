@@ -67,4 +67,10 @@ public class GameRestController {
         gameService.deleteGame(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{gameId}/{userId}/giveup")
+    public ResponseEntity<Game> giveUp(@PathVariable Integer gameId, @PathVariable Integer userId) {
+        Game game = gameService.giveUp(gameId, userId);
+        return ResponseEntity.ok(game);
+    }
 }

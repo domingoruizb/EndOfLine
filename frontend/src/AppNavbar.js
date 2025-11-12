@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, NavbarToggler, Collapse } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
 import logo from './static/images/SmallLogo.png';
@@ -13,8 +13,12 @@ function AppNavbar() {
     const [collapsed, setCollapsed] = useState(true);
 
     const toggleDropdown = (state) => setDropdownOpen(state);
-
     const toggleNavbar = () => setCollapsed(!collapsed);
+
+    const location = useLocation();
+    console.log(location.pathname);
+    const isInGame = location.pathname.startsWith('/game/');
+    const isInLobby = location.pathname.startsWith('/lobby/');
 
     useEffect(() => {
         if (jwt) {
@@ -28,6 +32,7 @@ function AppNavbar() {
     let userLinks = <></>;
     let publicLinks = <></>;
     let playerLinks = <></>;
+    let gameLinks = <></>;
 
     if (!jwt) {
         publicLinks = (
@@ -111,78 +116,89 @@ function AppNavbar() {
             )
         }
         if (role === "PLAYER") {
-            playerLinks = (
+            if (isInGame || isInLobby) {
+                gameLinks = (isInGame || isInLobby) && (
                 <>
                     <NavItem>
-                    <NavLink style={{ color: "white" }} id="creategame" tag={Link} to="/creategame">Play now!</NavLink>
+                        <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
                     </NavItem>
-                    <NavItem>
-                    <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
-                    </NavItem>
-                    <UncontrolledDropdown
-                    nav
-                    inNavbar
-                    onMouseEnter={() => toggleDropdown(true)}
-                    onMouseLeave={() => toggleDropdown(false)}
-                    isOpen={dropdownOpen}
-                    style={{ marginLeft: "auto" }}
-                >
-                    <DropdownToggle nav caret style={{ color: "white" }}>
-                    {username}
-                    </DropdownToggle>
-
-                    <DropdownMenu 
-                        end
-                        dark
-                        style={{ backgroundColor: "#1e1e1e", minWidth: "200px" }}>
-                    <DropdownItem tag={Link} 
-                            to="/myprofile"
-                            style={{
-                                color: "#b1d12d",
-                                fontWeight: "500",
-                            }}>
-                        Profile
-                    </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/friends"
-                                style={{
-                                    color: "#FE5B02",
-                                    fontWeight: "500",
-                                }}>
-                        Friends
-                    </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/games"
-                                style={{
-                                    color: "#b1d12d",
-                                    fontWeight: "500",
-                                }}>
-                        Games
-                    </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/achievements"
-                                style={{
-                                    color: "#FE5B02",
-                                    fontWeight: "500",
-                                }}>
-                        Achievements
-                    </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/stats"
-                                style={{
-                                    color: "#b1d12d",
-                                    fontWeight: "500",
-                                }}>
-                        Stats
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem tag={Link} to="/logout">
-                        Logout
-                    </DropdownItem>
-                    </DropdownMenu>
-                </UncontrolledDropdown>
                 </>
+                )
+            }
+            else {
+                playerLinks = (
+                        <>
+                            <NavItem>
+                            <NavLink style={{ color: "white" }} id="creategame" tag={Link} to="/creategame">Play now!</NavLink>
+                            </NavItem>
+                            <NavItem>
+                            <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
+                            </NavItem>
+                            <UncontrolledDropdown
+                            nav
+                            inNavbar
+                            onMouseEnter={() => toggleDropdown(true)}
+                            onMouseLeave={() => toggleDropdown(false)}
+                            isOpen={dropdownOpen}
+                            style={{ marginLeft: "auto" }}
+                        >
+                            <DropdownToggle nav caret style={{ color: "white" }}>
+                            {username}
+                            </DropdownToggle>
+
+                            <DropdownMenu 
+                                end
+                                dark
+                                style={{ backgroundColor: "#1e1e1e", minWidth: "200px" }}>
+                            <DropdownItem tag={Link} 
+                                    to="/myprofile"
+                                    style={{
+                                        color: "#b1d12d",
+                                        fontWeight: "500",
+                                    }}>
+                                Profile
+                            </DropdownItem>
+                            <DropdownItem tag={Link} 
+                                        to="/friends"
+                                        style={{
+                                            color: "#FE5B02",
+                                            fontWeight: "500",
+                                        }}>
+                                Friends
+                            </DropdownItem>
+                            <DropdownItem tag={Link} 
+                                        to="/games"
+                                        style={{
+                                            color: "#b1d12d",
+                                            fontWeight: "500",
+                                        }}>
+                                Games
+                            </DropdownItem>
+                            <DropdownItem tag={Link} 
+                                        to="/achievements"
+                                        style={{
+                                            color: "#FE5B02",
+                                            fontWeight: "500",
+                                        }}>
+                                Achievements
+                            </DropdownItem>
+                            <DropdownItem tag={Link} 
+                                        to="/stats"
+                                        style={{
+                                            color: "#b1d12d",
+                                            fontWeight: "500",
+                                        }}>
+                                Stats
+                            </DropdownItem>
+                            <DropdownItem divider />
+                            <DropdownItem tag={Link} to="/logout">
+                                Logout
+                            </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        </>
             )
+            }
         } 
     })
 }
@@ -220,6 +236,7 @@ function AppNavbar() {
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav className="me-auto mb-2 mb-lg-0" navbar>
+                        {gameLinks}
                         {userLinks}
                         {ownerLinks}
                     </Nav>

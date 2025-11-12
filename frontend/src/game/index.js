@@ -9,6 +9,7 @@ import { postCardPlacement } from './gameUtils/apiUtils'
 import GameInfo from './gameComponents/gameInfo'
 import SkillButton from './gameComponents/skillButton'
 import HandCard from './gameComponents/handCard'
+import GiveUpModal from './gameUtils/giveUpModal'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
@@ -29,6 +30,9 @@ export default function GamePage () {
     const [hostCards, setHostCards] = useState([]);
     const [secondCards, setSecondCards] = useState([]);
     const [randomCards, setRandomCards] = useState([]);
+    const [isGiveUpModalOpen, setIsGiveUpModalOpen] = useState(false);
+
+    const toggleGiveUpModal = () => setIsGiveUpModalOpen(!isGiveUpModalOpen);
 
     if (gameData != null && gameData.startedAt == null) {
         navigate(`/lobby/${gameId}`)
@@ -84,6 +88,39 @@ export default function GamePage () {
         }
     }
 
+const handleGiveUp = async () => {
+        toggleGiveUpModal();
+
+        try {
+            const res = await fetch(
+                `/api/v1/games/${gameId}/${user.id}/giveup`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
+            );
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                try {
+                    const errorData = JSON.parse(errorText);
+                    throw new Error(errorData.message || 'Failed to give up the game');
+                } catch (e) {
+                    throw new Error(`Failed to give up the game: ${res.status} ${res.statusText}`);
+                }
+            }
+
+            navigate('/creategame'); 
+
+        } catch (error) {
+            console.error("Error giving up the game:", error);
+            alert(`Error giving up: ${error.message}`);
+        }
+    };  
+
     const fetchGameData = async (signal) => {
         try {
             const res = await fetch(
@@ -99,6 +136,10 @@ export default function GamePage () {
             
             const data = await res.json()
             setGameData(data)
+
+            if (gameData.endedAt != null) {
+                navigate(`/creategame`);
+            }
 
             const hostPlayer = data?.gamePlayers?.find(player => player.user.id === data.host.id);
             const secondPlayer = data?.gamePlayers?.find(player => player.user.id !== data.host.id);
@@ -137,7 +178,7 @@ export default function GamePage () {
             clearInterval(intervalId);
             abortController.abort();
         }
-    }, [gameId, jwt, hostColor, secondColor])
+    }, [jwt, hostColor, secondColor, gameData])
 
 
     useEffect(() => {
@@ -206,10 +247,27 @@ export default function GamePage () {
         }
     }, [isHost, hostCards, secondCards]);
 
+    const isGameActive = gameData?.startedAt != null && gameData?.endedAt == null;
+  
     return (
         <div
             className='game-page-container'
         >
+            <GiveUpModal 
+                isOpen={isGiveUpModalOpen}
+                toggle={toggleGiveUpModal}
+                onConfirm={handleGiveUp} 
+            />
+            {isGameActive && (
+                <div className='floating-game-actions'>
+                    <button
+                        className='giveup-button'
+                        onClick={toggleGiveUpModal}
+                    >
+                        Give up
+                    </button>
+                </div>
+            )}
             <div
                 className='game-data-container'
             >
