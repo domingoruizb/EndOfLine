@@ -118,7 +118,11 @@
     background-color: #333;
     color: white;
     cursor: pointer;
-    transition: ease-in-out 0.1s;
+    transition: all ease-in-out 0.1s;
+}
+
+.card-button.selected {
+    transform: scale(1.05) rotate(2.5deg);
 }
 
 .card-button:hover {
@@ -127,6 +131,18 @@
 
 .pulsating-bg {
     animation: pulsate 2s infinite;
+}
+
+@keyframes select {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  40% {
+    transform: scale(1.08) rotate(2.5deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(2.5deg);
+  }
 }
 
 @keyframes pulsate {

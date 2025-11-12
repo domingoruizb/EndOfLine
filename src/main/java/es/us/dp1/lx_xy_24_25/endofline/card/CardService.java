@@ -30,9 +30,9 @@ public class CardService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Card> getCardsByColor(String color) {
+	public List<Card> getCardsByColorLine(String color) {
 		Color actualColor = Color.valueOf(color);
-		return cardRepository.findByColor(actualColor);
+		return cardRepository.findByColorLine(actualColor);
 	}
 
 /*

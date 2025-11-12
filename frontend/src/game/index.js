@@ -33,8 +33,8 @@ export default function GamePage () {
         return hostId != null && userId != null ? hostId === userId : false
     }, [gameData?.host?.id])
 
-    const handleCardSelect = (card) => {
-        setSelectedCard(prevCard => (prevCard === card ? null : card))
+    const handleCardSelect = (cardName) => {
+        setSelectedCard(prevCard => (prevCard === cardName ? null : cardName))
     }
 
     const handlePlaceCard = (index) => {
@@ -123,6 +123,10 @@ export default function GamePage () {
         return () => clearInterval(interval)
     }, [gameData?.startedAt])
 
+    function getCardName(card) {
+        return card?.image?.split('/')?.pop()?.replace('.png', '');
+    }
+
     useEffect(() => {
         const abortController = new AbortController()
         fetch(
@@ -146,7 +150,7 @@ export default function GamePage () {
     useEffect(() => {
         if (color != null && cards.length === 0) {
             fetch(
-            `/api/v1/cards/color/${color}`,
+            `/api/v1/cards/lineColor/${color}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
@@ -156,7 +160,6 @@ export default function GamePage () {
             .then((res) => res.json())
             .then(data => {
                 setCards(data)
-                console.log(data)
             })
             .catch((message) => alert(message))
         }
@@ -211,9 +214,9 @@ export default function GamePage () {
                     className='skills-container'
                 >
                     {
-                        skills.map((skill) => (
+                        skills.map((skill, index) => (
                             <button
-                                key={skill}
+                                key={index}
                                 className='skill-button'
                                 onClick={() => console.log(`Activated skill: ${skill}`)}
                             >
@@ -226,25 +229,22 @@ export default function GamePage () {
                     className='cards-container'
                 >
                     {
-                        randomCards.map((card) => {
-                            const cardName = card.image.split('/').pop().replace('.png', '');
+                        randomCards.map((card, index) => {
+                            const cardName = getCardName(card);
                             const bits = nameToBinary(cardName)
+                            const isSelected = selectedCard === cardName;
+                            const transformStyle = isSelected ? 'scale(1.05) rotate(2.5deg)' : 'none';
 
                             return (
                                 <button
-                                    key={card}
-                                    onClick={() => handleCardSelect(card)}
+                                    key={index}
+                                    onClick={() => handleCardSelect(cardName)}
                                     className='card-button'
-                                    style={{
-                                        borderLeft: (bits & 0b1000) ? '5px solid red' : '5px solid transparent',
-                                        borderTop: (bits & 0b0100) ? '5px solid red' : '5px solid transparent',
-                                        borderRight: (bits & 0b0010) ? '5px solid red' : '5px solid transparent',
-                                        borderBottom: '5px solid yellow',
-                                        backgroundColor: selectedCard === card && 'var(--main-orange-color)',
-                                        rotate: selectedCard === card && '2.5deg',
-                                        transform: selectedCard === card && 'scale(1.05)'
-                                    }}
-                                >
+                                        style={{ 
+                                            backgroundColor: isSelected && 'var(--main-orange-color)',
+                                            transform: transformStyle,
+                                        }}
+                                    >
                                     <img 
                                         src={card.image} 
                                         alt={`Card ${cardName}`} 
@@ -264,8 +264,13 @@ export default function GamePage () {
                 >
                     {
                         board.map((card, index) => {
-                            const bits = card != null ? nameToBinary(card.name) : 0b0000
+                            let cardName = card != null ? card.name : null;
+                            const bits = cardName != null ? nameToBinary(cardName) : 0b0000
                             const isValid = nextValidIndexes.includes(index)
+                            if (card?.name === 'START' && color != null) {
+                                const colorLetter = color.charAt(0).toUpperCase();
+                                cardName = `C${colorLetter}_START`;
+                            }
 
                             return (
                                 <button
@@ -274,10 +279,6 @@ export default function GamePage () {
                                     onClick={() => handlePlaceCard(index)}
                                     style={{
                                         rotate: card != null ? `${card.rotation * 90}deg` : '0deg',
-                                        borderLeft: (bits & 0b1000) ? '5px solid red' : '5px solid transparent',
-                                        borderTop: (bits & 0b0100) ? '5px solid red' : '5px solid transparent',
-                                        borderRight: (bits & 0b0010) ? '5px solid red' : '5px solid transparent',
-                                        borderBottom: card != null ? '5px solid yellow' : '5px solid transparent',
                                         animationName: isValid ? 'pulsate' : 'none',
                                         animationDuration: isValid ? '2s' : undefined,
                                         animationIterationCount: isValid ? 'infinite' : undefined,
@@ -285,7 +286,12 @@ export default function GamePage () {
                                     }}
                                 >
                                     {
-                                        card != null ? card.name.toUpperCase() : (
+                                        card != null ? 
+                                        <img 
+                                        src={`/cardImages/${cardName}.png`} 
+                                        alt={`Card ${cardName}`} 
+                                        className='card-image'
+                                        /> : (
                                             <span
                                                 style={{
                                                     color: 'gray',

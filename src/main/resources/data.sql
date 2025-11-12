@@ -170,7 +170,7 @@ INSERT INTO cards (id, color, image, initiative) VALUES
     (5, 0, '/cardImages/CB_1010_4.png', 4),
     (6, 0, '/cardImages/CB_1100_3.png', 3),
     (7, 0, '/cardImages/CB_1110_0.png', 0),
-    (8, 0, '/cardImages/CB_0010_5.png', 5),
+    (8, 0, '/cardImages/CB_1110_5.png', 5),
     (9, 0, '/cardImages/CB_BACK.png', null),
     (10, 0, '/cardImages/CB_ENERGY.png', null),
     (11, 0, '/cardImages/CB_START.png', null),

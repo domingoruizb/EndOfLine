@@ -12,8 +12,11 @@ import java.util.List;
 @Repository
 public interface CardRepository extends JpaRepository<Card, Integer> {
 
-    @Query("SELECT c FROM Card c WHERE c.color = :color")
-    List<Card> findByColor(Color color);
+    @Query("SELECT c FROM Card c WHERE c.color = :color AND c.initiative IS NOT NULL")
+    List<Card> findByColorLine(Color color);
+
+     @Query("SELECT c FROM Card c WHERE c.color = :color AND c.initiative IS NOT NULL")
+    List<Card> findByColorStartCard(Color color);
 /*
     // Find cards by the gamePlayer's id
     List<Card> findByGamePlayerId(Integer gamePlayerId);

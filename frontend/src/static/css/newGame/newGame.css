@@ -159,6 +159,7 @@
     border-radius: inherit; 
 }
 
+
 .selected-container {
     border-color: var(--main-orange-color);
     transform: scale(1.05);
