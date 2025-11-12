@@ -17,10 +17,12 @@ export default function GamePage () {
     const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
-    const [currentUser, setCurrentUser] = useState(tokenService.getUser());
-    const [gamePlayer, setGamePlayer] = useState(null);
-    const [color, setColor] = useState(null);
-    const [cards, setCards] = useState([]);
+    const [hostGamePlayer, setHostGamePlayer] = useState(null);
+    const [secondGamePlayer, setSecondGamePlayer] = useState(null);
+    const [hostColor, setHostColor] = useState(null);
+    const [secondColor, setSecondColor] = useState(null);
+    const [hostCards, setHostCards] = useState([]);
+    const [secondCards, setSecondCards] = useState([]);
     const [randomCards, setRandomCards] = useState([]);
 
     if (gameData != null && gameData.startedAt == null) {
@@ -83,33 +85,73 @@ export default function GamePage () {
         setSelectedCard(null)
     }
 
-    useEffect(() => {
-        const abortController = new AbortController()
-        fetch(
-            `/api/v1/games/${gameId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
+    const fetchGameData = async (signal) => {
+        try {
+            const res = await fetch(
+                `/api/v1/games/${gameId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                    signal: signal
                 }
-            }
-        )
-            .then((res) => res.json())
-            .then(data => {
-                setGameData(data)
-            })
-            .catch((message) => console.log(message))
+            )
+            if (!res.ok) throw new Error('Failed to fetch game data');
+            
+            const data = await res.json()
+            setGameData(data)
 
-        return () => abortController.abort('Component unmounted')
-    }, [gameData?.startedAt, gameId])
+            const hostPlayer = data?.gamePlayers?.find(player => player.user.id === data.host.id);
+            const secondPlayer = data?.gamePlayers?.find(player => player.user.id !== data.host.id);
+            
+            setHostGamePlayer(hostPlayer);
+            setSecondGamePlayer(secondPlayer);
+
+            if (hostColor !== hostPlayer?.color) {
+                setHostColor(hostPlayer?.color || null);
+            }
+            if (secondColor !== secondPlayer?.color) {
+                setSecondColor(secondPlayer?.color || null);
+            }
+            
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error("Error fetching game data:", error)
+            }
+        }
+    }
+
+    useEffect(() => {
+        let intervalId;
+        const pollingInterval = 3000;
+        let abortController = new AbortController();
+
+        fetchGameData(abortController.signal);
+
+        intervalId = setInterval(() => {
+            abortController.abort(); 
+            abortController = new AbortController();
+
+            fetchGameData(abortController.signal);
+        }, pollingInterval);
+        return () => {
+            clearInterval(intervalId);
+            abortController.abort();
+        }
+    }, [gameId, jwt, hostColor, secondColor])
+
 
     useEffect(() => {
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)
             setNextValidIndexes(initialIndexes)
+        } else if (lastPlacedCard != null) {
+             const nextIndexes = getValidIndexes(lastPlacedCard, board)
+             setNextValidIndexes(nextIndexes)
         }
-    }, [isHost, lastPlacedCards])
-  
+    }, [isHost, lastPlacedCards, board])
+ 
     useEffect(() => {
         if (gameData?.startedAt == null) {
             return
@@ -128,29 +170,9 @@ export default function GamePage () {
     }
 
     useEffect(() => {
-        const abortController = new AbortController()
-        fetch(
-            `/api/v1/gameplayers/${gameId}/${currentUser.id}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                }
-            }
-        )
-            .then((res) => res.json())
-            .then(data => {
-                setGamePlayer(data)
-                setColor(data.color)
-            })
-            .catch((message) => alert(message))
-
-        return () => abortController.abort('Component unmounted')
-    }, [gameId, currentUser.id, jwt])
-
-    useEffect(() => {
-        if (color != null && cards.length === 0) {
+        if (hostColor != null && hostCards.length === 0) {
             fetch(
-            `/api/v1/cards/lineColor/${color}`,
+            `/api/v1/cards/lineColor/${hostColor}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
@@ -159,13 +181,34 @@ export default function GamePage () {
         )
             .then((res) => res.json())
             .then(data => {
-                setCards(data)
+                setHostCards(data)
             })
-            .catch((message) => alert(message))
+            .catch((message) => console.error(message))
         }
 
-        setRandomCards(getCards(cards));
-    }, [color, cards]);
+        if (secondColor != null && secondCards.length === 0) {
+            fetch(
+            `/api/v1/cards/lineColor/${secondColor}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((res) => res.json())
+            .then(data => {
+                setSecondCards(data)
+            })
+            .catch((message) => console.error(message))
+        }
+    }, [hostColor, secondColor, jwt, hostCards.length, secondCards.length]);
+    useEffect(() => {
+        if (hostCards.length > 0 && isHost) {
+            setRandomCards(getCards(hostCards));
+        } else if (secondCards.length > 0 && !isHost) {
+            setRandomCards(getCards(secondCards));
+        }
+    }, [isHost, hostCards, secondCards]);
 
     const seconds = Math.floor(elapsed / 1000) % 60
     const minutes = Math.floor(elapsed / 60000) % 60
@@ -267,8 +310,11 @@ export default function GamePage () {
                             let cardName = card != null ? card.name : null;
                             const bits = cardName != null ? nameToBinary(cardName) : 0b0000
                             const isValid = nextValidIndexes.includes(index)
-                            if (card?.name === 'START' && color != null) {
-                                const colorLetter = color.charAt(0).toUpperCase();
+                            if (card?.name === 'START' && hostColor != null && index === 30) {
+                                const colorLetter = hostColor.charAt(0).toUpperCase();
+                                cardName = `C${colorLetter}_START`;
+                            } else if (card?.name === 'START' && secondColor != null && index === 32) {
+                                const colorLetter = secondColor.charAt(0).toUpperCase();
                                 cardName = `C${colorLetter}_START`;
                             }
 
