@@ -110,7 +110,7 @@ export default function GamePage () {
         }
     }, [isHost, lastPlacedCards])
   
-  useEffect(() => {
+    useEffect(() => {
         if (gameData?.startedAt == null) {
             return
         }
@@ -124,6 +124,7 @@ export default function GamePage () {
     }, [gameData?.startedAt])
 
     useEffect(() => {
+        const abortController = new AbortController()
         fetch(
             `/api/v1/gameplayers/${gameId}/${currentUser.id}`,
             {
