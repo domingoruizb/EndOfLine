@@ -1,37 +1,58 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { boardArray, checkPlacementValid, getCards, getCoordinates, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
+import { boardArray, checkPlacementValid, getCoordinates, getCards, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 
-const isHost = true
-const jwt = tokenService.getLocalAccessToken();
+const jwt = tokenService.getLocalAccessToken()
+const user = tokenService.getUser()
 
 export default function GamePage () {
     const { gameId } = useParams()
     const navigate = useNavigate()
     const [selectedCard, setSelectedCard] = useState(null)
-    const [cards] = useState(getCards())
     const [board, setBoard] = useState(boardArray)
-    const [lastPlacedCard, setLastPlacedCard] = useState(null)
-    const [nextValidIndexes, setNextValidIndexes] = useState(getInitialValidIndexes(isHost))
+    const [lastPlacedCards, setLastPlacedCards] = useState([])
+    const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
+    const [currentUser, setCurrentUser] = useState(tokenService.getUser());
+    const [gamePlayer, setGamePlayer] = useState(null);
+    const [color, setColor] = useState(null);
+    const [cards, setCards] = useState([]);
+    const [randomCards, setRandomCards] = useState([]);
 
     if (gameData != null && gameData.startedAt == null) {
         navigate(`/lobby/${gameId}`)
     }
+
+    const isHost = useMemo(() => {
+        const hostId = gameData?.host?.id
+        const userId = user?.id
+        return hostId != null && userId != null ? hostId === userId : false
+    }, [gameData?.host?.id])
 
     const handleCardSelect = (card) => {
         setSelectedCard(prevCard => (prevCard === card ? null : card))
     }
 
     const handlePlaceCard = (index) => {
-        if (lastPlacedCard == null && !getInitialValidIndexes(isHost).includes(index)) {
+        if (selectedCard == null) {
             return
         }
 
+        if (lastPlacedCards.length === 0) {
+            if (isHost == null) {
+                return
+            }
+
+            if (!getInitialValidIndexes(isHost).includes(index)) {
+                return
+            }
+        }
+
+        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (!checkPlacementValid(board, selectedCard, index, lastPlacedCard)) {
             return
         }
@@ -49,7 +70,8 @@ export default function GamePage () {
             rotation
         }
 
-        setLastPlacedCard(lastPlaced)
+        setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
+        console.log('Placed card:', [...lastPlacedCards, lastPlaced])
 
         const nextIndexes = getValidIndexes(lastPlaced, board)
         setNextValidIndexes(nextIndexes)
@@ -74,25 +96,72 @@ export default function GamePage () {
             .then((res) => res.json())
             .then(data => {
                 setGameData(data)
-                console.log(data)
             })
-            .catch((message) => alert(message))
+            .catch((message) => console.log(message))
 
+        return () => abortController.abort('Component unmounted')
+    }, [gameData?.startedAt, gameId])
+
+    useEffect(() => {
+        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
+        if (lastPlacedCard == null && isHost != null) {
+            const initialIndexes = getInitialValidIndexes(isHost)
+            setNextValidIndexes(initialIndexes)
+        }
+    }, [isHost, lastPlacedCards])
+  
+  useEffect(() => {
         if (gameData?.startedAt == null) {
             return
         }
 
         const startedAt = new Date(gameData.startedAt).getTime()
-
         const interval = setInterval(() => {
             setElapsed(Date.now() - startedAt)
         }, 1000)
 
-        return () => {
-            clearInterval(interval)
-            abortController.abort('Component unmounted')
+        return () => clearInterval(interval)
+    }, [gameData?.startedAt])
+
+    useEffect(() => {
+        fetch(
+            `/api/v1/gameplayers/${gameId}/${currentUser.id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((res) => res.json())
+            .then(data => {
+                setGamePlayer(data)
+                setColor(data.color)
+            })
+            .catch((message) => alert(message))
+
+        return () => abortController.abort('Component unmounted')
+    }, [gameId, currentUser.id, jwt])
+
+    useEffect(() => {
+        if (color != null && cards.length === 0) {
+            fetch(
+            `/api/v1/cards/color/${color}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((res) => res.json())
+            .then(data => {
+                setCards(data)
+                console.log(data)
+            })
+            .catch((message) => alert(message))
         }
-    }, [gameData?.startedAt, gameId])
+
+        setRandomCards(getCards(cards));
+    }, [color, cards]);
 
     const seconds = Math.floor(elapsed / 1000) % 60
     const minutes = Math.floor(elapsed / 60000) % 60
@@ -156,8 +225,9 @@ export default function GamePage () {
                     className='cards-container'
                 >
                     {
-                        cards.map((card) => {
-                            const bits = nameToBinary(card)
+                        randomCards.map((card) => {
+                            const cardName = card.image.split('/').pop().replace('.png', '');
+                            const bits = nameToBinary(cardName)
 
                             return (
                                 <button
@@ -174,7 +244,11 @@ export default function GamePage () {
                                         transform: selectedCard === card && 'scale(1.05)'
                                     }}
                                 >
-                                    {card.toUpperCase()}
+                                    <img 
+                                        src={card.image} 
+                                        alt={`Card ${cardName}`} 
+                                        className='card-image'
+                                    />
                                 </button>
                             )
                         })
@@ -190,22 +264,23 @@ export default function GamePage () {
                     {
                         board.map((card, index) => {
                             const bits = card != null ? nameToBinary(card.name) : 0b0000
+                            const isValid = nextValidIndexes.includes(index)
 
                             return (
                                 <button
                                     key={index}
-                                    // className='game-cell'
-                                    className={`
-                                        game-cell
-                                        ${nextValidIndexes.includes(index) && 'pulsating-bg'}    
-                                    `}
+                                    className='game-cell'
                                     onClick={() => handlePlaceCard(index)}
                                     style={{
                                         rotate: card != null ? `${card.rotation * 90}deg` : '0deg',
                                         borderLeft: (bits & 0b1000) ? '5px solid red' : '5px solid transparent',
                                         borderTop: (bits & 0b0100) ? '5px solid red' : '5px solid transparent',
                                         borderRight: (bits & 0b0010) ? '5px solid red' : '5px solid transparent',
-                                        borderBottom: card != null ? '5px solid yellow' : '5px solid transparent'
+                                        borderBottom: card != null ? '5px solid yellow' : '5px solid transparent',
+                                        animationName: isValid ? 'pulsate' : 'none',
+                                        animationDuration: isValid ? '2s' : undefined,
+                                        animationIterationCount: isValid ? 'infinite' : undefined,
+                                        animationFillMode: isValid ? 'both' : undefined
                                     }}
                                 >
                                     {

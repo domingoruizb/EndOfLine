@@ -1,7 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +29,16 @@ public class GamePlayerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{gameId}/{userId}")
+    public ResponseEntity<GamePlayer> getGamePlayer(@PathVariable Integer gameId, @PathVariable Integer userId) {
+        try {
+            GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, userId);
+            return new ResponseEntity<>(gamePlayer, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

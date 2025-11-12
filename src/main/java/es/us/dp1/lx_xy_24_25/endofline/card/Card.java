@@ -1,11 +1,14 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,9 +26,10 @@ public class Card extends BaseEntity {
 
 	private LocalDateTime updatedAt;
 
-	@ManyToOne
-	@JoinColumn(name = "gameplayer_id")
-	@JsonIgnore
-	private GamePlayer gamePlayer;
+	@NotNull
+	private Color color;
 
+	@NotNull
+	private String image;
+	
 }
