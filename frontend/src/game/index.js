@@ -150,7 +150,7 @@ export default function GamePage () {
     useEffect(() => {
         if (color != null && cards.length === 0) {
             fetch(
-            `/api/v1/cards/color/${color}`,
+            `/api/v1/cards/lineColor/${color}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwt}`,

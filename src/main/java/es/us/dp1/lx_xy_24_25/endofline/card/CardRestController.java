@@ -46,7 +46,7 @@ public class CardRestController {
         return new ResponseEntity<>(cardService.findByImage(image), HttpStatus.OK);
     }
 
-	@GetMapping("/color/{color}")
+	@GetMapping("/lineColor/{color}")
 	public ResponseEntity<List<Card>> findByColor(@PathVariable("color") String color) {
 		return new ResponseEntity<>(cardService.getCardsByColor(color), HttpStatus.OK);
 	}
