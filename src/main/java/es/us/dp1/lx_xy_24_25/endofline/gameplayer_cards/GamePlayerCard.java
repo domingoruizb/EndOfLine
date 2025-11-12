@@ -18,6 +18,12 @@ import lombok.Setter;
 @Setter
 public class GamePlayerCard extends BaseEntity {
 
+    private Integer positionX;
+    private Integer positionY;
+    private Integer rotation;
+
+    private LocalDateTime placedAt;
+
     @ManyToOne
     @JoinColumn(name = "gameplayer_id")
     private GamePlayer gamePlayer;
@@ -25,10 +31,4 @@ public class GamePlayerCard extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
-
-    private Integer positionX;
-    private Integer positionY;
-    private Boolean onBoard;
-
-    private LocalDateTime placedAt;
 }
