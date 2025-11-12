@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
 import { checkPlacementValid, getInitialValidIndexes, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
-import { boardArray, getCards } from './gameUtils/cardUtils'
+import { boardArray, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 import { postCardPlacement } from './gameUtils/apiUtils'
@@ -60,10 +60,7 @@ export default function GamePage () {
             const gamePlayerId = isHost ? hostGamePlayer?.id : secondGamePlayer?.id
             await postCardPlacement(index, rotation, selectedCard, gamePlayerId)
 
-            const newBoard = [...board]
-            newBoard[index] = { name: selectedCard, rotation }
-
-            console.log('Placing card:', { name: selectedCard, index, rotation })
+            const newBoard = board.map((cell, i) => i === index ? { name: selectedCard, rotation } : cell);
             setBoard(newBoard)
 
             const lastPlaced = {
@@ -73,9 +70,8 @@ export default function GamePage () {
             }
 
             setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
-            console.log('Placed card:', [...lastPlacedCards, lastPlaced])
 
-            const nextIndexes = getValidIndexes(lastPlaced, board)
+            const nextIndexes = getValidIndexes(lastPlaced, newBoard)
             setNextValidIndexes(nextIndexes)
 
             if (nextIndexes.length === 0) {
@@ -88,7 +84,7 @@ export default function GamePage () {
         }
     }
 
-const handleGiveUp = async () => {
+    const handleGiveUp = async () => {
         toggleGiveUpModal();
 
         try {
@@ -137,7 +133,7 @@ const handleGiveUp = async () => {
             const data = await res.json()
             setGameData(data)
 
-            if (gameData.endedAt != null) {
+            if (gameData?.endedAt != null) {
                 navigate(`/creategame`);
             }
 
@@ -161,24 +157,60 @@ const handleGiveUp = async () => {
         }
     }
 
+    const fetchCards = async (signal) => {
+        try {
+            const cards = await fetch(
+                `/api/v1/cards/game/${gameId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                    signal: signal
+                }
+            )
+
+            if (!cards.ok) throw new Error('Failed to fetch cards');
+            const cardsData = await cards.json()
+
+            setBoard(prevBoard => {
+                const newBoard = [...prevBoard]
+                cardsData.forEach(cgp => {
+                    const index = getIndex(cgp.positionX, cgp.positionY)
+                    newBoard[index] = {
+                        name: cgp.card.image.replace('/cardImages/', '').replace('.png', ''),
+                        rotation: cgp.rotation
+                    }
+                })
+
+                return newBoard
+            })
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.error('Error fetching cards:', err)
+            }
+        }
+    }
+
     useEffect(() => {
         let intervalId;
         const pollingInterval = 3000;
         let abortController = new AbortController();
 
         fetchGameData(abortController.signal)
+        fetchCards(abortController.signal)
 
         intervalId = setInterval(() => {
-            abortController.abort(); 
+            abortController.abort();
             abortController = new AbortController();
 
             fetchGameData(abortController.signal);
+            fetchCards(abortController.signal);
         }, pollingInterval);
         return () => {
             clearInterval(intervalId);
             abortController.abort();
         }
-    }, [jwt, hostColor, secondColor, gameData])
+    }, [jwt, hostColor, secondColor])
 
 
     useEffect(() => {
@@ -187,8 +219,8 @@ const handleGiveUp = async () => {
             const initialIndexes = getInitialValidIndexes(isHost)
             setNextValidIndexes(initialIndexes)
         } else if (lastPlacedCard != null) {
-             const nextIndexes = getValidIndexes(lastPlacedCard, board)
-             setNextValidIndexes(nextIndexes)
+            const nextIndexes = getValidIndexes(lastPlacedCard, board)
+            setNextValidIndexes(nextIndexes)
         }
     }, [isHost, lastPlacedCards, board])
  

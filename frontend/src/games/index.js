@@ -32,6 +32,7 @@ export default function GamesList() {
         <td className="text-center">{game.startedAt ? new Date(game.startedAt).toLocaleString() : 'N/A'}</td>
         <td className="text-center">{game.endedAt ? new Date(game.endedAt).toLocaleString() : 'N/A'}</td>
         <td className="text-center">{game.host?.username || 'Unknown'}</td>
+        <td className="text-center">{game.winner?.username || 'N/A'}</td>
         <td className="text-center">{game.gamePlayers?.map(gp => gp.user.username).join(' VS ')}</td>
       </tr>
     ));
@@ -68,6 +69,7 @@ export default function GamesList() {
                 <th className="text-center">Started at</th>
                 <th className="text-center">Ended at</th>
                 <th className="text-center">Creator</th>
+                <th className="text-center">Winner</th>
                 <th className="text-center">Players</th>
               </tr>
             </thead>
