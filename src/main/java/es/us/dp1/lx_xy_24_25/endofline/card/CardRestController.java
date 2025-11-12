@@ -35,6 +35,12 @@ public class CardRestController {
 		return new ResponseEntity<>(card, HttpStatus.OK);
 	}
 
+	@GetMapping("/color/{color}")
+	public ResponseEntity<List<Card>> findByColor(@PathVariable("color") String color) {
+		return new ResponseEntity<>(cardService.getCardsByColor(color), HttpStatus.OK);
+	}
+	/*
+
 	@GetMapping("/gameplayer/{gpId}")
 	public ResponseEntity<List<Card>> findByGamePlayer(@PathVariable("gpId") Integer gpId) {
 		return new ResponseEntity<>(cardService.getCardsByGamePlayer(gpId), HttpStatus.OK);
@@ -49,5 +55,5 @@ public class CardRestController {
 	public ResponseEntity<List<Card>> getVisible(@PathVariable("gameId") Integer gameId,
 												 @PathVariable("viewerGpId") Integer viewerGpId) {
 		return new ResponseEntity<>(cardService.getVisibleCards(gameId, viewerGpId), HttpStatus.OK);
-	}
+	}*/
 }

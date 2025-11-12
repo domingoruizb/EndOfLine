@@ -27,5 +27,11 @@ public class GamePlayerService {
         return gamePlayerRepository.save(gamePlayer);
     }
 
+    @Transactional(readOnly = true)
+    public GamePlayer getGamePlayer(Integer gameId, Integer userId) {
+        return gamePlayerRepository.findByGameIdAndUserId(gameId, userId)
+            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));
+    }
+
 
 }

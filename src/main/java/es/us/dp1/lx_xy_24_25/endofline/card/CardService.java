@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,13 @@ public class CardService {
 		return (List<Card>) cardRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
+	public List<Card> getCardsByColor(String color) {
+		Color actualColor = Color.valueOf(color);
+		return cardRepository.findByColor(actualColor);
+	}
 
+/*
 	@Transactional(readOnly = true)
 	public List<Card> getCardsByGamePlayer(Integer gamePlayerId) {
         return cardRepository.findByGamePlayerId(gamePlayerId);
@@ -46,5 +53,7 @@ public class CardService {
         visibleCards.addAll(cardRepository.findByGamePlayerId(viewerGamePlayerId));
         return visibleCards;
     }
+
+	*/
 
 }

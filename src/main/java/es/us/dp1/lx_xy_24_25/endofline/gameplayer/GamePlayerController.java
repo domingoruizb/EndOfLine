@@ -31,4 +31,14 @@ public class GamePlayerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/{gameId}/{userId}")
+    public ResponseEntity<GamePlayer> getGamePlayer(@PathVariable Integer gameId, @PathVariable Integer userId) {
+        try {
+            GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, userId);
+            return new ResponseEntity<>(gamePlayer, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
