@@ -153,4 +153,18 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    @Transactional
+    public Game giveUp(Integer gameId, Integer userId) {
+        Game game = getGameById(gameId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        game.setWinner(game.getGamePlayers().stream()   
+                .map(GamePlayer::getUser)
+                .filter(u -> !u.getId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No opponent found")));
+        game.setEndedAt(LocalDateTime.now());
+        return gameRepository.save(game);
+    }
+
 }
