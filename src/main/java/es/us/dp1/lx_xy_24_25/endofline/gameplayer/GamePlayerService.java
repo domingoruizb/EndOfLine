@@ -28,6 +28,12 @@ public class GamePlayerService {
     }
 
     @Transactional(readOnly = true)
+    public GamePlayer getById(Integer id) {
+        return gamePlayerRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "Id", id));
+    }
+
+    @Transactional(readOnly = true)
     public GamePlayer getGamePlayer(Integer gameId, Integer userId) {
         return gamePlayerRepository.findByGameIdAndUserId(gameId, userId)
             .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));

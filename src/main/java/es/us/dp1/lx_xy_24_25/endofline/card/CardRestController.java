@@ -1,15 +1,19 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
- 
 
 @RestController
 @RequestMapping("/api/v1/cards")
@@ -18,42 +22,51 @@ import org.springframework.web.bind.annotation.*;
 public class CardRestController {
 
 	private final CardService cardService;
+    private final GamePlayerCardService gpcService;
+    private final GamePlayerService gamePlayerService;
 
 	@Autowired
-	public CardRestController(CardService cardService) {
+	public CardRestController(
+        CardService cardService,
+        GamePlayerCardService gpcService,
+        GamePlayerService gamePlayerService
+    ) {
 		this.cardService = cardService;
+        this.gpcService = gpcService;
+        this.gamePlayerService = gamePlayerService;
 	}
 
 	@GetMapping
 	public ResponseEntity<List<Card>> findAll() {
-		return new ResponseEntity<>((List<Card>) cardService.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(cardService.findAll(), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Card> findCard(@PathVariable("id") Integer id) {
-		Card card = cardService.getById(id);
-		return new ResponseEntity<>(card, HttpStatus.OK);
-	}
+    @GetMapping("/image/{image}")
+    public ResponseEntity<Card> findByImage(@PathVariable("image") String image) {
+        return new ResponseEntity<>(cardService.findByImage(image), HttpStatus.OK);
+    }
 
 	@GetMapping("/lineColor/{color}")
 	public ResponseEntity<List<Card>> findByColor(@PathVariable("color") String color) {
-		return new ResponseEntity<>(cardService.getCardsByColorLine(color), HttpStatus.OK);
-	}
-	/*
-
-	@GetMapping("/gameplayer/{gpId}")
-	public ResponseEntity<List<Card>> findByGamePlayer(@PathVariable("gpId") Integer gpId) {
-		return new ResponseEntity<>(cardService.getCardsByGamePlayer(gpId), HttpStatus.OK);
+		return new ResponseEntity<>(cardService.getCardsByColor(color), HttpStatus.OK);
 	}
 
-	@GetMapping("/games/{gameId}/onboard")
-	public ResponseEntity<List<Card>> getOnBoardByGame(@PathVariable("gameId") Integer gameId) {
-		return new ResponseEntity<>(cardService.getOnBoardCards(gameId), HttpStatus.OK);
-	}
+    @PostMapping("/place/{gamePlayerId}")
+    public ResponseEntity<GamePlayerCard> placeCard(
+        @PathVariable("gamePlayerId") Integer gamePlayerId,
+        @RequestBody GamePlayerCardDTO dto
+    ) {
+        GamePlayerCard gpc = new GamePlayerCard();
+        Card card = cardService.findByImage(dto.getImage());
+        GamePlayer gp = gamePlayerService.getById(gamePlayerId);
 
-	@GetMapping("/games/{gameId}/visible/{viewerGpId}")
-	public ResponseEntity<List<Card>> getVisible(@PathVariable("gameId") Integer gameId,
-												 @PathVariable("viewerGpId") Integer viewerGpId) {
-		return new ResponseEntity<>(cardService.getVisibleCards(gameId, viewerGpId), HttpStatus.OK);
-	}*/
+        gpc.setCard(card);
+        gpc.setGamePlayer(gp);
+        gpc.setPositionX(dto.getPositionX());
+        gpc.setPositionY(dto.getPositionY());
+        gpc.setRotation(dto.getRotation());
+        gpc.setPlacedAt(LocalDateTime.now());
+
+        return new ResponseEntity<>(gpcService.placeCard(gpc), HttpStatus.CREATED);
+    }
 }
