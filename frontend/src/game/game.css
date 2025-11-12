@@ -1,13 +1,22 @@
+/* Variables */
+:root {
+    --main-orange-color: #ff9900;
+    --game-cell-size: 12vh; 
+    --board-gap: 0.5vh;
+    --side-container-width: 25vw;
+}
+
 /* Page container */
 .game-page-container {
     display: grid;
-    height: 100vh;
+    grid-template-columns: var(--side-container-width) 1fr var(--side-container-width); 
+    height: 92vh; 
     background-color: #121212;
-    grid-template-columns: 2fr 3fr 2fr;
-    align-items: center;
+    align-items: flex-start; 
+    overflow: hidden;
 }
 
-/* Game data */
+/* Game data (Always fixed at the top) */
 .game-data-container {
     position: absolute;
     top: 15px;
@@ -17,6 +26,7 @@
     align-items: center;
     gap: 20px;
     color: white;
+    z-index: 10;
 }
 
 .game-data-container span {
@@ -24,10 +34,11 @@
     padding: 5px 10px;
     border-radius: 10px;
     background-color: #333;
+    font-weight: bold;
 }
 
-/* Main board */
 .game-board-container {
+    grid-column: 2 / 3; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,21 +46,24 @@
 
 .game-board {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(7, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(7, var(--game-cell-size));
+    grid-template-rows: repeat(7, var(--game-cell-size));
+    gap: var(--board-gap);
+    max-height: 90vh; 
+    max-width: 90vw;
+    aspect-ratio: 1/1; 
 }
 
 .game-cell {
-    width: 100px;
-    height: 100px;
+    width: var(--game-cell-size);
+    height: var(--game-cell-size);
     background-color: #333;
     border: none;
-    border-radius: 15px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 1.5vh;
     color: white;
     user-select: none;
     outline: none;
@@ -61,28 +75,39 @@
     transform: scale(1.05);
 }
 
-/* Side deck + Skills */
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center;
+}
+
+/* Side deck + Skills (Left and Right Columns) */
 .side-container {
     background-color: #1e1e1e;
-    padding: 10px;
+    padding: 2vh; 
     border-radius: 15px;
     margin: 20px;
-    gap: 20px;
+    gap: 2vh; 
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; 
+    height: 85vh;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .skills-container {
     width: 100%;
+    flex-shrink: 0;
 }
 
 .skill-button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 18px;
+    margin: 0.5vh 0; 
+    padding: 1vh 1vw;
+    font-size: 2vh;
     width: 100%;
     border: 2px solid var(--main-orange-color);
     border-radius: 10px;
@@ -97,28 +122,34 @@
     color: black;
 }
 
-/* Card grid */
 .cards-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; 
+    gap: 1vh;
+    width: 100%;
+    overflow-y: hidden; 
 }
 
 .cards-container > :last-child {
     grid-column: span 2;
     justify-self: center;
+    margin-bottom: 15px;
 }
 
 .card-button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
     aspect-ratio: 1/1;
-    width: 150px;
-    margin: 5px;
-    font-size: 18px;
-    border: 5px solid transparent;
+    width: 100%; 
+    max-width: 8vw;
+    border: 3px solid transparent;
     border-radius: 10px;
     background-color: #333;
     color: white;
     cursor: pointer;
     transition: all ease-in-out 0.1s;
+    box-sizing: border-box;
 }
 
 .card-button.selected {
@@ -129,28 +160,12 @@
     background-color: #555;
 }
 
-.pulsating-bg {
-    animation: pulsate 2s infinite;
-}
-
-@keyframes select {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  40% {
-    transform: scale(1.08) rotate(2.5deg);
-  }
-  100% {
-    transform: scale(1.05) rotate(2.5deg);
-  }
-}
-
 @keyframes pulsate {
     0% {
         background-color: #333;
     }
     50% {
-        background-color: lightgreen;
+        background-color: #b0d12d62;
     }
     100% {
         background-color: #333;

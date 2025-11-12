@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { boardArray, checkPlacementValid, getCoordinates, getCards, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
+import { boardArray, checkPlacementValid, getCards, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 
@@ -343,7 +343,7 @@ export default function GamePage () {
                                                     color: 'gray',
                                                 }}
                                             >
-                                                ({getCoordinates(index).row}, {getCoordinates(index).col})
+                                                .                                                
                                             </span>
                                         )
                                     }
