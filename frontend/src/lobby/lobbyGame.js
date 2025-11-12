@@ -375,7 +375,7 @@ const copyGameCode = async () => {
                                 {GameGamePlayerFormInputs.map((choice) => (
                                     <div
                                         key={choice.color}
-                                        className={`color-image-container ${myColorState === choice.color ? "selected-container" : ""}`}
+                                        className={`color-image-container ${myColorState === choice.color ? "selected-color-container" : ""}`}
                                     >
                                         <img
                                             src={choice.image}
@@ -392,7 +392,7 @@ const copyGameCode = async () => {
                                 {GameGamePlayerFormInputs.map((choice) => (
                                     <div
                                         key={choice.color}
-                                        className={`color-image-container ${friendColorState === choice.color ? "selected-container" : ""}`}
+                                        className={`color-image-container ${friendColorState === choice.color ? "selected-color-container" : ""}`}
                                     >
                                         <img
                                             src={choice.image}
