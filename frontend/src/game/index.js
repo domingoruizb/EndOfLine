@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { boardArray, checkPlacementValid, getCards, getInitialValidIndexes, getRotation, getValidIndexes, nameToBinary } from './gameUtils/cardUtils'
+import { checkPlacementValid, getInitialValidIndexes, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
+import { boardArray, getCards } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
+import { postCardPlacement } from './gameUtils/apiUtils'
+import GameInfo from './gameComponents/gameInfo'
+import SkillButton from './gameComponents/skillButton'
+import HandCard from './gameComponents/handCard'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
@@ -39,50 +44,44 @@ export default function GamePage () {
         setSelectedCard(prevCard => (prevCard === cardName ? null : cardName))
     }
 
-    const handlePlaceCard = (index) => {
-        if (selectedCard == null) {
+    const handlePlaceCard = async (index) => {
+        if (!checkPlacementValid(board, selectedCard, index, lastPlacedCards, isHost)) {
             return
-        }
-
-        if (lastPlacedCards.length === 0) {
-            if (isHost == null) {
-                return
-            }
-
-            if (!getInitialValidIndexes(isHost).includes(index)) {
-                return
-            }
         }
 
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
-        if (!checkPlacementValid(board, selectedCard, index, lastPlacedCard)) {
-            return
-        }
-
         const rotation = getRotation(index, lastPlacedCard)
 
-        const newBoard = [...board]
-        newBoard[index] = { name: selectedCard, rotation }
+        try {
+            const gamePlayerId = isHost ? hostGamePlayer?.id : secondGamePlayer?.id
+            await postCardPlacement(index, rotation, selectedCard, gamePlayerId)
 
-        setBoard(newBoard)
+            const newBoard = [...board]
+            newBoard[index] = { name: selectedCard, rotation }
 
-        const lastPlaced = {
-            name: selectedCard,
-            index,
-            rotation
+            console.log('Placing card:', { name: selectedCard, index, rotation })
+            setBoard(newBoard)
+
+            const lastPlaced = {
+                name: selectedCard,
+                index,
+                rotation
+            }
+
+            setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
+            console.log('Placed card:', [...lastPlacedCards, lastPlaced])
+
+            const nextIndexes = getValidIndexes(lastPlaced, board)
+            setNextValidIndexes(nextIndexes)
+
+            if (nextIndexes.length === 0) {
+                console.log('Game Over!')
+            }
+
+            setSelectedCard(null)
+        } catch (err) {
+            console.error('Error placing card:', err)
         }
-
-        setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
-        console.log('Placed card:', [...lastPlacedCards, lastPlaced])
-
-        const nextIndexes = getValidIndexes(lastPlaced, board)
-        setNextValidIndexes(nextIndexes)
-
-        if (nextIndexes.length === 0) {
-            console.log('Game Over!')
-        }
-
-        setSelectedCard(null)
     }
 
     const fetchGameData = async (signal) => {
@@ -126,7 +125,7 @@ export default function GamePage () {
         const pollingInterval = 3000;
         let abortController = new AbortController();
 
-        fetchGameData(abortController.signal);
+        fetchGameData(abortController.signal)
 
         intervalId = setInterval(() => {
             abortController.abort(); 
@@ -165,14 +164,10 @@ export default function GamePage () {
         return () => clearInterval(interval)
     }, [gameData?.startedAt])
 
-    function getCardName(card) {
-        return card?.image?.split('/')?.pop()?.replace('.png', '');
-    }
-
     useEffect(() => {
         if (hostColor != null && hostCards.length === 0) {
             fetch(
-            `/api/v1/cards/lineColor/${hostColor}`,
+            `/api/v1/cards/color/${hostColor}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
@@ -188,7 +183,7 @@ export default function GamePage () {
 
         if (secondColor != null && secondCards.length === 0) {
             fetch(
-            `/api/v1/cards/lineColor/${secondColor}`,
+            `/api/v1/cards/color/${secondColor}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
@@ -202,6 +197,7 @@ export default function GamePage () {
             .catch((message) => console.error(message))
         }
     }, [hostColor, secondColor, jwt, hostCards.length, secondCards.length]);
+
     useEffect(() => {
         if (hostCards.length > 0 && isHost) {
             setRandomCards(getCards(hostCards));
@@ -210,10 +206,6 @@ export default function GamePage () {
         }
     }, [isHost, hostCards, secondCards]);
 
-    const seconds = Math.floor(elapsed / 1000) % 60
-    const minutes = Math.floor(elapsed / 60000) % 60
-    const hours = Math.floor(elapsed / 3600000)
-
     return (
         <div
             className='game-page-container'
@@ -221,34 +213,11 @@ export default function GamePage () {
             <div
                 className='game-data-container'
             >
-                Game ID:
-                <span>
-                    {gameId}
-                </span>
-                {
-                    gameData != null && gameData.host != null && (
-                        <>
-                            Host:
-                            <span>
-                                {gameData.host.username}
-                            </span>
-                            Guest:
-                            <span>
-                                {
-                                    gameData.gamePlayers
-                                        .find(player => player.user.id !== gameData.host.id)
-                                        ?.user.username ?? 'Waiting for guest...'
-                                }
-                            </span>
-                            Elapsed:
-                            <span>
-                                {hours.toString().padStart(2, '0')}:
-                                {minutes.toString().padStart(2, '0')}:
-                                {seconds.toString().padStart(2, '0')}
-                            </span>
-                        </>
-                    )
-                }
+                <GameInfo
+                    gameId={gameId}
+                    gameData={gameData}
+                    elapsed={elapsed}
+                />
             </div>
             <div
                 className='side-container'
@@ -258,13 +227,10 @@ export default function GamePage () {
                 >
                     {
                         skills.map((skill, index) => (
-                            <button
+                            <SkillButton
                                 key={index}
-                                className='skill-button'
-                                onClick={() => console.log(`Activated skill: ${skill}`)}
-                            >
-                                {skill}
-                            </button>
+                                skill={skill}
+                            />
                         ))
                     }
                 </div>
@@ -272,30 +238,14 @@ export default function GamePage () {
                     className='cards-container'
                 >
                     {
-                        randomCards.map((card, index) => {
-                            const cardName = getCardName(card);
-                            const bits = nameToBinary(cardName)
-                            const isSelected = selectedCard === cardName;
-                            const transformStyle = isSelected ? 'scale(1.05) rotate(2.5deg)' : 'none';
-
-                            return (
-                                <button
-                                    key={index}
-                                    onClick={() => handleCardSelect(cardName)}
-                                    className='card-button'
-                                        style={{ 
-                                            backgroundColor: isSelected && 'var(--main-orange-color)',
-                                            transform: transformStyle,
-                                        }}
-                                    >
-                                    <img 
-                                        src={card.image} 
-                                        alt={`Card ${cardName}`} 
-                                        className='card-image'
-                                    />
-                                </button>
-                            )
-                        })
+                        randomCards.map((card, index) => (
+                            <HandCard
+                                key={index}
+                                card={card}
+                                selectedCard={selectedCard}
+                                handleCardSelect={handleCardSelect}
+                            />
+                        ))
                     }
                 </div>
             </div>
@@ -308,7 +258,7 @@ export default function GamePage () {
                     {
                         board.map((card, index) => {
                             let cardName = card != null ? card.name : null;
-                            const bits = cardName != null ? nameToBinary(cardName) : 0b0000
+
                             const isValid = nextValidIndexes.includes(index)
                             if (card?.name === 'START' && hostColor != null && index === 30) {
                                 const colorLetter = hostColor.charAt(0).toUpperCase();
@@ -332,12 +282,13 @@ export default function GamePage () {
                                     }}
                                 >
                                     {
-                                        card != null ? 
-                                        <img 
-                                        src={`/cardImages/${cardName}.png`} 
-                                        alt={`Card ${cardName}`} 
-                                        className='card-image'
-                                        /> : (
+                                        card != null ? ( 
+                                            <img 
+                                                src={`/cardImages/${cardName}.png`} 
+                                                alt={`Card ${cardName}`} 
+                                                className='card-image'
+                                            />
+                                        ) : (
                                             <span
                                                 style={{
                                                     color: 'gray',

@@ -46,10 +46,15 @@ public class CardRestController {
         return new ResponseEntity<>(cardService.findByImage(image), HttpStatus.OK);
     }
 
-	@GetMapping("/lineColor/{color}")
+	@GetMapping("/color/{color}")
 	public ResponseEntity<List<Card>> findByColor(@PathVariable("color") String color) {
 		return new ResponseEntity<>(cardService.getCardsByColor(color), HttpStatus.OK);
 	}
+
+    @GetMapping("/game/{gameId}")
+    public ResponseEntity<List<GamePlayerCard>> findByGameId(@PathVariable("gameId") Integer gameId) {
+        return new ResponseEntity<>(cardService.findByGameId(gameId), HttpStatus.OK);
+    }
 
     @PostMapping("/place/{gamePlayerId}")
     public ResponseEntity<GamePlayerCard> placeCard(

@@ -9,6 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,10 +21,22 @@ import lombok.Setter;
 @Setter
 public class GamePlayerCard extends BaseEntity {
 
+    @NotNull
+    @Min(0)
+    @Max(6)
     private Integer positionX;
+
+    @NotNull
+    @Min(0)
+    @Max(6)
     private Integer positionY;
+
+    @NotNull
+    @Min(-3)
+    @Max(0)
     private Integer rotation;
 
+    @NotNull
     private LocalDateTime placedAt;
 
     @ManyToOne
