@@ -136,8 +136,6 @@ export default function GamePage () {
             const data = await res.json()
             setGameData(data)
 
-            console.log('Fetched game data:', data);
-
             const hostPlayer = data?.gamePlayers?.find(player => player.user.id === data.host.id);
             const secondPlayer = data?.gamePlayers?.find(player => player.user.id !== data.host.id);
             
@@ -242,6 +240,9 @@ export default function GamePage () {
             setNextValidIndexes(initialIndexes)
         } else if (lastPlacedCard != null) {
             const nextIndexes = getValidIndexes(lastPlacedCard, board)
+            if (nextIndexes.length === 0) {
+                setHasLost(true);
+            }
             setNextValidIndexes(nextIndexes)
         }
     }, [isHost, lastPlacedCards, board])
