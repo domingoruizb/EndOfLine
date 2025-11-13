@@ -49,7 +49,7 @@ public class Game extends BaseEntity {
 
     // @ManyToOne
     // @ManyToOne
-    @JoinColumn(name = "turn_user_id")
+    @JoinColumn(name = "turn")
     private Integer turn;
 /*
     // Method to end a game and declare a winner

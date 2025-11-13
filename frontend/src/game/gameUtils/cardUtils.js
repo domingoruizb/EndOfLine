@@ -29,6 +29,18 @@ export function getCards (cards) {
     return shuffled.slice(0, 5)
 }
 
+export function getReplacementCard (allCards, cardsInHand) {
+    const cardNamesInHand = cardsInHand.map(c => c.name);
+
+    const availableCards = allCards.filter(card => !cardNamesInHand.includes(card.name));
+
+    if (availableCards.length === 0) {
+        return null;
+    }
+    const randomIndex = Math.floor(Math.random() * availableCards.length);
+    return availableCards[randomIndex];
+};
+
 export function nameToBinary (cardName) {
     return parseInt(cardName.split('_')[1], 2)
 }

@@ -80,7 +80,6 @@ export function getValidIndexes (lastPlacedCard, board) {
         const newCol = (col + 1) % boardLength
         potential.push(getIndex(row, newCol))
     }
-    console.log('Potential valid indexes:', potential)
 
     return potential.filter(idx => board[idx] == null)
 }

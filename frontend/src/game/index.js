@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
 import { checkPlacementValid, getInitialValidIndexes, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
-import { boardArray, getCards, getIndex } from './gameUtils/cardUtils'
+import { boardArray, getCards, getIndex, getReplacementCard } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 import { postCardPlacement } from './gameUtils/apiUtils'
@@ -39,6 +39,10 @@ export default function GamePage () {
 
     if (gameData != null && gameData.startedAt == null) {
         navigate(`/lobby/${gameId}`)
+    }
+
+    const getCardName = (card) => {
+        return card?.image?.split('/')?.pop()?.replace('.png', '');
     }
 
     const isHost = useMemo(() => {
@@ -80,6 +84,34 @@ export default function GamePage () {
             if (nextIndexes.length === 0) {
                 setHasLost(true);
             }
+
+            setRandomCards(prevRandomCards => {
+                const cardIndexToReplace = prevRandomCards.findIndex(card => getCardName(card) === selectedCard);
+                
+                if (cardIndexToReplace !== -1) {
+                    const allCards = isHost ? hostCards : secondCards;
+                    
+                    const cardNamesInHand = prevRandomCards.map(c => getCardName(c));
+
+                    const availableCards = allCards.filter(card => !cardNamesInHand.includes(getCardName(card)));
+                    
+                    let newCard = null;
+                    if (availableCards.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * availableCards.length);
+                        newCard = availableCards[randomIndex];
+                    }
+
+                    const updatedCards = [...prevRandomCards];
+                    if (newCard) {
+                        updatedCards[cardIndexToReplace] = newCard;
+                    } else {
+                        updatedCards.splice(cardIndexToReplace, 1);
+                    }
+                    
+                    return updatedCards;
+                }
+                return prevRandomCards;
+            });
 
             setSelectedCard(null)
         } catch (err) {
