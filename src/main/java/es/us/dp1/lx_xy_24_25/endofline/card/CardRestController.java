@@ -3,6 +3,8 @@ package es.us.dp1.lx_xy_24_25.endofline.card;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
+import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
@@ -24,16 +26,19 @@ public class CardRestController {
 	private final CardService cardService;
     private final GamePlayerCardService gpcService;
     private final GamePlayerService gamePlayerService;
+    private final GameService gameService;
 
 	@Autowired
 	public CardRestController(
         CardService cardService,
         GamePlayerCardService gpcService,
-        GamePlayerService gamePlayerService
+        GamePlayerService gamePlayerService,
+        GameService gameService
     ) {
 		this.cardService = cardService;
         this.gpcService = gpcService;
         this.gamePlayerService = gamePlayerService;
+        this.gameService = gameService;
 	}
 
 	@GetMapping
@@ -64,6 +69,11 @@ public class CardRestController {
         GamePlayerCard gpc = new GamePlayerCard();
         Card card = cardService.findByImage(dto.getImage());
         GamePlayer gp = gamePlayerService.getById(gamePlayerId);
+        Game game = gp.getGame();
+
+        if (!game.getTurn().equals(gp.getUser().getId())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
         gpc.setCard(card);
         gpc.setGamePlayer(gp);
@@ -71,7 +81,14 @@ public class CardRestController {
         gpc.setPositionY(dto.getPositionY());
         gpc.setRotation(dto.getRotation());
         gpc.setPlacedAt(LocalDateTime.now());
+        GamePlayerCard savedGPC = gpcService.placeCard(gpc);
 
-        return new ResponseEntity<>(gpcService.placeCard(gpc), HttpStatus.CREATED);
+        gamePlayerService.incrementCardsPlayedThisRound(gp.getId());
+
+        if (dto.getTurnFinished()) {
+            gameService.advanceTurn(game.getId());
+        }
+
+        return new ResponseEntity<>(savedGPC, HttpStatus.CREATED);
     }
 }

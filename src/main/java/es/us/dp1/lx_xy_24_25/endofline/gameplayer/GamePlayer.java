@@ -31,4 +31,7 @@ public class GamePlayer extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Min(0)
+    private Integer cardsPlayedThisRound = 0;
 }

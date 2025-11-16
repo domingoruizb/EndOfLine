@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerRepository;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,12 @@ public class GameService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired 
+    private GamePlayerCardRepository gpcRepository;
+
+    @Autowired
+    private GamePlayerRepository gamePlayerRepository;
 
     @Autowired
     public GameService(GameRepository gameRepository) {
@@ -165,6 +174,118 @@ public class GameService {
                 .orElseThrow(() -> new IllegalStateException("No opponent found")));
         game.setEndedAt(LocalDateTime.now());
         return gameRepository.save(game);
+    }
+
+    private Integer comparePreviousCardsRecursively(Integer gamePlayerId1, Integer gamePlayerId2) {
+    
+    List<GamePlayerCard> cards1 = gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayerId1);
+
+    List<GamePlayerCard> cards2 = gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayerId2);
+    
+    if (cards1.size() <= 1 && cards2.size() <= 1) {
+        Game game = gamePlayerRepository.findById(gamePlayerId1).get().getGame();
+        return game.getHost().getId(); 
+    }
+
+    int index = 1; 
+
+    while (true) {
+        boolean hasCard1 = cards1.size() > index;
+        boolean hasCard2 = cards2.size() > index;
+
+        if (!hasCard1 && !hasCard2) {
+            Game game = gamePlayerRepository.findById(gamePlayerId1).get().getGame();
+            return game.getHost().getId(); 
+        }
+
+        if (hasCard1 && !hasCard2) {
+            return cards1.size() > cards2.size() ? cards2.get(0).getGamePlayer().getUser().getId() : cards1.get(0).getGamePlayer().getUser().getId(); 
+        }
+        
+        if (!hasCard1 && hasCard2) {
+            return cards2.size() > cards1.size() ? cards1.get(0).getGamePlayer().getUser().getId() : cards2.get(0).getGamePlayer().getUser().getId();
+        }
+
+        Integer initiative1 = cards1.get(index).getCard().getInitiative();
+        Integer initiative2 = cards2.get(index).getCard().getInitiative();
+
+        if (initiative1 < initiative2) {
+            return cards1.get(index).getGamePlayer().getUser().getId(); 
+        } else if (initiative2 < initiative1) {
+            return cards2.get(index).getGamePlayer().getUser().getId();
+        }
+        index++;
+    }
+}
+
+    private Integer determineNextTurnByInitiative(Game game) {
+    List<GamePlayer> players = game.getGamePlayers();
+    GamePlayer player1 = players.get(0);
+    GamePlayer player2 = players.get(1);
+
+    GamePlayerCard lastCard1 = gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(player1.getId()).stream().findFirst().orElse(null);
+    GamePlayerCard lastCard2 = gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(player2.getId()).stream().findFirst().orElse(null);
+
+    if (lastCard1 == null || lastCard2 == null) {
+        return game.getHost().getId();
+    }
+
+    Integer initiative1 = lastCard1.getCard().getInitiative();
+    Integer initiative2 = lastCard2.getCard().getInitiative();
+
+    if (initiative1 < initiative2) {
+        return player1.getUser().getId(); 
+    } else if (initiative2 < initiative1) {
+        return player2.getUser().getId();
+    } else {
+
+        if (game.getRound() == 1) {
+            return game.getHost().getId(); 
+        } else {
+            return comparePreviousCardsRecursively(player1.getId(), player2.getId());
+        }
+    }
+}
+
+    @Transactional
+    public void advanceTurn(Integer gameId) {   
+        Game game = getGameById(gameId);
+            
+        List<GamePlayer> players = game.getGamePlayers();
+
+        if (players.size() != 2) {
+            return; 
+        }
+
+        int cardsPerTurnLimit = game.getRound() == 1 ? 1 : 2;
+
+        boolean allPlayersFinished = players.stream()
+            .allMatch(gp -> gp.getCardsPlayedThisRound() >= cardsPerTurnLimit);
+
+        if (allPlayersFinished) {
+            game.setRound(game.getRound() + 1);
+            players.forEach(gp -> gp.setCardsPlayedThisRound(0));
+            
+            if (game.getRound() > 1) { 
+                game.setTurn(determineNextTurnByInitiative(game));
+            } else {
+                game.setTurn(game.getHost().getId());
+            }
+        } else {
+            if (game.getRound() == 1) {
+                Integer nextPlayerId = players.stream()
+                    .filter(gp -> !gp.getUser().getId().equals(game.getTurn()))
+                    .findFirst()
+                    .map(gp -> gp.getUser().getId())
+                    .orElseThrow(() -> new IllegalStateException("Missing opponent in game"));
+
+                game.setTurn(nextPlayerId);
+            } else {
+                game.setTurn(determineNextTurnByInitiative(game));
+            }
+        }
+        
+        gameRepository.save(game);
     }
 
 }

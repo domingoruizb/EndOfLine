@@ -16,17 +16,22 @@ public class GamePlayerCardDTO {
     @JsonProperty("rotation")
     private Integer rotation;
 
+    @JsonProperty("turnFinished")
+    private Boolean turnFinished;
+
     public GamePlayerCardDTO() {}
     public GamePlayerCardDTO(
         String image,
         Integer positionX,
         Integer positionY,
-        Integer rotation
+        Integer rotation,
+        Boolean turnFinished
     ) {
         this.image = image;
         this.positionX = positionX;
         this.positionY = positionY;
         this.rotation = rotation;
+        this.turnFinished = turnFinished;
     }
 
     public String getImage() {
@@ -59,5 +64,13 @@ public class GamePlayerCardDTO {
 
     public void setRotation(Integer rotation) {
         this.rotation = rotation;
+    }
+
+    public Boolean getTurnFinished() {
+        return turnFinished;
+    }
+
+    public void setTurnFinished(Boolean turnFinished) {
+        this.turnFinished = turnFinished;
     }
 }
