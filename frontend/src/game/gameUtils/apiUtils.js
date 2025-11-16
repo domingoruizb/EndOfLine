@@ -7,7 +7,8 @@ export async function postCardPlacement (
     index,
     rotation,
     selectedCard,
-    gamePlayerId
+    gamePlayerId,
+    isTurnFinished
 ) {
     const coords = getCoordinates(index)
     try {
@@ -24,6 +25,7 @@ export async function postCardPlacement (
                     position_x: coords.row,
                     position_y: coords.col,
                     rotation: rotation,
+                    turnFinished: isTurnFinished
                 })
             }
         )

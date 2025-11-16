@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
 import { checkPlacementValid, getInitialValidIndexes, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
-import { boardArray, getCards, getIndex, getReplacementCard } from './gameUtils/cardUtils'
+import { boardArray, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 import { postCardPlacement } from './gameUtils/apiUtils'
@@ -34,6 +34,7 @@ export default function GamePage () {
     const [randomCards, setRandomCards] = useState([]);
     const [isGiveUpModalOpen, setIsGiveUpModalOpen] = useState(false);
     const [hasLost, setHasLost] = useState(false);
+    const [cardsPlacedInTurn, setCardsPlacedInTurn] = useState(0);
 
     const toggleGiveUpModal = () => setIsGiveUpModalOpen(!isGiveUpModalOpen);
 
@@ -60,12 +61,17 @@ export default function GamePage () {
             return
         }
 
+        const currentRound = gameData?.round;
+        const cardsPerTurnLimit = currentRound === 1 ? 1 : 2;
+
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         const rotation = getRotation(index, lastPlacedCard)
 
+        const isTurnFinished = cardsPlacedInTurn + 1 === cardsPerTurnLimit;
+
         try {
             const gamePlayerId = isHost ? hostGamePlayer?.id : secondGamePlayer?.id
-            await postCardPlacement(index, rotation, selectedCard, gamePlayerId)
+            await postCardPlacement(index, rotation, selectedCard, gamePlayerId, isTurnFinished)
 
             const newBoard = board.map((cell, i) => i === index ? { name: selectedCard, rotation } : cell);
             setBoard(newBoard)
@@ -83,6 +89,12 @@ export default function GamePage () {
 
             if (nextIndexes.length === 0) {
                 setHasLost(true);
+            }
+
+            if (isTurnFinished) {
+                setCardsPlacedInTurn(0);
+            } else {
+                setCardsPlacedInTurn(prev => prev + 1);
             }
 
             setRandomCards(prevRandomCards => {
@@ -335,6 +347,12 @@ export default function GamePage () {
     }, [isHost, hostCards, secondCards]);
 
     const isGameActive = gameData?.startedAt != null && gameData?.endedAt == null;
+
+    const isMyTurn = isGameActive && gameData?.turn === user?.id;
+
+    const currentRound = gameData?.round || 1;
+    const cardsPerTurnLimit = currentRound === 1 ? 1 : 2;
+    const hasReachedLimit = cardsPlacedInTurn >= cardsPerTurnLimit;
   
     return (
         <div
@@ -400,7 +418,7 @@ export default function GamePage () {
                                 key={index}
                                 card={card}
                                 selectedCard={selectedCard}
-                                handleCardSelect={handleCardSelect}
+                                handleCardSelect={isMyTurn && !hasReachedLimit ? handleCardSelect : () => {}}
                             />
                         ))
                     }
@@ -460,6 +478,13 @@ export default function GamePage () {
                         })
                     }
                 </div>
+                {!isMyTurn && isGameActive && (
+                    <div className='turn-overlay'>
+                        <span className='overlay-text'>
+                            ⏳ Waiting for opponent's turn...
+                        </span>
+                    </div>
+                )}
             </div> 
         </div>
     )

@@ -17,6 +17,12 @@ public class GamePlayerService {
         this.gamePlayerRepository = gamePlayerRepository;
     }
 
+    @Transactional(readOnly = true)
+    public GamePlayer findById(Integer id) {
+        return gamePlayerRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "Id", id));
+    }
+
     @Transactional
     public GamePlayer updatePlayerColor(Integer gameId, Integer userId, String newColor) {
         GamePlayer gamePlayer = gamePlayerRepository.findByGameIdAndUserId(gameId, userId)
@@ -39,5 +45,12 @@ public class GamePlayerService {
             .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));
     }
 
+    @Transactional 
+    public void incrementCardsPlayedThisRound(Integer gamePlayerId) {
+        GamePlayer gp = findById(gamePlayerId);
+
+        gp.setCardsPlayedThisRound(gp.getCardsPlayedThisRound() + 1);
+        gamePlayerRepository.save(gp);
+    }
 
 }

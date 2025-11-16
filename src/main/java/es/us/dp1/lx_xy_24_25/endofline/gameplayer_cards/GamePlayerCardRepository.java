@@ -12,4 +12,7 @@ public interface GamePlayerCardRepository extends CrudRepository<GamePlayerCard,
     @Query("SELECT gpc FROM GamePlayerCard gpc WHERE gpc.gamePlayer.game.id = :gameId")
     List<GamePlayerCard> findByGameId(Integer gameId);
 
+    @Query("SELECT gpc FROM GamePlayerCard gpc WHERE gpc.gamePlayer.id = :gamePlayerId ORDER BY gpc.placedAt DESC")
+    List<GamePlayerCard> findByGamePlayerIdOrderByPlacedAtDesc(Integer gamePlayerId);
+
 }
