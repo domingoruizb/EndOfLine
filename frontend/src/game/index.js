@@ -236,7 +236,7 @@ export default function GamePage () {
 
     useEffect(() => {
         let intervalId;
-        const pollingInterval = 3000;
+        const pollingInterval = 100;
         let abortController = new AbortController();
 
         fetchGameData(abortController.signal)
