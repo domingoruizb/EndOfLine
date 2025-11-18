@@ -271,11 +271,11 @@ export default function GamePage () {
         }
     }
 
-    useEffect(() => {
-        if (hasLost) {
-            loseAndEndGame()
-        }
-    }, [hasLost]);
+    useEffect(() => {
+        if (hasLost) {
+            loseAndEndGame()
+        }
+    }, [hasLost]);
 
     useEffect(() => {
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
