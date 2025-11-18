@@ -281,11 +281,17 @@ public class GameService {
 
                 game.setTurn(nextPlayerId);
             } else {
-                game.setTurn(determineNextTurnByInitiative(game));
+                for (GamePlayer gp : players) {
+                    if (!gp.getUser().getId().equals(game.getTurn()) && gp.getCardsPlayedThisRound() < cardsPerTurnLimit) {
+                        game.setTurn(gp.getUser().getId());
+                        break;
+                    }
             }
         }
         
         gameRepository.save(game);
+    }
+
     }
 
 }
