@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { checkPlacementValid, getInitialValidIndexes, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
+import { checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
 import { boardArray, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
@@ -81,6 +81,11 @@ export default function GamePage () {
                 index,
                 rotation
             }
+
+            // In case of reverse skills activated
+            // const reverseCard = getReverseCard([...lastPlacedCards, lastPlaced]);
+            // const validInd = reverseCard ? getValidIndexes(reverseCard, newBoard) : [];
+            // console.log('Valid indexes after reverse check:', validInd);
 
             setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
 
