@@ -275,6 +275,7 @@ public class GameService {
         if (allPlayersFinished) {
             game.setRound(game.getRound() + 1);
             players.forEach(gp -> gp.setCardsPlayedThisRound(0));
+            game.setSkill(null);
 
             if (game.getRound() > 1) {
                 game.setTurn(determineNextTurnByInitiative(game));
@@ -289,6 +290,7 @@ public class GameService {
                 .map(gp -> gp.getUser().getId())
                 .orElseThrow(() -> new IllegalStateException("Missing opponent in game"));
 
+            game.setSkill(null);
             game.setTurn(nextPlayerId);
         }
 

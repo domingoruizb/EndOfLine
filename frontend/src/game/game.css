@@ -197,12 +197,6 @@
     overflow-y: hidden; 
 }
 
-.cards-container > :last-child {
-    grid-column: span 2;
-    justify-self: center;
-    margin-bottom: 15px;
-}
-
 .card-button {
     margin-left: auto;
     margin-right: auto;
@@ -221,6 +215,12 @@
 
 .card-button.selected {
     transform: scale(1.05) rotate(2.5deg);
+}
+
+.card-button.centered-last {
+    grid-column: span 2;
+    justify-self: center;
+    margin-bottom: 15px;
 }
 
 .card-button:hover {
@@ -247,18 +247,41 @@
 }
 
 .giveup-button {
-    background-color: var(--main-orange-color); 
-    color: white; 
-    font-weight: bold; 
-    padding: 6px 12px; 
-    border-radius: 5px;
+    margin: 0.5vh 0; 
+    margin-left: 5px;
+    padding: 1vh 1vw;
+    font-size: 2vh;
+    border: 2px solid var(--main-orange-color);
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
     cursor: pointer;
-    border: none;
-    text-transform: uppercase;
-    font-size: 16px;
-    transition: background-color 0.2s;
+    transition: ease-in-out 0.1s;
 }
 
 .giveup-button:hover {
-    background-color: #FE5B02; 
+    background-color: var(--main-orange-color);
+    color: black;
+}
+
+.change-deck-button {
+    margin: 0.5vh 0; 
+    padding: 1vh 1vw;
+    font-size: 2vh;
+    border: 2px solid var(--main-orange-color);
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    transition: ease-in-out 0.1s;
+}
+
+.change-deck-button:hover:not(:disabled) {
+    background-color: var(--main-orange-color);
+    color: black;
+}
+
+.change-deck-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

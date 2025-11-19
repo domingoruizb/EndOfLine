@@ -35,11 +35,19 @@ export default function GamePage () {
     const [isGiveUpModalOpen, setIsGiveUpModalOpen] = useState(false);
     const [hasLost, setHasLost] = useState(false);
     const [cardsPlacedInTurn, setCardsPlacedInTurn] = useState(0);
+    const [changeDeckUsed, setChangeDeckUsed] = useState(false);   
 
     const toggleGiveUpModal = () => setIsGiveUpModalOpen(!isGiveUpModalOpen);
 
     if (gameData != null && gameData.startedAt == null) {
         navigate(`/lobby/${gameId}`)
+    }
+
+    const handleChangeDeck = () => {
+        setChangeDeckUsed(true); 
+        const allCards = isHost ? hostCards : secondCards;
+        const newRandomCards = getCards(allCards); 
+        setRandomCards(newRandomCards); 
     }
 
     const getCardName = (card) => {
@@ -61,11 +69,12 @@ export default function GamePage () {
             return
         }
 
-
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         const rotation = getRotation(index, lastPlacedCard)
 
         const isTurnFinished = cardsPlacedInTurn + 1 === cardsPerTurnLimit;
+
+        const cardUsed = selectedCard;
 
         try {
             const gamePlayerId = isHost ? hostGamePlayer?.id : secondGamePlayer?.id
@@ -94,45 +103,60 @@ export default function GamePage () {
                 setHasLost(true);
             }
 
-            if (isTurnFinished) {
-                setCardsPlacedInTurn(0);
-            } else {
-                setCardsPlacedInTurn(prev => prev + 1);
-            }
-
             setRandomCards(prevRandomCards => {
-                const cardIndexToReplace = prevRandomCards.findIndex(card => getCardName(card) === selectedCard);
+                const cardIndexToReplace = prevRandomCards.findIndex(card => getCardName(card) === cardUsed);
                 
                 if (cardIndexToReplace !== -1) {
-                    const allCards = isHost ? hostCards : secondCards;
-                    
-                    const cardNamesInHand = prevRandomCards.map(c => getCardName(c));
-
-                    const availableCards = allCards.filter(card => !cardNamesInHand.includes(getCardName(card)));
-                    
-                    let newCard = null;
-                    if (availableCards.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * availableCards.length);
-                        newCard = availableCards[randomIndex];
-                    }
-
                     const updatedCards = [...prevRandomCards];
-                    if (newCard) {
-                        updatedCards[cardIndexToReplace] = newCard;
-                    } else {
-                        updatedCards.splice(cardIndexToReplace, 1);
-                    }
-                    
+                    updatedCards.splice(cardIndexToReplace, 1); 
                     return updatedCards;
                 }
                 return prevRandomCards;
             });
+
+            if (isTurnFinished) {
+                setCardsPlacedInTurn(0);
+                replaceHandCard();
+            } else {
+                setCardsPlacedInTurn(prev => prev + 1);
+            }
 
             setSelectedCard(null)
         } catch (err) {
             console.error('Error placing card:', err)
         }
     }
+
+    const replaceHandCard = () => {
+        setRandomCards(prevRandomCards => {
+            const currentHandCount = prevRandomCards.length;
+            const targetHandCount = 5;
+            const cardsToDraw = targetHandCount - currentHandCount;
+            
+            if (cardsToDraw <= 0) {
+                return prevRandomCards; 
+            }
+            
+            const allCards = isHost ? hostCards : secondCards;
+            const cardNamesInHand = prevRandomCards.map(c => getCardName(c));
+            
+            const availableCards = allCards.filter(card => !cardNamesInHand.includes(getCardName(card)));
+            
+            const updatedCards = [...prevRandomCards];
+
+            for (let i = 0; i < cardsToDraw; i++) {
+                if (availableCards.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * availableCards.length);
+                    const newCard = availableCards.splice(randomIndex, 1)[0];
+                    updatedCards.push(newCard);
+                } else {
+                    break;
+                }
+            }
+
+            return updatedCards;
+        });
+    };
 
     const handleGiveUp = async () => {
         toggleGiveUpModal();
@@ -281,6 +305,23 @@ export default function GamePage () {
     }, [hasLost]);
 
     useEffect(() => {
+        if (gameData != null && gameData?.skill === 'EXTRA_GAS' && gameData?.turn === user?.id) {
+            setRandomCards(prevCards => {
+                if (prevCards.length < 6) {
+                    const allCards = isHost ? hostCards : secondCards;
+                    const cardNamesInHand = prevCards.map(c => getCardName(c));
+                    const availableCards = allCards.filter(card => !cardNamesInHand.includes(getCardName(card)));
+                    const randomIndex = Math.floor(Math.random() * availableCards.length);
+                    const newCard = availableCards[randomIndex];
+                    return [...prevCards, newCard];
+                }
+                return prevCards;
+            });
+        }
+        console.log(randomCards);
+    }, [gameData?.skill]);
+
+    useEffect(() => {
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)
@@ -377,6 +418,9 @@ export default function GamePage () {
     gameData?.skill != null ||       
     cardsPlacedInTurn > 0;
 
+    const showChangeDeckButton = isGameActive && currentRound === 1 && isMyTurn;
+    const isChangeDeckDisabled = changeDeckUsed;
+
     return (
         <div
             className='game-page-container'
@@ -400,11 +444,20 @@ export default function GamePage () {
             />
             {isGameActive && (
                 <div className='floating-game-actions'>
+                    {showChangeDeckButton && (
+                        <button
+                            className={`change-deck-button ${isChangeDeckDisabled ? 'change-deck-disabled' : ''}`}
+                            onClick={handleChangeDeck}
+                            disabled={isChangeDeckDisabled}
+                        >
+                            CHANGE DECK
+                        </button>
+                    )}
                     <button
                         className='giveup-button'
                         onClick={toggleGiveUpModal}
                     >
-                        Give up
+                        GIVE UP
                     </button>
                 </div>
             )}
@@ -446,6 +499,7 @@ export default function GamePage () {
                                 card={card}
                                 selectedCard={selectedCard}
                                 handleCardSelect={isMyTurn && !hasReachedLimit ? handleCardSelect : () => {}}
+                                isCentered={randomCards.length === 5 && index === 4}
                             />
                         ))
                     }
