@@ -89,11 +89,6 @@ export default function GamePage () {
                 rotation
             }
 
-            // In case of reverse skills activated
-            // const reverseCard = getReverseCard([...lastPlacedCards, lastPlaced]);
-            // const validInd = reverseCard ? getValidIndexes(reverseCard, newBoard) : [];
-            // console.log('Valid indexes after reverse check:', validInd);
-
             setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
 
             const nextIndexes = getValidIndexes(lastPlaced, newBoard)
@@ -318,10 +313,25 @@ export default function GamePage () {
                 return prevCards;
             });
         }
+
+        // console.log('Skill effect applied:', gameData?.skill);
+        // if (gameData != null && gameData?.skill === 'REVERSE') {
+        //     const lastPlaced = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
+        //     const reverseCard = getReverseCard([...lastPlacedCards, lastPlaced]);
+        //     const validInd = reverseCard ? getValidIndexes(reverseCard, board) : [];
+        //     console.log('Valid indexes after reverse check:', validInd);
+
+        //     setNextValidIndexes(validInd);
+        // }
+
         console.log(randomCards);
     }, [gameData?.skill]);
 
     useEffect(() => {
+        // if (gameData?.skill === 'REVERSE') {
+        //     return;
+        // }
+
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)
