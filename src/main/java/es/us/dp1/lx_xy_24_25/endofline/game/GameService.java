@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserRepository;
@@ -288,10 +289,23 @@ public class GameService {
                     }
             }
         }
+
+        game.setSkill(null);
         
         gameRepository.save(game);
     }
 
+    }
+
+    @Transactional
+    public Game setUpSkill(Game game, GamePlayer gamePlayer, String skill) {
+        if (gamePlayer.getEnergy() <= 0) {
+            throw new IllegalStateException("Not enough energy to set up skill");
+        }
+
+        gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);
+        game.setSkill(Skill.valueOf(skill));
+        return gameRepository.save(game);
     }
 
 }

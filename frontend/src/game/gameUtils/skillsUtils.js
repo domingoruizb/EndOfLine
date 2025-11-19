@@ -1,5 +1,5 @@
 const skills = [
-    'Boost',
+    'Speed Up',
     'Brake',
     'Extra Gas',
     'Reverse'

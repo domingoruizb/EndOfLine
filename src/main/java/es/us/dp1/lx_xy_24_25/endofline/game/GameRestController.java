@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -7,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 
 import java.util.List;
 
@@ -77,6 +81,17 @@ public class GameRestController {
     @PutMapping("/{gameId}/{userId}/lose")
     public ResponseEntity<Game> lose(@PathVariable Integer gameId, @PathVariable Integer userId) {
         Game game = gameService.giveUpOrLose(gameId, userId);
+        return ResponseEntity.ok(game);
+    }
+
+    @PutMapping("/{gameId}/{userId}/setUpSkill")
+    public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody SkillRequestDTO dto) {
+        Game game = gameService.getGameById(gameId);
+        GamePlayer gamePlayer = game.getGamePlayers().stream()
+                .filter(gp -> gp.getUser().getId().equals(userId) && gp.getGame().getId().equals(gameId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("User is not a player in this game"));
+        game = gameService.setUpSkill(game, gamePlayer, dto.getSkill());
         return ResponseEntity.ok(game);
     }
 }
