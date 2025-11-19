@@ -353,7 +353,7 @@ export default function GamePage () {
 
     const isMyTurn = isGameActive && gameData?.turn === user?.id;
 
-    const currentRound = gameData?.round || 1;
+    const currentRound = gameData?.round;
 
     let calculatedCardsPerTurnLimit;
     if (gameData?.skill != null) {
@@ -362,7 +362,6 @@ export default function GamePage () {
         } else if (gameData.skill === 'BRAKE') {
             calculatedCardsPerTurnLimit = 1;
         } else {
-            // Manejar otras habilidades que no cambian el límite si es necesario
             calculatedCardsPerTurnLimit = currentRound === 1 ? 1 : 2;
         }
     } else {
@@ -371,6 +370,11 @@ export default function GamePage () {
 
     const cardsPerTurnLimit = calculatedCardsPerTurnLimit;
     const hasReachedLimit = cardsPlacedInTurn >= cardsPerTurnLimit;
+
+    const isSkillSelectionDisabled = 
+    currentRound === 1 ||           
+    gameData?.skill != null ||       
+    cardsPlacedInTurn > 0;
   
     return (
         <div
@@ -425,6 +429,8 @@ export default function GamePage () {
                                 skill={skill}
                                 gameId={gameId}
                                 userId={user.id}
+                                isDisabled={isSkillSelectionDisabled}
+                                activeSkill={gameData?.skill}
                             />
                         ))
                     }
