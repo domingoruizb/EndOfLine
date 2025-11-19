@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
 import { checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
-import { boardArray, getCards, getIndex } from './gameUtils/cardUtils'
+import { boardArray, calculateRotation, getCardColor, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
 import { postCardPlacement } from './gameUtils/apiUtils'
@@ -358,7 +358,8 @@ export default function GamePage () {
     const currentRound = gameData?.round || 1;
     const cardsPerTurnLimit = currentRound === 1 ? 1 : 2;
     const hasReachedLimit = cardsPlacedInTurn >= cardsPerTurnLimit;
-  
+    const rotation = calculateRotation(isHost, hostGamePlayer, secondGamePlayer);
+
     return (
         <div
             className='game-page-container'
@@ -441,10 +442,10 @@ export default function GamePage () {
 
                             const isValid = nextValidIndexes.includes(index)
                             if (card?.name === 'START' && hostColor != null && index === 30) {
-                                const colorLetter = hostColor.charAt(0).toUpperCase();
+                                const colorLetter = getCardColor(true, hostColor, secondColor);
                                 cardName = `C${colorLetter}_START`;
                             } else if (card?.name === 'START' && secondColor != null && index === 32) {
-                                const colorLetter = secondColor.charAt(0).toUpperCase();
+                                const colorLetter = getCardColor(false, hostColor, secondColor);
                                 cardName = `C${colorLetter}_START`;
                             }
 
@@ -474,7 +475,7 @@ export default function GamePage () {
                                                     color: 'gray',
                                                 }}
                                             >
-                                                .                                                
+                                                .
                                             </span>
                                         )
                                     }
@@ -490,7 +491,19 @@ export default function GamePage () {
                         </span>
                     </div>
                 )}
-            </div> 
+            </div>
+            <div
+                className='side-container'
+            >
+                <img
+                    src={`/cardImages/C${getCardColor(isHost, hostColor, secondColor)}_ENERGY.png`}
+                    alt='Energy Symbol'
+                    className='card-button'
+                    style={{
+                        rotate: rotation + 'deg'
+                    }}
+                />
+            </div>
         </div>
     )
 }

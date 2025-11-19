@@ -48,3 +48,20 @@ export function nameToBinary (cardName) {
 export function getCardName (card) {
     return card?.image?.split('/')?.pop()?.replace('.png', '');
 }
+
+export function getCardColor (isHost, hostColor, secondColor) {
+    if (hostColor == null || secondColor == null) {
+        return 'W'
+    }
+
+    return isHost ? hostColor.charAt(0).toUpperCase() : secondColor.charAt(0).toUpperCase()
+}
+
+export function calculateRotation (isHost, hostGamePlayer, secondGamePlayer) {
+    if (hostGamePlayer == null || secondGamePlayer == null) {
+        return 0
+    }
+
+    const energy = isHost ? hostGamePlayer.energy : secondGamePlayer.energy
+    return (3 - energy) * 90
+}
