@@ -152,6 +152,43 @@
     color: black;
 }
 
+.skill-button-disabled {
+    opacity: 0.45; 
+    cursor: not-allowed; 
+    background-color: #333333; 
+    box-shadow: none; 
+}
+
+.skill-button-disabled:hover {
+    background-color: transparent; 
+    color: white; 
+    cursor: not-allowed;
+}
+
+.skill-button-active {
+    background-color: var(--main-orange-color); 
+    color: black; 
+    font-weight: bold;
+    border: 3px solid var(--main-green-color); 
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); 
+    opacity: 0.8; 
+    cursor: not-allowed;
+    pointer-events: none; 
+    filter: brightness(85%) grayscale(20%); 
+}
+
+.skill-button-active:hover {
+    background-color: var(--main-orange-color); 
+    color: black;
+    cursor: not-allowed;
+}
+
+
+.skill-button-disabled.skill-button-active {
+    opacity: 0.8; 
+    cursor: not-allowed;
+}
+
 .cards-container {
     display: grid;
     grid-template-columns: 1fr 1fr; 

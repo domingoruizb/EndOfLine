@@ -61,8 +61,6 @@ export default function GamePage () {
             return
         }
 
-        const currentRound = gameData?.round;
-        const cardsPerTurnLimit = currentRound === 1 ? 1 : 2;
 
         const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         const rotation = getRotation(index, lastPlacedCard)
@@ -355,10 +353,29 @@ export default function GamePage () {
 
     const isMyTurn = isGameActive && gameData?.turn === user?.id;
 
-    const currentRound = gameData?.round || 1;
-    const cardsPerTurnLimit = currentRound === 1 ? 1 : 2;
+    const currentRound = gameData?.round;
+
+    let calculatedCardsPerTurnLimit;
+    if (gameData?.skill != null) {
+        if (gameData.skill === 'SPEED_UP') {
+            calculatedCardsPerTurnLimit = 3;
+        } else if (gameData.skill === 'BRAKE') {
+            calculatedCardsPerTurnLimit = 1;
+        } else {
+            calculatedCardsPerTurnLimit = currentRound === 1 ? 1 : 2;
+        }
+    } else {
+        calculatedCardsPerTurnLimit = currentRound === 1 ? 1 : 2;
+    }
+
+    const cardsPerTurnLimit = calculatedCardsPerTurnLimit;
     const hasReachedLimit = cardsPlacedInTurn >= cardsPerTurnLimit;
     const rotation = calculateRotation(isHost, hostGamePlayer, secondGamePlayer);
+
+    const isSkillSelectionDisabled = 
+    currentRound === 1 ||           
+    gameData?.skill != null ||       
+    cardsPlacedInTurn > 0;
 
     return (
         <div
@@ -411,6 +428,10 @@ export default function GamePage () {
                             <SkillButton
                                 key={index}
                                 skill={skill}
+                                gameId={gameId}
+                                userId={user.id}
+                                isDisabled={isSkillSelectionDisabled}
+                                activeSkill={gameData?.skill}
                             />
                         ))
                     }

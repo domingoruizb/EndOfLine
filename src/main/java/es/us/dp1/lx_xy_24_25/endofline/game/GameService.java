@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserRepository;
@@ -31,7 +32,7 @@ public class GameService {
     @Autowired
     private UserService userService;
 
-    @Autowired 
+    @Autowired
     private GamePlayerCardRepository gpcRepository;
 
     @Autowired
@@ -167,7 +168,7 @@ public class GameService {
         Game game = getGameById(gameId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        game.setWinner(game.getGamePlayers().stream()   
+        game.setWinner(game.getGamePlayers().stream()
                 .map(GamePlayer::getUser)
                 .filter(u -> !u.getId().equals(userId))
                 .findFirst()
@@ -177,17 +178,17 @@ public class GameService {
     }
 
     private Integer comparePreviousCardsRecursively(Integer gamePlayerId1, Integer gamePlayerId2) {
-    
+
     List<GamePlayerCard> cards1 = gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayerId1);
 
     List<GamePlayerCard> cards2 = gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayerId2);
-    
+
     if (cards1.size() <= 1 && cards2.size() <= 1) {
         Game game = gamePlayerRepository.findById(gamePlayerId1).get().getGame();
-        return game.getHost().getId(); 
+        return game.getHost().getId();
     }
 
-    int index = 1; 
+    int index = 1;
 
     while (true) {
         boolean hasCard1 = cards1.size() > index;
@@ -195,13 +196,13 @@ public class GameService {
 
         if (!hasCard1 && !hasCard2) {
             Game game = gamePlayerRepository.findById(gamePlayerId1).get().getGame();
-            return game.getHost().getId(); 
+            return game.getHost().getId();
         }
 
         if (hasCard1 && !hasCard2) {
-            return cards1.size() > cards2.size() ? cards2.get(0).getGamePlayer().getUser().getId() : cards1.get(0).getGamePlayer().getUser().getId(); 
+            return cards1.size() > cards2.size() ? cards2.get(0).getGamePlayer().getUser().getId() : cards1.get(0).getGamePlayer().getUser().getId();
         }
-        
+
         if (!hasCard1 && hasCard2) {
             return cards2.size() > cards1.size() ? cards1.get(0).getGamePlayer().getUser().getId() : cards2.get(0).getGamePlayer().getUser().getId();
         }
@@ -210,7 +211,7 @@ public class GameService {
         Integer initiative2 = cards2.get(index).getCard().getInitiative();
 
         if (initiative1 < initiative2) {
-            return cards1.get(index).getGamePlayer().getUser().getId(); 
+            return cards1.get(index).getGamePlayer().getUser().getId();
         } else if (initiative2 < initiative1) {
             return cards2.get(index).getGamePlayer().getUser().getId();
         }
@@ -234,13 +235,13 @@ public class GameService {
     Integer initiative2 = lastCard2.getCard().getInitiative();
 
     if (initiative1 < initiative2) {
-        return player1.getUser().getId(); 
+        return player1.getUser().getId();
     } else if (initiative2 < initiative1) {
         return player2.getUser().getId();
     } else {
 
         if (game.getRound() == 1) {
-            return game.getHost().getId(); 
+            return game.getHost().getId();
         } else {
             return comparePreviousCardsRecursively(player1.getId(), player2.getId());
         }
@@ -248,50 +249,80 @@ public class GameService {
 }
 
     @Transactional
-    public void advanceTurn(Integer gameId) {   
+    public void advanceTurn(Integer gameId) {
         Game game = getGameById(gameId);
-            
         List<GamePlayer> players = game.getGamePlayers();
 
-        if (players.size() != 2) {
-            return; 
-        }
+        if (players.size() != 2) return;
+
+        GamePlayer currentPlayer = players.stream()
+            .filter(gp -> gp.getUser().getId().equals(game.getTurn()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Current player not found."));
 
         int cardsPerTurnLimit = game.getRound() == 1 ? 1 : 2;
+        int cardsPlayed = currentPlayer.getCardsPlayedThisRound();
 
+        if (checkIfSkillUsedAndReset(game, cardsPlayed)) {
+            cardsPerTurnLimit = game.getRound() == 1 ? 1 : 2;
+        }
+
+        int finalCardsPerTurnLimit = cardsPerTurnLimit;
         boolean allPlayersFinished = players.stream()
-            .allMatch(gp -> gp.getCardsPlayedThisRound() >= cardsPerTurnLimit);
+            .allMatch(gp -> gp.getCardsPlayedThisRound() >= finalCardsPerTurnLimit);
+
 
         if (allPlayersFinished) {
             game.setRound(game.getRound() + 1);
             players.forEach(gp -> gp.setCardsPlayedThisRound(0));
-            
-            if (game.getRound() > 1) { 
+
+            if (game.getRound() > 1) {
                 game.setTurn(determineNextTurnByInitiative(game));
             } else {
                 game.setTurn(game.getHost().getId());
             }
-        } else {
-            if (game.getRound() == 1) {
-                Integer nextPlayerId = players.stream()
-                    .filter(gp -> !gp.getUser().getId().equals(game.getTurn()))
-                    .findFirst()
-                    .map(gp -> gp.getUser().getId())
-                    .orElseThrow(() -> new IllegalStateException("Missing opponent in game"));
 
-                game.setTurn(nextPlayerId);
-            } else {
-                for (GamePlayer gp : players) {
-                    if (!gp.getUser().getId().equals(game.getTurn()) && gp.getCardsPlayedThisRound() < cardsPerTurnLimit) {
-                        game.setTurn(gp.getUser().getId());
-                        break;
-                    }
-            }
+        } else {
+            Integer nextPlayerId = players.stream()
+                .filter(gp -> !gp.getUser().getId().equals(game.getTurn()))
+                .findFirst()
+                .map(gp -> gp.getUser().getId())
+                .orElseThrow(() -> new IllegalStateException("Missing opponent in game"));
+
+            game.setTurn(nextPlayerId);
         }
-        
+
         gameRepository.save(game);
     }
+    @Transactional
+    public Game setUpSkill(Game game, GamePlayer gamePlayer, String skill) {
+        if (gamePlayer.getEnergy() <= 0) {
+            throw new IllegalStateException("Not enough energy to set up skill");
+        }
 
+        gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);
+        game.setSkill(Skill.valueOf(skill));
+        return gameRepository.save(game);
+    }
+
+    private boolean checkIfSkillUsedAndReset(Game game, int cardsPlayedAfterPlacement) {
+        if (game.getSkill() != null) {
+            int skillLimit;
+
+            if (game.getSkill() == Skill.SPEED_UP) {
+                skillLimit = 3;
+            } else if (game.getSkill() == Skill.BRAKE) {
+                skillLimit = 1;
+            } else {
+                return false;
+            }
+
+            if (cardsPlayedAfterPlacement >= skillLimit) {
+                game.setSkill(null);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

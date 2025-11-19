@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
@@ -51,6 +52,8 @@ public class Game extends BaseEntity {
     // @ManyToOne
     @JoinColumn(name = "turn")
     private Integer turn;
+
+    private Skill skill;
 /*
     // Method to end a game and declare a winner
 //    public void startGame() {
