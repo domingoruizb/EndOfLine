@@ -22,6 +22,7 @@ export default function GamePage () {
     const [selectedCard, setSelectedCard] = useState(null)
     const [board, setBoard] = useState(boardArray)
     const [lastPlacedCards, setLastPlacedCards] = useState([])
+    const [lastPlacedCard, setLastPlacedCard] = useState(null)
     const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
@@ -65,11 +66,10 @@ export default function GamePage () {
     }
 
     const handlePlaceCard = async (index) => {
-        if (!checkPlacementValid(board, selectedCard, index, lastPlacedCards, isHost)) {
+        if (!checkPlacementValid(board, selectedCard, index, lastPlacedCards, isHost, lastPlacedCard)) {
             return
         }
 
-        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         const rotation = getRotation(index, lastPlacedCard)
 
         const isTurnFinished = cardsPlacedInTurn + 1 === cardsPerTurnLimit;
@@ -89,6 +89,7 @@ export default function GamePage () {
                 rotation
             }
 
+            setLastPlacedCard(lastPlaced)
             setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
 
             const nextIndexes = getValidIndexes(lastPlaced, newBoard)
@@ -314,17 +315,13 @@ export default function GamePage () {
             });
         }
 
-        // console.log('Skill effect applied:', gameData?.skill);
-        // if (gameData != null && gameData?.skill === 'REVERSE') {
-        //     const lastPlaced = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
-        //     const reverseCard = getReverseCard([...lastPlacedCards, lastPlaced]);
-        //     const validInd = reverseCard ? getValidIndexes(reverseCard, board) : [];
-        //     console.log('Valid indexes after reverse check:', validInd);
+        if (gameData != null && gameData?.skill === 'REVERSE' && gameData?.turn === user?.id) {
+            const reverseCard = getReverseCard([...lastPlacedCards, lastPlacedCard], lastPlacedCard);
+            const validInd = reverseCard ? getValidIndexes(reverseCard, board) : [];
 
-        //     setNextValidIndexes(validInd);
-        // }
-
-        console.log(randomCards);
+            setLastPlacedCard(reverseCard);
+            setNextValidIndexes(validInd);
+        }
     }, [gameData?.skill]);
 
     useEffect(() => {
@@ -332,7 +329,6 @@ export default function GamePage () {
         //     return;
         // }
 
-        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)
             setNextValidIndexes(initialIndexes)
@@ -343,7 +339,7 @@ export default function GamePage () {
             }
             setNextValidIndexes(nextIndexes)
         }
-    }, [isHost, lastPlacedCards, board])
+    }, [isHost, lastPlacedCard, board])
  
     useEffect(() => {
         if (gameData?.startedAt == null) {
