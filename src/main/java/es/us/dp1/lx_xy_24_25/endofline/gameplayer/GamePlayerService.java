@@ -9,8 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GamePlayerService {
 
-    @Autowired
-    GamePlayerRepository gamePlayerRepository;
+    private final GamePlayerRepository gamePlayerRepository;
 
     @Autowired
     public GamePlayerService(GamePlayerRepository gamePlayerRepository) {
@@ -45,12 +44,18 @@ public class GamePlayerService {
             .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));
     }
 
-    @Transactional 
+    @Transactional
     public void incrementCardsPlayedThisRound(Integer gamePlayerId) {
-        GamePlayer gp = findById(gamePlayerId);
+        GamePlayer gamePlayer = findById(gamePlayerId);
 
-        gp.setCardsPlayedThisRound(gp.getCardsPlayedThisRound() + 1);
-        gamePlayerRepository.save(gp);
+        gamePlayer.setCardsPlayedThisRound(gamePlayer.getCardsPlayedThisRound() + 1);
+        gamePlayerRepository.save(gamePlayer);
+    }
+
+    public Boolean isValidTurn (
+        GamePlayer gamePlayer
+    ) {
+        return gamePlayer.getGame().getTurn().equals(gamePlayer.getUser().getId());
     }
 
 }

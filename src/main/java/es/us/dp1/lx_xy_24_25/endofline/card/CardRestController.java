@@ -1,9 +1,5 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
@@ -17,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/cards")
 @Tag(name = "Cards", description = "The Cards management API")
@@ -24,21 +22,18 @@ import org.springframework.web.bind.annotation.*;
 public class CardRestController {
 
 	private final CardService cardService;
-    private final GamePlayerCardService gpcService;
+    private final GamePlayerCardService gamePlayerCardService;
     private final GamePlayerService gamePlayerService;
-    private final GameService gameService;
 
 	@Autowired
 	public CardRestController(
         CardService cardService,
-        GamePlayerCardService gpcService,
-        GamePlayerService gamePlayerService,
-        GameService gameService
+        GamePlayerCardService gamePlayerCardService,
+        GamePlayerService gamePlayerService
     ) {
 		this.cardService = cardService;
-        this.gpcService = gpcService;
+        this.gamePlayerCardService = gamePlayerCardService;
         this.gamePlayerService = gamePlayerService;
-        this.gameService = gameService;
 	}
 
 	@GetMapping
@@ -64,31 +59,24 @@ public class CardRestController {
     @PostMapping("/place/{gamePlayerId}")
     public ResponseEntity<GamePlayerCard> placeCard(
         @PathVariable("gamePlayerId") Integer gamePlayerId,
-        @RequestBody GamePlayerCardDTO dto
+        @RequestBody GamePlayerCardDTO gamePlayerCardDTO
     ) {
-        GamePlayerCard gpc = new GamePlayerCard();
-        Card card = cardService.findByImage(dto.getImage());
-        GamePlayer gp = gamePlayerService.getById(gamePlayerId);
-        Game game = gp.getGame();
+        GamePlayer gamePlayer = gamePlayerService.getById(gamePlayerId);
 
-        if (!game.getTurn().equals(gp.getUser().getId())) {
+        if (!gamePlayerService.isValidTurn(gamePlayer)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        gpc.setCard(card);
-        gpc.setGamePlayer(gp);
-        gpc.setPositionX(dto.getPositionX());
-        gpc.setPositionY(dto.getPositionY());
-        gpc.setRotation(dto.getRotation());
-        gpc.setPlacedAt(LocalDateTime.now());
-        GamePlayerCard savedGPC = gpcService.placeCard(gpc);
+        Card card = cardService.findByImage(gamePlayerCardDTO.getImage());
 
-        gamePlayerService.incrementCardsPlayedThisRound(gp.getId());
+        GamePlayerCard gamePlayerCard = GamePlayerCard.buildGamePlayerCard(
+            gamePlayerCardDTO,
+            gamePlayer,
+            card
+        );
 
-        if (dto.getTurnFinished()) {
-            gameService.advanceTurn(game.getId());
-        }
+        GamePlayerCard saved = gamePlayerCardService.placeCard(gamePlayerCard, gamePlayerCardDTO.getTurnFinished());
 
-        return new ResponseEntity<>(savedGPC, HttpStatus.CREATED);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 }

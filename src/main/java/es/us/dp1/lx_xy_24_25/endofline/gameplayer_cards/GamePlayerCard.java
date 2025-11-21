@@ -46,4 +46,21 @@ public class GamePlayerCard extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
+
+    public static GamePlayerCard buildGamePlayerCard (
+        GamePlayerCardDTO gamePlayerCardDTO,
+        GamePlayer gamePlayer,
+        Card card
+    ) {
+        GamePlayerCard gamePlayerCard = new GamePlayerCard();
+
+        gamePlayerCard.setCard(card);
+        gamePlayerCard.setGamePlayer(gamePlayer);
+        gamePlayerCard.setPositionX(gamePlayerCardDTO.getPositionX());
+        gamePlayerCard.setPositionY(gamePlayerCardDTO.getPositionY());
+        gamePlayerCard.setRotation(gamePlayerCardDTO.getRotation());
+        gamePlayerCard.setPlacedAt(LocalDateTime.now());
+
+        return gamePlayerCard;
+    }
 }
