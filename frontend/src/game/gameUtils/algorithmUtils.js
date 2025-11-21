@@ -129,7 +129,7 @@ export function getReverseCard (lastPlacedCards, lastPlacedCard) {
     return null
 }
 
-function isConnected (card1, card2) {
+export function isConnected (card1, card2) {
     const pos1 = getCoordinates(card1.index)
     const pos2 = getCoordinates(card2.index)
 
@@ -154,4 +154,14 @@ function isConnected (card1, card2) {
     }
 
     return false
+}
+
+export function canReverse (lastPlacedCards, lastPlacedCard, board) {
+    const reverseCard = getReverseCard(lastPlacedCards, lastPlacedCard)
+    if (reverseCard == null) {
+        return false
+    }
+
+    const validIndexes = getValidIndexes(reverseCard, board)
+    return validIndexes.length > 0
 }

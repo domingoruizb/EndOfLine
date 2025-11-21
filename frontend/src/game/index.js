@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
+import { canReverse, checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
 import { boardArray, calculateRotation, getCardColor, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
@@ -483,16 +483,21 @@ export default function GamePage () {
                     className='skills-container'
                 >
                     {
-                        skills.map((skill, index) => (
-                            <SkillButton
-                                key={index}
-                                skill={skill}
-                                gameId={gameId}
-                                userId={user.id}
-                                isDisabled={isSkillSelectionDisabled}
-                                activeSkill={gameData?.skill}
-                            />
-                        ))
+                        skills.map((skill, index) => {
+                            return (
+                                <SkillButton
+                                    key={index}
+                                    skill={skill}
+                                    gameId={gameId}
+                                    userId={user.id}
+                                    isDisabled={
+                                        (skill !== 'Reverse' && isSkillSelectionDisabled) ||
+                                        (skill === 'Reverse' && (isSkillSelectionDisabled || !canReverse(lastPlacedCards, lastPlacedCard, board)))
+                                    }
+                                    activeSkill={gameData?.skill}
+                                />
+                            )
+                        })
                     }
                 </div>
                 <div

@@ -1,4 +1,3 @@
-import React from 'react';
 import { setUpSkill } from '../gameUtils/apiUtils.js';
 
 export default function SkillButton ({
