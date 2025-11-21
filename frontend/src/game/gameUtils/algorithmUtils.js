@@ -8,13 +8,13 @@ export function getInitialValidIndexes (isHost) {
     ]
 }
 
-export function getRotation (index, lastPlaced) {
-    if (!lastPlaced || lastPlaced.name === 'START') {
+export function getRotation (index, lastPlacedCard) {
+    if (!lastPlacedCard || lastPlacedCard.name === 'START') {
         return 0
     }
 
     const selectedPos = getCoordinates(index)
-    const lastPos = getCoordinates(lastPlaced.index)
+    const lastPos = getCoordinates(lastPlacedCard.index)
 
     // Module boardLength to handle wrapping
     const rowDelta = (selectedPos.row - lastPos.row + boardLength) % boardLength
@@ -84,7 +84,7 @@ export function getValidIndexes (lastPlacedCard, board) {
     return potential.filter(idx => board[idx] == null)
 }
 
-export function checkPlacementValid (board, selectedCard, index, lastPlacedCards, isHost) {
+export function checkPlacementValid (board, selectedCard, index, lastPlacedCards, isHost, lastPlacedCard) {
     if (selectedCard == null) {
         return false
     }
@@ -98,8 +98,6 @@ export function checkPlacementValid (board, selectedCard, index, lastPlacedCards
             return
         }
     }
-
-    const lastPlacedCard = lastPlacedCards[lastPlacedCards.length - 1]
 
     const coords = getCoordinates(index)
     const isStart = initialPositions.some(p => p[0] === coords.row && p[1] === coords.col)
@@ -115,18 +113,15 @@ export function checkPlacementValid (board, selectedCard, index, lastPlacedCards
     return selectedCard != null && !isStart && board[index] == null
 }
 
-export function getReverseCard (lastPlacedCards) {
+export function getReverseCard (lastPlacedCards, lastPlacedCard) {
     if (lastPlacedCards.length < 2) {
         return null
     }
 
-    // Start from the last card
-    const lastCard = lastPlacedCards[lastPlacedCards.length - 1]
-
     for (let i = lastPlacedCards.length - 2; i >= 0; i--) {
         const candidateCard = lastPlacedCards[i]
 
-        if (isConnected(candidateCard, lastCard)) {
+        if (isConnected(candidateCard, lastPlacedCard)) {
             return candidateCard
         }
     }
@@ -134,7 +129,7 @@ export function getReverseCard (lastPlacedCards) {
     return null
 }
 
-function isConnected (card1, card2) {
+export function isConnected (card1, card2) {
     const pos1 = getCoordinates(card1.index)
     const pos2 = getCoordinates(card2.index)
 
@@ -159,4 +154,14 @@ function isConnected (card1, card2) {
     }
 
     return false
+}
+
+export function canReverse (lastPlacedCards, lastPlacedCard, board) {
+    const reverseCard = getReverseCard(lastPlacedCards, lastPlacedCard)
+    if (reverseCard == null) {
+        return false
+    }
+
+    const validIndexes = getValidIndexes(reverseCard, board)
+    return validIndexes.length > 0
 }

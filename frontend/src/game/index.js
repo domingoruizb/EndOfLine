@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './game.css'
-import { checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
+import { canReverse, checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
 import { boardArray, calculateRotation, getCardColor, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
@@ -22,6 +22,7 @@ export default function GamePage () {
     const [selectedCard, setSelectedCard] = useState(null)
     const [board, setBoard] = useState(boardArray)
     const [lastPlacedCards, setLastPlacedCards] = useState([])
+    const [lastPlacedCard, setLastPlacedCard] = useState(null)
     const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
@@ -65,11 +66,10 @@ export default function GamePage () {
     }
 
     const handlePlaceCard = async (index) => {
-        if (!checkPlacementValid(board, selectedCard, index, lastPlacedCards, isHost)) {
+        if (!checkPlacementValid(board, selectedCard, index, lastPlacedCards, isHost, lastPlacedCard)) {
             return
         }
 
-        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
         const rotation = getRotation(index, lastPlacedCard)
 
         const isTurnFinished = cardsPlacedInTurn + 1 === cardsPerTurnLimit;
@@ -89,11 +89,7 @@ export default function GamePage () {
                 rotation
             }
 
-            // In case of reverse skills activated
-            // const reverseCard = getReverseCard([...lastPlacedCards, lastPlaced]);
-            // const validInd = reverseCard ? getValidIndexes(reverseCard, newBoard) : [];
-            // console.log('Valid indexes after reverse check:', validInd);
-
+            setLastPlacedCard(lastPlaced)
             setLastPlacedCards(prevCards => [...prevCards, lastPlaced])
 
             const nextIndexes = getValidIndexes(lastPlaced, newBoard)
@@ -318,11 +314,21 @@ export default function GamePage () {
                 return prevCards;
             });
         }
-        console.log(randomCards);
+
+        if (gameData != null && gameData?.skill === 'REVERSE' && gameData?.turn === user?.id) {
+            const reverseCard = getReverseCard([...lastPlacedCards, lastPlacedCard], lastPlacedCard);
+            const validInd = reverseCard ? getValidIndexes(reverseCard, board) : [];
+
+            setLastPlacedCard(reverseCard);
+            setNextValidIndexes(validInd);
+        }
     }, [gameData?.skill]);
 
     useEffect(() => {
-        const lastPlacedCard = lastPlacedCards.length > 0 ? lastPlacedCards[lastPlacedCards.length - 1] : null
+        // if (gameData?.skill === 'REVERSE') {
+        //     return;
+        // }
+
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)
             setNextValidIndexes(initialIndexes)
@@ -333,7 +339,7 @@ export default function GamePage () {
             }
             setNextValidIndexes(nextIndexes)
         }
-    }, [isHost, lastPlacedCards, board])
+    }, [isHost, lastPlacedCard, board])
  
     useEffect(() => {
         if (gameData?.startedAt == null) {
@@ -477,16 +483,21 @@ export default function GamePage () {
                     className='skills-container'
                 >
                     {
-                        skills.map((skill, index) => (
-                            <SkillButton
-                                key={index}
-                                skill={skill}
-                                gameId={gameId}
-                                userId={user.id}
-                                isDisabled={isSkillSelectionDisabled}
-                                activeSkill={gameData?.skill}
-                            />
-                        ))
+                        skills.map((skill, index) => {
+                            return (
+                                <SkillButton
+                                    key={index}
+                                    skill={skill}
+                                    gameId={gameId}
+                                    userId={user.id}
+                                    isDisabled={
+                                        (skill !== 'Reverse' && isSkillSelectionDisabled) ||
+                                        (skill === 'Reverse' && (isSkillSelectionDisabled || !canReverse(lastPlacedCards, lastPlacedCard, board)))
+                                    }
+                                    activeSkill={gameData?.skill}
+                                />
+                            )
+                        })
                     }
                 </div>
                 <div
