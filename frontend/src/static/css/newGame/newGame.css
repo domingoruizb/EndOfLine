@@ -193,27 +193,27 @@
 }
 
 .negative-button {
-  color: rgb(225, 28, 36) !important;
-  border: 2px solid rgb(225, 28, 36) !important;
+  color: #FE5B02 !important;
+  border: 2px solid #FE5B02 !important;
   background-color: transparent !important;
   min-width: 15% !important;
 }
 
 .negative-button:hover {
   color: #222222 !important;
-  background-color: rgb(225, 28, 36) !important;
+  background-color: #FE5B02 !important;
 }
 
 .positive-button {
-  color: rgb(75, 178, 91) !important;
-  border: 2px solid rgb(75, 178, 91) !important;
+  color: #b1d12d !important;
+  border: 2px solid #b1d12d !important;
   background-color: transparent !important;
   min-width: 15% !important;
 }
 
 .positive-button:hover {
   color: #222222 !important;
-  background-color: rgb(75, 178, 91) !important;
+  background-color: #b1d12d !important;
 }
 
 .normal-button {
