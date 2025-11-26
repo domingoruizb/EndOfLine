@@ -219,9 +219,10 @@ export default function FriendshipList() {
                 fontWeight: 800,
                 letterSpacing: "2px",
                 color: "#FE5B02",
-                textShadow: "0 2px 8px #000"
+                textShadow: "0 2px 8px #000",
+                fontFamily: "Inter, Arial, sans-serif"
                 }}>
-                {friendshipType === "ACCEPTED" ? "Friendships" : "Pending invites"}
+                    {friendshipType === "ACCEPTED" ? "Friendships" : "Pending Invites"}
                 </h1>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                     <div style={{ display: 'flex', fontWeight: 800, width: '100%', padding: '10px', justifyContent: 'space-between', color: "#FE5B02" }}>
@@ -266,7 +267,7 @@ export default function FriendshipList() {
                         size='lg'
                         onClick={handleClick}
                     >
-                        <Link to="/friendships/create" style={{ textDecoration: "none", color: "#4BB25B" }}>
+                        <Link to="/friendships/create" style={{ textDecoration: "none", color: "#b1d12d" }}>
                         </Link>
                         Create
                     </Button>
