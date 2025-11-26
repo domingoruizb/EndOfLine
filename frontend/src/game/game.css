@@ -42,6 +42,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* keep overlays (turn-overlay) contained to the board area */
 }
 
 .turn-overlay {
@@ -237,6 +238,58 @@
     100% {
         background-color: #333;
     }
+}
+
+/* chat floats above, stays fixed in the bottom right corner */
+.fixed-chat {
+    position: fixed;
+    right: 20px;
+    top: 500px;
+    width: 300px;
+    max-width: calc(25vw + 40px);
+    z-index: 50;
+    height: auto;
+    padding: 12px;
+    margin: 0; /* override margin from .side-container */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+/* Keep internal layout of side-container styling but constrain height for floating */
+.fixed-chat .skills-container,
+.fixed-chat .cards-container {
+    display: none; /* hide other left/right widgets when floating chat is used */
+}
+
+/* on small screens should revert to inline side container behaviour */
+@media (max-width: 900px) {
+    .fixed-chat {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        margin: 20px;
+        box-shadow: none;
+    }
+    .game-page-container {
+        grid-template-columns: 1fr; /* single column layout on small screens */
+        overflow: auto;
+        height: auto;
+    }
+}
+
+/* topbar chat toggle button */
+.chat-toggle-button {
+    margin-left: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background-color: var(--main-orange-color);
+    border: none;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+.chat-toggle-button:hover {
+    filter: brightness(0.95);
 }
 
 .floating-game-actions {
