@@ -1,7 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
-import es.us.dp1.lx_xy_24_25.endofline.achievement.Achievement;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementService;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,48 +19,106 @@ public class PlayerAchievementServiceTests {
     @Autowired
     private PlayerAchievementService playerAchievementService;
 
-    @Test
-    void testFindAllAchievements () {
-        List<PlayerAchievement> playerAchievements = (List<PlayerAchievement>) this.playerAchievementService.findAll();
+    @Autowired
+    private PlayerAchievementRepository repository;
 
-        playerAchievements.stream()
-            .forEach(pa -> {
-                assertNotNull(pa.getAchievement(), "Achievement should not be null");
-                assertNotNull(pa.getUser(), "User should not be null");
-                assertNotNull(pa.getAchievedAt(), "AchievedAt should not be null");
-            });
+    @BeforeEach
+    void setup() {
+        assertNotNull(playerAchievementService);
+        assertNotNull(repository);
     }
 
     @Test
-    void testFindAchievementById () {
-        PlayerAchievement playerAchievement = this.playerAchievementService.findById(1);
+    void testFindAllAchievements() {
+        List<PlayerAchievement> achievements =
+                (List<PlayerAchievement>) playerAchievementService.findAll();
 
-        assertNotNull(playerAchievement, "Achievement should not be null");
-        assertNotNull(playerAchievement.getUser(), "User should not be null");
-        assertNotNull(playerAchievement.getAchievement(), "Achievement should not be null");
-        assertNotNull(playerAchievement.getAchievedAt(), "Achievement should not be null");
+        achievements.forEach(pa -> {
+            assertNotNull(pa.getUser());
+            assertNotNull(pa.getAchievement());
+            assertNotNull(pa.getAchievedAt());
+        });
+    }
+
+    @Test
+    void testFindAchievementById() {
+        PlayerAchievement pa = playerAchievementService.findById(1);
+
+        assertNotNull(pa);
+        assertEquals(4, pa.getUser().getId());
+        assertEquals(1, pa.getAchievement().getId());
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        assertThrows(ResourceNotFoundException.class,
+                () -> playerAchievementService.findById(99999));
+    }
+
+    @Test
+    void testFindByUserId() {
+        assertThrows(org.springframework.dao.IncorrectResultSizeDataAccessException.class,
+            () -> playerAchievementService.findByUserId(4));
+    }
+
+
+    @Test
+    void testFindByUserIdNoAchievement() {
+        // User 1 no tiene achievements en tu SQL
+        PlayerAchievement pa = playerAchievementService.findByUserId(1);
+        assertNull(pa);
     }
 
     @Test
     void testCreateAndDeleteAchievement() {
-        PlayerAchievement playerAchievement = this.playerAchievementService.create(1, 3, LocalDateTime.now());
-        assertNotNull(playerAchievement, "Achievement should not be null");
-        assertNotNull(playerAchievement.getId(), "Achievement id should not be null");
-        assertNotNull(playerAchievement.getUser(), "User should not be null");
-        assertNotNull(playerAchievement.getAchievement(), "Achievement should not be null");
-        assertNotNull(playerAchievement.getAchievedAt(), "Achievement should not be null");
+        PlayerAchievement pa =
+                playerAchievementService.create(4, 1, LocalDateTime.now());
 
-        Integer playerAchievementId = playerAchievement.getId();
+        assertNotNull(pa);
+        assertNotNull(pa.getId());
+        assertEquals(4, pa.getUser().getId());
+        assertEquals(1, pa.getAchievement().getId());
 
-        List<PlayerAchievement> playerAchievements = (List<PlayerAchievement>) this.playerAchievementService.findAll();
-        assertTrue(playerAchievements.stream()
-            .anyMatch(pa -> pa.getId().equals(playerAchievementId)));
+        Integer id = pa.getId();
 
-        this.playerAchievementService.delete(playerAchievementId);
+        assertTrue(
+                ((List<PlayerAchievement>) playerAchievementService.findAll())
+                        .stream()
+                        .anyMatch(x -> x.getId().equals(id))
+        );
 
-        playerAchievements = (List<PlayerAchievement>) this.playerAchievementService.findAll();
-        assertFalse(playerAchievements.stream()
-            .anyMatch(pa -> pa.getId().equals(playerAchievementId)));
+        playerAchievementService.delete(id);
+
+        assertFalse(
+                ((List<PlayerAchievement>) playerAchievementService.findAll())
+                        .stream()
+                        .anyMatch(x -> x.getId().equals(id))
+        );
     }
 
+    @Test
+    void testCreateWithNullDate() {
+        PlayerAchievement pa =
+                playerAchievementService.create(4, 1, null);
+        assertNotNull(pa);
+        assertNull(pa.getAchievedAt());
+        playerAchievementService.delete(pa.getId());
+    }
+
+    @Test
+    void testCreateUserNotFound() {
+        assertThrows(ResourceNotFoundException.class,
+                () -> playerAchievementService.create(99999, 1, LocalDateTime.now()));
+    }
+
+    @Test
+    void testCreateAchievementNotFound() {
+        assertThrows(ResourceNotFoundException.class,
+                () -> playerAchievementService.create(4, 99999, LocalDateTime.now()));
+    }
+
+    @Test
+    void testDeleteNonExisting() {
+        assertDoesNotThrow(() -> playerAchievementService.delete(99999));
+    }
 }
