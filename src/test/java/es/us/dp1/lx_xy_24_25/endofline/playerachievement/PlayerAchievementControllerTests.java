@@ -1,42 +1,25 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.Achievement;
-import es.us.dp1.lx_xy_24_25.endofline.auth.AuthController;
-import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = PlayerAchievementRestController.class, excludeFilters = @ComponentScan.Filter(
-    type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
-public class PlayerAchievementControllerTests {
-
-    private static final String BASE_URL = "/api/v1/playerachievements";
-
-    @MockBean
-    private AuthController authController;
-
-    @MockBean
-    private PlayerAchievementService playerAchievementService;
+@SpringBootTest
+@AutoConfigureMockMvc
+@AutoConfigureTestDatabase
+class PlayerAchievementRestControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,103 +27,99 @@ public class PlayerAchievementControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private User player;
-    private Achievement achievement;
-    private PlayerAchievement playerAchievement;
-
-    @BeforeEach
-    void setUp () throws Exception {
-        Achievement achievement = new Achievement();
-        achievement.setId(1);
-
-        this.achievement = achievement;
-
-        Authorities authorities = new Authorities();
-        authorities.setId(1);
-        authorities.setAuthority("PLAYER");
-
-        User user = new User();
-        user.setId(1);
-
-        this.player = user;
-
-        PlayerAchievement pa = new PlayerAchievement();
-        pa.setId(1);
-        pa.setUser(this.player);
-        pa.setAchievement(achievement);
-        pa.setAchievedAt(LocalDateTime.now());
-
-        this.playerAchievement = pa;
-    }
+    private static final String BASE_URL = "/api/v1/playerachievements";
 
     @Test
-    @WithMockUser("player")
-    void testAllPlayerAchievements () throws Exception {
-        when(
-            this.playerAchievementService.findAll()
-        ).thenReturn(
-            List.of(this.playerAchievement)
-        );
-
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testFindAll() throws Exception {
         mockMvc.perform(get(BASE_URL))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$[*].id").exists())
-            .andExpect(jsonPath("$[*].user_id").exists())
-            .andExpect(jsonPath("$[*].achievement_id").exists())
-            .andExpect(jsonPath("$[*].achieved_at").exists());
+            .andExpect(jsonPath("$", not(empty())))
+            .andExpect(jsonPath("$[0].id", notNullValue()))
+            .andExpect(jsonPath("$[0].user_id", notNullValue()))
+            .andExpect(jsonPath("$[0].achievement_id", notNullValue()));
     }
 
     @Test
-    @WithMockUser("player")
-    void testPlayerAchievementById () throws Exception {
-        when(
-            this.playerAchievementService.findById(this.playerAchievement.getId())
-        ).thenReturn(
-            this.playerAchievement
-        );
-
-        mockMvc.perform(get(BASE_URL + "/" + this.playerAchievement.getId()))
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testFindById() throws Exception {
+        mockMvc.perform(get(BASE_URL + "/1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").exists())
-            .andExpect(jsonPath("$.user_id").exists())
-            .andExpect(jsonPath("$.achievement_id").exists())
-            .andExpect(jsonPath("$.achieved_at").exists());
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.user_id").value(4))
+            .andExpect(jsonPath("$.achievement_id").value(1));
     }
 
     @Test
-    @WithMockUser("player")
-    void testPlayerAchievementCreate () throws Exception {
-        PlayerAchievementDTO dto = new PlayerAchievementDTO();
-        dto.setId(1);
-        dto.setUser_id(this.player.getId());
-        dto.setAchievement_id(this.achievement.getId());
-        dto.setAchieved_at(LocalDateTime.now());
+    @WithMockUser(username = "admin1", roles = {"ADMIN"})
+    void testFindByIdNotFound() throws Exception {
+        mockMvc.perform(get(BASE_URL + "/99999"))
+            .andExpect(status().is4xxClientError());
+    }
 
-        when(
-            this.playerAchievementService.create(
-                dto.getUser_id(),
-                dto.getAchievement_id(),
-                dto.getAchieved_at()
-            )
-        ).thenReturn(this.playerAchievement);
+    @Test
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testCreate() throws Exception {
+        String jsonBody = """
+        {
+          "user_id": 4,
+          "achievement_id": 2,
+          "achieved_at": "2024-12-01T10:00:00"
+        }
+        """;
 
         mockMvc.perform(
-            post(BASE_URL)
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto))
+                post(BASE_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody)
             )
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", notNullValue()))
+            .andExpect(jsonPath("$.user_id").value(4))
+            .andExpect(jsonPath("$.achievement_id").value(2));
     }
 
     @Test
-    @WithMockUser("player")
-    void testPlayerAchievementDelete() throws Exception {
-        Integer id = this.playerAchievement.getId();
+    @WithMockUser(username = "admin1", roles = {"ADMIN"})
+    void testCreateUserNotFound() throws Exception {
 
-        mockMvc.perform(delete(BASE_URL + "/" + id).with(csrf()))
+        PlayerAchievementDTO dto = new PlayerAchievementDTO();
+        dto.setUser_id(99999);
+        dto.setAchievement_id(1);
+        dto.setAchieved_at(LocalDateTime.now());
+
+        mockMvc.perform(post(BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser(username = "admin1", roles = {"ADMIN"})
+    void testCreateAchievementNotFound() throws Exception {
+
+        PlayerAchievementDTO dto = new PlayerAchievementDTO();
+        dto.setUser_id(4);
+        dto.setAchievement_id(99999);
+        dto.setAchieved_at(LocalDateTime.now());
+
+        mockMvc.perform(post(BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testDelete() throws Exception {
+        mockMvc.perform(delete(BASE_URL + "/1"))
             .andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testDeleteNonExisting() throws Exception {
+        mockMvc.perform(delete(BASE_URL + "/9999"))
+            .andExpect(status().isOk());
+    }
 }
