@@ -92,23 +92,28 @@ export default function GameChat ({ gameId, jwt, user }) {
     }
   }
 
+  const senderName = user?.username || user?.name || user?.id
+
   return (
-    <div style={{ width: '280px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-      <div style={{ fontWeight: '600' }}>Chat</div>
-      <div ref={listRef} style={{ height: '220px', overflowY: 'auto', background: '#fff', padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }}>
+    <div className='game-chat' style={{ width: '280px' }}>
+      <div className='chat-header'>Chat</div>
+      <div ref={listRef} className='chat-list'>
         {messages.length === 0 && (
           <div style={{ color: '#888', fontSize: '13px' }}>No messages yet</div>
         )}
-        {messages.map((m, idx) => (
-          <div key={idx} style={{ marginBottom: '6px' }}>
-            <div style={{ fontSize: '12px', color: '#333' }}><strong>{m.sender}</strong></div>
-            <div style={{ fontSize: '14px', color: '#222' }}>{m.text}</div>
-          </div>
-        ))}
+        {messages.map((m, idx) => {
+          const isMe = senderName && m.sender === senderName
+          return (
+            <div key={idx} className={`chat-message ${isMe ? 'me' : 'other'}`}>
+              {!isMe && <div className='chat-sender'><strong>{m.sender}</strong></div>}
+              <div className='chat-text'>{m.text}</div>
+            </div>
+          )
+        })}
       </div>
-      <form onSubmit={sendMessage} style={{ display: 'flex', gap: '6px' }}>
-        <input value={text} onChange={e => setText(e.target.value)} placeholder='Type a message' style={{ flex: 1, padding: '6px', borderRadius: '4px', border: '1px solid #ccc' }} />
-        <button type='submit' style={{ padding: '6px 8px', borderRadius: '4px' }}>Send</button>
+      <form onSubmit={sendMessage}>
+        <input value={text} onChange={e => setText(e.target.value)} placeholder='Type a message' type='text' />
+        <button type='submit'>Send</button>
       </form>
     </div>
   )
