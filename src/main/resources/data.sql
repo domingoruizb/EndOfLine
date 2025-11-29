@@ -1,73 +1,73 @@
 INSERT INTO authorities(id,authority) VALUES (1,'ADMIN');
 INSERT INTO authorities(id,authority) VALUES (2,'PLAYER');
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (1,'admin1','$2a$10$nMmTWAhPTqXqLDJTag3prumFrAJpsYtroxf0ojesFYq0k4PmcbWUS',
-        1,'1990-01-15','El Super','Admin','admin1@endofline.com');
+        1,'1990-01-15','El Super','Admin','admin1@endofline.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (4,'player1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2000-03-12','Liam','Torres','liam.torres@email.com');
+        2,'2000-03-12','Liam','Torres','liam.torres@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (5,'player2','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1999-07-25','Emma','Rodríguez','emma.rodriguez@email.com');
+        2,'1999-07-25','Emma','Rodríguez','emma.rodriguez@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (6,'player3','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2001-02-18','Noah','Gómez','noah.gomez@email.com');
+        2,'2001-02-18','Noah','Gómez','noah.gomez@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (7,'player4','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1998-10-09','Olivia','Martínez','olivia.martinez@email.com');
+        2,'1998-10-09','Olivia','Martínez','olivia.martinez@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (8,'player5','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2002-06-30','Elías','Navarro','elias.navarro@email.com');
+        2,'2002-06-30','Elías','Navarro','elias.navarro@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (9,'player6','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2000-12-14','Ava','Serrano','ava.serrano@email.com');
+        2,'2000-12-14','Ava','Serrano','ava.serrano@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (10,'player7','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1997-08-21','Lucas','Fernández','lucas.fernandez@email.com');
+        2,'1997-08-21','Lucas','Fernández','lucas.fernandez@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (11,'player8','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2003-11-02','Mia','Jiménez','mia.jimenez@email.com');
+        2,'2003-11-02','Mia','Jiménez','mia.jimenez@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (12,'player9','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2001-05-16','Mateo','Ruiz','mateo.ruiz@email.com');
+        2,'2001-05-16','Mateo','Ruiz','mateo.ruiz@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (13,'player10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1999-09-27','Isabella','Morales','isabella.morales@email.com');
+        2,'1999-09-27','Isabella','Morales','isabella.morales@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
 -- Usuarios adicionales
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (14,'RRP9465','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1998-04-04','Makar','Lavrov','makar.lavrov@email.com');
+        2,'1998-04-04','Makar','Lavrov','makar.lavrov@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (15,'DYS4321','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2000-01-30','Domingo','Ruiz Bellido','domingo.ruiz@email.com');
+        2,'2000-01-30','Domingo','Ruiz Bellido','domingo.ruiz@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (16,'FLX0814','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1997-03-08','Angelo Sho','Moraschi','angelo.moraschi@email.com');
+        2,'1997-03-08','Angelo Sho','Moraschi','angelo.moraschi@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (17,'HNR0360','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'2001-09-12','Fernando Jose','Fernandez Fernandez','fernando.fernandez@email.com');
+        2,'2001-09-12','Fernando Jose','Fernandez Fernandez','fernando.fernandez@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (18,'VMC1155','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
-        2,'1998-11-22','Alejandro','Urbina Tamayo','alejandro.urbina@email.com');
+        2,'1998-11-22','Alejandro','Urbina Tamayo','alejandro.urbina@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
         
-INSERT INTO users(id,username,password,authority,birthdate,name,surname,email)
+INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (19,'Deleted user','userDeleted',
-        2,'1998-11-22','User','Deleted','userDeleted@email.com');
+        2,'1998-11-22','User','Deleted','userDeleted@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
 INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Principiante','Si juegas 5 partidas',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
 INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Explorador','Si juegas 25 partidas',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');

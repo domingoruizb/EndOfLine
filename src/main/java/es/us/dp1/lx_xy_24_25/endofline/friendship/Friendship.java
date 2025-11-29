@@ -1,5 +1,8 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
@@ -20,12 +23,14 @@ public class Friendship extends BaseEntity {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "sender_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     User sender;
 
     @JsonManagedReference("receivedFriendships")
     @ManyToOne
     @NotNull
     @JoinColumn(name = "receiver_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     User receiver;
 
     @NotNull
