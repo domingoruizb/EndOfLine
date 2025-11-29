@@ -44,10 +44,10 @@ public class GamePlayerCardService {
     }
 
     public GamePlayerCard getLastCard(GamePlayer gamePlayer) {
-        return gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId()).getFirst();
+        return gamePlayerCardRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId()).getFirst();
     }
 
     public List<GamePlayerCard> getCards(GamePlayer gamePlayer) {
-        return gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId());
+        return gamePlayerCardRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId());
     }
 }
