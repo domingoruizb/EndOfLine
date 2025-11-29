@@ -42,12 +42,4 @@ public class GamePlayerCardService {
 
         return saved;
     }
-
-    public GamePlayerCard getLastCard(GamePlayer gamePlayer) {
-        return gamePlayerCardRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId()).getFirst();
-    }
-
-    public List<GamePlayerCard> getCards(GamePlayer gamePlayer) {
-        return gamePlayerCardRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId());
-    }
 }

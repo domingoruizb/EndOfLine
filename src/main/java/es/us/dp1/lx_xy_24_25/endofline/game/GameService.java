@@ -4,9 +4,12 @@ import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +24,23 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final GamePlayerCardRepository gpcRepository;
     private final UserService userService;
-    private final GamePlayerCardService gpcService;
     private final GamePlayerService gamePlayerService;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 6;
     private final Random random = new Random();
 
-    public GameService(GameRepository gameRepository,
-                       UserService userService, GamePlayerCardService gpcService,
-                       GamePlayerService gamePlayerService) {
+    public GameService(
+        GameRepository gameRepository,
+        UserService userService,
+        GamePlayerService gamePlayerService,
+        GamePlayerCardRepository gpcRepository
+    ) {
         this.gameRepository = gameRepository;
+        this.gpcRepository = gpcRepository;
         this.userService = userService;
-        this.gpcService = gpcService;
         this.gamePlayerService = gamePlayerService;
     }
 
@@ -264,8 +270,8 @@ public class GameService {
         GamePlayer player1 = players.get(0);
         GamePlayer player2 = players.get(1);
 
-        GamePlayerCard lastCard1 = gpcService.getLastCard(player1);
-        GamePlayerCard lastCard2 = gpcService.getLastCard(player2);
+        GamePlayerCard lastCard1 = getLastCard(player1);
+        GamePlayerCard lastCard2 = getLastCard(player2);
 
         if (lastCard1 == null || lastCard2 == null) {
             return game.getHost().getId();
@@ -290,8 +296,8 @@ public class GameService {
 
     private Integer comparePreviousCardsRecursively(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
 
-        List<GamePlayerCard> cards1 = gpcService.getCards(gamePlayer1);
-        List<GamePlayerCard> cards2 = gpcService.getCards(gamePlayer2);
+        List<GamePlayerCard> cards1 = getCards(gamePlayer1);
+        List<GamePlayerCard> cards2 = getCards(gamePlayer2);
 
         if (cards1.size() <= 1 && cards2.size() <= 1) {
             Game game = gamePlayer1.getGame();
@@ -329,5 +335,13 @@ public class GameService {
             }
             index++;
         }
+    }
+
+    public GamePlayerCard getLastCard(GamePlayer gamePlayer) {
+        return gpcRepository.findPlacedCards(gamePlayer.getId()).getFirst();
+    }
+
+    public List<GamePlayerCard> getCards(GamePlayer gamePlayer) {
+        return gpcRepository.findPlacedCards(gamePlayer.getId());
     }
 }

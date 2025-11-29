@@ -1,6 +1,9 @@
 package es.us.dp1.lx_xy_24_25.endofline.board;
 
+import es.us.dp1.lx_xy_24_25.endofline.game.GameRepository;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,70 +11,74 @@ import java.util.List;
 @Service
 public class BoardService {
 
-    private final List<List<Integer>> INITIAL_POSITIONS = List.of(List.of(2, 4), List.of(4, 4));
+    GamePlayerCardRepository gamePlayerCardRepository;
+    GameRepository gameRepository;
 
-    public List<Integer> getInitialValidIndexes (Boolean isHost) {
-        List<Integer> startPos = isHost ? INITIAL_POSITIONS.get(0) : INITIAL_POSITIONS.get(1);
-
-        return List.of(BoardUtils.getIndex(startPos.get(0), startPos.get(1) - 1));
+    @Autowired
+    public BoardService (
+        GamePlayerCardRepository gamePlayerCardRepository,
+        GameRepository gameRepository
+    ) {
+        this.gamePlayerCardRepository = gamePlayerCardRepository;
+        this.gameRepository = gameRepository;
     }
 
-    public Integer getRotation (Integer index, GamePlayerCard lastPlacedCard) {
-        String name = BoardUtils.getName(lastPlacedCard);
-
-        if (name.equals("START")) {
-            return 0;
-        }
-
-        BoardPosition selectedPos = BoardUtils.getCoordinates(index);
-        BoardPosition lastPos = new BoardPosition(
-            lastPlacedCard.getPositionX(),
-            lastPlacedCard.getPositionY()
+    public void placeCard (
+        GamePlayerCard selectedCard
+    ) {
+        Integer index = BoardUtils.getIndex(
+            selectedCard.getPositionX(),
+            selectedCard.getPositionY()
         );
 
-        int rowDelta = (selectedPos.row() - lastPos.row() + BoardUtils.BOARD_SIZE) % BoardUtils.BOARD_SIZE;
-        int colDelta = (selectedPos.col() - lastPos.col() + BoardUtils.BOARD_SIZE) % BoardUtils.BOARD_SIZE;
+        GamePlayerCard lastPlacedCard = gamePlayerCardRepository
+            .findPlacedCards(selectedCard.getGamePlayer().getId())
+            .getFirst();
 
-        if (rowDelta == 1 && colDelta == 0) {
-            return -3;
-        } else if (rowDelta == BoardUtils.BOARD_SIZE - 1 && colDelta == 0) {
-            return -1;
-        } else if (rowDelta == 0 && colDelta == 1) {
-            return -2;
-        } else if (rowDelta == 0 && colDelta == BoardUtils.BOARD_SIZE - 1) {
-            return 0;
+        Boolean isHost = gameRepository
+            .getIsHostOfGame(
+                selectedCard.getGamePlayer().getGame().getId(),
+                selectedCard.getGamePlayer().getUser().getId()
+            );
+
+        if (!getIsPlacementValid(
+            index,
+            selectedCard,
+            lastPlacedCard,
+            selectedCard.getGamePlayer().getId(),
+            selectedCard.getGamePlayer().getGame().getId(),
+            isHost
+        )) {
+            throw new IllegalArgumentException("Invalid card placement");
         }
 
-        return 0;
+        Integer rotation = BoardUtils.getRotation(index, lastPlacedCard);
+
+        // TODO: HOW TO CHECK IF TURN IS FINISHED?
+
+        selectedCard.setRotation(rotation);
+        gamePlayerCardRepository.save(selectedCard);
     }
 
-    public List<Integer> getValidIndexes (GamePlayerCard lastPlacedCard, List<GamePlayerCard> board) {
-        String name = BoardUtils.getName(lastPlacedCard);
-
-        if (name.equals("START")) {
-            return List.of();
-        }
-
-        Integer lastBits = BoardUtils.getNameToBinary(name);
-        Integer lastRotatedBits = BoardUtils.getRotatedBits(lastBits, lastPlacedCard.getRotation());
-
-        List<Integer> potential = new BoardRotation(lastRotatedBits)
-            .getPotentialIndexes(lastPlacedCard);
-
-        return potential
-            .stream()
-            .filter(index -> BoardUtils.getIsIndexEmpty(index, board))
-            .toList();
+    public List<Integer> getPlaceableIndexes (
+        GamePlayerCard lastPlacedCard,
+        Integer gameId
+    ) {
+        List<GamePlayerCard> board = gamePlayerCardRepository.findByGameId(gameId);
+        return BoardUtils.getValidIndexes(lastPlacedCard, board);
     }
 
     public Boolean getIsPlacementValid (
         Integer selectedIndex,
         GamePlayerCard selectedCard,
         GamePlayerCard lastPlacedCard,
-        List<GamePlayerCard> lastPlacedCards,
-        List<GamePlayerCard> board,
+        Integer gamePlayerId,
+        Integer gameId,
         Boolean isHost
     ) {
+        List<GamePlayerCard> board = gamePlayerCardRepository.findByGameId(gameId);
+        List<GamePlayerCard> lastPlacedCards = gamePlayerCardRepository.findPlacedCards(gamePlayerId);
+
         if (selectedCard == null) {
             return false;
         }
@@ -81,13 +88,13 @@ public class BoardService {
                 return false;
             }
 
-            if (!getInitialValidIndexes(isHost).contains(selectedIndex)) {
+            if (!BoardUtils.getInitialValidIndexes(isHost).contains(selectedIndex)) {
                 return false;
             }
         }
 
         BoardPosition coordinates = BoardUtils.getCoordinates(selectedIndex);
-        boolean isStart = INITIAL_POSITIONS
+        Boolean isStart = BoardUtils.INITIAL_POSITIONS
             .stream()
             .anyMatch(pos ->
                 pos.getFirst().equals(coordinates.row()) &&
@@ -95,7 +102,7 @@ public class BoardService {
             );
 
         if (lastPlacedCard != null) {
-            List<Integer> validIndexes = getValidIndexes(lastPlacedCard, board);
+            List<Integer> validIndexes = BoardUtils.getValidIndexes(lastPlacedCard, board);
 
             if (!validIndexes.contains(selectedIndex)) {
                 return false;
@@ -103,22 +110,6 @@ public class BoardService {
         }
 
         return !isStart && BoardUtils.getIsIndexEmpty(selectedIndex, board);
-    }
-
-    public GamePlayerCard getReverseCard (GamePlayerCard lastPlacedCard, List<GamePlayerCard> lastPlacedCards) {
-        if (lastPlacedCards.size() < 2) {
-            return null;
-        }
-
-        for (int i = lastPlacedCards.size() - 2; i >= 0; i--) {
-            GamePlayerCard candidate = lastPlacedCards.get(i);
-
-            if (BoardUtils.getIsConnected(candidate, lastPlacedCard)) {
-                return candidate;
-            }
-        }
-
-        return null;
     }
 
     public Boolean getCanReverse (
@@ -132,7 +123,23 @@ public class BoardService {
             return false;
         }
 
-        List<Integer> validIndexes = getValidIndexes(reverseCard, board);
+        List<Integer> validIndexes = BoardUtils.getValidIndexes(reverseCard, board);
         return !validIndexes.isEmpty();
+    }
+
+    public GamePlayerCard getReverseCard (GamePlayerCard lastPlacedCard, List<GamePlayerCard> lastPlacedCards) {
+        if (lastPlacedCards.size() < 2) {
+            return null;
+        }
+
+        for (Integer i = lastPlacedCards.size() - 2; i >= 0; i--) {
+            GamePlayerCard candidate = lastPlacedCards.get(i);
+
+            if (BoardUtils.getIsConnected(candidate, lastPlacedCard)) {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 }
