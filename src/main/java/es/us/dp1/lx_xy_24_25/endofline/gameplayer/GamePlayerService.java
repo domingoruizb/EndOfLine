@@ -58,4 +58,9 @@ public class GamePlayerService {
         return gamePlayer.getGame().getTurn().equals(gamePlayer.getUser().getId());
     }
 
+    @Transactional
+    public GamePlayer updateGamePlayer(GamePlayer gamePlayer) {
+        return gamePlayerRepository.save(gamePlayer);
+    }
+
 }

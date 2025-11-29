@@ -7,6 +7,8 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GamePlayerCardService {
 
@@ -39,5 +41,13 @@ public class GamePlayerCardService {
         }
 
         return saved;
+    }
+
+    public GamePlayerCard getLastCard(GamePlayer gamePlayer) {
+        return gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId()).getFirst();
+    }
+
+    public List<GamePlayerCard> getCards(GamePlayer gamePlayer) {
+        return gpcRepository.findByGamePlayerIdOrderByPlacedAtDesc(gamePlayer.getId());
     }
 }
