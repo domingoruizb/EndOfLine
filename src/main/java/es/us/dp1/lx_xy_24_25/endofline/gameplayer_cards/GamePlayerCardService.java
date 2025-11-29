@@ -34,10 +34,10 @@ public class GamePlayerCardService {
     ) {
         GamePlayerCard saved = gamePlayerCardRepository.save(gamePlayerCard);
 
-        gamePlayerService.incrementCardsPlayedThisRound(gamePlayerCard.getGamePlayer().getId());
+        gamePlayerService.incrementCardsPlayedThisRound(gamePlayerCard.getGamePlayer());
 
         if (isTurnFinished) {
-            gameService.advanceTurn(gamePlayerCard.getGamePlayer().getGame().getId());
+            gameService.advanceTurn(gamePlayerCard.getGamePlayer().getGame());
         }
 
         return saved;

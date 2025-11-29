@@ -2,6 +2,7 @@ package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,10 +46,14 @@ public class GamePlayerService {
     }
 
     @Transactional
-    public void incrementCardsPlayedThisRound(Integer gamePlayerId) {
-        GamePlayer gamePlayer = findById(gamePlayerId);
-
+    public void incrementCardsPlayedThisRound(GamePlayer gamePlayer) {
         gamePlayer.setCardsPlayedThisRound(gamePlayer.getCardsPlayedThisRound() + 1);
+        gamePlayerRepository.save(gamePlayer);
+    }
+
+    @Transactional
+    public void setCardPlayedThisRoundTo0(GamePlayer gamePlayer) {
+        gamePlayer.setCardsPlayedThisRound(0);
         gamePlayerRepository.save(gamePlayer);
     }
 

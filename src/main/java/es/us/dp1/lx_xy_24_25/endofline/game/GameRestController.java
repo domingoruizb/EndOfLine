@@ -54,7 +54,8 @@ public class GameRestController {
 
     @PostMapping("/{id}/next-turn")
     public ResponseEntity<Game> nextTurn(@PathVariable Integer id) {
-        gameService.advanceTurn(id);
+        Game game = gameService.getGameById(id);
+        gameService.advanceTurn(game);
         return ResponseEntity.ok(gameService.getGameById(id));
     }
 

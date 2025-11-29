@@ -166,8 +166,7 @@ public class GameService {
     }
 
     @Transactional
-    public void advanceTurn(Integer gameId) {
-        Game game = getGameById(gameId);
+    public void advanceTurn(Game game) {
         List<GamePlayer> players = game.getGamePlayers();
 
         if (players.size() != 2) return;

@@ -325,9 +325,6 @@ export default function GamePage () {
     }, [gameData?.skill]);
 
     useEffect(() => {
-        // if (gameData?.skill === 'REVERSE') {
-        //     return;
-        // }
 
         if (lastPlacedCard == null && isHost != null) {
             const initialIndexes = getInitialValidIndexes(isHost)

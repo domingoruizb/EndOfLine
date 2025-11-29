@@ -1,8 +1,15 @@
 package es.us.dp1.lx_xy_24_25.endofline.board;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameRepository;
+import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +20,20 @@ public class BoardService {
 
     GamePlayerCardRepository gamePlayerCardRepository;
     GameRepository gameRepository;
+    GameService gameService;
+    GamePlayerService gamePlayerService;
 
     @Autowired
     public BoardService (
         GamePlayerCardRepository gamePlayerCardRepository,
-        GameRepository gameRepository
+        GameRepository gameRepository,
+        GameService gameService,
+        GamePlayerService gamePlayerService
     ) {
         this.gamePlayerCardRepository = gamePlayerCardRepository;
         this.gameRepository = gameRepository;
+        this.gameService = gameService;
+        this.gamePlayerService = gamePlayerService;
     }
 
     public void placeCard (
@@ -31,14 +44,18 @@ public class BoardService {
             selectedCard.getPositionY()
         );
 
+        Game game = selectedCard.getGamePlayer().getGame();
+        User player = selectedCard.getGamePlayer().getUser();
+        GamePlayer gamePlayer = selectedCard.getGamePlayer();
+
         GamePlayerCard lastPlacedCard = gamePlayerCardRepository
             .findPlacedCards(selectedCard.getGamePlayer().getId())
             .getFirst();
 
         Boolean isHost = gameRepository
             .getIsHostOfGame(
-                selectedCard.getGamePlayer().getGame().getId(),
-                selectedCard.getGamePlayer().getUser().getId()
+                game.getId(),
+                player.getId()
             );
 
         if (!getIsPlacementValid(
@@ -54,10 +71,17 @@ public class BoardService {
 
         Integer rotation = BoardUtils.getRotation(index, lastPlacedCard);
 
-        // TODO: HOW TO CHECK IF TURN IS FINISHED?
-
         selectedCard.setRotation(rotation);
         gamePlayerCardRepository.save(selectedCard);
+
+        Boolean isTurnFinished = getIsTurnFinished(gamePlayer);
+
+        if (isTurnFinished) {
+            gamePlayerService.setCardPlayedThisRoundTo0(gamePlayer);
+            gameService.advanceTurn(game);
+        } else {
+            gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
+        }
     }
 
     public List<Integer> getPlaceableIndexes (
@@ -141,5 +165,17 @@ public class BoardService {
         }
 
         return null;
+    }
+
+    private Boolean getIsTurnFinished(GamePlayer gamePlayer) {
+        Integer cardLimitInTurn = 2;
+        Game game = gamePlayer.getGame();
+        Skill skill = game.getSkill();
+        if (skill == Skill.BRAKE) {
+            cardLimitInTurn = 1;
+        } else if (skill == Skill.EXTRA_GAS) {
+            cardLimitInTurn = 3;
+        }
+        return gamePlayer.getCardsPlayedThisRound() + 1 == cardLimitInTurn;
     }
 }
