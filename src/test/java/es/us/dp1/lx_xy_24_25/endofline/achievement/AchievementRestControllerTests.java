@@ -40,11 +40,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 @WebMvcTest(
         controllers = AchievementRestController.class
 )
-@AutoConfigureMockMvc(addFilters = true)  // 🔥 Activa seguridad REAL en los tests
+@AutoConfigureMockMvc(addFilters = true)
 public class AchievementRestControllerTests {
 
     private static final String BASE_URL = "/api/v1/achievements";
     private static final String BADGE_IMAGE = "https://cdn-icons-png.flaticon.com/128/5730/5730459.png";
+    public static final Integer TEST_ACHIEVEMENT_ID = 1;
+    private static final String avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
 
     @Autowired
     private MockMvc mockMvc;
@@ -79,7 +81,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "PLAYER")
-    void testFindAllAchievementsAsPlayer() throws Exception {
+    void playerFindAllAchievementsTest() throws Exception {
         when(achievementService.getAchievements()).thenReturn(List.of(a1, a2));
 
         mockMvc.perform(get(BASE_URL))
@@ -91,7 +93,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testFindAllAchievementsAsAdmin() throws Exception {
+    void adminFindAllAchievementsTest() throws Exception {
         when(achievementService.getAchievements()).thenReturn(List.of(a1, a2));
 
         mockMvc.perform(get(BASE_URL))
@@ -101,7 +103,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "PLAYER")
-    void testFindAllEmpty() throws Exception {
+    void playerFindAllEmptyTest() throws Exception {
         when(achievementService.getAchievements()).thenReturn(List.of());
 
         mockMvc.perform(get(BASE_URL))
@@ -111,7 +113,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "PLAYER")
-    void testFindAchievementById() throws Exception {
+    void playerFindAchievementByIdTest() throws Exception {
         when(achievementService.getById(1)).thenReturn(a1);
 
         mockMvc.perform(get(BASE_URL + "/1"))
@@ -121,7 +123,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "PLAYER")
-    void testFindAchievementByIdNotFound() throws Exception {
+    void playerFindAchievementByIdNotFoundTest() throws Exception {
         when(achievementService.getById(99))
                 .thenThrow(new ResourceNotFoundException("Achievement not found"));
 
@@ -131,7 +133,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testCreateAchievement() throws Exception {
+    void adminCreateAchievementTest() throws Exception {
         when(achievementService.saveAchievement(any(Achievement.class))).thenReturn(a1);
 
         mockMvc.perform(post(BASE_URL)
@@ -144,7 +146,7 @@ public class AchievementRestControllerTests {
 /*
     @Test
     @WithMockUser(authorities = "PLAYER")
-    void testPlayerCannotCreate() throws Exception {
+    void playerCannotCreateTest() throws Exception {
         Achievement achievement3 = new Achievement();
         achievement3.setId(3);
         achievement3.setName("achievementName3");
@@ -163,7 +165,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testCreateInvalidAchievement() throws Exception {
+    void adminCreateInvalidAchievementTest() throws Exception {
 
         Achievement invalid = new Achievement();
         invalid.setId(99);
@@ -181,7 +183,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testUpdateAchievement() throws Exception {
+    void adminUpdateAchievementTest() throws Exception {
 
         a1.setName("UPDATED");
         when(achievementService.getById(1)).thenReturn(a1);
@@ -197,7 +199,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testUpdateNotFound() throws Exception {
+    void adminUpdateAchievementNotFoundTest() throws Exception {
 
         when(achievementService.getById(99))
                 .thenThrow(new ResourceNotFoundException("Achievement not found"));
@@ -211,7 +213,7 @@ public class AchievementRestControllerTests {
 /*
     @Test
     @WithMockUser(authorities = "PLAYER")
-    void testPlayerCannotUpdateAchievement() throws Exception {
+    void playerCannotUpdateAchievementTest() throws Exception {
 
         a1.setName("UPDATED");
 
@@ -222,14 +224,9 @@ public class AchievementRestControllerTests {
                 .andExpect(status().isForbidden());
     }
 */
-
-    // ================================
-    // DELETE (ADMIN ONLY)
-    // ================================
-
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testDeleteAchievement() throws Exception {
+    void adminDeleteAchievementTest() throws Exception {
 
         when(achievementService.getById(1)).thenReturn(a1);
         doNothing().when(achievementService).deleteAchievementById(1);
@@ -242,7 +239,7 @@ public class AchievementRestControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void testDeleteAchievementNotFound() throws Exception {
+    void adminDeleteAchievementNotFoundTest() throws Exception {
         when(achievementService.getById(99))
                 .thenThrow(new ResourceNotFoundException("Achievement not found"));
 
@@ -252,12 +249,12 @@ public class AchievementRestControllerTests {
     }
 /*
     @Test
-    @WithMockUser(authorities = "PLAYER") // PLAYER NO PUEDE ELIMINAR
-    void testPlayerCannotDeleteAchievement() throws Exception {
+    @WithMockUser(authorities = "PLAYER")
+    void playerCannotDeleteAchievementTest() throws Exception {
 
         mockMvc.perform(delete(BASE_URL + "/1")
                 .with(csrf()))
-                .andExpect(status().isForbidden()); // ✔ 403
+                .andExpect(status().isForbidden());
     }
 */
 }
