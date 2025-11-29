@@ -125,7 +125,7 @@ class GamePlayerServiceTests {
     void shouldIncrementCardsPlayed() {
         gp.setCardsPlayedThisRound(2);
         when(gamePlayerRepository.findById(1)).thenReturn(Optional.of(gp));
-        gamePlayerService.incrementCardsPlayedThisRound(1);
+        gamePlayerService.incrementCardsPlayedThisRound(gamePlayerRepository.findById(1).get());
         ArgumentCaptor<GamePlayer> captor = ArgumentCaptor.forClass(GamePlayer.class);
         verify(gamePlayerRepository).save(captor.capture());
         GamePlayer updated = captor.getValue();
@@ -135,7 +135,7 @@ class GamePlayerServiceTests {
     @Test
     void shouldFailIncrementCardsPlayed_NotFound() {
         when(gamePlayerRepository.findById(50)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> gamePlayerService.incrementCardsPlayedThisRound(50));
+        assertThrows(ResourceNotFoundException.class, () -> gamePlayerService.incrementCardsPlayedThisRound(gamePlayerRepository.findById(50).get()));
     }
 
 }
