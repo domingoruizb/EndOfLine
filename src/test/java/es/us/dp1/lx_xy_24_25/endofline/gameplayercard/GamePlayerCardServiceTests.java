@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
@@ -27,6 +28,9 @@ class GamePlayerCardServiceTests {
 
     @Mock
     private GamePlayerCardRepository gpcRepository;
+
+    @Mock
+    private GamePlayerService gamePlayerService;
 
     @InjectMocks
     private GamePlayerCardService gpcService;
@@ -57,7 +61,7 @@ class GamePlayerCardServiceTests {
     @Test
     void shouldSaveGamePlayerCard() {
         when(gpcRepository.save(any(GamePlayerCard.class))).thenReturn(gpc);
-        GamePlayerCard saved = gpcService.placeCard(gpc);
+        GamePlayerCard saved = gpcService.placeCard(gpc, false);
         assertNotNull(saved);
         assertEquals(1, saved.getId());
         assertEquals(3, saved.getPositionX());
@@ -72,6 +76,6 @@ class GamePlayerCardServiceTests {
     void shouldFailWhenSavingNullGamePlayerCard() {
         when(gpcRepository.save(null)).thenThrow(new IllegalArgumentException("Entity cannot be null"));
 
-        assertThrows(IllegalArgumentException.class, () -> gpcService.placeCard(null));
+        assertThrows(IllegalArgumentException.class, () -> gpcService.placeCard(null, false));
     }
 }
