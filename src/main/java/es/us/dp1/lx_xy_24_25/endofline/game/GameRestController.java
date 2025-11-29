@@ -1,5 +1,4 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
-
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 
 import java.util.List;
 
@@ -44,32 +40,27 @@ public class GameRestController {
         return ResponseEntity.ok(game);
     }
 
+    @PostMapping("/join/{userId}/{code}")
+    public ResponseEntity<Game> joinGame(@PathVariable Integer userId, @PathVariable String code) {
+        Game game = gameService.joinGameByCode(userId, code);
+        return ResponseEntity.ok(game);
+    }
+
     @PostMapping("/{id}/start")
     public ResponseEntity<Game> startGame(@PathVariable Integer id) {
         Game game = gameService.startGame(id);
         return ResponseEntity.ok(game);
     }
 
-    @PostMapping("/join/{userId}/{code}")
-    public ResponseEntity<Game> startGame(@PathVariable Integer userId, @PathVariable String code) {
-        Game game = gameService.joinGameByCode(userId, code);
-        return ResponseEntity.ok(game);
-    }
-
     @PostMapping("/{id}/next-turn")
     public ResponseEntity<Game> nextTurn(@PathVariable Integer id) {
-        return ResponseEntity.ok(gameService.nextTurn(id));
+        gameService.advanceTurn(id);
+        return ResponseEntity.ok(gameService.getGameById(id));
     }
 
     @PostMapping("/{id}/end/{winnerId}")
     public ResponseEntity<Game> endGame(@PathVariable Integer id, @PathVariable Integer winnerId) {
         return ResponseEntity.ok(gameService.endGame(id, winnerId));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
-        gameService.deleteGame(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{gameId}/{userId}/giveup")
@@ -86,12 +77,13 @@ public class GameRestController {
 
     @PutMapping("/{gameId}/{userId}/setUpSkill")
     public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody SkillRequestDTO dto) {
-        Game game = gameService.getGameById(gameId);
-        GamePlayer gamePlayer = game.getGamePlayers().stream()
-                .filter(gp -> gp.getUser().getId().equals(userId) && gp.getGame().getId().equals(gameId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("User is not a player in this game"));
-        game = gameService.setUpSkill(game, gamePlayer, dto.getSkill());
+        Game game = gameService.setUpSkill(gameId, userId, dto.getSkill());
         return ResponseEntity.ok(game);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
+        gameService.deleteGame(id);
+        return ResponseEntity.noContent().build();
     }
 }

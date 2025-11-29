@@ -29,15 +29,11 @@ public class FriendshipService {
     FriendshipRepository friendshipRepository;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     UserService userService;
 
     @Autowired
-    public FriendshipService(FriendshipRepository friendshipRepository, UserRepository userRepository) {
+    public FriendshipService(FriendshipRepository friendshipRepository) {
         this.friendshipRepository = friendshipRepository;
-        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -79,7 +75,7 @@ public class FriendshipService {
         if (sender_id.equals(receiver_id))
             throw new BadRequestException("You cannot create a friendship with yourself.");
 
-        if (!userRepository.existsUserById(sender_id) || !userRepository.existsUserById(receiver_id))
+        if (!userService.existsUser(sender_id) || !userService.existsUser(receiver_id))
             throw new BadRequestException("User with id " + sender_id + " or " + receiver_id + " does not exist.");
 
         Optional<Friendship> optionalFriendship = friendshipRepository.findFriendshipBySenderAndReceiver(sender_id,

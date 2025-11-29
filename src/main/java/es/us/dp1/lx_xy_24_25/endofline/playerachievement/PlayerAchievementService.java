@@ -19,6 +19,7 @@ public class PlayerAchievementService {
     PlayerAchievementRepository repository;
 
     UserService userService;
+
     AchievementService achievementService;
 
     @Autowired

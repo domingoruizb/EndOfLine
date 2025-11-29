@@ -45,12 +45,17 @@ public class GamePlayerService {
             .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));
     }
 
-    @Transactional 
+    @Transactional
     public void incrementCardsPlayedThisRound(Integer gamePlayerId) {
         GamePlayer gp = findById(gamePlayerId);
 
         gp.setCardsPlayedThisRound(gp.getCardsPlayedThisRound() + 1);
         gamePlayerRepository.save(gp);
+    }
+
+    @Transactional
+    public GamePlayer updateGamePlayer(GamePlayer gamePlayer) {
+        return gamePlayerRepository.save(gamePlayer);
     }
 
 }
