@@ -139,7 +139,6 @@ public class GameService {
     @Transactional
     public Game giveUpOrLose(Integer gameId, Integer userId) {
         Game game = getGameById(gameId);
-        User loser = userService.findUser(userId);
 
         User winner = game.getGamePlayers().stream()
             .map(GamePlayer::getUser)
