@@ -36,6 +36,10 @@ public class BoardService {
         this.gamePlayerService = gamePlayerService;
     }
 
+    public List<GamePlayerCard> getBoard (Integer gameId) {
+        return gamePlayerCardRepository.findByGameId(gameId);
+    }
+
     public void placeCard (
         GamePlayerCard selectedCard
     ) {
@@ -44,9 +48,9 @@ public class BoardService {
             selectedCard.getPositionY()
         );
 
-        Game game = selectedCard.getGamePlayer().getGame();
-        User player = selectedCard.getGamePlayer().getUser();
         GamePlayer gamePlayer = selectedCard.getGamePlayer();
+        Game game = gamePlayer.getGame();
+        User user = gamePlayer.getUser();
 
         GamePlayerCard lastPlacedCard = gamePlayerCardRepository
             .findPlacedCards(selectedCard.getGamePlayer().getId())
@@ -55,7 +59,7 @@ public class BoardService {
         Boolean isHost = gameRepository
             .getIsHostOfGame(
                 game.getId(),
-                player.getId()
+                user.getId()
             );
 
         if (!getIsPlacementValid(
@@ -63,7 +67,7 @@ public class BoardService {
             selectedCard,
             lastPlacedCard,
             selectedCard.getGamePlayer().getId(),
-            selectedCard.getGamePlayer().getGame().getId(),
+            game.getId(),
             isHost
         )) {
             throw new IllegalArgumentException("Invalid card placement");
@@ -82,14 +86,19 @@ public class BoardService {
         } else {
             gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
         }
-    }
 
-    public List<Integer> getPlaceableIndexes (
-        GamePlayerCard lastPlacedCard,
-        Integer gameId
-    ) {
-        List<GamePlayerCard> board = gamePlayerCardRepository.findByGameId(gameId);
-        return BoardUtils.getValidIndexes(lastPlacedCard, board);
+        List<GamePlayerCard> board = getBoard(game.getId());
+        List<Integer> validIndexes = BoardUtils.getValidIndexes(
+            selectedCard,
+            board
+        );
+
+        if (validIndexes.isEmpty()) {
+            gameService.giveUpOrLose(
+                game.getId(),
+                user.getId()
+            );
+        }
     }
 
     public Boolean getIsPlacementValid (
@@ -100,7 +109,7 @@ public class BoardService {
         Integer gameId,
         Boolean isHost
     ) {
-        List<GamePlayerCard> board = gamePlayerCardRepository.findByGameId(gameId);
+        List<GamePlayerCard> board = getBoard(gameId);
         List<GamePlayerCard> lastPlacedCards = gamePlayerCardRepository.findPlacedCards(gamePlayerId);
 
         if (selectedCard == null) {
