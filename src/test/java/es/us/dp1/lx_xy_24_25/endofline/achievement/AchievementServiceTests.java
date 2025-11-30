@@ -1,7 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.achievement;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -11,9 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.transaction.Transactional;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.Achievement;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementService;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.Category;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 
 @SpringBootTest
@@ -23,7 +19,7 @@ public class AchievementServiceTests {
     @Autowired
     private AchievementService achievementService;
 
-    private Achievement createAchievement(){
+    private Achievement createAchievement() {
         Achievement achievement = new Achievement();
         achievement.setName("Test achievement");
         achievement.setDescription("This is a test achievement");
@@ -35,31 +31,29 @@ public class AchievementServiceTests {
 
     @Test
     void findAllAchievementsTest() {
-        List<Achievement> achievements = (List<Achievement>) this.achievementService.getAchievements();
+        List<Achievement> achievements = this.achievementService.getAchievements();
         assertEquals(3, achievements.size());
     }
 
     @Test
-    void findAchievementByIdTest(){
+    void findAchievementByIdTest() {
         Achievement achievement = this.achievementService.getById(1);
         assertEquals("Principiante", achievement.getName());
     }
 
     @Test
-    void notFindAchievementByIdTest(){
+    void notFindAchievementByIdTest() {
         assertThrows(ResourceNotFoundException.class, () -> this.achievementService.getById(404));
     }
 
     @Test
     @Transactional
     public void insertAchievementTest() {
-        Iterable<Achievement> achievements = achievementService.getAchievements();
-        long count = achievements.spliterator().getExactSizeIfKnown();
+        int count = this.achievementService.getAchievements().size();
         createAchievement();
-        Iterable<Achievement> achievements2 = achievementService.getAchievements();
-        long count2 = achievements2.spliterator().getExactSizeIfKnown();
+        int count2 = this.achievementService.getAchievements().size();
         assertEquals(count + 1, count2);
-    } 
+    }
 
     @Test
     @Transactional
@@ -68,20 +62,66 @@ public class AchievementServiceTests {
         achievement.setName("Updated name");
         achievement.setDescription("Updated description");
         achievementService.updateAchievement(1, achievement);
-        assertEquals("Updated name", achievement.getName());
-        assertEquals("Updated description", achievement.getDescription());
-    } 
+        Achievement updated = this.achievementService.getById(1);
+        assertEquals("Updated name", updated.getName());
+        assertEquals("Updated description", updated.getDescription());
+    }
+
+    @Test
+    void updateAchievementWithWrongIdTest() {
+        Achievement achievement = new Achievement();
+        achievement.setId(999);
+        achievement.setName("X");
+        achievement.setDescription("X");
+        achievement.setCategory(Category.GAMES_PLAYED);
+        achievement.setThreshold(5);
+        assertThrows(ResourceNotFoundException.class, () -> {
+            achievementService.updateAchievement(999, achievement);
+        });
+    }
 
     @Test
     @Transactional
     public void deleteAchievementTest() {
         Achievement achievement = createAchievement();
-        Iterable<Achievement> achievements = achievementService.getAchievements();
-        long count = achievements.spliterator().getExactSizeIfKnown();
+        int count = this.achievementService.getAchievements().size();
         achievementService.deleteAchievementById(achievement.getId());
-        Iterable<Achievement> achievements2 = achievementService.getAchievements();
-        long count2 = achievements2.spliterator().getExactSizeIfKnown();
+        int count2 = this.achievementService.getAchievements().size();
         assertEquals(count - 1, count2);
-    } 
+    }
 
+    @Test
+    void deleteAchievementNonExistingTest() {
+        assertDoesNotThrow(() -> {
+            achievementService.deleteAchievementById(9999);
+        });
+        assertThrows(ResourceNotFoundException.class, () -> {
+            achievementService.getById(9999);
+        });
+    }
+
+    @Test
+    void createAchievementWithInvalidDataShouldFail() {
+        Achievement a = new Achievement();
+        a.setName("Invalid Achievement");
+        a.setDescription("");
+        a.setCategory(null);
+        a.setThreshold(-10);
+        assertThrows(Exception.class, () -> {
+            achievementService.saveAchievement(a);
+        });
+    }
+
+    @Test
+    void findByNameExistingTest() {
+        Achievement achievement = achievementService.getAchievementByName("Principiante");
+        assertNotNull(achievement);
+        assertEquals(1, achievement.getId());
+    }
+
+    @Test
+    void findByNameNonExistingTest() {
+        Achievement achievement = achievementService.getAchievementByName("DOES_NOT_EXIST");
+        assertNull(achievement);
+    }
 }

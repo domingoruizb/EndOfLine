@@ -1,88 +1,120 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.stream.StreamSupport;
-
+import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
-import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-class FriendshipServiceTests {
+@Transactional
+public class FriendshipServiceTests {
 
     @Autowired
     private FriendshipService friendshipService;
 
-    private Friendship createFriendship(){
-        FriendshipDTO friendShipDTO = new FriendshipDTO(6, 11);
-        return this.friendshipService.create(friendShipDTO);
+    @Test
+    void testFindById() {
+        Friendship friendship = friendshipService.findById(1);
+        assertNotNull(friendship);
+        assertEquals(1, friendship.getId());
+        assertEquals(FriendStatus.ACCEPTED, friendship.getFriendState());
     }
 
     @Test
-    void shouldFindFriendshipById() {
-        Friendship testFriendship = friendshipService.findById(1);
-        assert(testFriendship.getSender().getId() == 1);
-        assert(testFriendship.getReceiver().getId() == 4);
-        assert(testFriendship.getFriendState().equals(FriendStatus.ACCEPTED));
+    void testFindByIdNotFound() {
+        assertThrows(ResourceNotFoundException.class, () ->
+                friendshipService.findById(9999)
+        );
     }
 
     @Test
-    void shouldNotFindFriendshipByBadId(){
-        assertThrows(ResourceNotFoundException.class, () -> friendshipService.findById(1000));
+    void testCreateFriendship() {
+        FriendshipDTO dto = new FriendshipDTO(13, 14);
+        Friendship created = friendshipService.create(dto);
+        assertNotNull(created);
+        assertEquals(FriendStatus.PENDING, created.getFriendState());
+        assertEquals(13, created.getSender().getId());
+        assertEquals(14, created.getReceiver().getId());
     }
 
     @Test
-    void shouldFindAllFriendships(){
-        Iterable<Friendship> friendships = friendshipService.findAll();
-        long count = StreamSupport.stream(friendships.spliterator(), false).count();
-        assertTrue(count > 0);
+    void testCreateFriendshipWithSelf() {
+        FriendshipDTO dto = new FriendshipDTO(4, 4);
+        assertThrows(BadRequestException.class, () ->
+                friendshipService.create(dto)
+        );
     }
 
     @Test
-    void shouldFindAllFriendshipsByPlayerId(){
-        Iterable<Friendship> friendships = friendshipService.findFriendshipsByUserId(1, FriendStatus.ACCEPTED);
-        long count = StreamSupport.stream(friendships.spliterator(), false).count();
-        assertEquals(3, count);
+    void testCreateFriendshipAlreadyPending() {
+        FriendshipDTO dto = new FriendshipDTO(4, 5);
+        assertThrows(BadRequestException.class, () ->
+                friendshipService.create(dto)
+        );
     }
 
     @Test
-    @Transactional
-    void shouldInsertFriendship(){
-        Iterable<Friendship> friendships = friendshipService.findAll();
-        long initialCount = StreamSupport.stream(friendships.spliterator(), false).count();
-        createFriendship();
-        Iterable<Friendship> friendships2 = friendshipService.findAll();
-        long finalCount = StreamSupport.stream(friendships2.spliterator(), false).count();
-        assertEquals(initialCount + 1, finalCount);
+    void testCreateFriendshipAlreadyAccepted() {
+        FriendshipDTO dto = new FriendshipDTO(1, 4);
+        assertThrows(BadRequestException.class, () ->
+                friendshipService.create(dto)
+        );
     }
 
     @Test
-    @Transactional
-    void shouldUpdateFriendship(){
-        FriendshipDTO friendshipDTO = new FriendshipDTO(1, 6);
-        Friendship friendship = this.friendshipService.create(friendshipDTO);
-        assertEquals(friendship.getFriendState(), FriendStatus.PENDING);
-        friendshipDTO.setFriendship_state(FriendStatus.ACCEPTED);
-        Friendship updatedFriendship = this.friendshipService.update(friendship.getId(), friendshipDTO);
-        assertEquals(updatedFriendship.getFriendState(), FriendStatus.ACCEPTED);
+    void testCreateFriendshipUserNotExist() {
+        FriendshipDTO dto = new FriendshipDTO(4, 9999);
+        assertThrows(BadRequestException.class, () ->
+                friendshipService.create(dto)
+        );
     }
 
     @Test
-    @Transactional
-    void shouldDeleteFriendship(){
-        Friendship friendship = createFriendship();
-        Iterable<Friendship> friendships = friendshipService.findAll();
-        long initialCount = StreamSupport.stream(friendships.spliterator(), false).count();
-        friendshipService.delete(friendship.getId());
-        Iterable<Friendship> friendships2 = friendshipService.findAll();
-        long finalCount = StreamSupport.stream(friendships2.spliterator(), false).count();
-        assertEquals(initialCount - 1, finalCount);
+    @WithMockUser(username = "player2", authorities = {"PLAYER"})
+    void testAcceptFriendship() {
+        Friendship accepted = friendshipService.acceptFriendShip(2);
+        assertEquals(FriendStatus.ACCEPTED, accepted.getFriendState());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testAcceptFriendshipNotReceiver() {
+        assertThrows(AccessDeniedException.class, () ->
+                friendshipService.acceptFriendShip(2)
+        );
+    }
+
+    @Test
+    @WithMockUser(username = "player6", authorities = {"PLAYER"})
+    void testRejectFriendship() {
+        assertDoesNotThrow(() -> friendshipService.rejectFriendShip(9));
+        assertThrows(ResourceNotFoundException.class, () -> friendshipService.findById(9));
+    }
+
+    @Test
+    @WithMockUser(username = "player4", authorities = {"PLAYER"})
+    void testRejectFriendshipNotReceiver() {
+        assertThrows(AccessDeniedException.class, () ->
+                friendshipService.rejectFriendShip(9)
+        );
+    }
+
+    @Test
+    void testDeleteFriendship() {
+        FriendshipDTO dto = new FriendshipDTO(7, 10);
+        Friendship f = friendshipService.create(dto);
+        assertDoesNotThrow(() -> friendshipService.delete(f.getId()));
+        assertThrows(ResourceNotFoundException.class, () ->
+                friendshipService.findById(f.getId())
+        );
     }
 }

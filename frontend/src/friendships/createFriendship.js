@@ -103,6 +103,7 @@ export default function FriendshipCreation() {
                             size="lg"
                             className="positive-button"
                             type="submit"
+                            color='#b1d12d'
                         >
                             Send
                         </Button>

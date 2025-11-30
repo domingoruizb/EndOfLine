@@ -18,10 +18,12 @@ package es.us.dp1.lx_xy_24_25.endofline.user;
 import java.util.List;
 import java.util.Optional;
 
+import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,8 +40,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+    @Lazy
 	@Autowired
-	private GameRepository gameRepository;
+	private GameService gameService;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
@@ -110,7 +113,7 @@ public class UserService {
 			User toUpdate = findUser(currentUser.getId());
 			BeanUtils.copyProperties(user, toUpdate, "id");
 			userRepository.save(toUpdate);
-			
+
 			return toUpdate;
 		}
 
@@ -121,18 +124,18 @@ public class UserService {
 		User toDelete = findUser(id);
 
 		User deletedUser = userRepository.findByUsername("Deleted user").get();
-		 List<Game> hostedGames = gameRepository.findByHost(toDelete);
+		 List<Game> hostedGames = gameService.getGamesByHost(deletedUser);
     	for (Game g : hostedGames) {
         	g.setHost(deletedUser);
     	}
 
-		List<Game> wonGames = gameRepository.findByWinner(toDelete);
+		List<Game> wonGames = gameService.getGamesByWinner(deletedUser);
     	for (Game g : wonGames) {
         	g.setWinner(deletedUser);
     	}
 
-		gameRepository.saveAll(hostedGames);
-    	gameRepository.saveAll(wonGames);
+		gameService.saveGames(hostedGames);
+    	gameService.saveGames(wonGames);
 
 		this.userRepository.delete(toDelete);
 	}

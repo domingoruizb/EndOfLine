@@ -1,16 +1,19 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardService;
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
+import es.us.dp1.lx_xy_24_25.endofline.card.Card;
+import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 
 import java.util.List;
 
@@ -21,10 +24,21 @@ import java.util.List;
 public class GameRestController {
 
     private final GameService gameService;
+    private final BoardService boardService;
+    private final GamePlayerService gamePlayerService;
+    private final CardService cardService;
 
     @Autowired
-    public GameRestController(GameService gameService) {
+    public GameRestController(
+        GameService gameService,
+        BoardService boardService,
+        GamePlayerService gamePlayerService,
+        CardService cardService
+    ) {
         this.gameService = gameService;
+        this.boardService = boardService;
+        this.gamePlayerService = gamePlayerService;
+        this.cardService = cardService;
     }
 
     @GetMapping
@@ -44,32 +58,28 @@ public class GameRestController {
         return ResponseEntity.ok(game);
     }
 
+    @PostMapping("/join/{userId}/{code}")
+    public ResponseEntity<Game> joinGame(@PathVariable Integer userId, @PathVariable String code) {
+        Game game = gameService.joinGameByCode(userId, code);
+        return ResponseEntity.ok(game);
+    }
+
     @PostMapping("/{id}/start")
     public ResponseEntity<Game> startGame(@PathVariable Integer id) {
         Game game = gameService.startGame(id);
         return ResponseEntity.ok(game);
     }
 
-    @PostMapping("/join/{userId}/{code}")
-    public ResponseEntity<Game> startGame(@PathVariable Integer userId, @PathVariable String code) {
-        Game game = gameService.joinGameByCode(userId, code);
-        return ResponseEntity.ok(game);
-    }
-
     @PostMapping("/{id}/next-turn")
     public ResponseEntity<Game> nextTurn(@PathVariable Integer id) {
-        return ResponseEntity.ok(gameService.nextTurn(id));
+        Game game = gameService.getGameById(id);
+        gameService.advanceTurn(game);
+        return ResponseEntity.ok(gameService.getGameById(id));
     }
 
     @PostMapping("/{id}/end/{winnerId}")
     public ResponseEntity<Game> endGame(@PathVariable Integer id, @PathVariable Integer winnerId) {
         return ResponseEntity.ok(gameService.endGame(id, winnerId));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
-        gameService.deleteGame(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{gameId}/{userId}/giveup")
@@ -86,12 +96,38 @@ public class GameRestController {
 
     @PutMapping("/{gameId}/{userId}/setUpSkill")
     public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody SkillRequestDTO dto) {
-        Game game = gameService.getGameById(gameId);
-        GamePlayer gamePlayer = game.getGamePlayers().stream()
-                .filter(gp -> gp.getUser().getId().equals(userId) && gp.getGame().getId().equals(gameId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("User is not a player in this game"));
-        game = gameService.setUpSkill(game, gamePlayer, dto.getSkill());
+        Game game = gameService.setUpSkill(gameId, userId, dto.getSkill());
         return ResponseEntity.ok(game);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
+        gameService.deleteGame(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{gamePlayerId}/placeable")
+    public ResponseEntity<List<Integer>> getPlaceablePositions(
+        @PathVariable Integer gamePlayerId,
+        @RequestBody GamePlayerCardDTO lastPlacedCardDTO
+    ) {
+        GamePlayer gamePlayer = gamePlayerService.getById(gamePlayerId);
+
+        Card card = cardService.findByImage(lastPlacedCardDTO.getImage());
+
+        GamePlayerCard gamePlayerCard = GamePlayerCard.buildGamePlayerCard(
+            lastPlacedCardDTO,
+            gamePlayer,
+            card
+        );
+
+        List<GamePlayerCard> board = boardService.getBoard(gamePlayer.getGame().getId());
+
+        List<Integer> placeablePositions = BoardUtils.getValidIndexes(
+            gamePlayerCard,
+            board
+        );
+
+        return ResponseEntity.ok(placeablePositions);
     }
 }

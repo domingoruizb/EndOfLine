@@ -89,7 +89,55 @@ Sprint 2 AI Ethical Use Compliance Checklist:
 
 - [✓] AI was used without providing personal/sensitive data that could be exposed to external tools.
 
-Repita esta subsección para Sprints 3 y 4.
+### Sprint 3 — AI Usage Summary
+
+Recorded Uses: Controlled use of Artificial Intelligence (AI) tools, such as Gemini and ChatGPT, was recorded for the implementation of complex game logic on the frontend, CSS/Frontend styling assistance, and unit/integration test development on the backend.
+
+Main Areas: AI was primarily used in technical assistance and the development of specific logic:
+
+* Game Logic (Frontend/React):
+
+    * Assistance in implementing complex algorithms like card rotation logic using bit manipulation based on the card image name.
+
+    * Help structuring the player turn logic.
+
+    * Guidance in implementing "reverse" skill.
+
+* CSS/Frontend:
+
+    * Support in conceptualizing and implementing all CSS styles for the component or feature developed during the sprint.
+
+* Testing (Backend):
+
+    * Assistance in writing and structuring some tests for the backend, ensuring coverage and validation of the newly implemented logic.
+
+* Test Plan Document:
+    
+    * Support in doing the traceability matrix.
+
+Value Added: The use of AI allowed for a significant acceleration in game logic development, especially in implementing the bit-based card rotation algorithm, which was such a difficult process. AI acted as a technical consultant, helping to translate complex game functionalities into functional code and assisting in the consistent design and application of visual styles.
+
+Relevant Risks and Mitigations:
+
+* Risks: No direct risks were identified.
+
+* Mitigation: All generated logic, especially the bit manipulation and turn structure on the frontend and backend, was manually verified, tested, and adapted by the developers. This ensured the code was compatible with the project's architecture and that the game logic strictly adhered to the defined rules.
+
+Lessons Learned: AI is an exceptionally valuable tool for the generation and implementation of specific, complex algorithms when the developer has a clear understanding of the objective. It also proved to be a great support for rapid CSS styling. However, exhaustive verification and human testing remain essential to guarantee the correct interpretation of game rules and seamless integration.
+
+Sprint 3 AI Ethical Use Compliance Checklist:
+
+- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+
+- [✓] AI was not used for narrative purposes (or there is documented authorization).
+
+- [✓] Every accepted piece was understood and verified by humans (testing/review).
+
+- [✓] Citations/Attributions included where applicable.
+
+- [✓] AI was used without providing personal/sensitive data that could be exposed to external tools.
+
+Repita esta subsección para Sprint 4.
 
 ## Registro detallado de uso de AI por Sprint
 
@@ -108,13 +156,28 @@ AI was not used in this sprint.
 
 | # | Fecha y hora | Sprint | Integrante(s) | **Herramienta & versión** | **Acceso** | **Enlace a conversación / Prompt** | **Finalidad** | **Artefactos afectados** | **Verificación humana** | **Riesgos & modificaciones** | **Resultado** |
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
-| 2.1 | 01/11/2025 | 2 | Alejandro / Domingo / Fernando / Angelo | ChatGPT-5 Mini | Web | Circular dependency JPA explanation / CSS property for styling | Code / Debugging | PlayerAchievement.java / myProfile.css / ... | Testing / Self-revision | Ambiguity between variable/function names | Accepted with changes |
+| 2.1 | 01/11/2025 | 2 | Alejandro / Domingo / Fernando / Angelo | ChatGPT-5 Mini | Web | Circular dependency JPA explanation / CSS property for styling | Code / Debugging | PlayerAchievement.java / myProfile.css / ... | Testing / Self-revision | None | Accepted with changes |
 
 ### Sprint 3
 
 | # | Fecha y hora | Sprint | Integrante(s) | **Herramienta & versión** | **Acceso** | **Enlace a conversación / Prompt** | **Finalidad** | **Artefactos afectados** | **Verificación humana** | **Riesgos & mitigaciones** | **Resultado** |
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
-| 3.1 | <!-- 04/09/2025 18:40 --> | 3 | <!-- Nombre --> | <!-- p.ej., ChatGPT (GPT-5, OpenAI, 2025) --> | <!-- web/plugin/integración --> | <!-- URL al chat o prompt resumido --> | <!-- idea / código / depuración / pruebas / documentación técnica* --> | <!-- ficheros, issue, PR, commit --> | <!-- pruebas, revisión por pares, reasoning propio --> | <!-- plagio, licencias, datos personales; mitigación --> | <!-- aceptado / rechazado / aceptado con cambios parciales --> |
+| 3.1 | 12/11/2025 | 3 | Angelo | Gemini | Web | I am developing a game called End Of Line in React and I want to know how to manage the rotation of the cards when placing it in the board. Each card has 1 input and from 1 to 3 outputs. The key is to connect the input of the card to be placed to one of the outputs of the last placed card. | Ideas | None | Self-revision | None | Accepted with changes |
+| 3.2 | 16/11/2025 | 3 | Domingo | Gemini | Web | Attached is the file of the game implementation in backend. I want to develop the turn functionality --I explained what is the turn functionality of the game--. Give me some guides for helping me developing this. | Ideas | Index.js file of the game folder in Frontend | Self-revision | Ambiguity between variable/function names and some code | Accepted with changes |
+| 3.3 | 28/11/2025 | 3 | Fernando | ChatGPT | Web | The following tests in this "GameServiceTests" file give these errors.
+- gamePlayersConsistencyTest: "@Test
+    @Transactional
+    void gamePlayersConsistencyTest() {
+        Game g = gameService.getGameById(1);
+        assertNotNull(g.getGamePlayers());
+        assertTrue(g.getGamePlayers().size() > 0);
+        for (GamePlayer gp : g.getGamePlayers()) {
+            assertEquals(g.getId(), gp.getGame().getId());
+        }
+    }" (org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: es.us.dp1.lx_xy_24_25.endofline.game.Game.gamePlayers: could not initialize proxy - no Session).
+
+What could be the cause of this error? | Code | GameServiceTests.java | Self-revision | None | Accepted |
+
 
 ### Sprint 4
 

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../static/css/auth/authButton.css";
 import "../../static/css/auth/authPage.css";
+import '../../static/css/home/home.css'; 
 import tokenService from "../../services/token.service";
 import { Container } from 'reactstrap';
 
@@ -18,12 +19,12 @@ const Logout = () => {
 
   return (
     <div
+      className="home-page-container"
       style={{
-        backgroundColor: "black",
         color: "white",
         minHeight: "100vh",
         padding: "2rem 0",
-        fontFamily: "Inter, Arial, sans-serif",
+        fontFamily: "Inter, Arial, sans-serif"
       }}
     >
       <Container
@@ -34,6 +35,7 @@ const Logout = () => {
           background: "none",
           borderRadius: "1rem",
           boxShadow: "none",
+          marginTop: '70px'
         }}
       >
         <h1 className="text-center" style={{
