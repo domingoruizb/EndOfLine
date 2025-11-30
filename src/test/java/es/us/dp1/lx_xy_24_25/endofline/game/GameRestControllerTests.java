@@ -130,7 +130,7 @@ public class GameRestControllerTests {
             this.gameService.findAll()
         ).thenReturn(
             List.of(game, game2));
-        mockMvc.perform(get(BASE_URL + "/all"))
+        mockMvc.perform(get(BASE_URL))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", hasSize(2)))
                .andExpect(jsonPath("$[*].id").exists())
