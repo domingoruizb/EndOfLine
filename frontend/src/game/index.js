@@ -12,6 +12,7 @@ import HandCard from './gameComponents/handCard'
 import GiveUpModal from './gameComponents/giveUpModal'
 import WinnerModal from './gameComponents/winnerModal'
 import LoserModal from './gameComponents/loserModal'
+import GameChat from './gameComponents/gameChat'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
@@ -26,6 +27,7 @@ export default function GamePage () {
     const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
+    const [isChatVisible, setIsChatVisible] = useState(false);
     const [hostGamePlayer, setHostGamePlayer] = useState(null);
     const [secondGamePlayer, setSecondGamePlayer] = useState(null);
     const [hostColor, setHostColor] = useState(null);
@@ -465,14 +467,21 @@ export default function GamePage () {
                 </div>
             )}
             <div
-                className='game-data-container'
-            >
-                <GameInfo
-                    gameId={gameId}
-                    gameData={gameData}
-                    elapsed={elapsed}
-                />
-            </div>
+                        className='game-data-container'
+                    >
+                        <GameInfo
+                            gameId={gameId}
+                            gameData={gameData}
+                            elapsed={elapsed}
+                        />
+                        <button
+                            className='chat-toggle-button'
+                            onClick={() => setIsChatVisible(prev => !prev)}
+                            title='Toggle chat'
+                        >
+                            {isChatVisible ? 'Hide Chat' : 'Show Chat'}
+                        </button>
+                    </div>
             <div
                 className='side-container'
             >
@@ -587,6 +596,11 @@ export default function GamePage () {
                     }}
                 />
             </div>
+            {isChatVisible && (
+                <div className='side-container fixed-chat'>
+                    <GameChat gameId={gameId} jwt={jwt} user={user} />
+                </div>
+            )}
         </div>
     )
 }
