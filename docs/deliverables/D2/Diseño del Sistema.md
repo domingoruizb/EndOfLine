@@ -37,7 +37,7 @@ _Un ejemplo de diagrama para los ejercicios planteados en los boletines de labor
 ![Domain diagram](../../diagrams/domainDiagram_v3.png)
 
 ### Layers diagram
-![Layers diagram](../../diagrams/layersDiagramv3.png)
+![Layers diagram](../../diagrams/LayersDiagramv3.png)
 
 ## Descomposición del mockups del tablero de juego en componentes
 
