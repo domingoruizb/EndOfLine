@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/games/{gameId}/chat")
-public class ChatController {
+public class MessageController {
 
     private final UserRepository userRepository;
     private final GamePlayerRepository gamePlayerRepository;
     private final MessageRepository messageRepository;
 
     @Autowired
-    public ChatController(
+    public MessageController(
         UserRepository userRepository,
         GamePlayerRepository gamePlayerRepository,
         MessageRepository messageRepository
@@ -45,7 +45,7 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<ChatMessage> postMessage(@PathVariable Long gameId, @RequestBody ChatRequest req, Principal principal) {
+    public ResponseEntity<MessageDTO> postMessage(@PathVariable Long gameId, @RequestBody ChatRequest req, Principal principal) {
         if (principal == null) return ResponseEntity.status(401).build();
         if (req == null || req.text == null || req.text.trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -68,13 +68,13 @@ public class ChatController {
 
         Message saved = messageRepository.save(msg);
 
-        ChatMessage dto = new ChatMessage(user.getUsername(), saved.getBody());
+        MessageDTO dto = new MessageDTO(user.getUsername(), saved.getBody());
         dto.setTimestamp(saved.getCreatedAt().toEpochMilli());
         return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/messages")
-    public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable Long gameId, @RequestParam(name = "since", required = false, defaultValue = "0") long since) {
+    public ResponseEntity<List<MessageDTO>> getMessages(@PathVariable Long gameId, @RequestParam(name = "since", required = false, defaultValue = "0") long since) {
         List<Message> messages;
         if (since > 0) {
             messages = messageRepository.findByGamePlayer_Game_IdAndCreatedAtAfterOrderByCreatedAtAsc(gameId.intValue(), Instant.ofEpochMilli(since));
@@ -82,9 +82,9 @@ public class ChatController {
             messages = messageRepository.findByGamePlayer_Game_IdOrderByCreatedAtAsc(gameId.intValue());
         }
 
-        List<ChatMessage> dtos = messages.stream().map(m -> {
+        List<MessageDTO> dtos = messages.stream().map(m -> {
             String sender = m.getGamePlayer() != null && m.getGamePlayer().getUser() != null ? m.getGamePlayer().getUser().getUsername() : "anonymous";
-            ChatMessage cm = new ChatMessage(sender, m.getBody());
+            MessageDTO cm = new MessageDTO(sender, m.getBody());
             cm.setTimestamp(m.getCreatedAt().toEpochMilli());
             return cm;
         }).collect(Collectors.toList());

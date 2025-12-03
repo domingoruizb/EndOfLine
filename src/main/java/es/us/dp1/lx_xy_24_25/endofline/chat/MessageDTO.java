@@ -4,14 +4,14 @@ import java.time.Instant;
 
 // DTO for returning messages to player
 // 'body' for message text, 'timestamp' as epoch milliseconds 
-public class ChatMessage {
+public class MessageDTO {
     private String sender;
     private String body;
     private long timestamp;
 
-    public ChatMessage() {}
+    public MessageDTO() {}
 
-    public ChatMessage(String sender, String body) {
+    public MessageDTO(String sender, String body) {
         this.sender = sender;
         this.body = body;
         this.timestamp = Instant.now().toEpochMilli();
