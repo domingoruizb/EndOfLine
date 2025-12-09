@@ -33,11 +33,11 @@
 		<node.version>v18.12.1</node.version>
 		<npm.version>8.19.2</npm.version>
 		<frontend-src-dir>${project.basedir}/frontend</frontend-src-dir>
-
+        <sonar.organization>genius</sonar.organization>
 	</properties>
 
 	<developers>
-	
+
 		<developer>
 			<name>Makar</name>
 			<email>makar.lavrov.1@iliauni.edu.ge</email>
