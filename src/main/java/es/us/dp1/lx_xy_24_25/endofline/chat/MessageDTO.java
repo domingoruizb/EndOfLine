@@ -2,16 +2,18 @@ package es.us.dp1.lx_xy_24_25.endofline.chat;
 
 import java.time.Instant;
 
-public class ChatMessage {
+// DTO for returning messages to player
+// 'body' for message text, 'timestamp' as epoch milliseconds 
+public class MessageDTO {
     private String sender;
-    private String text;
+    private String body;
     private long timestamp;
 
-    public ChatMessage() {}
+    public MessageDTO() {}
 
-    public ChatMessage(String sender, String text) {
+    public MessageDTO(String sender, String body) {
         this.sender = sender;
-        this.text = text;
+        this.body = body;
         this.timestamp = Instant.now().toEpochMilli();
     }
 
@@ -23,12 +25,12 @@ public class ChatMessage {
         this.sender = sender;
     }
 
-    public String getText() {
-        return text;
+    public String getBody() {
+        return body;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public long getTimestamp() {

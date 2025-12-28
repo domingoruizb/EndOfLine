@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 const COLOR_MAP = {
-  RED: '#E31E25',      // Red
+  RED: '#E31E25',     
   ORANGE: '#F39514',
-  YELLOW: '#FFEF47',   // Amber/Yellow
-  GREEN: '#50B15F',    // Your main green
-  BLUE: '#00A0E3',     // Blue
-  MAGENTA: '#E5087F',  // Magenta
-  VIOLET: '#C48FBF',   // Deep Purple
-  WHITE: '#C5C6C6'     // Light Grey/White
+  YELLOW: '#FFEF47',  
+  GREEN: '#50B15F',   
+  BLUE: '#00A0E3',     
+  MAGENTA: '#E5087F',  
+  VIOLET: '#C48FBF',  
+  WHITE: '#C5C6C6'    
 }
 
 export default function GameChat ({ gameId, jwt, user }) {
@@ -154,7 +154,7 @@ export default function GameChat ({ gameId, jwt, user }) {
               style={{ backgroundColor: bubbleColor }}
             >
               {!isMe && <div className='chat-sender'><strong>{m.sender}</strong></div>}
-              <div className='chat-text'>{m.text}</div>
+              <div className='chat-text'>{m.body}</div>
             </div>
           )
         })}
