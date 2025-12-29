@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Label } from "reactstrap";
+import { toast } from "react-toastify";
 import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
 import "../static/css/friendships/friendsList.css";
@@ -61,11 +62,27 @@ export default function FriendshipCreation() {
             if (!response.ok)
                 throw new Error('Failed to send friendship request.');
 
-            navigate("/friends");
+            toast.success(`🎉 Friendship request sent to ${username}!`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            
+            setTimeout(() => {
+                navigate("/friends");
+            }, 500);
         } catch (error) {
-            setMessage(error.message);
-        } finally {
-            setVisible(true);
+            toast.error(`❌ ${error.message}`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
