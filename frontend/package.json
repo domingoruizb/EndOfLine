@@ -38,7 +38,7 @@
     "source-map-loader": "^4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "SET NODE_OPTIONS=--max_old_space_size=4096 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "coverage": "react-scripts test --coverage --watchAll --collectCoverageFrom='!src/{index,reportWebVitals,error-page,App}.{js,jsx}'",

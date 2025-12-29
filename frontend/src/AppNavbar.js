@@ -53,51 +53,52 @@ function AppNavbar() {
     
     roles.forEach((role) => {
         if (role === "ADMIN") {
-            adminLinks = (   
-                <>       
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
-                    </NavItem>        
-                    <UncontrolledDropdown
-                    nav
-                    inNavbar
-                    onMouseEnter={() => toggleDropdown(true)}
-                    onMouseLeave={() => toggleDropdown(false)}
-                    isOpen={dropdownOpen}
-                    style={{ marginLeft: "auto" }}
-                >
-                    <DropdownToggle nav caret style={{ color: "white" }}>
-                    {username}
-                    </DropdownToggle>
+            if (!isInGame) {
+                adminLinks = (   
+                    <>       
+                        <NavItem>
+                            <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
+                        </NavItem>        
+                        <UncontrolledDropdown
+                        nav
+                        inNavbar
+                        onMouseEnter={() => toggleDropdown(true)}
+                        onMouseLeave={() => toggleDropdown(false)}
+                        isOpen={dropdownOpen}
+                        style={{ marginLeft: "auto" }}
+                    >
+                        <DropdownToggle nav caret style={{ color: "white" }}>
+                        {username}
+                        </DropdownToggle>
 
-                    <DropdownMenu 
-                        end
-                        dark
-                        style={{ backgroundColor: "#1e1e1e", minWidth: "200px" }}>
-                    <DropdownItem tag={Link} 
-                            to="/myprofile"
-                            style={{
-                                color: "#b1d12d",
-                                fontWeight: "500",
-                            }}>
-                        Profile
-                    </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/games"
-                                style={{
-                                    color: "#FE5B02",
-                                    fontWeight: "500",
-                                }}>
-                        Games
-                    </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/users"
+                        <DropdownMenu 
+                            end
+                            dark
+                            style={{ backgroundColor: "#1e1e1e", minWidth: "200px" }}>
+                        <DropdownItem tag={Link} 
+                                to="/myprofile"
                                 style={{
                                     color: "#b1d12d",
                                     fontWeight: "500",
                                 }}>
-                        Players
-                    </DropdownItem>
+                            Profile
+                        </DropdownItem>
+                        <DropdownItem tag={Link} 
+                                    to="/games"
+                                    style={{
+                                        color: "#FE5B02",
+                                        fontWeight: "500",
+                                    }}>
+                            Games
+                        </DropdownItem>
+                        <DropdownItem tag={Link} 
+                                    to="/users"
+                                    style={{
+                                        color: "#b1d12d",
+                                        fontWeight: "500",
+                                    }}>
+                            Players
+                        </DropdownItem>
                     <DropdownItem tag={Link} 
                                 to="/developers"
                                 style={{
@@ -114,6 +115,7 @@ function AppNavbar() {
                 </UncontrolledDropdown>
                 </>
             )
+            }
         }
         if (role === "PLAYER") {
             if (isInGame || isInLobby) {

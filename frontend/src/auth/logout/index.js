@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../static/css/auth/authButton.css";
 import "../../static/css/auth/authPage.css";
-import '../../static/css/home/home.css'; 
+import '../../static/css/home/home.css';
+import "../../static/css/auth/logout.css"; 
 import tokenService from "../../services/token.service";
-import { Container } from 'reactstrap';
 
 const Logout = () => {
   function sendLogoutRequest() {
@@ -18,48 +18,25 @@ const Logout = () => {
   }
 
   return (
-    <div
-      className="home-page-container"
-      style={{
-        color: "white",
-        minHeight: "100vh",
-        padding: "2rem 0",
-        fontFamily: "Inter, Arial, sans-serif"
-      }}
-    >
-      <Container
-        className="auth-page-container"
-        style={{
-          padding: "0 1rem",
-          maxWidth: 900,
-          background: "none",
-          borderRadius: "1rem",
-          boxShadow: "none",
-          marginTop: '70px'
-        }}
-      >
-        <h1 className="text-center" style={{
-          fontWeight: 800,
-          letterSpacing: "2px",
-          color: "#FE5B02",
-          textShadow: "0 2px 8px #000"
-        }}>
+    <div className="logout-page">
+      <div className="logout-content-wrapper">
+        <h1 className="logout-title">
           Logout
         </h1>
-        <div className="auth-form-container">
-          <h2 className="text-center text-md">
+        <div className="logout-form-container">
+          <h2 className="logout-message">
             Are you sure you want to log out?
           </h2>
-          <div className="options-row">
-            <Link className="auth-button" to="/" style={{textDecoration: "none"}}>
+          <div className="logout-buttons">
+            <Link className="logout-button" to="/">
               No
             </Link>
-            <button className="auth-button orange-button" onClick={() => sendLogoutRequest()}>
+            <button className="logout-button logout-button-confirm" onClick={() => sendLogoutRequest()}>
               Yes
             </button>
           </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 };

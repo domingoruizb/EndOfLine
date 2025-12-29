@@ -56,15 +56,18 @@ public class MessageController {
 
         User user = userOpt.get();
 
+        // Allow both players and spectators to send messages
         Optional<GamePlayer> gpOpt = gamePlayerRepository.findByGameIdAndUserId(gameId.intValue(), user.getId());
-        if (gpOpt.isEmpty()) return ResponseEntity.status(403).build();
-
-        GamePlayer gp = gpOpt.get();
-
+        
         Message msg = new Message();
         msg.setBody(req.text.trim());
         msg.setCreatedAt(Instant.now());
-        msg.setGamePlayer(gp);
+        msg.setGameId(gameId.intValue());
+        msg.setSenderUsername(user.getUsername());
+        
+        if (gpOpt.isPresent()) {
+            msg.setGamePlayer(gpOpt.get());
+        }
 
         Message saved = messageRepository.save(msg);
 
@@ -77,13 +80,20 @@ public class MessageController {
     public ResponseEntity<List<MessageDTO>> getMessages(@PathVariable Long gameId, @RequestParam(name = "since", required = false, defaultValue = "0") long since) {
         List<Message> messages;
         if (since > 0) {
-            messages = messageRepository.findByGamePlayer_Game_IdAndCreatedAtAfterOrderByCreatedAtAsc(gameId.intValue(), Instant.ofEpochMilli(since));
+            messages = messageRepository.findByGameIdAndCreatedAtAfterOrderByCreatedAtAsc(gameId.intValue(), Instant.ofEpochMilli(since));
         } else {
-            messages = messageRepository.findByGamePlayer_Game_IdOrderByCreatedAtAsc(gameId.intValue());
+            messages = messageRepository.findByGameIdOrderByCreatedAtAsc(gameId.intValue());
         }
 
         List<MessageDTO> dtos = messages.stream().map(m -> {
-            String sender = m.getGamePlayer() != null && m.getGamePlayer().getUser() != null ? m.getGamePlayer().getUser().getUsername() : "anonymous";
+            String sender;
+            if (m.getSenderUsername() != null) {
+                sender = m.getSenderUsername();
+            } else if (m.getGamePlayer() != null && m.getGamePlayer().getUser() != null) {
+                sender = m.getGamePlayer().getUser().getUsername();
+            } else {
+                sender = "anonymous";
+            }
             MessageDTO cm = new MessageDTO(sender, m.getBody());
             cm.setTimestamp(m.getCreatedAt().toEpochMilli());
             return cm;

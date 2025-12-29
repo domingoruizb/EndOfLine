@@ -5,48 +5,9 @@ import tokenService from "../services/token.service";
 import deleteFromList from "../util/deleteFromList";
 import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
+import "../static/css/friendships/friendsList.css";
 
-const Pagination = ({ friendshipsPerPage, totalFriendships, paginate, currentPage }) => {
-    const pageNumbers = [];
 
-    for (let i = 1; i <= Math.ceil(totalFriendships / friendshipsPerPage); i++) {
-        pageNumbers.push(i);
-    }
-
-    const getPageStyle = (pageNumber) => {
-        return {
-            backgroundColor: '#000000ff',
-            color: currentPage === pageNumber ? "#FE5B02" : "#b1d12d",
-            border: 'none',
-            padding: '5px 10px',
-            margin: '10px 5px',
-            borderRadius: '5px',
-            cursor: 'pointer'
-        };
-    };
-
-    return (
-        <nav>
-            <ul className='pagination'>
-                {pageNumbers.map(number => (
-                    <li key={number} className='page-item'>
-                        <a
-                            onClick={(e) => {
-                                e.preventDefault();
-                                paginate(number);
-                            }}
-                            href="!#"
-                            style={getPageStyle(number)}
-                            className='page-link'
-                        >
-                            {number}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-        </nav>
-    );
-};
 
 
 
@@ -55,6 +16,7 @@ export default function FriendshipList() {
     const user = tokenService.getUser();
     const [friendshipType, setFriendshipType] = useState("ACCEPTED");
     const [friendships, setFriendships] = useFetchState(null, `/api/v1/friendships/myFriendships`, jwt);
+    const [activeGames, setActiveGames] = useFetchState([], `/api/v1/games`, jwt);
     const [currentPage, setCurrentPage] = useState(1);
     const [friendshipsPerPage] = useState(5);
 
@@ -146,132 +108,151 @@ export default function FriendshipList() {
         }
     };
 
-    const columnStyles = {
-        pending: {
-            username: { flex: 3, textAlign: 'center', paddingLeft: '10px' },
-            actions: { flex: 3, textAlign: 'center' } 
-        },
-        accepted: {
-            username: { flex: 3, textAlign: 'center', paddingLeft: '10px' }, 
-            actions: { flex: 1.5, textAlign: 'center' }
-        }
-    };
-
-    const displayUserDetails = (friendship) => {
-        const isSender = friendship.sender.id === user.id;
-        const otherUser = isSender ? friendship.receiver : friendship.sender;
-
-        const currentColumnStyle = friendshipType === "PENDING" ? columnStyles.pending : columnStyles.accepted;
-
-        return (
-            <div key={friendship.id} style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '10px', borderBottom: '1px solid #ddd', alignItems: 'center' }}>
-                <span style={currentColumnStyle.username}>{otherUser.username}</span>
-                <span style={currentColumnStyle.actions}>
-                    {friendshipType === "PENDING" && !isSender ? (
-                        <div>
-                            <Button
-                                aria-label={"update-" + friendship.id}
-                                size="sm"
-                                style={{ marginRight: '5px' }}
-                                className="positive-button"
-                                onClick={() => acceptFriendship(friendship.id)}
-                            >
-                                Accept
-                            </Button>
-
-                            <Button
-                                aria-label={"delete-" + friendship.id}
-                                size="sm"
-                                color="danger"
-                                className="negative-button"
-                                onClick={() => rejectFriendship(friendship.id)}
-                            >
-                                Reject
-                            </Button>
-                        </div>
-                    ) : (
-                        <Button
-                            aria-label={"delete-" + friendship.id}
-                            size="sm"
-                            color="danger"
-                            className="negative-button"
-                            onClick={() => deleteFromList(
-                                `/api/v1/friendships/${friendship.id}`,
-                                friendship.id,
-                                [friendships, setFriendships],
-                                [alerts, setAlerts],
-                                setMessage,
-                                setVisible
-                            )}
-                        >
-                            Delete
-                        </Button>
-                    )}
-                </span>
-            </div>
+    const getFriendActiveGame = (friendUserId) => {
+        if (!activeGames || activeGames.length === 0) return null;
+        return activeGames.find(game => 
+            game.endedAt === null && 
+            game.gamePlayers?.some(gp => gp.user.id === friendUserId)
         );
     };
 
+    const handleSpectateGame = (gameId) => {
+        navigate(`/game/${gameId}`);
+    };
+
+
+
+    const totalPages = Math.ceil((friendships ? friendships.filter(f => f.friendState === friendshipType).length : 0) / friendshipsPerPage);
+
     return (
-        <div className="home-page-container">
-            <div className="hero-div">
-                <h1 className="text-center" style={{
-                fontWeight: 800,
-                letterSpacing: "2px",
-                color: "#FE5B02",
-                textShadow: "0 2px 8px #000",
-                fontFamily: "Inter, Arial, sans-serif"
-                }}>
+        <div className="friend-list-page">
+            <div className="friend-content-wrapper">
+            <div className="admin-page-container-friend">
+                <h1 className="friend-list-title">
                     {friendshipType === "ACCEPTED" ? "Friendships" : "Pending Invites"}
                 </h1>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                    <div style={{ display: 'flex', fontWeight: 800, width: '100%', padding: '10px', justifyContent: 'space-between', color: "#FE5B02" }}>
-                        <span style={friendshipType === "PENDING" ? columnStyles.pending.username : columnStyles.accepted.username}>
-                            {currentFriendships.length > 0 ? "Username" : ""}
-                        </span>
-                        <span style={friendshipType === "PENDING" ? columnStyles.pending.actions : columnStyles.accepted.actions}>
-                        </span>
-                    </div>
-                    {currentFriendships.length > 0 ? (
-                        currentFriendships
-                        .filter(friendship => friendship.friendState === friendshipType)
-                        .map((friendship) => displayUserDetails(friendship))
-                    ) : (
-                        <div style={{ textAlign: 'center', width: '100%' }}>{friendshipType === "ACCEPTED" 
+                {modal}
+                {currentFriendships.filter(friendship => friendship.friendState === friendshipType).length > 0 ? (
+                    <>
+                        <table aria-label="friendships" className="friend-table mt-4 text-white">
+                            <thead>
+                                <tr>
+                                    <th className="text-center">Username</th>
+                                    <th className="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentFriendships
+                                    .filter(friendship => friendship.friendState === friendshipType)
+                                    .map((friendship) => {
+                                        const isSender = friendship.sender.id === user.id;
+                                        const otherUser = isSender ? friendship.receiver : friendship.sender;
+                                        return (
+                                            <tr key={friendship.id}>
+                                                <td className="text-center">{otherUser.username}</td>
+                                                <td className="text-center">
+                                                    {friendshipType === "PENDING" && !isSender ? (
+                                                        <div className="friend-action-group">
+                                                            <Button
+                                                                aria-label={"update-" + friendship.id}
+                                                                size="sm"
+                                                                className="positive-button"
+                                                                onClick={() => acceptFriendship(friendship.id)}
+                                                            >
+                                                                Accept
+                                                            </Button>
+                                                            <Button
+                                                                aria-label={"delete-" + friendship.id}
+                                                                size="sm"
+                                                                className="negative-button"
+                                                                onClick={() => rejectFriendship(friendship.id)}
+                                                            >
+                                                                Reject
+                                                            </Button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="friend-action-group">
+                                                            {getFriendActiveGame(otherUser.id) && (
+                                                                <Button
+                                                                    aria-label={"spectate-" + friendship.id}
+                                                                    size="sm"
+                                                                    className="positive-button"
+                                                                    onClick={() => handleSpectateGame(getFriendActiveGame(otherUser.id).id)}
+                                                                >
+                                                                    Spectate
+                                                                </Button>
+                                                            )}
+                                                            <Button
+                                                                aria-label={"delete-" + friendship.id}
+                                                                size="sm"
+                                                                className="negative-button"
+                                                                onClick={() => deleteFromList(
+                                                                    `/api/v1/friendships/${friendship.id}`,
+                                                                    friendship.id,
+                                                                    [friendships, setFriendships],
+                                                                    [alerts, setAlerts],
+                                                                    setMessage,
+                                                                    setVisible
+                                                                )}
+                                                            >
+                                                                Delete
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                            </tbody>
+                        </table>
+                        {totalPages > 1 && (
+                            <div className="friend-pagination text-center mt-4">
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="friend-pagination-button"
+                                >
+                                    Previous
+                                </button>
+                                <span className="friend-pagination-info">
+                                    Page {currentPage} of {totalPages}
+                                </span>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    className="friend-pagination-button"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <p className="text-center text-white mt-4">
+                        {friendshipType === "ACCEPTED" 
                             ? "You don't have any friends yet." 
                             : "You don't have any pending friend invitations yet."
-                        }</div>
-                    )}
-                </div>
-                <Pagination
-                    friendshipsPerPage={friendshipsPerPage}
-                    totalFriendships={friendships ? friendships.length : 0}
-                    paginate={paginate}
-                    currentPage={currentPage}
-                />
-                {modal}
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                        className="normal-button"
-                        size='lg'
-                        style={{ marginRight: '10px' }}
+                        }
+                    </p>
+                )}
+                <div className="friend-cta-row text-center mt-4">
+                    <button
                         onClick={() => {
                             setFriendshipType(friendshipType === "PENDING" ? "ACCEPTED" : "PENDING");
-                            setCurrentPage(1)
+                            setCurrentPage(1);
                         }}
+                        className="friend-cta-button"
                     >
-                        {friendshipType === "PENDING" ? "Friendships" : "Pending"}
-                    </Button>
-                    <Button
-                        className="positive-button"
-                        size='lg'
+                        {friendshipType === "PENDING" ? "Show Friendships" : "Show Pending"}
+                    </button>
+                    <button
                         onClick={handleClick}
+                        className="friend-cta-button friend-add-button"
                     >
-                        <Link to="/friendships/create" style={{ textDecoration: "none", color: "#b1d12d" }}>
-                        </Link>
-                        Create
-                    </Button>
+                        Add Friend
+                    </button>
                 </div>
+            </div>
             </div>
         </div>
     );

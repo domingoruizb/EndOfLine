@@ -77,7 +77,10 @@ export default function GameChat ({ gameId, jwt, user }) {
           Authorization: `Bearer ${jwt}`
         }
       })
-      if (!res.ok) return
+      if (!res.ok) {
+        console.error('Failed to fetch messages:', res.status)
+        return
+      }
       const data = await res.json()
       if (!mounted.current) return
       if (data.length > 0) {
@@ -100,7 +103,7 @@ export default function GameChat ({ gameId, jwt, user }) {
         }
       }
     } catch (err) {
-      // ignore transient errors
+      console.error('Error fetching messages:', err)
     }
   }
 
@@ -118,7 +121,12 @@ export default function GameChat ({ gameId, jwt, user }) {
         },
         body: JSON.stringify({ text: t })
       })
-      if (!res.ok) return
+      if (!res.ok) {
+        const errorText = await res.text()
+        console.error('Failed to send message:', res.status, errorText)
+        setText(t) // restore text on error
+        return
+      }
       const saved = await res.json()
       setMessages(prev => [...prev, saved])
       setLastTs(saved.timestamp)
@@ -126,7 +134,8 @@ export default function GameChat ({ gameId, jwt, user }) {
         if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight
       }, 50)
     } catch (err) {
-      console.error(err)
+      console.error('Error sending message:', err)
+      setText(t) // restore text on error
     }
   }
 

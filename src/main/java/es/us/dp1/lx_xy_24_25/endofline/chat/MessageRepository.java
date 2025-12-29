@@ -9,4 +9,8 @@ public interface MessageRepository extends CrudRepository<Message, Integer> {
     List<Message> findByGamePlayer_Game_IdOrderByCreatedAtAsc(Integer gameId);
 
     List<Message> findByGamePlayer_Game_IdAndCreatedAtAfterOrderByCreatedAtAsc(Integer gameId, Instant since);
+
+    List<Message> findByGameIdOrderByCreatedAtAsc(Integer gameId);
+
+    List<Message> findByGameIdAndCreatedAtAfterOrderByCreatedAtAsc(Integer gameId, Instant since);
 }

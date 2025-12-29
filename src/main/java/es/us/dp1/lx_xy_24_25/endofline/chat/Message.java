@@ -20,8 +20,14 @@ public class Message extends BaseEntity {
     private Instant createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "game_player_id")
+    @JoinColumn(name = "game_player_id", nullable = true)
     private GamePlayer gamePlayer;
+
+    @Column(name = "game_id", nullable = true)
+    private Integer gameId;
+
+    @Column(name = "sender_username", nullable = true, length = 255)
+    private String senderUsername;
 
     public Message() {}
 
@@ -29,5 +35,8 @@ public class Message extends BaseEntity {
         this.body = body;
         this.createdAt = createdAt;
         this.gamePlayer = gamePlayer;
+        if (gamePlayer != null) {
+            this.gameId = gamePlayer.getGame().getId();
+        }
     }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalHeader, Container, ModalBody, Button, Input, Label, ModalFooter } from "reactstrap";
+import DeleteProfileModal from "./DeleteProfileModal";
 import tokenService from "../services/token.service";
 import "../static/css/admin/adminPage.css";
 import '../static/css/myProfile/myProfile.css'; 
@@ -315,20 +316,11 @@ export default function MyProfile() {
         </div>
       </div>
       {deleteProfile && (
-        <Modal isOpen={deleteProfile} toggle={cancelDelete}>
-          <ModalHeader toggle={cancelDelete}>Confirm Deletion</ModalHeader>
-          <ModalBody>
-            Are you sure you want to delete your profile?
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={cancelDelete}>
-              Cancel
-            </Button>
-            <Button color="danger" onClick={confirmDelete}>
-              Delete
-            </Button>
-          </ModalFooter>
-        </Modal>
+        <DeleteProfileModal
+          isOpen={deleteProfile}
+          toggle={cancelDelete}
+          onConfirm={confirmDelete}
+        />
       )}
     </Container>
     </div>  

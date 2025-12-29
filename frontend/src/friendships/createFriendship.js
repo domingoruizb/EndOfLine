@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Label } from "reactstrap";
 import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
+import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipCreation() {
     const jwt = tokenService.getLocalAccessToken();
@@ -70,18 +71,18 @@ export default function FriendshipCreation() {
 
 
     return (
-        <div className="home-page-container">
-            <div className="hero-div">
-                <h1 className="text-center" style={{
-                fontWeight: 800,
-                letterSpacing: "2px",
-                color: "#FE5B02",
-                textShadow: "0 2px 8px #000"
-                }}>Send Friendship</h1>
+        <div className="friend-list-page">
+            <div className="friend-content-wrapper">
+                <div className="create-friendship-container">
+                    <h1 className="create-friendship-title">
+                        Send Friendship
+                    </h1>
                 {modal}
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} className="create-friendship-form">
                     <div className="custom-form-input">
-                        <Label for="username">Friend's Username</Label>
+                        <Label for="username" className="create-friendship-label">
+                            Friend's Username
+                        </Label>
                         <Input
                             type="text"
                             required
@@ -89,26 +90,26 @@ export default function FriendshipCreation() {
                             id="username"
                             value={username}
                             onChange={handleChange}
+                            className="create-friendship-input"
                         />
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-                        <Button
-                            size="lg"
-                            className="negative-button"
+                    <div className="create-friendship-buttons">
+                        <button
+                            type="button"
                             onClick={() => navigate("/friends")}
+                            className="create-friendship-cancel-button"
                         >
                             Cancel
-                        </Button>
-                        <Button
-                            size="lg"
-                            className="positive-button"
+                        </button>
+                        <button
                             type="submit"
-                            color='#b1d12d'
+                            className="create-friendship-send-button"
                         >
                             Send
-                        </Button>
+                        </button>
                     </div>
                 </Form>
+                </div>
             </div>
         </div>
     );

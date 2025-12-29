@@ -17,7 +17,6 @@ import SwaggerDocs from "./public/swagger";
 import DeveloperList from "./developers";
 import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
-import GamesList from './games';
 import UserStats from './stats/UserStats';
 import MyProfile from './myprofile/myProfile';
 import Friends from './friendships/friendsList';
@@ -26,6 +25,8 @@ import GamePage from './game';
 import CreateGame from './lobby/index';
 import LobbyGame from './lobby/lobbyGame';
 import JoinGame from './lobby/joinGame';
+import PlayerGamesList from "./games/playerGames";
+import AdminGamesList from "./games/adminGames";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -61,7 +62,8 @@ function App() {
           <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
           <Route path="/developers" element={<DeveloperList />} />
-          <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
+          <Route path="/games" element={<PrivateRoute><AdminGamesList /></PrivateRoute>} />
+          <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
         </>)
     }
     if (role === "PLAYER") {
@@ -72,7 +74,7 @@ function App() {
           <Route path="/joingame" exact={true} element={<PrivateRoute><JoinGame /></PrivateRoute>} />
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
           <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} />
-          <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
+          <Route path="/games" element={<PrivateRoute><PlayerGamesList /></PrivateRoute>} />
           <Route path="/friends" exact={true} element={<PrivateRoute><Friends /></PrivateRoute>} />
           <Route path="/friendships/create" exact={true} element={<PrivateRoute><FriendshipCreation /></PrivateRoute>} />
           <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />

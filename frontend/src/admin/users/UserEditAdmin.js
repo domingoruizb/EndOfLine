@@ -74,15 +74,9 @@ export default function UserEditAdmin() {
   ));
 
   return (
-    <div style={{
-          backgroundColor: "black",
-          color: "white",
-          minHeight: "100vh",
-          padding: "2rem 0",
-          fontFamily: "Inter, Arial, sans-serif",
-        }}>
-      <div className="auth-page-container">
-      {<h2>{user.id ? "Edit User" : "Add User"}</h2>}
+    <div className="user-list-page">
+      <div className="admin-page-container user-list-container">
+      {<h1 className="text-center user-list-title">{user.id ? "Edit User" : "Add User"}</h1>}
       {modal}
       <div className="auth-form-container">
         <Form onSubmit={handleSubmit}>
@@ -142,21 +136,6 @@ export default function UserEditAdmin() {
               className="custom-input"
             />
           </div>
-
-          {/*<div className="custom-form-input">
-            <Label for="lastName" className="custom-form-input-label">
-              Password
-            </Label>
-            <Input
-              type="password"
-              required
-              name="password"
-              id="password"
-              value={user.password || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>  */}
           
           <div className="custom-form-input">
             <Label for="username" className="custom-form-input-label">
@@ -190,12 +169,21 @@ export default function UserEditAdmin() {
               </Input>
           </div>
           </div>
-          <div className="custom-button-row">
-            <button className="auth-button">Save</button>
+          <div className="custom-button-row" style={{ alignItems: "center" }}>
+            <button className="user-add-button" type="submit" style={{ margin: "0" }}>Save</button>
             <Link
               to={`/users`}
-              className="auth-button"
-              style={{ textDecoration: "none" }}
+              style={{ 
+                textDecoration: "none", 
+                background: "#555", 
+                color: "#fff", 
+                border: "none",
+                borderRadius: "5px",
+                padding: "10px 20px",
+                fontWeight: "bold",
+                display: "inline-block",
+                marginTop: "15px",
+              }}
             >
               Cancel
             </Link>

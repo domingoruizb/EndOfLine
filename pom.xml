@@ -42,31 +42,45 @@
 			<name>Makar</name>
 			<email>makar.lavrov.1@iliauni.edu.ge</email>
 			<url>https://github.com/kirooshii</url>
+			<properties>
+				<picUrl>https://avatars.githubusercontent.com/u/63282296?v=4</picUrl>
+			</properties>
 		</developer>
 
 		<developer>
 			<name>Fernando</name>
 			<email>ferferfer@alum.us.es</email>
 			<url>https://github.com/FdoJFdezFdez</url>
+			<properties>
+				<picUrl>https://avatars.githubusercontent.com/u/146451915?v=4</picUrl>
+			</properties>
 		</developer>
-
 
 		<developer>
 			<name>Domingo</name>
-			<email>domruibel@alum.us.es</email>
+			<email>domingorubellido@gmail.com</email>
 			<url>https://github.com/domingoruizb</url>
+			<properties>
+				<picUrl>https://thumbs.dreamstime.com/b/icono-negro-s%C3%B3lido-del-avatar-perfil-de-usuario-134114304.jpg</picUrl>
+			</properties>
 		</developer>
 
-    <developer>
-      <name>Angelo</name>
-      <email>angmoraschi@gmail.com</email>
-      <url>https://github.com/amoraschi</url>
-    </developer>
+		<developer>
+			<name>Angelo</name>
+			<email>angmoraschi@gmail.com</email>
+			<url>https://github.com/amoraschi</url>
+			<properties>
+				<picUrl>https://avatars.githubusercontent.com/u/68395930?v=4</picUrl>
+			</properties>
+		</developer>
 
-	<developer>
+		<developer>
 			<name>Alejandro</name>
 			<email>aleurbtam@alum.us.es</email>
 			<url>https://github.com/aurbinat</url>
+			<properties>
+				<picUrl>https://thumbs.dreamstime.com/b/icono-negro-s%C3%B3lido-del-avatar-perfil-de-usuario-134114304.jpg</picUrl>
+			</properties>
 		</developer>
 	</developers>
 

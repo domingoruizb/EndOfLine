@@ -1,12 +1,16 @@
 import React from "react";
 import { Container } from "reactstrap";
 import "../../static/css/auth/authPage.css";
+import bgImage from "../../static/images/home_background.png";
 
 export default function RulesPage() {
     return (
         <div
             style={{
-                backgroundColor: "black",
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${bgImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
                 color: "white",
                 minHeight: "100vh",
                 padding: "2rem 0",

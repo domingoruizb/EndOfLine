@@ -1,0 +1,124 @@
+.developers-page {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url('../../images/home_background.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+  min-height: 100vh;
+  padding-top: 2rem;
+}
+
+.developers-content-wrapper {
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 20px rgba(254, 91, 2, 0.1);
+  margin: 2rem auto;
+  padding-bottom: 2rem;
+  max-width: 1000px;
+  width: 95%;
+}
+
+.developers-title {
+  font-size: 5em;
+  font-weight: bold;
+  color: #fe5b02;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.developers-table {
+  width: 100%;
+  color: white;
+  border-collapse: separate;
+  border-spacing: 2em 1em;
+  background-color: transparent;
+  margin-top: 1rem;
+}
+
+.developers-table thead th {
+  text-align: center;
+  font-weight: bold;
+  color: #fe5b02;
+  border-bottom: 1px solid #fe5b02;
+  padding-bottom: 1rem;
+}
+
+.developers-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.developers-table tbody tr:hover {
+  background: rgba(254, 91, 2, 0.05);
+  border-radius: 8px;
+}
+
+.developers-table td {
+  text-align: center;
+  padding: 0.5rem;
+  word-break: break-word;
+}
+
+.developers-table td a {
+  color: #fe5b02;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.developers-table td a:hover {
+  color: #b1d12d;
+  text-decoration: underline;
+}
+
+.developers-table img {
+  border-radius: 50%;
+  border: 2px solid #fe5b02;
+  transition: all 0.3s ease;
+}
+
+.developers-table img:hover {
+  border-color: #b1d12d;
+  box-shadow: 0 0 10px rgba(254, 91, 2, 0.3);
+}
+
+.developers-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.developers-pagination-button {
+  padding: 10px 20px;
+  background-color: #fe5b02;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.developers-pagination-button:hover:not(:disabled) {
+  background-color: #b1d12d;
+  box-shadow: 0 0 10px rgba(254, 91, 2, 0.3);
+}
+
+.developers-pagination-button:disabled {
+  background-color: #555;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.developers-pagination-info {
+  color: #fe5b02;
+  font-weight: bold;
+  font-size: 1.2em;
+}

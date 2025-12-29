@@ -187,8 +187,13 @@
 
 
 .skill-button-disabled.skill-button-active {
-    opacity: 0.8; 
+    opacity: 1; 
     cursor: not-allowed;
+    background-color: var(--main-orange-color);
+    color: black;
+    font-weight: bold;
+    border: 3px solid var(--main-green-color);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .cards-container {
@@ -241,37 +246,9 @@
     }
 }
 
-/* chat floats above, stays fixed in the bottom right corner */
-.fixed-chat {
-    position: fixed;
-    right: 20px;
-    top: 500px;
-    width: 300px;
-    max-width: calc(25vw + 40px);
-    z-index: 50;
-    height: auto;
-    padding: 12px;
-    margin: 0; /* override margin from .side-container */
-    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-}
-
-/* Keep internal layout of side-container styling but constrain height for floating */
-.fixed-chat .skills-container,
-.fixed-chat .cards-container {
-    display: none; /* hide other left/right widgets when floating chat is used */
-}
-
-/* on small screens should revert to inline side container behaviour */
 @media (max-width: 900px) {
-    .fixed-chat {
-        position: static;
-        width: 100%;
-        max-width: 100%;
-        margin: 20px;
-        box-shadow: none;
-    }
     .game-page-container {
-        grid-template-columns: 1fr; /* single column layout on small screens */
+        grid-template-columns: 1fr; 
         overflow: auto;
         height: auto;
     }
@@ -293,33 +270,45 @@
     filter: brightness(0.95);
 }
 
-/* Chat styles */
 .game-chat {
-    width: 100%;
-    background: #000; /* black background */
+    width: calc(100% + 3vh);
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(8px);
     color: #fff;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 1.5vh;
+    border-radius: 16px;
+    border: 1px solid rgba(254, 91, 2, 0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 0 20px rgba(254, 91, 2, 0.1);
     box-sizing: border-box;
+    margin-top: 2vh;
+    margin-left: -1.5vh;
+    margin-right: -1.5vh;
 }
 .game-chat .chat-header {
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 1vh;
+    color: var(--main-orange-color);
+    font-size: 1.2rem;
 }
 .game-chat .chat-list {
     height: 220px;
     overflow-y: auto;
-    padding: 6px;
+    padding: 1vh;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 0.8vh;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.game-chat .chat-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
 }
 .chat-message {
     max-width: 85%;
-    padding: 8px 10px;
+    padding: 0.8vh 1vh;
     border-radius: 10px;
     font-size: 14px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     word-break: break-word;
 }
 .chat-message .chat-sender {
@@ -329,37 +318,56 @@
 }
 .chat-message.me {
     align-self: flex-end;
-    background: var(--main-orange-color);
+    background: linear-gradient(135deg, var(--main-orange-color), #ff7a2d);
     color: black;
     border-bottom-right-radius: 2px;
+    font-weight: 500;
 }
 .chat-message.other {
     align-self: flex-start;
-    background: var(--main-green-color);
-    color: black;
+    background: rgba(177, 209, 45, 0.7);
+    color: #000;
     border-bottom-left-radius: 2px;
+    font-weight: 500;
+    border: 1px solid rgba(177, 209, 45, 0.5);
 }
 
 .game-chat form {
     display: flex;
-    gap: 6px;
-    margin-top: 8px;
+    gap: 0.6vh;
+    margin-top: 1vh;
 }
 .game-chat input[type="text"] {
     flex: 1;
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #333;
-    background: #111;
+    padding: 0.8vh 1vh;
+    border-radius: 8px;
+    border: 1px solid rgba(254, 91, 2, 0.3);
+    background: rgba(0, 0, 0, 0.3);
     color: #fff;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+.game-chat input[type="text"]:focus {
+    outline: none;
+    border-color: var(--main-orange-color);
+    box-shadow: 0 0 8px rgba(254, 91, 2, 0.3);
+}
+.game-chat input[type="text"]::placeholder {
+    color: #888;
 }
 .game-chat button[type="submit"] {
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: none;
-    background: #ffffff; /* white send button */
+    padding: 0.8vh 1.5vh;
+    border-radius: 8px;
+    border: 1px solid var(--main-orange-color);
+    background: var(--main-orange-color);
     color: black;
     cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.game-chat button[type="submit"]:hover {
+    background: #ff7a2d;
+    box-shadow: 0 0 12px rgba(254, 91, 2, 0.4);
 }
 
 .floating-game-actions {
@@ -367,6 +375,8 @@
     top: 15px; 
     right: 20px;
     z-index: 1000; 
+    margin-bottom: 10px;
+    display: flex;
 }
 
 .giveup-button {
@@ -407,4 +417,38 @@
 .change-deck-disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.spectator-badge {
+    padding: 1vh 1.5vw;
+    font-size: 2vh;
+    font-weight: bold;
+    border: 2px solid var(--main-green-color);
+    border-radius: 10px;
+    background-color: rgba(177, 209, 45, 0.2);
+    color: var(--main-green-color);
+    text-align: center;
+    animation: pulse-spectator 2s infinite;
+}
+
+@keyframes pulse-spectator {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(177, 209, 45, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(177, 209, 45, 0.6);
+    }
+}
+
+.spectator-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.spectator-leave-button {
+    margin: 0;
+    padding: 1vh 1vw;
+    font-size: 2vh;
+    min-width: 110px;
 }

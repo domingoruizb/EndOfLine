@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
 import './game.css'
 import { canReverse, checkPlacementValid, getInitialValidIndexes, getReverseCard, getRotation, getValidIndexes } from './gameUtils/algorithmUtils'
 import { boardArray, calculateRotation, getCardColor, getCards, getIndex } from './gameUtils/cardUtils'
@@ -12,10 +13,13 @@ import HandCard from './gameComponents/handCard'
 import GiveUpModal from './gameComponents/giveUpModal'
 import WinnerModal from './gameComponents/winnerModal'
 import LoserModal from './gameComponents/loserModal'
+import SpectatorEndModal from './gameComponents/spectatorEndModal'
 import GameChat from './gameComponents/gameChat'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
+const userRoles = jwt ? jwt_decode(jwt).authorities : []
+const isAdmin = userRoles.includes('ADMIN')
 
 export default function GamePage () {
     const { gameId } = useParams()
@@ -27,7 +31,6 @@ export default function GamePage () {
     const [nextValidIndexes, setNextValidIndexes] = useState([])
     const [gameData, setGameData] = useState(null)
     const [elapsed, setElapsed] = useState(0)
-    const [isChatVisible, setIsChatVisible] = useState(false);
     const [hostGamePlayer, setHostGamePlayer] = useState(null);
     const [secondGamePlayer, setSecondGamePlayer] = useState(null);
     const [hostColor, setHostColor] = useState(null);
@@ -38,7 +41,7 @@ export default function GamePage () {
     const [isGiveUpModalOpen, setIsGiveUpModalOpen] = useState(false);
     const [hasLost, setHasLost] = useState(false);
     const [cardsPlacedInTurn, setCardsPlacedInTurn] = useState(0);
-    const [changeDeckUsed, setChangeDeckUsed] = useState(false);   
+    const [changeDeckUsed, setChangeDeckUsed] = useState(false);
 
     const toggleGiveUpModal = () => setIsGiveUpModalOpen(!isGiveUpModalOpen);
 
@@ -63,11 +66,19 @@ export default function GamePage () {
         return hostId != null && userId != null ? hostId === userId : false
     }, [gameData?.host?.id])
 
+    const isSpectator = useMemo(() => {
+        const userId = user?.id
+        if (!gameData || !gameData.gamePlayers || userId == null) return false
+        return !gameData.gamePlayers.some(gp => gp.user.id === userId)
+    }, [gameData, user?.id])
+
     const handleCardSelect = (cardName) => {
         setSelectedCard(prevCard => (prevCard === cardName ? null : cardName))
     }
 
     const handlePlaceCard = async (index) => {
+        if (isSpectator) return;
+        
         if (!checkPlacementValid(board, selectedCard, index, lastPlacedCards, isHost, lastPlacedCard)) {
             return
         }
@@ -397,7 +408,7 @@ export default function GamePage () {
 
     const isGameActive = gameData?.startedAt != null && gameData?.endedAt == null;
 
-    const isMyTurn = isGameActive && gameData?.turn === user?.id;
+    const isMyTurn = !isSpectator && isGameActive && gameData?.turn === user?.id;
 
     const currentRound = gameData?.round;
 
@@ -447,7 +458,14 @@ export default function GamePage () {
                     }
                 } 
             />
-            {isGameActive && (
+            <SpectatorEndModal 
+                isOpen={isSpectator && gameData?.endedAt != null}
+                toggle={() => navigate(isAdmin ? '/games' : '/friends')}
+                onCancel={() => navigate(isAdmin ? '/games' : '/friends')}
+                onConfirm={() => navigate('/')}
+                winnerUsername={gameData?.winner?.username}
+            />
+            {isGameActive && !isSpectator && (
                 <div className='floating-game-actions'>
                     {showChangeDeckButton && (
                         <button
@@ -466,6 +484,19 @@ export default function GamePage () {
                     </button>
                 </div>
             )}
+            {isSpectator && isGameActive && (
+                <div className='floating-game-actions spectator-actions'>
+                    <button
+                        className='giveup-button spectator-leave-button'
+                        onClick={() => navigate(isAdmin ? '/games' : '/friends')}
+                    >
+                        Leave
+                    </button>
+                    <div className='spectator-badge'>
+                        👁️ SPECTATOR MODE
+                    </div>
+                </div>
+            )}
             <div
                         className='game-data-container'
                     >
@@ -473,14 +504,9 @@ export default function GamePage () {
                             gameId={gameId}
                             gameData={gameData}
                             elapsed={elapsed}
+                            isSpectator={isSpectator}
+                            user={user}
                         />
-                        <button
-                            className='chat-toggle-button'
-                            onClick={() => setIsChatVisible(prev => !prev)}
-                            title='Toggle chat'
-                        >
-                            {isChatVisible ? 'Hide Chat' : 'Show Chat'}
-                        </button>
                     </div>
             <div
                 className='side-container'
@@ -497,6 +523,7 @@ export default function GamePage () {
                                     gameId={gameId}
                                     userId={user.id}
                                     isDisabled={
+                                        isSpectator ||
                                         (skill !== 'Reverse' && isSkillSelectionDisabled) ||
                                         (skill === 'Reverse' && (isSkillSelectionDisabled || !canReverse(lastPlacedCards, lastPlacedCard, board)))
                                     }
@@ -532,7 +559,7 @@ export default function GamePage () {
                         board.map((card, index) => {
                             let cardName = card != null ? card.name : null;
 
-                            const isValid = nextValidIndexes.includes(index)
+                            const isValid = !isSpectator && nextValidIndexes.includes(index)
                             if (card?.name === 'START' && hostColor != null && index === 30) {
                                 const colorLetter = getCardColor(true, hostColor, secondColor);
                                 cardName = `C${colorLetter}_START`;
@@ -576,7 +603,7 @@ export default function GamePage () {
                         })
                     }
                 </div>
-                {!isMyTurn && isGameActive && (
+                {!isMyTurn && !isSpectator && isGameActive && (
                     <div className='turn-overlay'>
                         <span className='overlay-text'>
                             ⏳ Waiting for opponent's turn...
@@ -595,12 +622,8 @@ export default function GamePage () {
                         rotate: rotation + 'deg'
                     }}
                 />
+                <GameChat gameId={gameId} jwt={jwt} user={user} />
             </div>
-            {isChatVisible && (
-                <div className='side-container fixed-chat'>
-                    <GameChat gameId={gameId} jwt={jwt} user={user} />
-                </div>
-            )}
         </div>
     )
 }
