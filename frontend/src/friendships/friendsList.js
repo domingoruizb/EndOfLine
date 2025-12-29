@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "reactstrap";
+import { toast } from "react-toastify";
 import tokenService from "../services/token.service";
 import deleteFromList from "../util/deleteFromList";
 import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
 import "../static/css/friendships/friendsList.css";
-
-
-
-
 
 export default function FriendshipList() {
     const jwt = tokenService.getLocalAccessToken();
@@ -19,6 +16,7 @@ export default function FriendshipList() {
     const [activeGames, setActiveGames] = useFetchState([], `/api/v1/games`, jwt);
     const [currentPage, setCurrentPage] = useState(1);
     const [friendshipsPerPage] = useState(5);
+    const [lastNotifiedRequests, setLastNotifiedRequests] = useState(new Set());
 
     const [message, setMessage] = useState("");
     const [visible, setVisible] = useState(false);
@@ -40,13 +38,32 @@ export default function FriendshipList() {
                 });
                 const data = await response.json();
                 setFriendships(data);
+
+                // Check for new incoming friendship requests
+                const newPendingRequests = data.filter(f => 
+                    f.friendState === "PENDING" && f.receiver.id === user.id
+                );
+
+                newPendingRequests.forEach(request => {
+                    if (!lastNotifiedRequests.has(request.id)) {
+                        toast.info(`👤 ${request.sender.username} sent you a friendship request!`, {
+                            position: "top-right",
+                            autoClose: 4000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                        });
+                        setLastNotifiedRequests(prev => new Set(prev).add(request.id));
+                    }
+                });
             } catch (error) {
                 setMessage("Error fetching friendships data");
                 setVisible(true);
             }
         };
         fetchData();
-    }, [jwt, user.id, friendshipType, setFriendships]);
+    }, [jwt, user.id, friendshipType, setFriendships, lastNotifiedRequests]);
 
     const sortedPendingRequest = friendships ? [...friendships].sort((a, b) => {
         const isAReceiver = a.receiver.id === user.id;
@@ -76,8 +93,16 @@ export default function FriendshipList() {
                 }
             })
             if (response.ok) {
-                    setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
-                    setMessage(`Friendship acceptance successfully`);
+                const acceptedFriendship = friendships.find(f => f.id === friendshipId);
+                setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
+                toast.success(`✅ Friendship with ${acceptedFriendship.sender.username} accepted!`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 } else {
                     throw new Error('Failed to accept the friendship.');
                 }
@@ -97,8 +122,16 @@ export default function FriendshipList() {
                 }
             })
             if (response.ok) {
-                    setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
-                    setMessage(`Friendship rejection successfully`);
+                const rejectedFriendship = friendships.find(f => f.id === friendshipId);
+                setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
+                toast.info(`🚫 Friendship request from ${rejectedFriendship.sender.username} rejected.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 } else {
                     throw new Error('Failed to accept the friendship.');
                 }

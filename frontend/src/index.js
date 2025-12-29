@@ -3,16 +3,31 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './global.css';
 import '@splidejs/react-splide/css/sea-green';
+import 'react-toastify/dist/ReactToastify.css';
+import './static/css/notifications/toast.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <App />
     </BrowserRouter >
   </React.StrictMode>

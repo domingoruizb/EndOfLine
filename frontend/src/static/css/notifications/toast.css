@@ -1,0 +1,96 @@
+/* Toast Notification Styling */
+.Toastify__toast-container {
+    z-index: 9999;
+}
+
+.Toastify__toast {
+    background: rgba(20, 20, 20, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(254, 91, 2, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(254, 91, 2, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 16px;
+    min-height: 64px;
+}
+
+.Toastify__toast--success {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(177, 209, 45, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(177, 209, 45, 0.15);
+}
+
+.Toastify__toast--error {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(255, 69, 69, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 69, 69, 0.15);
+}
+
+.Toastify__toast--info {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(102, 178, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(102, 178, 255, 0.15);
+}
+
+.Toastify__toast--warning {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 193, 7, 0.15);
+}
+
+.Toastify__toast-body {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0;
+    line-height: 1.5;
+}
+
+.Toastify__progress-bar {
+    background: linear-gradient(90deg, #fe5b02, #b1d12d);
+    height: 3px;
+    border-radius: 0 0 12px 0;
+}
+
+.Toastify__close-button {
+    color: #fe5b02;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.Toastify__close-button:hover {
+    opacity: 1;
+}
+
+/* Animation improvements */
+@keyframes toastSlideIn {
+    from {
+        transform: translate3d(400px, 0, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+.Toastify__toast--top-right {
+    animation: toastSlideIn 0.4s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .Toastify__toast-container {
+        width: 100vw;
+        padding: 8px;
+        left: 0;
+        right: 0;
+        margin: 0;
+    }
+
+    .Toastify__toast {
+        margin-bottom: 8px;
+        margin-right: 0;
+        border-radius: 8px;
+    }
+}
