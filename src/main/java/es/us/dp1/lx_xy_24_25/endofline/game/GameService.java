@@ -195,8 +195,6 @@ public class GameService {
     }
 
     private int getCardsPerTurnLimit(Game game, GamePlayer player) {
-        if (game.getSkill() != null && game.getSkill() == Skill.SPEED_UP && player.getUser().getId().equals(game.getTurn())) {
-        }
         return game.getRound() == 1 ? 1 : 2;
     }
 
@@ -257,7 +255,12 @@ public class GameService {
         }
 
         gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);
-        game.setSkill(Skill.valueOf(skill));
+        Skill skillEnum = Skill.valueOf(skill);
+        game.setSkill(skillEnum);
+        
+      
+        gamePlayer.getSkillsUsed().add(skillEnum);
+        
         gamePlayerService.updateGamePlayer(gamePlayer);
 
         return gameRepository.save(game);

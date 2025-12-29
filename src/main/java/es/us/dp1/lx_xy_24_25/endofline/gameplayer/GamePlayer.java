@@ -2,9 +2,12 @@ package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -34,4 +37,10 @@ public class GamePlayer extends BaseEntity {
 
     @Min(0)
     private Integer cardsPlayedThisRound = 0;
+
+    @ElementCollection
+    @CollectionTable(name = "game_player_skills", joinColumns = @JoinColumn(name = "game_player_id"))
+    @Column(name = "skill")
+    @Enumerated(EnumType.STRING)
+    private List<Skill> skillsUsed = new ArrayList<>();
 }

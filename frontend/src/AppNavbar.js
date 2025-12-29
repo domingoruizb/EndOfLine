@@ -99,14 +99,22 @@ function AppNavbar() {
                                     }}>
                             Players
                         </DropdownItem>
-                    <DropdownItem tag={Link} 
-                                to="/developers"
-                                style={{
-                                    color: "#FE5B02",
-                                    fontWeight: "500",
-                                }}>
-                        Developers
-                    </DropdownItem>
+                        <DropdownItem tag={Link} 
+                                    to="/developers"
+                                    style={{
+                                        color: "#FE5B02",
+                                        fontWeight: "500",
+                                    }}>
+                            Developers
+                        </DropdownItem>
+                        <DropdownItem tag={Link} 
+                                    to="/social"
+                                    style={{
+                                        color: "#b1d12d",
+                                        fontWeight: "500",
+                                    }}>
+                            Social
+                        </DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem tag={Link} to="/logout">
                         Logout
@@ -191,6 +199,14 @@ function AppNavbar() {
                                             fontWeight: "500",
                                         }}>
                                 Stats
+                            </DropdownItem>
+                            <DropdownItem tag={Link} 
+                                        to="/social"
+                                        style={{
+                                            color: "#FE5B02",
+                                            fontWeight: "500",
+                                        }}>
+                                Social
                             </DropdownItem>
                             <DropdownItem divider />
                             <DropdownItem tag={Link} to="/logout">

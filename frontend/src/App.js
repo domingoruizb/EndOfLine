@@ -27,6 +27,7 @@ import LobbyGame from './lobby/lobbyGame';
 import JoinGame from './lobby/joinGame';
 import PlayerGamesList from "./games/playerGames";
 import AdminGamesList from "./games/adminGames";
+import Social from "./social/Social";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -64,6 +65,7 @@ function App() {
           <Route path="/developers" element={<DeveloperList />} />
           <Route path="/games" element={<PrivateRoute><AdminGamesList /></PrivateRoute>} />
           <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
+          <Route path="/social" exact={true} element={<PrivateRoute><Social /></PrivateRoute>} />
         </>)
     }
     if (role === "PLAYER") {
@@ -78,6 +80,7 @@ function App() {
           <Route path="/friends" exact={true} element={<PrivateRoute><Friends /></PrivateRoute>} />
           <Route path="/friendships/create" exact={true} element={<PrivateRoute><FriendshipCreation /></PrivateRoute>} />
           <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
+          <Route path="/social" exact={true} element={<PrivateRoute><Social /></PrivateRoute>} />
         </>)
     }    
   })

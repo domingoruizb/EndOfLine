@@ -1,11 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.configuration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import javax.sql.DataSource;
 
@@ -52,23 +47,18 @@ public class SecurityConfiguration {
 
 		http
             .cors(withDefaults())
-            // Si usas H2, conviene ignorar su CSRF:
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
 
             .authorizeHttpRequests(auth -> auth
-                // Recursos estáticos comunes (css, js, images, webjars…) públicos
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                // H2 Console accesible
                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
 
-                // Raíz / páginas públicas
                 .requestMatchers("/", "/oups").permitAll()
 
-                // Swagger / OpenAPI accesible
                 .requestMatchers(
                     "/v3/api-docs/**",
                     "/swagger-ui.html",
@@ -76,21 +66,20 @@ public class SecurityConfiguration {
                     "/swagger-resources/**"
                 ).permitAll()
 
-                // API pública
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/developers").permitAll()
                 .requestMatchers("/api/v1/plan").permitAll()
 
                 // API restringida para usuarios autenticados
                 .requestMatchers("/api/v1/games/**").authenticated()
+                .requestMatchers("/api/v1/stats/**").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/v1/achievements").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/v1/achievements/**").authenticated()
                 .requestMatchers(HttpMethod.PUT,"/api/v1/users/myself").authenticated()
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/users/myself").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
 
-                // API restringida para jugadores
-			    .requestMatchers("/api/v1/friendships/**").hasAuthority(PLAYER)
+                .requestMatchers("/api/v1/friendships/**").hasAuthority(PLAYER)
                 .requestMatchers("/api/v1/cards/**").hasAuthority(PLAYER)
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/games/**").hasAuthority(PLAYER)
 
@@ -99,13 +88,11 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
                 .requestMatchers("/api/v1/gameplayers/**").hasAuthority(PLAYER)
 
-                // API restringida para administradores
                 .requestMatchers("/api/v1/users/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.POST,"/api/v1/achievements/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.PUT,"/api/v1/achievements/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/achievements/**").hasAuthority(ADMIN)
 
-                // El resto denegado
                 .anyRequest().denyAll()
             )
 

@@ -1,61 +1,79 @@
-.user-stats-page {
+  .user-stats-page {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../static/images/home_background.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 28px 16px;
+  align-items: flex-start;
+  padding: 2rem 0;
 }
 
 .user-stats-container {
-  width: 100%;
+  width: 95%;
   max-width: 1000px;
+  margin: 2rem auto;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(254, 91, 2, 0.1);
+  border: 1px solid rgba(254, 91, 2, 0.2);
+  color: #fff;
 }
 
-.stat-card {
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+.user-stats-container h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fe5b02;
   text-align: center;
 }
 
+.user-stats-container .text-muted {
+  color: #ddd !important;
+  text-align: center;
+}
+
+.stat-card {
+  border-radius: 12px;
+  text-align: center;
+  background: rgba(34, 34, 34, 0.85);
+  --bs-card-bg: rgba(34, 34, 34, 0.85);
+  --bs-card-color: #ffffff;
+  border: 1px solid rgba(254, 91, 2, 0.2);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.stat-card .card-body {
+  background-color: rgba(34, 34, 34, 0.85);
+  color: #ffffff;
+}
+
 .stat-title {
-  color: #6c757d;
-  font-weight: 600;
+  color: #fe5b02;
+  font-weight: 700;
   margin-bottom: 6px;
 }
 
 .stat-number {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #222;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
 }
 
-.roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-}
-
-.role-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 6px;
-  background: #f8f9fa;
-  border: 1px solid rgba(0,0,0,0.04);
-}
-
-.role-name {
-  font-weight: 600;
-  color: #333;
-}
-
-.role-count {
-  font-weight: 700;
-  color: #0d6efd;
+.list-group-item {
+  background: rgba(34, 34, 34, 0.8);
+  --bs-list-group-bg: rgba(34, 34, 34, 0.8);
+  --bs-list-group-color: #ffffff;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 @media (max-width: 576px) {
   .user-stats-container {
-    padding: 0 8px;
+    padding: 1.5rem 1rem;
   }
-  .stat-number { font-size: 1.3rem; }
+  .user-stats-container h2 { font-size: 2.2rem; }
+  .stat-number { font-size: 1.4rem; }
 }
