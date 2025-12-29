@@ -29,15 +29,6 @@ public class FriendshipRestController {
 
     @Autowired
     UserService userService;
-    /*
-
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public Iterable<Friendship> findAll() {
-        return friendshipService.findAll();
-    }
-
-     */
 
     @GetMapping("/myFriendships")
     @ResponseStatus(HttpStatus.OK)
@@ -77,13 +68,6 @@ public class FriendshipRestController {
     public Friendship create(@RequestBody @Valid FriendshipDTO friendshipDTO) {
         return friendshipService.create(friendshipDTO);
     }
-    /*
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Friendship update(@PathVariable Integer id, @RequestBody @Valid Friendship friendship) {
-        return friendshipService.update(id, friendship);
-    }
-    */
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

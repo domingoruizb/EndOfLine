@@ -59,11 +59,6 @@ public class User extends NamedEntity {
         return cond;
     }
 
-
-	// setter for the collection used by Hibernate with orphanRemoval = true
-	// it is important to mutate the existing collection instance (clear and add)
-	// instead of replacing the reference, so Hibernate can track orphan removals properly
-
 	public void setGamePlayer(List<GamePlayer> gamePlayers) {
         if (this.gamePlayer == null) {
             this.gamePlayer = new ArrayList<>();
