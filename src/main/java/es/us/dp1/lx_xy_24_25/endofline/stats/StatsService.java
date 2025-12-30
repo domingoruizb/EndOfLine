@@ -95,7 +95,7 @@ public class StatsService {
                 .collect(Collectors.toList());
 
         if (userGames.isEmpty()) {
-            return new StatsDTO.UserStats(0, 0L, 0.0, 0L, 0L, null);
+            return new StatsDTO.UserStats(0, 0L, 0.0, 0L, 0L, null, 0, 0);
         }
 
         List<Long> durations = userGames.stream()
@@ -109,13 +109,23 @@ public class StatsService {
 
         String favoriteSkill = calculateUserFavoriteSkill(userGames, user);
 
+        int wins = (int) userGames.stream()
+                .filter(g -> g.getWinner() != null && g.getWinner().getId().equals(user.getId()))
+                .count();
+        
+        int losses = (int) userGames.stream()
+                .filter(g -> g.getWinner() != null && !g.getWinner().getId().equals(user.getId()))
+                .count();
+
         return new StatsDTO.UserStats(
                 userGames.size(),
                 totalDuration,
                 avgDuration,
                 maxDuration,
                 minDuration,
-                favoriteSkill
+                favoriteSkill,
+                wins,
+                losses
         );
     }
 

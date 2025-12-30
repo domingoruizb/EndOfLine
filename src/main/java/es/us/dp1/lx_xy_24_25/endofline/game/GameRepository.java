@@ -16,5 +16,15 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
     Optional<Game> getGameByCode(String code);
 
     @Query("SELECT CASE WHEN COUNT(g) > 0 THEN true ELSE false END FROM Game g WHERE g.id = :gameId AND g.host.id = :userId")
-    Boolean getIsHostOfGame (Integer gameId, Integer userId);
+    Boolean getIsHostOfGame(Integer gameId, Integer userId);
+
+    @Query("SELECT COUNT(g) FROM Game g JOIN g.gamePlayers gp WHERE gp.user.id = ?1 AND g.endedAt IS NOT NULL")
+    long countGamesPlayedByUser(Integer userId);
+
+    @Query("SELECT COUNT(g) FROM Game g WHERE g.winner.id = ?1")
+    long countGameWinsByUser(Integer userId);
+
+    @Query("SELECT g FROM Game g JOIN g.gamePlayers gp WHERE gp.user.id = ?1 AND g.endedAt IS NOT NULL AND g.startedAt IS NOT NULL")
+    List<Game> findFinishedGamesByUser(Integer userId);
+
 }

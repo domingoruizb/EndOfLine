@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,15 +20,18 @@ import java.util.List;
 public class PlayerAchievementRestController {
 
     private final PlayerAchievementService playerAchievementService;
+    private final UserService userService;
 
     @Autowired
-    public PlayerAchievementRestController(PlayerAchievementService service) {
+    public PlayerAchievementRestController(PlayerAchievementService service, UserService userService) {
         this.playerAchievementService = service;
+        this.userService = userService;
     }
 
     @GetMapping
     public ResponseEntity<List<PlayerAchievementDTO>> findAll() {
-        List<PlayerAchievementDTO> playerAchievements = ((List<PlayerAchievement>) playerAchievementService.findAll())
+        User currentUser = userService.findCurrentUser();
+        List<PlayerAchievementDTO> playerAchievements = playerAchievementService.findAllByUserId(currentUser.getId())
             .stream()
             .map(PlayerAchievementDTO::new)
             .toList();
@@ -60,6 +65,18 @@ public class PlayerAchievementRestController {
     ) {
         playerAchievementService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/achievement/{achievementId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<PlayerAchievementDTO>> findByAchievementId(
+        @PathVariable Integer achievementId
+    ) {
+        List<PlayerAchievementDTO> playerAchievements = playerAchievementService.findAllByAchievementId(achievementId)
+            .stream()
+            .map(PlayerAchievementDTO::new)
+            .toList();
+        return new ResponseEntity<>(playerAchievements, HttpStatus.OK);
     }
 
 }

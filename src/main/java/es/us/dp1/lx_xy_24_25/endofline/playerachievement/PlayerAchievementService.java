@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +70,25 @@ public class PlayerAchievementService {
     @Transactional
     public void delete (Integer id) {
         repository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasAchievement(Integer userId, Integer achievementId) {
+        try {
+            return repository.existsByUserIdAndAchievementId(userId, achievementId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlayerAchievement> findAllByUserId(Integer userId) {
+        return repository.findAllByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlayerAchievement> findAllByAchievementId(Integer achievementId) {
+        return repository.findAllByAchievementId(achievementId);
     }
 
 }

@@ -1,0 +1,140 @@
+.achievement-modal {
+  --bs-modal-bg: rgba(30, 30, 30, 0.95);
+}
+
+.achievement-modal-header {
+  background: linear-gradient(135deg, rgba(254, 91, 2, 0.15), rgba(177, 209, 45, 0.1));
+  border-bottom: 2px solid rgba(254, 91, 2, 0.3);
+  padding: 1.5rem;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.achievement-modal-header .achievement-name {
+  color: #fe5b02;
+  font-weight: 800;
+  margin-left: 0.5rem;
+}
+
+.achievement-modal-body {
+  background: rgba(20, 20, 20, 0.85);
+  padding: 1.5rem;
+  color: #fff;
+}
+
+.players-table-wrapper {
+  overflow-x: auto;
+}
+
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(34, 34, 34, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.players-table thead {
+  background: rgba(254, 91, 2, 0.15);
+  border-bottom: 2px solid rgba(254, 91, 2, 0.3);
+}
+
+.players-table th {
+  padding: 1rem;
+  text-align: left;
+  color: #fe5b02;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.player-row {
+  border-bottom: 1px solid rgba(254, 91, 2, 0.1);
+  transition: all 0.2s ease;
+}
+
+.player-row:hover {
+  background: rgba(254, 91, 2, 0.08);
+  box-shadow: inset 0 0 10px rgba(254, 91, 2, 0.05);
+}
+
+.player-row:last-child {
+  border-bottom: none;
+}
+
+.player-name {
+  padding: 0.875rem 1rem;
+  color: #b1d12d;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.achieved-date {
+  padding: 0.875rem 1rem;
+  color: #ccc;
+  font-size: 0.95rem;
+}
+
+.no-players-message {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(254, 91, 2, 0.08);
+  border: 1px dashed rgba(254, 91, 2, 0.3);
+  border-radius: 8px;
+}
+
+.no-players-message p {
+  color: #999;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.achievement-modal-footer {
+  background: rgba(20, 20, 20, 0.85);
+  border-top: 1px solid rgba(254, 91, 2, 0.15);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-button {
+  background: #fe5b02 !important;
+  border: none !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+  padding: 0.6rem 1.5rem !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+.close-button:hover {
+  background: #b1d12d !important;
+  box-shadow: 0 4px 12px rgba(254, 91, 2, 0.3) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .achievement-modal-header {
+    padding: 1rem;
+  }
+
+  .achievement-modal-body {
+    padding: 1rem;
+  }
+
+  .players-table th,
+  .player-name,
+  .achieved-date {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .achievement-modal-header .achievement-name {
+    display: block;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}

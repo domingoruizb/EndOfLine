@@ -38,6 +38,8 @@ public class StatsDTO {
         private Long maxDurationMinutes;
         private Long minDurationMinutes;
         private String favoriteSkill;
+        private Integer wins;
+        private Integer losses;
     }
 
     @Data

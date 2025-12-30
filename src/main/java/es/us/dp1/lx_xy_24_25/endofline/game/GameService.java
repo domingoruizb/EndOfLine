@@ -8,12 +8,14 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
+import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,6 +29,7 @@ public class GameService {
     private final GamePlayerCardRepository gpcRepository;
     private final UserService userService;
     private final GamePlayerService gamePlayerService;
+    private final AchievementUnlockService achievementUnlockService;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 6;
@@ -36,12 +39,14 @@ public class GameService {
         GameRepository gameRepository,
         UserService userService,
         GamePlayerService gamePlayerService,
-        GamePlayerCardRepository gpcRepository
+        GamePlayerCardRepository gpcRepository,
+        AchievementUnlockService achievementUnlockService
     ) {
         this.gameRepository = gameRepository;
         this.gpcRepository = gpcRepository;
         this.userService = userService;
         this.gamePlayerService = gamePlayerService;
+        this.achievementUnlockService = achievementUnlockService;
     }
 
     @Transactional(readOnly = true)
@@ -126,7 +131,37 @@ public class GameService {
 
     private Game finalizeGame(Game game, User winner) {
         game.markAsEnded(winner);
-        return gameRepository.save(game);
+        Game savedGame = gameRepository.save(game);
+
+        for (GamePlayer gamePlayer : game.getGamePlayers()) {
+            User player = gamePlayer.getUser();
+            long totalGamesPlayed = gameRepository.countGamesPlayedByUser(player.getId());
+            long totalWins = gameRepository.countGameWinsByUser(player.getId());
+            long totalDurationMinutes = calculateTotalDurationMinutes(player.getId());
+
+            achievementUnlockService.checkAndUnlockAchievements(
+                    player,
+                    totalGamesPlayed,
+                    totalWins,
+                    totalDurationMinutes
+            );
+        }
+
+        return savedGame;
+    }
+
+    private long calculateTotalDurationMinutes(Integer userId) {
+        List<Game> userGames = gameRepository.findFinishedGamesByUser(userId);
+        return userGames.stream()
+                .map(game -> {
+                    if (game.getStartedAt() == null || game.getEndedAt() == null) {
+                        return 0L;
+                    }
+                    Duration duration = Duration.between(game.getStartedAt(), game.getEndedAt());
+                    return Math.max(0L, duration.toMinutes());
+                })
+                .mapToLong(Long::longValue)
+                .sum();
     }
 
     @Transactional
@@ -257,10 +292,10 @@ public class GameService {
         gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);
         Skill skillEnum = Skill.valueOf(skill);
         game.setSkill(skillEnum);
-        
-      
+
+
         gamePlayer.getSkillsUsed().add(skillEnum);
-        
+
         gamePlayerService.updateGamePlayer(gamePlayer);
 
         return gameRepository.save(game);

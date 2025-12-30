@@ -65,6 +65,8 @@ function App() {
           <Route path="/developers" element={<DeveloperList />} />
           <Route path="/games" element={<PrivateRoute><AdminGamesList /></PrivateRoute>} />
           <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
+          <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
+          <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} />
           <Route path="/social" exact={true} element={<PrivateRoute><Social /></PrivateRoute>} />
         </>)
     }

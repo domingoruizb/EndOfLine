@@ -1,125 +1,283 @@
-import {
-  	Container,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import tokenService from '../services/token.service';
+import useFetchState from '../util/useFetchState';
+import AchievementPlayersModal from './AchievementPlayersModal';
+import '../static/css/achievementList.css';
 
-import tokenService from "../services/token.service";
-import useFetchState from "../util/useFetchState";
-import deleteFromList from '../util/deleteFromList';
-import { useState } from "react";
-import getErrorModal from "./../util/getErrorModal"; 
-import "./achievementList.css";
+const AchievementList = () => {
+  const jwt = tokenService.getLocalAccessToken();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [viewMode, setViewMode] = useState('grid');
+  const [modal, setModal] = useState(false);
+  const [selectedAchievementId, setSelectedAchievementId] = useState(null);
+  const [playersWithAchievement, setPlayersWithAchievement] = useState([]);
 
-const imgnotfound = "https://cdn-icons-png.flaticon.com/512/5778/5778223.png";
-const jwt = tokenService.getLocalAccessToken();
+  const [achievements, setAchievements] = useFetchState([], `/api/v1/achievements`, jwt);
+  const [playerAchievements] = useFetchState(
+    [],
+    `/api/v1/playerachievements`,
+    jwt
+  );
 
-export default function AchievementList () {
-	const [message, setMessage] = useState(null);
-	const [visible, setVisible] = useState(false);
-	const [alerts, setAlerts] = useState([]);
+  useEffect(() => {
+    if (jwt) {
+      const base64Url = jwt.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const decoded = JSON.parse(jsonPayload);
+      setIsAdmin(decoded.authorities && decoded.authorities.includes('ADMIN'));
+    }
+  }, [jwt]);
 
-	const [achievements, setAchievements] = useFetchState(
-		[],
-		`/api/v1/achievements`,
-		jwt
-	);
+  const isAchievementUnlocked = (achievementId) => {
+    return playerAchievements.some((pa) => pa.achievementId === achievementId);
+  };
 
-  	const achievementList = achievements.map((a) => {
-		return (
-			<tr key={a.id}>
-				<td className="text-center">{a.name}</td>
-				<td className="text-center"> {a.description} </td>
-				<td className="text-center">
-					<img src={a.badgeImage ? a.badgeImage : imgnotfound} alt={a.name}
-					width="50px" />
-				</td>
-				<td className="text-center"> {a.threshold} </td>
-				<td className="text-center"> {a.category} </td>
-				<td className="text-center">
-                    <Link
-                        to={`/achievements/` + a.id}
-                        className="edit-button"
-                        style={{ textDecoration: "none" }}
-                    >
-                        Edit
-                    </Link>
-				</td>
-				<td className="text-center">
-					<button
-                        className="delete-button"
-						onClick={() =>
-							deleteFromList(
-								`/api/v1/achievements/${a.id}`,
-								a.id,
-								[achievements, setAchievements],
-								[alerts, setAlerts],
-								setMessage,
-								setVisible
-							)}>
-						Delete
-					</button>
-				</td>
-			</tr>
-		);
-	});
+  const handleDeleteAchievement = (achievementId) => {
+    if (window.confirm('Are you sure you want to delete this achievement?')) {
+      fetch(`/api/v1/achievements/${achievementId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${jwt}` },
+      }).then(() => {
+        setAchievements(achievements.filter((p) => p.id !== achievementId));
+      });
+    }
+  };
 
-	const modal = getErrorModal(setVisible, visible, message); 
+  const handleViewPlayers = (achievementId) => {
+    setSelectedAchievementId(achievementId);
+    fetch(`/api/v1/playerachievements/achievement/${achievementId}`, {
+      headers: { Authorization: `Bearer ${jwt}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPlayersWithAchievement(data);
+        setModal(true);
+      })
+      .catch((err) => console.error('Error fetching players:', err));
+  };
 
-    return (
-        <div
-            style={{
-                backgroundColor: "black",
-                color: "white",
-                minHeight: "100vh",
-                padding: "2rem 0",
-                fontFamily: "Inter, Arial, sans-serif",
-            }}
-        >
-            <Container
-                className="auth-page-container"
-                style={{
-                    padding: "0 1rem",
-                    maxWidth: 900,
-                    background: "none",
-                    borderRadius: "1rem",
-                    boxShadow: "none",
-                }}
+  const toggleModal = () => {
+    setModal(!modal);
+  };
+
+  return (
+    <div className="achievements-page">
+      <div className="achievements-container">
+        <h1>ACHIEVEMENTS</h1>
+
+        {isAdmin && (
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <Link to="/achievements/new" style={{ marginRight: '1rem' }}>
+              <button className="create-button">Create Achievement</button>
+            </Link>
+            <button
+              onClick={() => setViewMode('grid')}
+              style={{
+                margin: '0 0.5rem',
+                padding: '0.5rem 1rem',
+                background: viewMode === 'grid' ? '#fe5b02' : 'transparent',
+                border: '2px solid #fe5b02',
+                color: viewMode === 'grid' ? 'black' : '#fe5b02',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease',
+              }}
             >
-                <h1 className="text-center" style={{
-                    fontWeight: 800,
-                    letterSpacing: "2px",
-                    color: "#FE5B02",
-                    textShadow: "0 2px 8px #000"
-                }}>
-                    Achievements
-                </h1>
-				<div style ={{
-					display: 'flex',
-    				flexDirection: 'column',     // Para apilar tabla y botón verticalmente
-    				alignItems: 'center',        // Centra horizontalmente
-    				gap: '20px', }}>
-					<table aria-label="achievements" className="mt-4">
-						<thead>
-						<tr>
-							<th className="text-center">Name</th>
-							<th className="text-center">Description</th>
-							<th className="text-center">Image</th>
-							<th className="text-center">Threshold</th>
-							<th className="text-center">Category</th>
-							<th className="text-center">Actions</th>
-						</tr>
-						</thead>
-						<tbody>{achievementList}</tbody>
-					</table>
-                    <Link
-                        to={`/achievements/new`}
-                        className="create-button"
-                        style={{ textDecoration: "none" }}
-                    >
-                        Create achievement
-                    </Link>
-				</div>
-			</Container>
-		</div>
-	);
-} 
+              Grid View
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              style={{
+                margin: '0 0.5rem',
+                padding: '0.5rem 1rem',
+                background: viewMode === 'table' ? '#fe5b02' : 'transparent',
+                border: '2px solid #fe5b02',
+                color: viewMode === 'table' ? 'black' : '#fe5b02',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              Table View
+            </button>
+          </div>
+        )}
+
+        {achievements && achievements.length > 0 ? (
+          <>
+            {viewMode === 'grid' ? (
+              <div className="achievements-grid">
+                {achievements.map((achievement) => (
+                  <div
+                    key={achievement.id}
+                    className={`achievement-card ${
+                      isAchievementUnlocked(achievement.id) ? 'unlocked' : 'locked'
+                    }`}
+                  >
+                    <div className="achievement-badge">
+                      {achievement.badgeImage && (
+                        <img
+                          src={achievement.badgeImage}
+                          alt={achievement.name}
+                          onError={(e) => {
+                            e.target.src =
+                              'https://cdn-icons-png.flaticon.com/512/5778/5778223.png';
+                          }}
+                        />
+                      )}
+                      <div className="achievement-status">
+                        {isAchievementUnlocked(achievement.id) ? '✓' : '🔒'}
+                      </div>
+                    </div>
+                    <div className="achievement-name">{achievement.name}</div>
+                    <div className="achievement-description">{achievement.description}</div>
+                    <div className="achievement-meta">
+                      {achievement.category && (
+                        <span className="achievement-category">{achievement.category}</span>
+                      )}
+                      {achievement.threshold && (
+                        <span className="achievement-threshold">Threshold: {achievement.threshold}</span>
+                      )}
+                    </div>
+                    {isAdmin && (
+                      <div
+                        style={{
+                          marginTop: '1rem',
+                          paddingTop: '1rem',
+                          borderTop: '1px solid rgba(254, 91, 2, 0.1)',
+                          display: 'flex',
+                          gap: '0.5rem',
+                          justifyContent: 'center',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        <Link to={`/achievements/${achievement.id}`}>
+                          <button className="edit-button">Edit</button>
+                        </Link>
+                        <button
+                          className="view-button"
+                          onClick={() => handleViewPlayers(achievement.id)}
+                          style={{
+                            padding: '0.5rem 1rem',
+                            background: '#b1d12d',
+                            color: '#000',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '0.9rem',
+                          }}
+                        >
+                          View Players
+                        </button>
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDeleteAchievement(achievement.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <table className="achievements-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Threshold</th>
+                    <th>Status</th>
+                    {isAdmin && <th>Actions</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {achievements.map((achievement) => (
+                    <tr key={achievement.id}>
+                      <td>
+                        {achievement.badgeImage && (
+                          <img
+                            src={achievement.badgeImage}
+                            alt={achievement.name}
+                            onError={(e) => {
+                              e.target.src =
+                                'https://cdn-icons-png.flaticon.com/512/5778/5778223.png';
+                            }}
+                          />
+                        )}
+                      </td>
+                      <td>{achievement.name}</td>
+                      <td>{achievement.description}</td>
+                      <td>{achievement.category || 'N/A'}</td>
+                      <td>{achievement.threshold || 'N/A'}</td>
+                      <td
+                        style={{
+                          color: isAchievementUnlocked(achievement.id) ? '#4CAF50' : '#999',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {isAchievementUnlocked(achievement.id) ? '✓ Unlocked' : '🔒 Locked'}
+                      </td>
+                      {isAdmin && (
+                        <td>
+                          <div className="admin-buttons" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <Link to={`/achievements/${achievement.id}`}>
+                              <button className="edit-button">Edit</button>
+                            </Link>
+                            <button
+                              className="view-button"
+                              onClick={() => handleViewPlayers(achievement.id)}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: '#b1d12d',
+                                color: '#000',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem',
+                              }}
+                            >
+                              Players
+                            </button>
+                            <button
+                              className="delete-button"
+                              onClick={() => handleDeleteAchievement(achievement.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
+        ) : (
+          <div className="no-achievements">No achievements found.</div>
+        )}
+      </div>
+
+      <AchievementPlayersModal
+        isOpen={modal}
+        toggle={toggleModal}
+        players={playersWithAchievement}
+        achievementName={achievements.find((a) => a.id === selectedAchievementId)?.name || 'Achievement'}
+      />
+    </div>
+  );
+};
+
+export default AchievementList; 
