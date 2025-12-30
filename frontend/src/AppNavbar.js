@@ -115,6 +115,14 @@ function AppNavbar() {
                                     }}>
                             Social
                         </DropdownItem>
+                        <DropdownItem tag={Link} 
+                                    to="/achievements"
+                                    style={{
+                                        color: "#FE5B02",
+                                        fontWeight: "500",
+                                    }}>
+                            Achievements
+                        </DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem tag={Link} to="/logout">
                         Logout

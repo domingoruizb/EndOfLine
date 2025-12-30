@@ -6,6 +6,7 @@ import getErrorModal from "./../util/getErrorModal";
 import getIdFromUrl from "./../util/getIdFromUrl";
 import useFetchState from "./../util/useFetchState";
 import { useNavigate } from "react-router-dom";
+import "../static/css/admin/adminPage.css";
 const jwt = tokenService.getLocalAccessToken();
 export default function AchievementEdit () {
     const id = getIdFromUrl(2);
@@ -72,13 +73,14 @@ export default function AchievementEdit () {
         setAchievement({ ...achievement, [name]: value });
     }
     return (
-        <div className="auth-page-container">
-            <h2 className="text-center">
-                {achievement.id ? "Edit Achievement" : "Add Achievement"}
-            </h2>
-            <div className="auth-form-container">
+        <div className="user-list-page">
+            <div className="admin-page-container user-list-container">
+                <h1 className="user-list-title">
+                    {achievement.id ? "Edit Achievement" : "Add Achievement"}
+                </h1>
                 {modal}
-                <Form onSubmit={handleSubmit}>
+                <div className="auth-form-container">
+                    <Form onSubmit={handleSubmit}>
                     <div className="custom-form-input">
                         <Label for="name" className="custom-form-input-label">
                             Name
@@ -132,7 +134,7 @@ export default function AchievementEdit () {
                             id="category"
                             value={achievement.category || ""}
                             onChange={handleChange}
-                            className="custom-input"
+                            className="custom-input black-select"
                         >
                             <option value="">None</option>
                             <option value="GAMES_PLAYED">GAMES_PLAYED</option>
@@ -155,16 +157,17 @@ export default function AchievementEdit () {
                         />
                     </div>
                     <div className="custom-button-row">
-                        <button className="auth-button">Save</button>
+                        <button className="user-add-button" type="submit">Save</button>
                         <Link
                             to={`/achievements`}
-                            className="auth-button"
-                            style={{ textDecoration: "none" }}
+                            className="user-add-button"
+                            style={{ textDecoration: "none", background: "#555", marginLeft: "1rem" }}
                         >
                             Cancel
                         </Link>
                     </div>
-                </Form>
+                    </Form>
+                </div>
             </div>
         </div>
     );

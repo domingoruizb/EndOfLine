@@ -53,14 +53,17 @@ export default function UserStats() {
         </header>
 
         <Row className="g-3 stats-row">
-          <Col xs={12} sm={6} md={4}>
+          <Col xs={12} sm={6} md={3}>
             <StatCard title="My Games Played">{user.gamesPlayed}</StatCard>
           </Col>
-          <Col xs={12} sm={6} md={4}>
-            <StatCard title="My Avg Duration (min)">{fmtMins(user.avgDurationMinutes)}</StatCard>
+          <Col xs={12} sm={6} md={3}>
+            <StatCard title="My Wins">{user.wins || 0}</StatCard>
           </Col>
-          <Col xs={12} sm={12} md={4}>
-            <StatCard title="My Total Duration (hrs)">{fmtHours(user.totalDurationMinutes)}</StatCard>
+          <Col xs={12} sm={6} md={3}>
+            <StatCard title="My Losses">{user.losses || 0}</StatCard>
+          </Col>
+          <Col xs={12} sm={6} md={3}>
+            <StatCard title="My Avg Duration (min)">{fmtMins(user.avgDurationMinutes)}</StatCard>
           </Col>
         </Row>
 
@@ -88,6 +91,10 @@ export default function UserStats() {
               <CardBody>
                 <CardTitle tag="h6" className="stat-title">Durations — Detailed</CardTitle>
                 <ListGroup flush>
+                  <ListGroupItem className="d-flex justify-content-between align-items-center">
+                    <span>My total duration (hrs)</span>
+                    <strong>{fmtHours(user.totalDurationMinutes)}</strong>
+                  </ListGroupItem>
                   <ListGroupItem className="d-flex justify-content-between align-items-center">
                     <span>My avg duration (min)</span>
                     <strong>{fmtMins(user.avgDurationMinutes)}</strong>

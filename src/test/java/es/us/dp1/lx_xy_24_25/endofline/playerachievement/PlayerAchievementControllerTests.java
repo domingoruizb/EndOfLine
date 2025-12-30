@@ -36,8 +36,8 @@ class PlayerAchievementRestControllerTests {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", not(empty())))
             .andExpect(jsonPath("$[0].id", notNullValue()))
-            .andExpect(jsonPath("$[0].user_id", notNullValue()))
-            .andExpect(jsonPath("$[0].achievement_id", notNullValue()));
+            .andExpect(jsonPath("$[0].userId", notNullValue()))
+            .andExpect(jsonPath("$[0].achievementId", notNullValue()));
     }
 
     @Test
@@ -46,8 +46,8 @@ class PlayerAchievementRestControllerTests {
         mockMvc.perform(get(BASE_URL + "/1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.user_id").value(4))
-            .andExpect(jsonPath("$.achievement_id").value(1));
+            .andExpect(jsonPath("$.userId").value(4))
+            .andExpect(jsonPath("$.achievementId").value(1));
     }
 
     @Test
@@ -62,9 +62,9 @@ class PlayerAchievementRestControllerTests {
     void testCreate() throws Exception {
         String jsonBody = """
         {
-          "user_id": 4,
-          "achievement_id": 2,
-          "achieved_at": "2024-12-01T10:00:00"
+          "userId": 4,
+          "achievementId": 2,
+          "achievedAt": "2024-12-01T10:00:00"
         }
         """;
 
@@ -75,8 +75,8 @@ class PlayerAchievementRestControllerTests {
             )
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", notNullValue()))
-            .andExpect(jsonPath("$.user_id").value(4))
-            .andExpect(jsonPath("$.achievement_id").value(2));
+            .andExpect(jsonPath("$.userId").value(4))
+            .andExpect(jsonPath("$.achievementId").value(2));
     }
 
     @Test

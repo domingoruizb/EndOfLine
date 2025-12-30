@@ -83,7 +83,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/cards/**").hasAuthority(PLAYER)
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/games/**").hasAuthority(PLAYER)
 
-                .requestMatchers(HttpMethod.GET, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
+                .requestMatchers(HttpMethod.GET, "/api/v1/playerachievements/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/playerachievements/**").hasAuthority(PLAYER)
                 .requestMatchers("/api/v1/gameplayers/**").hasAuthority(PLAYER)

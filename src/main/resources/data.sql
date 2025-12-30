@@ -69,44 +69,23 @@ INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, a
 VALUES (19,'Deleted user','userDeleted',
         2,'1998-11-22','User','Deleted','userDeleted@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Principiante','Si juegas 5 partidas',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Explorador','Si juegas 25 partidas',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,category) VALUES (3,'Experto','Si ganas 20 partidas',20.0,'VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Rookie','Play more than 5 games',5.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Experienced','Play more than 25 games',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (3,'Old Soldier','Play more than 50 games',50.0,'https://cdn-icons-png.flaticon.com/512/4062/4062536.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (4,'Winner','Win more than 2 games',2.0,'https://cdn-icons-png.flaticon.com/512/747/747376.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (5,'Master','Win more than 10 games',10.0,'https://cdn-icons-png.flaticon.com/512/3050/3050159.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (6,'Legend','Win more than 25 games',25.0,'https://cdn-icons-png.flaticon.com/512/2620/2620051.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (7,'Time Enthusiast','Play more than 10 hours total',600.0,'https://cdn-icons-png.flaticon.com/512/2912/2912681.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (8,'Time Devotee','Play more than 30 hours total',1800.0,'https://cdn-icons-png.flaticon.com/512/2912/2912681.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (9,'Time Master','Play more than 50 hours total',3000.0,'https://cdn-icons-png.flaticon.com/512/2912/2912681.png','TOTAL_PLAY_TIME');
 
-INSERT INTO games(id, round, started_at, ended_at, host_id) VALUES
-        (8, 6, '2025-10-10 10:15:00', '2025-10-10 11:45:00', 4),
-        (9, 7, '2025-10-11 11:45:00', '2025-10-12 09:00:00', 6),
-        (10, 8, '2025-10-12 14:30:00', '2025-10-13 14:30:00', 8),
-        (11, 9, '2025-10-08 13:20:00', '2025-10-15 15:00:00', 10),
-        (12, 10, '2025-10-09 12:30:00', '2025-10-16 13:15:00', 12),
-        (13, 12, '2025-10-14 19:30:00', '2025-10-18 21:00:00', 14);
-
-INSERT INTO playerachievements (id, user_id, achievement_id, achieved_at) VALUES
-    (1, 4, 1, '2024-02-05 14:30:00'),
-    (2, 4, 2, '2024-02-05 14:30:00'),
-    (3, 4, 3, '2024-02-05 14:30:00'),
-    (4, 5, 1, '2024-02-18 09:15:00'),
-    (5, 6, 3, '2024-01-28 13:20:00'),
-    (6, 7, 2, '2024-02-25 10:50:00'),
-    (7, 8, 1, '2024-03-30 16:10:00'),
-    (8, 9, 3, '2024-04-08 11:20:00'),
-    (9, 10, 2, '2024-04-18 09:45:00'),
-    (10, 11, 1, '2024-05-02 13:30:00'),
-    (11, 12, 3, '2024-05-10 15:15:00'),
-    (12, 13, 2, '2024-05-20 10:05:00'),
-    (13, 14, 1, '2024-05-25 12:40:00'),
-    (14, 15, 3, '2024-06-01 14:55:00'),
-    (15, 16, 2, '2024-06-05 16:30:00'),
-    (16, 17, 1, '2024-01-20 08:20:00'),
-    (17, 18, 3, '2024-02-15 11:45:00'),
-    (18, 18, 2, '2024-03-20 13:10:00'),
-    (19, 8, 3, '2024-03-05 09:30:00'),
-    (20, 10, 1, '2024-03-15 12:25:00'),
-    (21, 12, 2, '2024-04-12 14:20:00'),
-    (22, 14, 3, '2024-04-25 16:45:00'),
-    (23, 16, 1, '2024-05-15 10:30:00'),
-    (24, 18, 1, '2024-06-10 11:15:00'),
-    (25, 6, 2, '2024-02-10 13:40:00');
+INSERT INTO games(id, round, started_at, ended_at, winner_id, host_id) VALUES
+        (8, 6, '2025-10-10 10:15:00', '2025-10-10 11:45:00', 4, 4),
+        (9, 7, '2025-10-11 11:45:00', '2025-10-12 09:00:00',  6, 6),
+        (10, 8, '2025-10-12 14:30:00', '2025-10-13 14:30:00', 8, 8),
+        (11, 9, '2025-10-08 13:20:00', '2025-10-15 15:00:00', 10, 10),
+        (12, 10, '2025-10-09 12:30:00', '2025-10-16 13:15:00', 12, 12),
+        (13, 12, '2025-10-14 19:30:00', '2025-10-18 21:00:00', 14, 14);
 
 INSERT INTO game_players (id, energy, game_id, user_id) VALUES
         (15, 3, 8, 4),
