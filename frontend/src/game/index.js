@@ -15,6 +15,7 @@ import WinnerModal from './gameComponents/winnerModal'
 import LoserModal from './gameComponents/loserModal'
 import SpectatorEndModal from './gameComponents/spectatorEndModal'
 import GameChat from './gameComponents/gameChat'
+import RulesModal from './gameComponents/rulesModal'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
@@ -39,11 +40,13 @@ export default function GamePage () {
     const [secondCards, setSecondCards] = useState([]);
     const [randomCards, setRandomCards] = useState([]);
     const [isGiveUpModalOpen, setIsGiveUpModalOpen] = useState(false);
+    const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
     const [hasLost, setHasLost] = useState(false);
     const [cardsPlacedInTurn, setCardsPlacedInTurn] = useState(0);
     const [changeDeckUsed, setChangeDeckUsed] = useState(false);
 
     const toggleGiveUpModal = () => setIsGiveUpModalOpen(!isGiveUpModalOpen);
+    const toggleRulesModal = () => setIsRulesModalOpen(!isRulesModalOpen);
 
     if (gameData != null && gameData.startedAt == null) {
         navigate(`/lobby/${gameId}`)
@@ -446,6 +449,10 @@ export default function GamePage () {
                 toggle={toggleGiveUpModal}
                 onConfirm={handleGiveUp} 
             />
+            <RulesModal
+                isOpen={isRulesModalOpen}
+                toggle={toggleRulesModal}
+            />
             <WinnerModal 
                 isOpen={gameData?.endedAt != null && gameData.winner?.id === user?.id}
                 onConfirm={() => navigate('/creategame')} 
@@ -478,6 +485,12 @@ export default function GamePage () {
                     )}
                     <button
                         className='giveup-button'
+                        onClick={toggleRulesModal}
+                    >
+                        RULES
+                    </button>
+                    <button
+                        className='giveup-button'
                         onClick={toggleGiveUpModal}
                     >
                         GIVE UP
@@ -491,6 +504,13 @@ export default function GamePage () {
                         onClick={() => navigate(isAdmin ? '/games' : '/friends')}
                     >
                         Leave
+                    </button>
+                    <button
+                        className='giveup-button'
+                        onClick={toggleRulesModal}
+                        style={{ marginLeft: '8px' }}
+                    >
+                        Rules
                     </button>
                     <div className='spectator-badge'>
                         👁️ SPECTATOR MODE

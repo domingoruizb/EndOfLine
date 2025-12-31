@@ -69,15 +69,15 @@ INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, a
 VALUES (19,'Deleted user','userDeleted',
         2,'1998-11-22','User','Deleted','userDeleted@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Rookie','Play more than 5 games',5.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Experienced','Play more than 25 games',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (3,'Old Soldier','Play more than 50 games',50.0,'https://cdn-icons-png.flaticon.com/512/4062/4062536.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (4,'Winner','Win more than 2 games',2.0,'https://cdn-icons-png.flaticon.com/512/747/747376.png','VICTORIES');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (5,'Master','Win more than 10 games',10.0,'https://cdn-icons-png.flaticon.com/512/3050/3050159.png','VICTORIES');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (6,'Legend','Win more than 25 games',25.0,'https://cdn-icons-png.flaticon.com/512/2620/2620051.png','VICTORIES');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (7,'Time Enthusiast','Play more than 10 hours total',600.0,'https://cdn-icons-png.flaticon.com/512/2912/2912681.png','TOTAL_PLAY_TIME');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (8,'Time Devotee','Play more than 30 hours total',1800.0,'https://cdn-icons-png.flaticon.com/512/2912/2912681.png','TOTAL_PLAY_TIME');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (9,'Time Master','Play more than 50 hours total',3000.0,'https://cdn-icons-png.flaticon.com/512/2912/2912681.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Rookie','Play more than 5 games',5.0,'/images/rookiegb.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Experienced','Play more than 25 games',25.0,'/images/experiencedgb.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (3,'Old Soldier','Play more than 50 games',50.0,'/images/oldsoldiergb.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (4,'Winner','Win more than 2 games',2.0,'/images/winnergb.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (5,'Master','Win more than 10 games',10.0,'/images/mastergb.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (6,'Legend','Win more than 25 games',25.0,'/images/legendgb.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (7,'Time Rookie','Play more than 10 hours total',600.0,'/images/timerookiegb.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (8,'Time Devotee','Play more than 30 hours total',1800.0,'/images/timedevoteegb.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (9,'Time Master','Play more than 50 hours total',3000.0,'/images/timemastergb.png','TOTAL_PLAY_TIME');
 
 INSERT INTO games(id, round, started_at, ended_at, winner_id, host_id) VALUES
         (8, 6, '2025-10-10 10:15:00', '2025-10-10 11:45:00', 4, 4),

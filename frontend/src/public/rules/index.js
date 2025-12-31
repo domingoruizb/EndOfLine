@@ -3,28 +3,36 @@ import { Container } from "reactstrap";
 import "../../static/css/auth/authPage.css";
 import bgImage from "../../static/images/home_background.png";
 
-export default function RulesPage() {
+export default function RulesPage({ embed = false }) {
+    const outerStyle = embed
+        ? {
+            background: "transparent",
+            color: "white",
+            minHeight: "auto",
+            padding: "1.5rem 0",
+            fontFamily: "Inter, Arial, sans-serif",
+        }
+        : {
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${bgImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            color: "white",
+            minHeight: "100vh",
+            padding: "2rem 0",
+            fontFamily: "Inter, Arial, sans-serif",
+        };
+
     return (
-        <div
-            style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${bgImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                color: "white",
-                minHeight: "100vh",
-                padding: "2rem 0",
-                fontFamily: "Inter, Arial, sans-serif",
-            }}
-        >
+        <div style={outerStyle}>
             <Container
                 className="auth-page-container"
                 style={{
                     padding: "0 1rem",
                     maxWidth: 900,
                     background: "none",
-                    borderRadius: "1rem",
-                    boxShadow: "none",
+                    borderRadius: embed ? "0.5rem" : "1rem",
+                    boxShadow: embed ? "none" : "none",
                 }}
             >
                 <h1 className="text-center" style={{
@@ -227,7 +235,7 @@ export default function RulesPage() {
                     </p>
                     <ul style={{ marginLeft: "1.5em" }}>
                         <li>
-                            <b style={{ color: "#FE5B02" }}>BOOST (ACELERÓN)</b>: Place <b>3 Line Cards</b> this round (instead of 2).
+                            <b style={{ color: "#FE5B02" }}>SPEED UP (ACELERÓN)</b>: Place <b>3 Line Cards</b> this round (instead of 2).
                         </li>
                         <li>
                             <b style={{ color: "#FE5B02" }}>BRAKE (FRENAZO)</b>: Place <b>1 Line Card</b> this round (instead of 2).

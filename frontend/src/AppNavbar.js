@@ -137,9 +137,6 @@ function AppNavbar() {
             if (isInGame || isInLobby) {
                 gameLinks = (isInGame || isInLobby) && (
                 <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} id="rules" tag={Link} to="/rules">Rules</NavLink>
-                    </NavItem>
                 </>
                 )
             }

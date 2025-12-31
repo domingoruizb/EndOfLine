@@ -132,7 +132,7 @@ const AchievementList = () => {
                             e.target.src =
                               'https://cdn-icons-png.flaticon.com/512/5778/5778223.png';
                           }}
-                        />
+                        /> 
                       )}
                       <div className="achievement-status">
                         {isAchievementUnlocked(achievement.id) ? '✓' : '🔒'}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify";
@@ -16,7 +16,7 @@ export default function FriendshipList() {
     const [activeGames, setActiveGames] = useFetchState([], `/api/v1/games`, jwt);
     const [currentPage, setCurrentPage] = useState(1);
     const [friendshipsPerPage] = useState(5);
-    const [lastNotifiedRequests, setLastNotifiedRequests] = useState(new Set());
+    const notifiedPendingRef = useRef(new Set());
 
     const [message, setMessage] = useState("");
     const [visible, setVisible] = useState(false);
@@ -39,13 +39,12 @@ export default function FriendshipList() {
                 const data = await response.json();
                 setFriendships(data);
 
-                // Check for new incoming friendship requests
-                const newPendingRequests = data.filter(f => 
-                    f.friendState === "PENDING" && f.receiver.id === user.id
+                const newPendingRequests = data.filter(
+                    (f) => f.friendState === "PENDING" && f.receiver.id === user.id
                 );
 
-                newPendingRequests.forEach(request => {
-                    if (!lastNotifiedRequests.has(request.id)) {
+                newPendingRequests.forEach((request) => {
+                    if (!notifiedPendingRef.current.has(request.id)) {
                         toast.info(`👤 ${request.sender.username} sent you a friendship request!`, {
                             position: "top-right",
                             autoClose: 4000,
@@ -54,7 +53,7 @@ export default function FriendshipList() {
                             pauseOnHover: true,
                             draggable: true,
                         });
-                        setLastNotifiedRequests(prev => new Set(prev).add(request.id));
+                        notifiedPendingRef.current.add(request.id);
                     }
                 });
             } catch (error) {
@@ -63,9 +62,11 @@ export default function FriendshipList() {
             }
         };
         fetchData();
-    }, [jwt, user.id, friendshipType, setFriendships, lastNotifiedRequests]);
+    }, [jwt, user.id, friendshipType, setFriendships]);
 
-    const sortedPendingRequest = friendships ? [...friendships].sort((a, b) => {
+    const filteredFriendships = friendships ? friendships.filter(f => f.friendState === friendshipType) : [];
+
+    const sortedFriendships = [...filteredFriendships].sort((a, b) => {
         const isAReceiver = a.receiver.id === user.id;
         const isBReceiver = b.receiver.id === user.id;
         if (isAReceiver && !isBReceiver && a.friendState === "PENDING")
@@ -74,11 +75,11 @@ export default function FriendshipList() {
             return 1;
         else
             return 0;
-    }) : [];
+    });
 
     const indexOfLastFriendship = currentPage * friendshipsPerPage;
     const indexOfFirstFriendship = indexOfLastFriendship - friendshipsPerPage;
-    const currentFriendships = friendships ? sortedPendingRequest.slice(indexOfFirstFriendship, indexOfLastFriendship) : [];
+    const currentFriendships = sortedFriendships.slice(indexOfFirstFriendship, indexOfLastFriendship);
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     const modal = getErrorModal(setVisible, visible, message);
@@ -155,7 +156,7 @@ export default function FriendshipList() {
 
 
 
-    const totalPages = Math.ceil((friendships ? friendships.filter(f => f.friendState === friendshipType).length : 0) / friendshipsPerPage);
+    const totalPages = Math.ceil(filteredFriendships.length / friendshipsPerPage);
 
     return (
         <div className="friend-list-page">
@@ -165,7 +166,7 @@ export default function FriendshipList() {
                     {friendshipType === "ACCEPTED" ? "Friendships" : "Pending Invites"}
                 </h1>
                 {modal}
-                {currentFriendships.filter(friendship => friendship.friendState === friendshipType).length > 0 ? (
+                {currentFriendships.length > 0 ? (
                     <>
                         <table aria-label="friendships" className="friend-table mt-4 text-white">
                             <thead>
@@ -175,9 +176,7 @@ export default function FriendshipList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentFriendships
-                                    .filter(friendship => friendship.friendState === friendshipType)
-                                    .map((friendship) => {
+                                {currentFriendships.map((friendship) => {
                                         const isSender = friendship.sender.id === user.id;
                                         const otherUser = isSender ? friendship.receiver : friendship.sender;
                                         return (

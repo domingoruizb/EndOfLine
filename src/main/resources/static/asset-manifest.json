@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.55f42060.css",
+    "main.js": "/static/js/main.27ef1793.js",
+    "static/js/685.0e60998c.chunk.js": "/static/js/685.0e60998c.chunk.js",
+    "static/media/EndOfLineProjectLogo.png": "/static/media/EndOfLineProjectLogo.8f579523396f5668bd29.png",
+    "static/media/RulesIMG 1.png": "/static/media/RulesIMG 1.dcce85ef5fcb9e9ca735.png",
+    "static/media/SmallLogo.png": "/static/media/SmallLogo.72e1ac9b78a00d4a5cad.png",
+    "static/media/JosefinSans.ttf": "/static/media/JosefinSans.c464ea79c32a55349581.ttf",
+    "static/media/home_background.png": "/static/media/home_background.e6ca6ee8f22b7fd09aa0.png",
+    "static/media/CW_BACK.png": "/static/media/CW_BACK.552653e5709b07b3f54c.png",
+    "static/media/CY_BACK.png": "/static/media/CY_BACK.84b0b726298e415c415f.png",
+    "static/media/CV_BACK.png": "/static/media/CV_BACK.de08af65bcb79c7d596d.png",
+    "static/media/CO_BACK.png": "/static/media/CO_BACK.d760200abf319cab6293.png",
+    "static/media/CM_BACK.png": "/static/media/CM_BACK.25658c41eeb6c16af91c.png",
+    "static/media/CG_BACK.png": "/static/media/CG_BACK.3ac0286bf5a31064e201.png",
+    "static/media/CB_BACK.png": "/static/media/CB_BACK.4996469cfe65865dcd48.png",
+    "static/media/CR_BACK.png": "/static/media/CR_BACK.35d213cdd7e85ac60a00.png",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.55f42060.css",
+    "static/js/main.27ef1793.js"
+  ]
+}

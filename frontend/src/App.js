@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Route, Routes } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ErrorBoundary } from "react-error-boundary";
@@ -28,6 +28,7 @@ import JoinGame from './lobby/joinGame';
 import PlayerGamesList from "./games/playerGames";
 import AdminGamesList from "./games/adminGames";
 import Social from "./social/Social";
+import { toast } from "react-toastify";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -41,10 +42,58 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
 function App() {
   const jwt = tokenService.getLocalAccessToken();
+  const user = tokenService.getUser();
   let roles = []
   if (jwt) {
     roles = getRolesFromJWT(jwt);
   }
+
+  //notifications for pending friendship requests
+
+  const notifiedPendingRef = useRef(new Set());
+
+  useEffect(() => {
+    if (!jwt || !user?.id) return;
+
+    const controller = new AbortController();
+
+    const fetchPending = async () => {
+      try {
+        const response = await fetch(`/api/v1/friendships/myFriendships`, {
+          headers: { Authorization: `Bearer ${jwt}` },
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+        const data = await response.json();
+        const newPending = data.filter(
+          (f) => f.friendState === "PENDING" && f.receiver?.id === user.id
+        );
+        newPending.forEach((req) => {
+          if (!notifiedPendingRef.current.has(req.id)) {
+            toast.info(`👤 ${req.sender.username} sent you a friendship request!`, {
+              position: "top-right",
+              autoClose: 4000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+            notifiedPendingRef.current.add(req.id);
+          }
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+        }
+      }
+    };
+
+    fetchPending();
+    const interval = setInterval(fetchPending, 30000); // 30s polling
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+    };
+  }, [jwt, user?.id]);
 
   function getRolesFromJWT(jwt) {
     return jwt_decode(jwt).authorities;
