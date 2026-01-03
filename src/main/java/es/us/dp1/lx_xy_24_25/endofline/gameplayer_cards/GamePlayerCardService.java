@@ -28,7 +28,17 @@ public class GamePlayerCardService {
         this.gameService = gameService;
     }
 
-    public GamePlayerCard placeCard(
+    public List<GamePlayerCard> getLastPlacedCards (GamePlayer gamePlayer) {
+        return gamePlayerCardRepository.findLastPlacedCards(gamePlayer);
+    }
+
+    public GamePlayerCard getLastPlacedCard (GamePlayer gamePlayer) {
+        List<GamePlayerCard> lastPlacedCards = getLastPlacedCards(gamePlayer);
+        return lastPlacedCards.isEmpty() ? null : lastPlacedCards.getFirst();
+    }
+
+    // TODO: Used in frontend
+    public GamePlayerCard placeCard (
         GamePlayerCard gamePlayerCard,
         Boolean isTurnFinished
     ) {

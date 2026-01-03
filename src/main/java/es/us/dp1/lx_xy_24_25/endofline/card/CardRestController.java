@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
-import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
@@ -22,18 +21,18 @@ import java.util.List;
 public class CardRestController {
 
 	private final CardService cardService;
-    private final GamePlayerCardService gamePlayerCardService;
     private final GamePlayerService gamePlayerService;
+    private final GamePlayerCardService gamePlayerCardService;
 
 	@Autowired
 	public CardRestController(
         CardService cardService,
-        GamePlayerCardService gamePlayerCardService,
-        GamePlayerService gamePlayerService
+        GamePlayerService gamePlayerService,
+        GamePlayerCardService gamePlayerCardService
     ) {
 		this.cardService = cardService;
-        this.gamePlayerCardService = gamePlayerCardService;
         this.gamePlayerService = gamePlayerService;
+        this.gamePlayerCardService = gamePlayerCardService;
 	}
 
 	@GetMapping
@@ -56,9 +55,10 @@ public class CardRestController {
         return new ResponseEntity<>(cardService.findByGameId(gameId), HttpStatus.OK);
     }
 
+    // TODO: Used in frontend
     @PostMapping("/place/{gamePlayerId}")
     public ResponseEntity<GamePlayerCard> placeCard(
-        @PathVariable("gamePlayerId") Integer gamePlayerId,
+        @PathVariable Integer gamePlayerId,
         @RequestBody GamePlayerCardDTO gamePlayerCardDTO
     ) {
         GamePlayer gamePlayer = gamePlayerService.getById(gamePlayerId);

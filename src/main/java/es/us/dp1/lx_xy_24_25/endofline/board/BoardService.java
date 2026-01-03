@@ -8,8 +8,8 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public class BoardService {
 
+    private final GamePlayerCardService gamePlayerCardService;
     GamePlayerCardRepository gamePlayerCardRepository;
     GameRepository gameRepository;
     GameService gameService;
@@ -28,19 +29,36 @@ public class BoardService {
         GamePlayerCardRepository gamePlayerCardRepository,
         GameRepository gameRepository,
         GameService gameService,
-        GamePlayerService gamePlayerService
-    ) {
+        GamePlayerService gamePlayerService,
+        GamePlayerCardService gamePlayerCardService) {
         this.gamePlayerCardRepository = gamePlayerCardRepository;
         this.gameRepository = gameRepository;
         this.gameService = gameService;
         this.gamePlayerService = gamePlayerService;
+        this.gamePlayerCardService = gamePlayerCardService;
     }
 
     public List<GamePlayerCard> getBoard (Integer gameId) {
         return gamePlayerCardRepository.findByGameId(gameId);
     }
 
-    public void placeCard (
+    public GamePlayerCard increasePlacedCards (
+        GamePlayerCard gamePlayerCard,
+        Boolean isTurnFinished
+    ) {
+        GamePlayerCard saved = gamePlayerCardRepository.save(gamePlayerCard);
+
+        gamePlayerService.incrementCardsPlayedThisRound(gamePlayerCard.getGamePlayer());
+
+        if (isTurnFinished) {
+            gameService.advanceTurn(gamePlayerCard.getGamePlayer().getGame());
+        }
+
+        return saved;
+    }
+
+    // TODO: Implement
+    public GamePlayerCard placeCard (
         GamePlayerCard selectedCard
     ) {
         Integer index = BoardUtils.getIndex(
@@ -52,23 +70,13 @@ public class BoardService {
         Game game = gamePlayer.getGame();
         User user = gamePlayer.getUser();
 
-        GamePlayerCard lastPlacedCard = gamePlayerCardRepository
-            .findPlacedCards(selectedCard.getGamePlayer().getId())
-            .getFirst();
-
-        Boolean isHost = gameRepository
-            .getIsHostOfGame(
-                game.getId(),
-                user.getId()
-            );
+        GamePlayerCard lastPlacedCard = gamePlayerCardService.getLastPlacedCard(gamePlayer);
 
         if (!getIsPlacementValid(
             index,
             selectedCard,
-            lastPlacedCard,
-            selectedCard.getGamePlayer().getId(),
-            game.getId(),
-            isHost
+            gamePlayer,
+            game
         )) {
             throw new IllegalArgumentException("Invalid card placement");
         }
@@ -76,51 +84,52 @@ public class BoardService {
         Integer rotation = BoardUtils.getRotation(index, lastPlacedCard);
 
         selectedCard.setRotation(rotation);
+
         gamePlayerCardRepository.save(selectedCard);
 
-        Boolean isTurnFinished = getIsTurnFinished(gamePlayer);
+//        Boolean isTurnFinished = BoardUtils.getIsTurnFinished(gamePlayer);
+//
+//        if (isTurnFinished) {
+//            gamePlayerService.setCardPlayedThisRoundTo0(gamePlayer);
+//            gameService.advanceTurn(game);
+//        } else {
+//            gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
+//        }
 
-        if (isTurnFinished) {
-            gamePlayerService.setCardPlayedThisRoundTo0(gamePlayer);
-            gameService.advanceTurn(game);
-        } else {
-            gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
-        }
+//        List<GamePlayerCard> board = getBoard(game.getId());
+//        List<Integer> validIndexes = BoardUtils.getValidIndexes(
+//            selectedCard,
+//            board
+//        );
 
-        List<GamePlayerCard> board = getBoard(game.getId());
-        List<Integer> validIndexes = BoardUtils.getValidIndexes(
-            selectedCard,
-            board
-        );
+//        if (validIndexes.isEmpty()) {
+//            gameService.giveUpOrLose(
+//                game.getId(),
+//                user.getId()
+//            );
+//        }
 
-        if (validIndexes.isEmpty()) {
-            gameService.giveUpOrLose(
-                game.getId(),
-                user.getId()
-            );
-        }
+//        GamePlayerCard saved = increasePlacedCards(selectedCard, isTurnFinished);
+
+//        return saved;
+        return null;
     }
 
     public Boolean getIsPlacementValid (
         Integer selectedIndex,
         GamePlayerCard selectedCard,
-        GamePlayerCard lastPlacedCard,
-        Integer gamePlayerId,
-        Integer gameId,
-        Boolean isHost
+        GamePlayer gamePlayer,
+        Game game
     ) {
-        List<GamePlayerCard> board = getBoard(gameId);
-        List<GamePlayerCard> lastPlacedCards = gamePlayerCardRepository.findPlacedCards(gamePlayerId);
+        List<GamePlayerCard> board = getBoard(game.getId());
+        List<GamePlayerCard> lastPlacedCards = gamePlayerCardService.getLastPlacedCards(gamePlayer);
+        Boolean isHost = gamePlayerService.isHost(gamePlayer);
 
         if (selectedCard == null) {
             return false;
         }
 
         if (lastPlacedCards.isEmpty()) {
-            if (isHost == null) {
-                return false;
-            }
-
             if (!BoardUtils.getInitialValidIndexes(isHost).contains(selectedIndex)) {
                 return false;
             }
@@ -134,36 +143,46 @@ public class BoardService {
                 pos.getLast().equals(coordinates.col())
             );
 
-        if (lastPlacedCard != null) {
-            List<Integer> validIndexes = BoardUtils.getValidIndexes(lastPlacedCard, board);
-
-            if (!validIndexes.contains(selectedIndex)) {
-                return false;
+        if (game.getSkill().equals(Skill.REVERSE)) {
+            List<Integer> reversiblePositions = getReversiblePositions(gamePlayer);
+            if (reversiblePositions.contains(selectedIndex)) {
+                return !isStart && BoardUtils.getIsIndexEmpty(selectedIndex, board);
             }
+        }
+
+        GamePlayerCard lastPlacedCard = lastPlacedCards.getFirst();
+        List<Integer> validIndexes = BoardUtils.getValidIndexes(lastPlacedCard, board);
+
+        if (!validIndexes.contains(selectedIndex)) {
+            return false;
         }
 
         return !isStart && BoardUtils.getIsIndexEmpty(selectedIndex, board);
     }
 
-    public Boolean getCanReverse (
-        List<GamePlayerCard> lastPlacedCards,
-        GamePlayerCard lastPlacedCard,
-        List<GamePlayerCard> board
-    ) {
-        GamePlayerCard reverseCard = getReverseCard(lastPlacedCard, lastPlacedCards);
+    // TODO: Possibly remove
+//    public Boolean getCanReverse (
+//        GamePlayer gamePlayer
+//    ) {
+//        List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
+//        GamePlayerCard reverseCard = getReverseCard(gamePlayer);
+//
+//        if (reverseCard == null) {
+//            return false;
+//        }
+//
+//        List<Integer> validIndexes = BoardUtils.getValidIndexes(reverseCard, board);
+//        return !validIndexes.isEmpty();
+//    }
 
-        if (reverseCard == null) {
-            return false;
-        }
+    public GamePlayerCard getReverseCard (GamePlayer gamePlayer) {
+        List<GamePlayerCard> lastPlacedCards = gamePlayerCardService.getLastPlacedCards(gamePlayer);
 
-        List<Integer> validIndexes = BoardUtils.getValidIndexes(reverseCard, board);
-        return !validIndexes.isEmpty();
-    }
-
-    public GamePlayerCard getReverseCard (GamePlayerCard lastPlacedCard, List<GamePlayerCard> lastPlacedCards) {
         if (lastPlacedCards.size() < 2) {
             return null;
         }
+
+        GamePlayerCard lastPlacedCard = lastPlacedCards.getFirst();
 
         for (Integer i = lastPlacedCards.size() - 2; i >= 0; i--) {
             GamePlayerCard candidate = lastPlacedCards.get(i);
@@ -176,15 +195,20 @@ public class BoardService {
         return null;
     }
 
-    private Boolean getIsTurnFinished(GamePlayer gamePlayer) {
-        Integer cardLimitInTurn = 2;
-        Game game = gamePlayer.getGame();
-        Skill skill = game.getSkill();
-        if (skill == Skill.BRAKE) {
-            cardLimitInTurn = 1;
-        } else if (skill == Skill.EXTRA_GAS) {
-            cardLimitInTurn = 3;
+    public List<Integer> getReversiblePositions (
+        GamePlayer gamePlayer
+    ) {
+        GamePlayerCard reverseCard = getReverseCard(gamePlayer);
+
+        if (reverseCard == null) {
+            return List.of();
         }
-        return gamePlayer.getCardsPlayedThisRound() + 1 == cardLimitInTurn;
+
+        List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
+
+        return BoardUtils.getValidIndexes(
+            reverseCard,
+            board
+        );
     }
 }

@@ -2,7 +2,6 @@ package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +60,12 @@ public class GamePlayerService {
         GamePlayer gamePlayer
     ) {
         return gamePlayer.getGame().getTurn().equals(gamePlayer.getUser().getId());
+    }
+
+    public Boolean isHost (
+        GamePlayer gamePlayer
+    ) {
+        return gamePlayer.getGame().getHost().getId().equals(gamePlayer.getUser().getId());
     }
 
     @Transactional

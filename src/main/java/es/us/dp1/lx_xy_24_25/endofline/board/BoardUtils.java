@@ -1,7 +1,9 @@
 package es.us.dp1.lx_xy_24_25.endofline.board;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -16,12 +18,6 @@ public class BoardUtils {
             .getImage()
             .replace("/cardImages/", "")
             .replace(".png", "");
-    }
-
-    public static List<Integer> getInitialValidIndexes (Boolean isHost) {
-        List<Integer> startPos = isHost ? INITIAL_POSITIONS.get(0) : INITIAL_POSITIONS.get(1);
-
-        return List.of(getIndex(startPos.get(0), startPos.get(1) - 1));
     }
 
     public static Integer getIndex (Integer row, Integer col) {
@@ -63,8 +59,8 @@ public class BoardUtils {
         BoardPosition pos1 = new BoardPosition(card1.getPositionX(), card1.getPositionY());
         BoardPosition pos2 = new BoardPosition(card2.getPositionX(), card2.getPositionY());
 
-        Integer rowDelta = (pos1.row() - pos2.row() + BOARD_SIZE) % BOARD_SIZE;
-        Integer colDelta = (pos1.col() - pos2.col() + BOARD_SIZE) % BOARD_SIZE;
+        Integer rowDelta = (pos2.row() - pos1.row() + BOARD_SIZE) % BOARD_SIZE;
+        Integer colDelta = (pos2.col() - pos1.col() + BOARD_SIZE) % BOARD_SIZE;
 
         Integer bits1 = getNameToBinary(getName(card1));
         Integer rotatedBits1 = getRotatedBits(bits1, card1.getRotation());
@@ -113,6 +109,12 @@ public class BoardUtils {
         return 0;
     }
 
+    public static List<Integer> getInitialValidIndexes (Boolean isHost) {
+        List<Integer> startPos = isHost ? INITIAL_POSITIONS.get(0) : INITIAL_POSITIONS.get(1);
+
+        return List.of(getIndex(startPos.get(0), startPos.get(1) - 1));
+    }
+
     public static List<Integer> getValidIndexes (GamePlayerCard lastPlacedCard, List<GamePlayerCard> board) {
         String name = getName(lastPlacedCard);
 
@@ -130,6 +132,19 @@ public class BoardUtils {
             .stream()
             .filter(index -> getIsIndexEmpty(index, board))
             .toList();
+    }
+
+    // TODO: Fix, doesn't work
+    public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
+        Integer cardLimitInTurn = 2;
+        Game game = gamePlayer.getGame();
+        Skill skill = game.getSkill();
+        if (skill == Skill.BRAKE) {
+            cardLimitInTurn = 1;
+        } else if (skill == Skill.EXTRA_GAS) {
+            cardLimitInTurn = 3;
+        }
+        return gamePlayer.getCardsPlayedThisRound() + 1 == cardLimitInTurn;
     }
 
 }

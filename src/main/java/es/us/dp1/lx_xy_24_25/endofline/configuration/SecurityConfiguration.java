@@ -93,6 +93,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT,"/api/v1/achievements/**").hasAuthority(ADMIN)
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/achievements/**").hasAuthority(ADMIN)
 
+                .requestMatchers("/api/v1/board/**").hasAuthority(PLAYER)
+
                 .anyRequest().denyAll()
             )
 

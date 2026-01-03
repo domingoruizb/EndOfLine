@@ -21,9 +21,10 @@ function RulesModal({ isOpen, toggle }) {
         style={{
           backgroundColor: '#2a2a2a',
           color: 'white',
-          maxHeight: '80vh',
+          height: '80vh',
           overflowY: 'auto',
           padding: '1rem',
+          display: 'block',
         }}
       >
         <RulesPage embed />

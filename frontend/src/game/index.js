@@ -6,7 +6,7 @@ import { canReverse, checkPlacementValid, getInitialValidIndexes, getReverseCard
 import { boardArray, calculateRotation, getCardColor, getCards, getIndex } from './gameUtils/cardUtils'
 import { skills } from './gameUtils/skillsUtils'
 import tokenService from '../services/token.service'
-import { postCardPlacement } from './gameUtils/apiUtils'
+import { handleGiveUp, loseAndEndGame, postCardPlacement } from './gameUtils/apiUtils'
 import GameInfo from './gameComponents/gameInfo'
 import SkillButton from './gameComponents/skillButton'
 import HandCard from './gameComponents/handCard'
@@ -19,8 +19,7 @@ import RulesModal from './gameComponents/rulesModal'
 
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
-const userRoles = jwt ? jwt_decode(jwt).authorities : []
-const isAdmin = userRoles.includes('ADMIN')
+const isAdmin = user.roles.includes('ADMIN')
 
 export default function GamePage () {
     const { gameId } = useParams()
@@ -170,39 +169,6 @@ export default function GamePage () {
         });
     };
 
-    const handleGiveUp = async () => {
-        toggleGiveUpModal();
-
-        try {
-            const res = await fetch(
-                `/api/v1/games/${gameId}/${user.id}/giveup`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${jwt}`,
-                    },
-                }
-            );
-
-            if (!res.ok) {
-                const errorText = await res.text();
-                try {
-                    const errorData = JSON.parse(errorText);
-                    throw new Error(errorData.message || 'Failed to give up the game');
-                } catch (e) {
-                    throw new Error(`Failed to give up the game: ${res.status} ${res.statusText}`);
-                }
-            }
-
-            navigate('/creategame'); 
-
-        } catch (error) {
-            console.error("Error giving up the game:", error);
-            alert(`Error giving up: ${error.message}`);
-        }
-    };  
-
     const fetchGameData = async (signal) => {
         try {
             const res = await fetch(
@@ -294,25 +260,9 @@ export default function GamePage () {
         }
     }, [jwt, hostColor, secondColor])
 
-    async function loseAndEndGame() {
-        try {
-            const res = await fetch(`/api/v1/games/${gameId}/${user.id}/lose`, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!res.ok) throw new Error('Failed to lose the game');
-        } catch (error) {
-            console.error("Error losing the game:", error);
-        }
-    }
-
     useEffect(() => {
         if (hasLost) {
-            loseAndEndGame()
+            loseAndEndGame(gameId)
         }
     }, [hasLost]);
 
@@ -447,7 +397,11 @@ export default function GamePage () {
             <GiveUpModal 
                 isOpen={isGiveUpModalOpen}
                 toggle={toggleGiveUpModal}
-                onConfirm={handleGiveUp} 
+                onConfirm={() => handleGiveUp(
+                    gameId,
+                    toggleGiveUpModal,
+                    navigate
+                )}
             />
             <RulesModal
                 isOpen={isRulesModalOpen}

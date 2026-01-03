@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards;
 
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,6 @@ public interface GamePlayerCardRepository extends CrudRepository<GamePlayerCard,
     @Query("SELECT gpc FROM GamePlayerCard gpc WHERE gpc.gamePlayer.id = :gamePlayerId ORDER BY gpc.placedAt DESC")
     List<GamePlayerCard> findPlacedCards (Integer gamePlayerId);
 
+    @Query("SELECT gpc FROM GamePlayerCard gpc WHERE gpc.gamePlayer = :gamePlayer ORDER BY gpc.placedAt DESC")
+    List<GamePlayerCard> findLastPlacedCards(GamePlayer gamePlayer);
 }

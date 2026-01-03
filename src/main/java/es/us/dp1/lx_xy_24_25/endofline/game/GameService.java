@@ -5,12 +5,9 @@ import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

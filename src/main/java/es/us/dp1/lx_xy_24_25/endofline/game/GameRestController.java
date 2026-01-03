@@ -105,29 +105,4 @@ public class GameRestController {
         gameService.deleteGame(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping("/{gamePlayerId}/placeable")
-    public ResponseEntity<List<Integer>> getPlaceablePositions(
-        @PathVariable Integer gamePlayerId,
-        @RequestBody GamePlayerCardDTO lastPlacedCardDTO
-    ) {
-        GamePlayer gamePlayer = gamePlayerService.getById(gamePlayerId);
-
-        Card card = cardService.findByImage(lastPlacedCardDTO.getImage());
-
-        GamePlayerCard gamePlayerCard = GamePlayerCard.buildGamePlayerCard(
-            lastPlacedCardDTO,
-            gamePlayer,
-            card
-        );
-
-        List<GamePlayerCard> board = boardService.getBoard(gamePlayer.getGame().getId());
-
-        List<Integer> placeablePositions = BoardUtils.getValidIndexes(
-            gamePlayerCard,
-            board
-        );
-
-        return ResponseEntity.ok(placeablePositions);
-    }
 }
