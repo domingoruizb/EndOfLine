@@ -69,7 +69,7 @@ public class CardRestController {
 
         Card card = cardService.findByImage(gamePlayerCardDTO.getImage());
 
-        GamePlayerCard gamePlayerCard = GamePlayerCard.buildGamePlayerCard(
+        GamePlayerCard gamePlayerCard = GamePlayerCard.build(
             gamePlayerCardDTO,
             gamePlayer,
             card

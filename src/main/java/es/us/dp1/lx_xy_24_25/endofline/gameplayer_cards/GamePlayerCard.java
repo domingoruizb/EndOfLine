@@ -47,7 +47,7 @@ public class GamePlayerCard extends BaseEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    public static GamePlayerCard buildGamePlayerCard (
+    public static GamePlayerCard build (
         GamePlayerCardDTO gamePlayerCardDTO,
         GamePlayer gamePlayer,
         Card card

@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Getter
@@ -37,6 +38,9 @@ public class GamePlayer extends BaseEntity {
 
     @Min(0)
     private Integer cardsPlayedThisRound = 0;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean canRequestDeckChange = true;
 
     @ElementCollection
     @CollectionTable(name = "game_player_skills", joinColumns = @JoinColumn(name = "game_player_id"))

@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -47,7 +49,7 @@ public class BoardRestController {
         this.gamePlayerCardService = gamePlayerCardService;
     }
 
-    @GetMapping("/{gameId}")
+    @GetMapping("/{gameId}/state")
     public ResponseEntity<BoardStateDTO> getState (
         @PathVariable Integer gameId
     ) {
@@ -109,16 +111,70 @@ public class BoardRestController {
             energy,
             turn,
             round,
+            skill,
             players,
-            cards,
-            skill
+            cards
         );
 
         return new ResponseEntity<>(boardStateDTO, HttpStatus.OK);
     }
 
+    @PostMapping("/{gameId}/deck")
+    public ResponseEntity<List<Card>> getDeckCards (
+        @PathVariable Integer gameId,
+        @RequestBody List<Card> deck
+    ) {
+        User user = DecodeJWT.getUserFromJWT();
+        GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
+
+        if (gamePlayer == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Check if deck is empty and if deck change is allowed
+        if (deck.isEmpty()) {
+            if (!gamePlayer.getCanRequestDeckChange()) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
+            if (gamePlayer.getGame().getRound() > 1) {
+                boardService.disableDeckChange(gamePlayer);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        // Check deck size based on active skill
+        Integer totalSize = gamePlayer.getGame().getSkill() == Skill.EXTRA_GAS ? 6 : 5;
+        Integer refillSize = totalSize - deck.size();
+
+        if (refillSize <= 0) {
+            return new ResponseEntity<>(deck, HttpStatus.OK);
+        }
+
+        List<Integer> deckIds = deck.stream().map(Card::getId).toList();
+        List<Card> filteredCards = new ArrayList<>(
+            cardService
+                .getCardsByColor(gamePlayer.getColor().toString())
+                .stream()
+                .filter(card -> !deckIds.contains(card.getId()))
+                .toList()
+        );
+
+        Collections.shuffle(filteredCards);
+
+        List<Card> newCards = filteredCards.stream().limit(refillSize).toList();
+
+        // Add new cards to the existing deck
+        List<Card> fullDeck = new ArrayList<>(deck);
+        fullDeck.addAll(newCards);
+
+        // Disable further deck changes for this game player
+        boardService.disableDeckChange(gamePlayer);
+        return new ResponseEntity<>(fullDeck, HttpStatus.OK);
+    }
+
     // TODO: Not used in frontend
-    @PostMapping("/{gameId}")
+    @PostMapping("/{gameId}/place")
     public ResponseEntity<GamePlayerCard> placeCard (
         @PathVariable Integer gameId,
         @RequestBody GamePlayerCardDTO gamePlayerCardDTO
@@ -136,7 +192,7 @@ public class BoardRestController {
 
         Card card = cardService.findByImage(gamePlayerCardDTO.getImage());
 
-        GamePlayerCard gamePlayerCard = GamePlayerCard.buildGamePlayerCard(
+        GamePlayerCard gamePlayerCard = GamePlayerCard.build(
             gamePlayerCardDTO,
             gamePlayer,
             card

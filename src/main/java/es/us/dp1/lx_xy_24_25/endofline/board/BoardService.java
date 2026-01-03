@@ -42,21 +42,6 @@ public class BoardService {
         return gamePlayerCardRepository.findByGameId(gameId);
     }
 
-    public GamePlayerCard increasePlacedCards (
-        GamePlayerCard gamePlayerCard,
-        Boolean isTurnFinished
-    ) {
-        GamePlayerCard saved = gamePlayerCardRepository.save(gamePlayerCard);
-
-        gamePlayerService.incrementCardsPlayedThisRound(gamePlayerCard.getGamePlayer());
-
-        if (isTurnFinished) {
-            gameService.advanceTurn(gamePlayerCard.getGamePlayer().getGame());
-        }
-
-        return saved;
-    }
-
     // TODO: Implement
     public GamePlayerCard placeCard (
         GamePlayerCard selectedCard
@@ -85,34 +70,29 @@ public class BoardService {
 
         selectedCard.setRotation(rotation);
 
-        gamePlayerCardRepository.save(selectedCard);
+        GamePlayerCard placed = gamePlayerCardRepository.save(selectedCard);
 
-//        Boolean isTurnFinished = BoardUtils.getIsTurnFinished(gamePlayer);
-//
-//        if (isTurnFinished) {
-//            gamePlayerService.setCardPlayedThisRoundTo0(gamePlayer);
-//            gameService.advanceTurn(game);
-//        } else {
-//            gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
-//        }
+        List<GamePlayerCard> board = getBoard(game.getId());
+        List<Integer> validIndexes = BoardUtils.getValidIndexes(
+            selectedCard,
+            board
+        );
 
-//        List<GamePlayerCard> board = getBoard(game.getId());
-//        List<Integer> validIndexes = BoardUtils.getValidIndexes(
-//            selectedCard,
-//            board
-//        );
+        if (validIndexes.isEmpty()) {
+            gameService.giveUpOrLose(
+                game.getId(),
+                user.getId()
+            );
+        }
 
-//        if (validIndexes.isEmpty()) {
-//            gameService.giveUpOrLose(
-//                game.getId(),
-//                user.getId()
-//            );
-//        }
+        gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
 
-//        GamePlayerCard saved = increasePlacedCards(selectedCard, isTurnFinished);
+        Boolean isTurnFinished = BoardUtils.getIsTurnFinished(gamePlayer);
+        if (isTurnFinished) {
+            gameService.advanceTurn(game);
+        }
 
-//        return saved;
-        return null;
+        return placed;
     }
 
     public Boolean getIsPlacementValid (
@@ -210,5 +190,12 @@ public class BoardService {
             reverseCard,
             board
         );
+    }
+
+    public void disableDeckChange (
+        GamePlayer gamePlayer
+    ) {
+        gamePlayer.setCanRequestDeckChange(false);
+        gamePlayerService.updateGamePlayer(gamePlayer);
     }
 }

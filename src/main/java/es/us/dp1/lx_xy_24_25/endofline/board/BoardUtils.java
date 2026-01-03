@@ -6,6 +6,7 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 
 import java.util.List;
+import java.util.Objects;
 
 public class BoardUtils {
 
@@ -134,17 +135,24 @@ public class BoardUtils {
             .toList();
     }
 
-    // TODO: Fix, doesn't work
+    // TODO: Possibly remove, compare turn instead
+//    public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
+//        Game game = gamePlayer.getGame();
+//        Skill skill = game.getSkill();
+//
+//        Integer cardLimitInTurn = game.getRound() == 1 ? 1 : 2;
+//
+//        if (skill == Skill.BRAKE) {
+//            cardLimitInTurn = 1;
+//        } else if (skill == Skill.SPEED_UP) {
+//            cardLimitInTurn = 3;
+//        }
+//
+//        return gamePlayer.getCardsPlayedThisRound() >= cardLimitInTurn;
+//    }
+
     public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
-        Integer cardLimitInTurn = 2;
-        Game game = gamePlayer.getGame();
-        Skill skill = game.getSkill();
-        if (skill == Skill.BRAKE) {
-            cardLimitInTurn = 1;
-        } else if (skill == Skill.EXTRA_GAS) {
-            cardLimitInTurn = 3;
-        }
-        return gamePlayer.getCardsPlayedThisRound() + 1 == cardLimitInTurn;
+        return !gamePlayer.getGame().getTurn().equals(gamePlayer.getUser().getId());
     }
 
 }

@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.board.dto;
 
+import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,11 +26,10 @@ public class BoardStateDTO {
     private Integer turn;
     private Integer round;
 
-    private List<BoardPlayerDTO> players;
-    private List<BoardCardDTO> cards;
-
     private Skill skill;
 
+    private List<BoardPlayerDTO> players;
+    private List<BoardCardDTO> cards;
     public BoardStateDTO(
         Integer userId,
         Integer gameId,
@@ -40,9 +40,9 @@ public class BoardStateDTO {
         Integer energy,
         Integer turn,
         Integer round,
+        Skill skill,
         List<BoardPlayerDTO> players,
-        List<BoardCardDTO> cards,
-        Skill skill
+        List<BoardCardDTO> cards
     ) {
         this.userId = userId;
         this.gameId = gameId;
@@ -53,9 +53,9 @@ public class BoardStateDTO {
         this.energy = energy;
         this.turn = turn;
         this.round = round;
+        this.skill = skill;
         this.players = players;
         this.cards = cards;
-        this.skill = skill;
     }
 
 }
