@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import WinnerModal from '../atemp/WinnerModal'
-import LoserModal from '../atemp/LoserModal'
-import GiveUpModal from '../atemp/GiveUpModal'
+import WinnerModal from './WinnerModal'
+import LoserModal from './LoserModal'
+import GiveUpModal from './GiveUpModal'
 import RulesModal from './RulesModal'
 import { giveUp } from '../gameUtils/api'
 
