@@ -1,14 +1,8 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
 import es.us.dp1.lx_xy_24_25.endofline.board.BoardService;
-import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
-import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/v1/games")
 @Tag(name = "Games", description = "The Games management API")
 @SecurityRequirement(name = "bearerAuth")
-public class GameRestController {
+public class GameController {
 
     private final GameService gameService;
     private final BoardService boardService;
@@ -30,7 +24,7 @@ public class GameRestController {
     private final CardService cardService;
 
     @Autowired
-    public GameRestController(
+    public GameController(
         GameService gameService,
         BoardService boardService,
         GamePlayerService gamePlayerService,

@@ -21,27 +21,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-
 import org.springframework.http.MediaType;
 
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.us.dp1.lx_xy_24_25.endofline.achievement.*;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 @WebMvcTest(
-        controllers = AchievementRestController.class
+        controllers = AchievementController.class
 )
 @AutoConfigureMockMvc(addFilters = true)
-public class AchievementRestControllerTests {
+public class AchievementControllerTests {
 
     private static final String BASE_URL = "/api/v1/achievements";
     private static final String BADGE_IMAGE = "https://cdn-icons-png.flaticon.com/128/5730/5730459.png";

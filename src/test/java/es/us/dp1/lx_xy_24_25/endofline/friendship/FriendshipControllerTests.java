@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @Transactional
-public class FriendshipRestControllerTests {
+public class FriendshipControllerTests {
 
     private static final String BASE_URL = "/api/v1/friendships";
 
@@ -71,7 +71,7 @@ public class FriendshipRestControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "player2", authorities = {"PLAYER"}) 
+    @WithMockUser(username = "player2", authorities = {"PLAYER"})
     void testAcceptFriendship() throws Exception {
         mockMvc.perform(put(BASE_URL + "/2/acceptFriendship"))
                 .andExpect(status().isOk())

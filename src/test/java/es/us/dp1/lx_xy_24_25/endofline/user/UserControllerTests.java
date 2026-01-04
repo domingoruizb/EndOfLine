@@ -38,12 +38,6 @@ import es.us.dp1.lx_xy_24_25.endofline.configuration.SecurityConfiguration;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 
-import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
-import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserRestController;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
-
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
@@ -51,8 +45,8 @@ import io.qameta.allure.Owner;
 @Epic("Users & Admin Module")
 @Feature("Users Management")
 @Owner("DP1-tutors")
-@WebMvcTest(controllers = UserRestController.class, 
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), 
+@WebMvcTest(controllers = UserController.class,
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
     excludeAutoConfiguration = SecurityConfiguration.class)
 class UserControllerTests {
 
@@ -61,7 +55,7 @@ class UserControllerTests {
     private static final String BASE_URL = "/api/v1/users";
 
     @Autowired
-    private UserRestController userController;
+    private UserController userController;
 
     @MockBean
     private UserService userService;

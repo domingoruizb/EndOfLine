@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,20 +29,18 @@ import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
 import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
 import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
-import io.swagger.v3.oas.models.media.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @AutoConfigureMockMvc
-public class GameRestControllerTests {
+public class GameControllerTests {
     private static final String BASE_URL = "/api/v1/games";
 
     private User player;
@@ -57,7 +54,7 @@ public class GameRestControllerTests {
 
     @SuppressWarnings("unused")
     @Autowired
-    private GameRestController gameRestController;
+    private GameController gameController;
 
     @MockBean
     private GameService gameService;

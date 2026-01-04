@@ -13,7 +13,6 @@ import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,7 +31,7 @@ import java.util.List;
 @RequestMapping("/api/v1/board")
 @Tag(name = "Cards", description = "The board management API")
 @SecurityRequirement(name = "bearerAuth")
-public class BoardRestController {
+public class BoardController {
 
     private final CardService cardService;
     private final GamePlayerService gamePlayerService;
@@ -41,7 +40,7 @@ public class BoardRestController {
     private final GameService gameService;
 
     @Autowired
-    public BoardRestController(
+    public BoardController(
         CardService cardService,
         GamePlayerService gamePlayerService,
         BoardService boardService,

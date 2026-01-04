@@ -18,14 +18,14 @@ import java.util.List;
 @RequestMapping("/api/v1/cards")
 @Tag(name = "Cards", description = "The Cards management API")
 @SecurityRequirement(name = "bearerAuth")
-public class CardRestController {
+public class CardController {
 
 	private final CardService cardService;
     private final GamePlayerService gamePlayerService;
     private final GamePlayerCardService gamePlayerCardService;
 
 	@Autowired
-	public CardRestController(
+	public CardController(
         CardService cardService,
         GamePlayerService gamePlayerService,
         GamePlayerCardService gamePlayerCardService

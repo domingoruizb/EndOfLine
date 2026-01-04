@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/stats")
 @Tag(name = "Statistics", description = "Game and player statistics API")
 @SecurityRequirement(name = "bearerAuth")
-public class StatsRestController {
+public class StatsController {
 
     private final StatsService statsService;
 
-    public StatsRestController(StatsService statsService) {
+    public StatsController(StatsService statsService) {
         this.statsService = statsService;
     }
 

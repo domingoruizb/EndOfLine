@@ -34,20 +34,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.endofline.auth.payload.response.MessageResponse;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.endofline.util.RestPreconditions;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @SecurityRequirement(name = "bearerAuth")
-class UserRestController {
+class UserController {
 
 	private final UserService userService;
 	private final AuthoritiesService authService;
 
 	@Autowired
-	public UserRestController(UserService userService, AuthoritiesService authService) {
+	public UserController(UserService userService, AuthoritiesService authService) {
 		this.userService = userService;
 		this.authService = authService;
 	}

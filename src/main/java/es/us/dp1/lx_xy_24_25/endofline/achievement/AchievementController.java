@@ -3,7 +3,6 @@ package es.us.dp1.lx_xy_24_25.endofline.achievement;
 import java.util.List;
 
 import es.us.dp1.lx_xy_24_25.endofline.auth.payload.response.MessageResponse;
-import org.aspectj.bridge.Message;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,12 +27,12 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/achievements")
 @Tag(name = "Achievements", description = "The Achievements management API")
 @SecurityRequirement(name = "bearerAuth")
-public class AchievementRestController {
+public class AchievementController {
 
     private final AchievementService achievementService;
 
     @Autowired
-    public AchievementRestController(AchievementService achievementService) {
+    public AchievementController(AchievementService achievementService) {
         this.achievementService = achievementService;
     }
 

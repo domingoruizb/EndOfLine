@@ -17,13 +17,13 @@ import java.util.List;
 @RequestMapping("/api/v1/playerachievements")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "PlayerAchievement", description = "API for the management of PlayerAchievements")
-public class PlayerAchievementRestController {
+public class PlayerAchievementController {
 
     private final PlayerAchievementService playerAchievementService;
     private final UserService userService;
 
     @Autowired
-    public PlayerAchievementRestController(PlayerAchievementService service, UserService userService) {
+    public PlayerAchievementController(PlayerAchievementService service, UserService userService) {
         this.playerAchievementService = service;
         this.userService = userService;
     }
