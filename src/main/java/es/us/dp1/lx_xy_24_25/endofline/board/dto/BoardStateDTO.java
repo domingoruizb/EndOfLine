@@ -38,6 +38,8 @@ public class BoardStateDTO {
     private List<BoardPlayerDTO> players;
     private List<BoardCardDTO> cards;
 
+    private Boolean spectating;
+
     public BoardStateDTO(
         Integer userId,
         Integer gameId,
@@ -54,7 +56,8 @@ public class BoardStateDTO {
         Boolean skillsAvailable,
         Boolean deckChangeAvailable,
         List<BoardPlayerDTO> players,
-        List<BoardCardDTO> cards
+        List<BoardCardDTO> cards,
+        Boolean spectating
     ) {
         this.userId = userId;
         this.gameId = gameId;
@@ -72,6 +75,7 @@ public class BoardStateDTO {
         this.deckChangeAvailable = deckChangeAvailable;
         this.players = players;
         this.cards = cards;
+        this.spectating = spectating;
     }
 
 }

@@ -1,4 +1,9 @@
+import { useNavigate } from 'react-router-dom'
+import tokenService from '../../services/token.service'
 import { isTurn } from '../gameUtils/utils'
+
+const user = tokenService.getUser()
+const isAdmin = user.roles.includes('ADMIN')
 
 export default function GameActions ({
     game,
@@ -6,30 +11,57 @@ export default function GameActions ({
     toggleGiveUpModal,
     requestNewDeck
 }) {
+    const navigate = useNavigate()
+
     return game != null && (
         <>
             {
-                game.deckChangeAvailable && isTurn(game) && (
-                    <button
-                        className='change-deck-button'
-                        onClick={requestNewDeck}
-                    >
-                        CHANGE DECK
-                    </button>
+                !game.spectating && (
+                    <>
+                        {
+                            game.deckChangeAvailable && isTurn(game) && (
+                                <button
+                                    className='change-deck-button'
+                                    onClick={requestNewDeck}
+                                >
+                                    CHANGE DECK
+                                </button>
+                            )
+                        }
+                        <button
+                            className='giveup-button'
+                            onClick={toggleGiveUpModal}
+                        >
+                            GIVE UP
+                        </button>
+                    </>
                 )
             }
-            <button
-                className='giveup-button'
-                onClick={toggleRulesModal}
+            <div
+                className='spectator-actions'
             >
-                RULES
-            </button>
-            <button
-                className='giveup-button'
-                onClick={toggleGiveUpModal}
-            >
-                GIVE UP
-            </button>
+                <button
+                    className='giveup-button'
+                    onClick={toggleRulesModal}
+                >
+                    RULES
+                </button>
+                {
+                    game.spectating && (
+                        <>
+                            <button
+                                className='giveup-button spectator-leave-button'
+                                onClick={() => navigate(isAdmin ? '/games' : '/friends')}
+                            >
+                                LEAVE
+                            </button>
+                            <div className='spectator-badge'>
+                                👁️ SPECTATOR MODE
+                            </div>
+                        </>
+                    )
+                }
+            </div>
         </>
     )
 }

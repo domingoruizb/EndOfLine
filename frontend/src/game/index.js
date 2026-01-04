@@ -96,6 +96,7 @@ export default function GamePage () {
                     requestMoreCards={requestMoreCards}
                 />
                 <DeckCards
+                    game={game}
                     deck={deck}
                     selected={selected}
                     setSelected={setSelected}

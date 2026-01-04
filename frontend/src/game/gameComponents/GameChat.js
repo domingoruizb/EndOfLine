@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import tokenService from '../../services/token.service'
 
 const COLOR_MAP = {
   RED: '#E31E25',     
@@ -10,6 +11,8 @@ const COLOR_MAP = {
   VIOLET: '#C48FBF',  
   WHITE: '#C5C6C6'    
 }
+
+const user = tokenService.getUser()
 
 export default function GameChat ({ game, jwt }) {
   const [messages, setMessages] = useState([])
@@ -139,7 +142,7 @@ export default function GameChat ({ game, jwt }) {
     }
   }
 
-  const senderName = game?.players?.find(p => p.userId === game.userId)?.username || null
+  const senderName = user?.username || null
 
   return (
     <div className='game-chat' style={{ width: '280px' }}>
@@ -153,7 +156,10 @@ export default function GameChat ({ game, jwt }) {
           
           // lookup the color for this sender
           const userColorName = playerColors[m.sender] // e.g. "RED"
-          const bubbleColor = COLOR_MAP[userColorName] || (isMe ? '#FE5B02' : '#2ecc71') // fallback to defaults
+          const isSpectator = !userColorName // sender is not a player
+          const bubbleColor = isSpectator 
+            ? 'rgba(255, 255, 255, 0.5)' 
+            : (COLOR_MAP[userColorName] || (isMe ? '#FE5B02' : '#2ecc71')) // fallback to defaults
 
           return (
             <div 
@@ -162,7 +168,7 @@ export default function GameChat ({ game, jwt }) {
               // apply the dynamic background color
               style={{ backgroundColor: bubbleColor }}
             >
-              {!isMe && <div className='chat-sender'><strong>{m.sender}</strong></div>}
+              {!isMe && <div className='chat-sender'><strong>{m.sender}{isSpectator && ' (spectating)'}</strong></div>}
               <div className='chat-text'>{m.body}</div>
             </div>
           )

@@ -8,6 +8,7 @@ import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.configuration.DecodeJWT;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
@@ -59,7 +60,10 @@ public class BoardRestController {
         @PathVariable Integer gameId
     ) {
         User user = DecodeJWT.getUserFromJWT();
-        GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
+        Game game = gameService.getGameById(gameId);
+        GamePlayer possiblePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
+
+        GamePlayer gamePlayer = possiblePlayer == null ? gamePlayerService.getFriendInGame(user, game) : possiblePlayer;
 
         if (gamePlayer == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -67,13 +71,13 @@ public class BoardRestController {
 
         GamePlayerCard lastPlacedCard = gamePlayerCardService.getLastPlacedCard(gamePlayer);
 
-        List<GamePlayerCard> board = boardService.getBoard(gamePlayer.getGame().getId());
+        List<GamePlayerCard> board = boardService.getBoard(game.getId());
 
         Boolean isTurn = gamePlayerService.isValidTurn(gamePlayer);
         Boolean isHost = gamePlayerService.isHost(gamePlayer);
         Integer energy = gamePlayer.getEnergy();
-        Integer turn = gamePlayer.getGame().getTurn();
-        Integer round = gamePlayer.getGame().getRound();
+        Integer turn = game.getTurn();
+        Integer round = game.getRound();
 
         // Don't return placeable positions if it's not the player's turn
         // If it's the first turn, return initial valid positions
@@ -86,7 +90,7 @@ public class BoardRestController {
         // Only return reversible positions if it's the player's turn
         List<Integer> reversiblePositions = isTurn && lastPlacedCard != null ? boardService.getReversiblePositions(gamePlayer) : List.of();
 
-        List<BoardPlayerDTO> players = gamePlayer.getGame().getGamePlayers().stream().map(p -> new BoardPlayerDTO(
+        List<BoardPlayerDTO> players = game.getGamePlayers().stream().map(p -> new BoardPlayerDTO(
             p.getId(),
             p.getUser().getId(),
             p.getColor().toString(),
@@ -94,9 +98,9 @@ public class BoardRestController {
             gamePlayerService.isHost(p)
         )).toList();
 
-        LocalDateTime startedAt = gamePlayer.getGame().getStartedAt();
-        LocalDateTime endedAt = gamePlayer.getGame().getEndedAt();
-        User winner = gamePlayer.getGame().getWinner();
+        LocalDateTime startedAt = game.getStartedAt();
+        LocalDateTime endedAt = game.getEndedAt();
+        User winner = game.getWinner();
 
         List<BoardCardDTO> cards = board.stream().map(c -> new BoardCardDTO(
             c.getGamePlayer().getId(),
@@ -106,13 +110,15 @@ public class BoardRestController {
             c.getCard()
         )).toList();
 
-        Skill skill = isTurn ? gamePlayer.getGame().getSkill() : null;
+        Skill skill = isTurn ? game.getSkill() : null;
         Boolean skillsAvailable = isTurn && round > 1 && skill == null && gamePlayer.getCardsPlayedThisRound() == 0;
-        Boolean deckChangeAvailable = gamePlayer.getDeckRequests() < 2 && gamePlayer.getGame().getRound() < 2;
+        Boolean deckChangeAvailable = gamePlayer.getDeckRequests() < 2 && game.getRound() < 2;
+
+        Boolean spectating = possiblePlayer == null && gamePlayer != null;
 
         BoardStateDTO boardStateDTO = new BoardStateDTO(
-            user.getId(),
-            gamePlayer.getGame().getId(),
+            gamePlayer.getUser().getId(),
+            game.getId(),
             gamePlayer.getId(),
             startedAt,
             endedAt,
@@ -127,7 +133,8 @@ public class BoardRestController {
             skillsAvailable,
             deckChangeAvailable,
             players,
-            cards
+            cards,
+            spectating
         );
 
         return new ResponseEntity<>(boardStateDTO, HttpStatus.OK);

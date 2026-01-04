@@ -8,6 +8,7 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,8 +85,16 @@ public class GameRestController {
 
     @PutMapping("/{gameId}/{userId}/giveup")
     public ResponseEntity<Game> giveUp(@PathVariable Integer gameId, @PathVariable Integer userId) {
-        Game game = gameService.giveUpOrLose(gameId, userId);
-        return ResponseEntity.ok(game);
+        // Handle spectating users trying to give up
+        Game game = gameService.getGameById(gameId);
+        List<Integer> user = game.getGamePlayers().stream().map(p -> p.getUser().getId()).toList();
+
+        if (!user.contains(userId)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Game updatedGame = gameService.giveUpOrLose(gameId, userId);
+        return ResponseEntity.ok(updatedGame);
     }
 
     @PutMapping("/{gameId}/{userId}/lose")

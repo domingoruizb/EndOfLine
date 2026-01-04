@@ -1,9 +1,14 @@
 import { useNavigate } from 'react-router-dom'
+import tokenService from '../../services/token.service'
 import WinnerModal from './WinnerModal'
 import LoserModal from './LoserModal'
 import GiveUpModal from './GiveUpModal'
 import RulesModal from './RulesModal'
+import SpectatorEndModal from './SpectatorEndModal'
 import { giveUp } from '../gameUtils/api'
+
+const user = tokenService.getUser()
+const isAdmin = user.roles.includes('ADMIN')
 
 export default function Modals ({
     game,
@@ -36,6 +41,13 @@ export default function Modals ({
             <RulesModal
                 isOpen={rulesOpen}
                 toggle={toggleRulesModal}
+            />
+            <SpectatorEndModal
+                isOpen={game.spectating && game.endedAt != null}
+                toggle={() => navigate(isAdmin ? '/games' : '/friends')}
+                onCancel={() => navigate(isAdmin ? '/games' : '/friends')}
+                onConfirm={() => navigate('/')}
+                winnerUsername={game.players?.find(p => p.userId === game.winnerId)?.username}
             />
         </>
     )

@@ -11,7 +11,7 @@ export default function SkillButtons ({
     game,
     requestMoreCards
 }) {
-    return game != null && (
+    return game != null && !game.spectating && (
         <div
             className='skills-container'
         >
