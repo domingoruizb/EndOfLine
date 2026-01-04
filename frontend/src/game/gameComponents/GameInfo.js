@@ -65,6 +65,10 @@ export default function GameInfo ({
                 {minutes.toString().padStart(2, '0')}:
                 {seconds.toString().padStart(2, '0')}
             </span>
+            Round:
+            <span>
+                {game.round}
+            </span>
         </>
     )
 }
