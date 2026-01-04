@@ -14,7 +14,7 @@ import SkillButtons from './gameComponents/SkillButtons'
 import GameChat from './gameComponents/GameChat'
 import Modals from './gameComponents/Modals'
 import GameActions from './gameComponents/GameActions'
-import './game.css'
+import '../static/css/game/game.css'
 
 const jwt = tokenService.getLocalAccessToken()
 

@@ -15,8 +15,6 @@ export default function Home(){
     if (location.state?.message) {
       setMessage(location.state.message);
       window.history.replaceState({}, document.title);
-      // const timer = setTimeout(() => setMessage(""), 4000);
-      // return () => clearTimeout(timer);
     }
   }, [location.state]);
 

@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import tokenService from '../../services/token.service'
 import { isTurn } from '../gameUtils/utils'
 
-const user = tokenService.getUser()
-const isAdmin = user.roles.includes('ADMIN')
+const user = tokenService.getUser();
+const isAdmin = user && user.roles ? user.roles.includes('ADMIN') : false;
 
 export default function GameActions ({
     game,

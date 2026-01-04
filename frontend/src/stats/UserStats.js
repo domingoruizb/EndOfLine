@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardBody, CardTitle, CardText, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
-import './UserStats.css';
+import '../static/css/stats/UserStats.css';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
 

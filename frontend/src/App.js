@@ -8,7 +8,6 @@ import PrivateRoute from "./privateRoute";
 import Register from "./auth/register";
 import Login from "./auth/login";
 import Logout from "./auth/logout";
-import PlanList from "./public/plan";
 import RulesPage from "./public/rules";
 import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
@@ -159,7 +158,6 @@ function App() {
         <AppNavbar />
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
-          <Route path="/plans" element={<PlanList />} />
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/stats" element={<UserStats />} />
           <Route path="/docs" element={<SwaggerDocs />} />

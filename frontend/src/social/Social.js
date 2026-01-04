@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardBody, CardTitle, CardText, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
-import './Social.css';
+import '../static/css/social/Social.css'
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
 

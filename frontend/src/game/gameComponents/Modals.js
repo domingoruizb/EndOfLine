@@ -7,8 +7,8 @@ import RulesModal from './RulesModal'
 import SpectatorModal from './SpectatorModal'
 import { giveUp } from '../gameUtils/api'
 
-const user = tokenService.getUser()
-const isAdmin = user.roles.includes('ADMIN')
+const user = tokenService.getUser();
+const isAdmin = user && user.roles ? user.roles.includes('ADMIN') : false;
 
 export default function Modals ({
     game,

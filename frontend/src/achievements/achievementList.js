@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
 import AchievementPlayersModal from './AchievementPlayersModal';
-import '../static/css/achievementList.css';
+import '../static/css/achievements/achievementList.css';
 
 const AchievementList = () => {
   const jwt = tokenService.getLocalAccessToken();

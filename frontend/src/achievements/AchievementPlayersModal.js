@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import '../static/css/achievementPlayersModal.css';
+import '../static/css/achievements/achievementPlayersModal.css';
 
 const AchievementPlayersModal = ({ isOpen, toggle, players, achievementName }) => {
   const formatDate = (dateString) => {
