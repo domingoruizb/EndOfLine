@@ -55,7 +55,7 @@ public class CardRestController {
         return new ResponseEntity<>(cardService.findByGameId(gameId), HttpStatus.OK);
     }
 
-    // TODO: Used in frontend
+    // TODO: Not used anymore on frontend
     @PostMapping("/place/{gamePlayerId}")
     public ResponseEntity<GamePlayerCard> placeCard(
         @PathVariable Integer gamePlayerId,

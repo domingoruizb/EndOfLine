@@ -139,7 +139,6 @@ public class BoardUtils {
             .toList();
     }
 
-    // TODO: Possibly remove, compare turn instead
     public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
         Game game = gamePlayer.getGame();
         Skill skill = game.getSkill();

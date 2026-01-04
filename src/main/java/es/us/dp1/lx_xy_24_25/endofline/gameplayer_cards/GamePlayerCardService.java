@@ -37,7 +37,7 @@ public class GamePlayerCardService {
         return lastPlacedCards.isEmpty() ? null : lastPlacedCards.getFirst();
     }
 
-    // TODO: Used in frontend
+    // TODO: Not used anymore on frontend
     public GamePlayerCard placeCard (
         GamePlayerCard gamePlayerCard,
         Boolean isTurnFinished
