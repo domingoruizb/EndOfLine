@@ -3,6 +3,7 @@ package es.us.dp1.lx_xy_24_25.endofline.board;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.SkillUsage;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 
 import java.util.List;
@@ -139,15 +140,23 @@ public class BoardUtils {
             .toList();
     }
 
-    public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
+    public static Boolean getIsTurnFinished(GamePlayer gamePlayer) {
         Game game = gamePlayer.getGame();
-        Skill skill = game.getSkill();
+        Integer currentRound = game.getRound();
 
-        Integer cardLimitInTurn = game.getRound() == 1 ? 1 : 2;
+        // Default card limit
+        Integer cardLimitInTurn = currentRound == 1 ? 1 : 2;
 
-        if (skill == Skill.BRAKE) {
+        // Check if player used a skill this round
+        Skill skillThisRound = gamePlayer.getSkillsUsed().stream()
+            .filter(usage -> usage.getRound().equals(currentRound))
+            .map(SkillUsage::getSkill)
+            .findFirst()
+            .orElse(null);
+
+        if (skillThisRound == Skill.BRAKE) {
             cardLimitInTurn = 1;
-        } else if (skill == Skill.SPEED_UP) {
+        } else if (skillThisRound == Skill.SPEED_UP) {
             cardLimitInTurn = 3;
         }
 

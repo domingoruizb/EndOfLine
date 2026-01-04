@@ -43,7 +43,5 @@ public class GamePlayer extends BaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "game_player_skills", joinColumns = @JoinColumn(name = "game_player_id"))
-    @Column(name = "skill")
-    @Enumerated(EnumType.STRING)
-    private List<Skill> skillsUsed = new ArrayList<>();
+    private List<SkillUsage> skillsUsed = new ArrayList<>();
 }

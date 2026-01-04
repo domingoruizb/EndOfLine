@@ -112,7 +112,7 @@ public class StatsService {
         int wins = (int) userGames.stream()
                 .filter(g -> g.getWinner() != null && g.getWinner().getId().equals(user.getId()))
                 .count();
-        
+
         int losses = (int) userGames.stream()
                 .filter(g -> g.getWinner() != null && !g.getWinner().getId().equals(user.getId()))
                 .count();
@@ -143,7 +143,7 @@ public class StatsService {
         games.forEach(game ->
             game.getGamePlayers().forEach(gp ->
                 gp.getSkillsUsed().forEach(skill ->
-                    skillCounts.put(skill, skillCounts.getOrDefault(skill, 0L) + 1)
+                    skillCounts.put(skill.getSkill(), skillCounts.getOrDefault(skill.getSkill(), 0L) + 1)
                 )
             )
         );
@@ -162,7 +162,7 @@ public class StatsService {
                 .filter(gp -> gp.getUser().getId().equals(user.getId()))
                 .forEach(gp ->
                     gp.getSkillsUsed().forEach(skill ->
-                        skillCounts.put(skill, skillCounts.getOrDefault(skill, 0L) + 1)
+                        skillCounts.put(skill.getSkill(), skillCounts.getOrDefault(skill.getSkill(), 0L) + 1)
                     )
                 )
         );

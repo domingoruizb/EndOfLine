@@ -5,6 +5,7 @@ import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.SkillUsage;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
@@ -291,8 +292,11 @@ public class GameService {
         Skill skillEnum = Skill.valueOf(skill);
         game.setSkill(skillEnum);
 
+        SkillUsage skillUsage = new SkillUsage();
+        skillUsage.setSkill(skillEnum);
+        skillUsage.setRound(game.getRound());
 
-        gamePlayer.getSkillsUsed().add(skillEnum);
+        gamePlayer.getSkillsUsed().add(skillUsage);
 
         gamePlayerService.updateGamePlayer(gamePlayer);
 
