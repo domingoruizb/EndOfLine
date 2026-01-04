@@ -82,9 +82,7 @@ public class BoardUtils {
     }
 
     public static Integer getRotation (Integer index, GamePlayerCard lastPlacedCard) {
-        String name = getName(lastPlacedCard);
-
-        if (name.equals("START")) {
+        if (Objects.isNull(lastPlacedCard)) {
             return 0;
         }
 
@@ -129,30 +127,32 @@ public class BoardUtils {
         List<Integer> potential = new BoardRotation(lastRotatedBits)
             .getPotentialIndexes(lastPlacedCard);
 
+        List<Integer> startingIndexes = INITIAL_POSITIONS
+            .stream()
+            .map(pos -> getIndex(pos.get(0), pos.get(1)))
+            .toList();
+
         return potential
             .stream()
             .filter(index -> getIsIndexEmpty(index, board))
+            .filter(index -> !startingIndexes.contains(index))
             .toList();
     }
 
     // TODO: Possibly remove, compare turn instead
-//    public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
-//        Game game = gamePlayer.getGame();
-//        Skill skill = game.getSkill();
-//
-//        Integer cardLimitInTurn = game.getRound() == 1 ? 1 : 2;
-//
-//        if (skill == Skill.BRAKE) {
-//            cardLimitInTurn = 1;
-//        } else if (skill == Skill.SPEED_UP) {
-//            cardLimitInTurn = 3;
-//        }
-//
-//        return gamePlayer.getCardsPlayedThisRound() >= cardLimitInTurn;
-//    }
-
     public static Boolean getIsTurnFinished (GamePlayer gamePlayer) {
-        return !gamePlayer.getGame().getTurn().equals(gamePlayer.getUser().getId());
+        Game game = gamePlayer.getGame();
+        Skill skill = game.getSkill();
+
+        Integer cardLimitInTurn = game.getRound() == 1 ? 1 : 2;
+
+        if (skill == Skill.BRAKE) {
+            cardLimitInTurn = 1;
+        } else if (skill == Skill.SPEED_UP) {
+            cardLimitInTurn = 3;
+        }
+
+        return gamePlayer.getCardsPlayedThisRound() >= cardLimitInTurn;
     }
 
 }

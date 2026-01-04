@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 function GiveUpModal({ isOpen, toggle, onConfirm }) {

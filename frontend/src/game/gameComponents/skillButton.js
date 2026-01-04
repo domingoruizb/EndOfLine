@@ -1,31 +1,43 @@
-import { setUpSkill } from '../gameUtils/apiUtils.js';
+import { setUpSkill } from '../gameUtils/api'
 
 export default function SkillButton ({
     skill,
-    gameId,
-    userId,
-    isDisabled,
-    activeSkill
+    game,
+    requestMoreCards
 }) {
-    const handleClick = () => {
-        if (!isDisabled) {
-            const formattedSkill = skill.toUpperCase().replace(' ', '_');
-            setUpSkill(formattedSkill, gameId, userId);
-        }
-    };
+    const enabled = skill === 'Reverse' ? (
+        game.skillsAvailable && game.reversible?.length > 0
+    ) : (
+        game.skillsAvailable
+    )
 
-    const buttonSkillName = skill.toUpperCase().replace(' ', '_');
-    const isActive = activeSkill === buttonSkillName;
+    const formattedSkill = skill.toUpperCase().replace(' ', '_')
+
+    const handleClick = async () => {
+        if (enabled) {
+            await setUpSkill(formattedSkill, game.gameId, game.userId)
+
+            if (formattedSkill === 'EXTRA_GAS') {
+                await requestMoreCards()
+            }
+        }
+    }
+
+    const buttonSkillName = skill.toUpperCase().replace(' ', '_')
+    const isActive = game.skill === buttonSkillName
 
     const buttonClasses = `skill-button 
-        ${isDisabled ? 'skill-button-disabled' : ''} 
+        ${!enabled ? 'skill-button-disabled' : ''} 
         ${isActive ? 'skill-button-active' : ''}
-    `;
+    `
     return (
         <button
             className={buttonClasses}
             onClick={handleClick}
-            disabled={isDisabled}
+            disabled={!enabled}
+            style={{
+                border: formattedSkill === 'REVERSE'  ? '2px dashed #00BCD4' : '2px solid var(--main-orange-color)'
+            }}
         >
             {skill}
         </button>

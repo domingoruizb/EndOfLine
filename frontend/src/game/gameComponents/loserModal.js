@@ -1,7 +1,6 @@
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
-function LoserModal({ isOpen, toggle, onConfirm }) {
+export default function LoserModal({ isOpen, toggle, onConfirm }) {
     return (
         <Modal 
             isOpen={isOpen} 
@@ -51,7 +50,5 @@ function LoserModal({ isOpen, toggle, onConfirm }) {
                 </Button>
             </ModalFooter>
         </Modal>
-    );
+    )
 }
-
-export default LoserModal;

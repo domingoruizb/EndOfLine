@@ -1,12 +1,14 @@
 package es.us.dp1.lx_xy_24_25.endofline.board;
 
 import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardCardDTO;
+import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardPlaceDTO;
 import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardPlayerDTO;
 import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardStateDTO;
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.configuration.DecodeJWT;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
@@ -35,18 +37,21 @@ public class BoardRestController {
     private final GamePlayerService gamePlayerService;
     private final BoardService boardService;
     private final GamePlayerCardService gamePlayerCardService;
+    private final GameService gameService;
 
     @Autowired
     public BoardRestController(
         CardService cardService,
         GamePlayerService gamePlayerService,
         BoardService boardService,
-        GamePlayerCardService gamePlayerCardService
+        GamePlayerCardService gamePlayerCardService,
+        GameService gameService
     ) {
         this.cardService = cardService;
         this.gamePlayerService = gamePlayerService;
         this.boardService = boardService;
         this.gamePlayerCardService = gamePlayerCardService;
+        this.gameService = gameService;
     }
 
     @GetMapping("/{gameId}/state")
@@ -90,6 +95,8 @@ public class BoardRestController {
         )).toList();
 
         LocalDateTime startedAt = gamePlayer.getGame().getStartedAt();
+        LocalDateTime endedAt = gamePlayer.getGame().getEndedAt();
+        User winner = gamePlayer.getGame().getWinner();
 
         List<BoardCardDTO> cards = board.stream().map(c -> new BoardCardDTO(
             c.getGamePlayer().getId(),
@@ -100,18 +107,25 @@ public class BoardRestController {
         )).toList();
 
         Skill skill = isTurn ? gamePlayer.getGame().getSkill() : null;
+        Boolean skillsAvailable = isTurn && round > 1 && skill == null && gamePlayer.getCardsPlayedThisRound() == 0;
+        Boolean deckChangeAvailable = gamePlayer.getDeckRequests() < 2 && gamePlayer.getGame().getRound() < 2;
 
         BoardStateDTO boardStateDTO = new BoardStateDTO(
             user.getId(),
             gamePlayer.getGame().getId(),
             gamePlayer.getId(),
             startedAt,
-            placeablePositions,
+            endedAt,
+            winner != null ? winner.getId() : null,
+            // Return reversible positions if REVERSE skill is active, otherwise placeable positions
+            skill == Skill.REVERSE ? reversiblePositions : placeablePositions,
             reversiblePositions,
             energy,
             turn,
             round,
             skill,
+            skillsAvailable,
+            deckChangeAvailable,
             players,
             cards
         );
@@ -133,12 +147,11 @@ public class BoardRestController {
 
         // Check if deck is empty and if deck change is allowed
         if (deck.isEmpty()) {
-            if (!gamePlayer.getCanRequestDeckChange()) {
+            if (gamePlayer.getDeckRequests() >= 2) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
             if (gamePlayer.getGame().getRound() > 1) {
-                boardService.disableDeckChange(gamePlayer);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
@@ -169,15 +182,14 @@ public class BoardRestController {
         fullDeck.addAll(newCards);
 
         // Disable further deck changes for this game player
-        boardService.disableDeckChange(gamePlayer);
+        boardService.increaseDeckRequests(gamePlayer);
         return new ResponseEntity<>(fullDeck, HttpStatus.OK);
     }
 
-    // TODO: Not used in frontend
     @PostMapping("/{gameId}/place")
     public ResponseEntity<GamePlayerCard> placeCard (
         @PathVariable Integer gameId,
-        @RequestBody GamePlayerCardDTO gamePlayerCardDTO
+        @RequestBody BoardPlaceDTO boardPlaceDTO
     ) {
         User user = DecodeJWT.getUserFromJWT();
         GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
@@ -190,17 +202,11 @@ public class BoardRestController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        Card card = cardService.findByImage(gamePlayerCardDTO.getImage());
+        Card card = cardService.findById(boardPlaceDTO.getCardId());
 
-        GamePlayerCard gamePlayerCard = GamePlayerCard.build(
-            gamePlayerCardDTO,
-            gamePlayer,
-            card
-        );
+        boardService.placeCard(gamePlayer, card, boardPlaceDTO.getIndex());
 
-        GamePlayerCard saved = boardService.placeCard(gamePlayerCard);
-
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

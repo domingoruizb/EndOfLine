@@ -298,6 +298,12 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    @Transactional
+    public void clearSkill(Game game) {
+        game.setSkill(null);
+        gameRepository.save(game);
+    }
+
     private Integer determineNextTurnByInitiative(Game game) {
         List<GamePlayer> players = game.getGamePlayers();
         GamePlayer player1 = players.get(0);

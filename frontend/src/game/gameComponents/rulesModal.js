@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import RulesPage from '../../public/rules';
 

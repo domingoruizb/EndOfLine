@@ -1,7 +1,6 @@
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
-function WinnerModal({ isOpen, toggle, onConfirm }) {
+export default function WinnerModal({ isOpen, toggle, onConfirm }) {
     return (
         <Modal 
             isOpen={isOpen} 
@@ -51,7 +50,5 @@ function WinnerModal({ isOpen, toggle, onConfirm }) {
                 </Button>
             </ModalFooter>
         </Modal>
-    );
+    )
 }
-
-export default WinnerModal;

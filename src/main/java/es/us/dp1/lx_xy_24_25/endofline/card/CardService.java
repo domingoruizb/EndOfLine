@@ -29,6 +29,12 @@ public class CardService {
 	}
 
     @Transactional(readOnly = true)
+    public Card findById(Integer id) {
+        return cardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Card with id " + id + " not found"));
+    }
+
+    @Transactional(readOnly = true)
     public Card findByImage(String image) {
         Card card = cardRepository.findByImage(image);
 

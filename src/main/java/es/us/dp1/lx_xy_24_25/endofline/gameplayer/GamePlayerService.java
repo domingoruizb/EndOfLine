@@ -68,6 +68,15 @@ public class GamePlayerService {
         return gamePlayer.getGame().getHost().getId().equals(gamePlayer.getUser().getId());
     }
 
+    @Transactional(readOnly = true)
+    public GamePlayer getOpponent(GamePlayer gamePlayer) {
+        return gamePlayer.getGame().getGamePlayers()
+            .stream()
+            .filter(gp -> !gp.getId().equals(gamePlayer.getId()))
+            .findFirst()
+            .orElse(null);
+    }
+
     @Transactional
     public GamePlayer updateGamePlayer(GamePlayer gamePlayer) {
         return gamePlayerRepository.save(gamePlayer);

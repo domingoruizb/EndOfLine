@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.board;
 
+import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameRepository;
@@ -42,47 +43,66 @@ public class BoardService {
         return gamePlayerCardRepository.findByGameId(gameId);
     }
 
-    // TODO: Implement
-    public GamePlayerCard placeCard (
-        GamePlayerCard selectedCard
+    // TODO: Implement further ideas
+    public void placeCard (
+        GamePlayer gamePlayer,
+        Card card,
+        Integer index
     ) {
-        Integer index = BoardUtils.getIndex(
-            selectedCard.getPositionX(),
-            selectedCard.getPositionY()
-        );
-
-        GamePlayer gamePlayer = selectedCard.getGamePlayer();
         Game game = gamePlayer.getGame();
         User user = gamePlayer.getUser();
 
-        GamePlayerCard lastPlacedCard = gamePlayerCardService.getLastPlacedCard(gamePlayer);
+        // Get the reference card to continue from (either reverse card or last placed)
+        Boolean isReversing = game.getSkill() == Skill.REVERSE;
+        GamePlayerCard referenceCard = isReversing
+            ? getReverseCard(gamePlayer)
+            : gamePlayerCardService.getLastPlacedCard(gamePlayer);
 
         if (!getIsPlacementValid(
             index,
-            selectedCard,
             gamePlayer,
-            game
+            referenceCard
         )) {
             throw new IllegalArgumentException("Invalid card placement");
         }
 
-        Integer rotation = BoardUtils.getRotation(index, lastPlacedCard);
+        Integer rotation = BoardUtils.getRotation(index, referenceCard);
+        GamePlayerCard selectedCard = GamePlayerCard.build(
+            gamePlayer,
+            card,
+            index,
+            rotation
+        );
 
-        selectedCard.setRotation(rotation);
+        gamePlayerCardRepository.save(selectedCard);
 
-        GamePlayerCard placed = gamePlayerCardRepository.save(selectedCard);
+        // Clear REVERSE skill after using it (it's a one-time use per activation)
+        if (isReversing) {
+            gameService.clearSkill(game);
+        }
 
         List<GamePlayerCard> board = getBoard(game.getId());
+
+        // Check if current player has valid moves
         List<Integer> validIndexes = BoardUtils.getValidIndexes(
             selectedCard,
             board
         );
 
-        if (validIndexes.isEmpty()) {
+        List<Integer> reversiblePositions = getReversiblePositions(gamePlayer);
+
+        if (validIndexes.isEmpty() && reversiblePositions.isEmpty()) {
             gameService.giveUpOrLose(
                 game.getId(),
                 user.getId()
             );
+        }
+
+        // Check if opponent has valid moves (they might be blocked)
+        GamePlayer opponent = gamePlayerService.getOpponent(gamePlayer);
+
+        if (opponent != null) {
+            checkOpponent(game, opponent, board);
         }
 
         gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
@@ -91,53 +111,49 @@ public class BoardService {
         if (isTurnFinished) {
             gameService.advanceTurn(game);
         }
+    }
 
-        return placed;
+    public void checkOpponent (Game game, GamePlayer opponent, List<GamePlayerCard> board) {
+        GamePlayerCard opponentLastCard = gamePlayerCardService.getLastPlacedCard(opponent);
+
+        if (opponentLastCard != null) {
+            List<Integer> opponentValidIndexes = BoardUtils.getValidIndexes(opponentLastCard, board);
+            List<Integer> opponentReversiblePositions = getReversiblePositions(opponent);
+
+            if (opponentValidIndexes.isEmpty() && opponentReversiblePositions.isEmpty()) {
+                gameService.giveUpOrLose(
+                    game.getId(),
+                    opponent.getUser().getId()
+                );
+            }
+        }
     }
 
     public Boolean getIsPlacementValid (
         Integer selectedIndex,
-        GamePlayerCard selectedCard,
         GamePlayer gamePlayer,
-        Game game
+        GamePlayerCard referenceCard
     ) {
-        List<GamePlayerCard> board = getBoard(game.getId());
-        List<GamePlayerCard> lastPlacedCards = gamePlayerCardService.getLastPlacedCards(gamePlayer);
+        List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
         Boolean isHost = gamePlayerService.isHost(gamePlayer);
 
-        if (selectedCard == null) {
-            return false;
-        }
-
-        if (lastPlacedCards.isEmpty()) {
+        // First card placement - check initial valid positions
+        if (referenceCard == null) {
             if (!BoardUtils.getInitialValidIndexes(isHost).contains(selectedIndex)) {
                 return false;
             }
+
+            return true;
         }
 
-        BoardPosition coordinates = BoardUtils.getCoordinates(selectedIndex);
-        Boolean isStart = BoardUtils.INITIAL_POSITIONS
-            .stream()
-            .anyMatch(pos ->
-                pos.getFirst().equals(coordinates.row()) &&
-                pos.getLast().equals(coordinates.col())
-            );
-
-        if (game.getSkill().equals(Skill.REVERSE)) {
-            List<Integer> reversiblePositions = getReversiblePositions(gamePlayer);
-            if (reversiblePositions.contains(selectedIndex)) {
-                return !isStart && BoardUtils.getIsIndexEmpty(selectedIndex, board);
-            }
-        }
-
-        GamePlayerCard lastPlacedCard = lastPlacedCards.getFirst();
-        List<Integer> validIndexes = BoardUtils.getValidIndexes(lastPlacedCard, board);
+        // Get valid indexes from the reference card (could be last placed or reverse card)
+        List<Integer> validIndexes = BoardUtils.getValidIndexes(referenceCard, board);
 
         if (!validIndexes.contains(selectedIndex)) {
             return false;
         }
 
-        return !isStart && BoardUtils.getIsIndexEmpty(selectedIndex, board);
+        return BoardUtils.getIsIndexEmpty(selectedIndex, board);
     }
 
     // TODO: Possibly remove
@@ -164,7 +180,7 @@ public class BoardService {
 
         GamePlayerCard lastPlacedCard = lastPlacedCards.getFirst();
 
-        for (Integer i = lastPlacedCards.size() - 2; i >= 0; i--) {
+        for (Integer i = 1; i < lastPlacedCards.size(); i++) {
             GamePlayerCard candidate = lastPlacedCards.get(i);
 
             if (BoardUtils.getIsConnected(candidate, lastPlacedCard)) {
@@ -186,16 +202,18 @@ public class BoardService {
 
         List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
 
-        return BoardUtils.getValidIndexes(
+        // If player has no energy left, they can't use REVERSE skill
+        return gamePlayer.getEnergy() > 0 ? BoardUtils.getValidIndexes(
             reverseCard,
             board
-        );
+        ) : List.of();
     }
 
-    public void disableDeckChange (
+    public void increaseDeckRequests (
         GamePlayer gamePlayer
     ) {
-        gamePlayer.setCanRequestDeckChange(false);
+        Integer deckRequests = gamePlayer.getDeckRequests();
+        gamePlayer.setDeckRequests(deckRequests == null ? 1 : deckRequests + 1);
         gamePlayerService.updateGamePlayer(gamePlayer);
     }
 }

@@ -7,11 +7,16 @@
     --side-container-width: 25vw;
 }
 
+html,
+body {
+    background-color: #121212;
+}
+
 /* Page container */
 .game-page-container {
     display: grid;
     grid-template-columns: var(--side-container-width) 1fr var(--side-container-width); 
-    height: 92vh; 
+    min-height: 92vh; 
     background-color: #121212;
     justify-items: center;
     overflow: hidden;

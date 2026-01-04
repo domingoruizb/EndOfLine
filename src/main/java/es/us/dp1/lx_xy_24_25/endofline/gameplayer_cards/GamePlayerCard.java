@@ -2,6 +2,10 @@ package es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards;
 
 import java.time.LocalDateTime;
 
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardPosition;
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardRotation;
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
+import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardPlaceDTO;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
@@ -59,6 +63,25 @@ public class GamePlayerCard extends BaseEntity {
         gamePlayerCard.setPositionX(gamePlayerCardDTO.getPositionX());
         gamePlayerCard.setPositionY(gamePlayerCardDTO.getPositionY());
         gamePlayerCard.setRotation(gamePlayerCardDTO.getRotation());
+        gamePlayerCard.setPlacedAt(LocalDateTime.now());
+
+        return gamePlayerCard;
+    }
+
+    public static GamePlayerCard build (
+        GamePlayer gamePlayer,
+        Card card,
+        Integer index,
+        Integer rotation
+    ) {
+        GamePlayerCard gamePlayerCard = new GamePlayerCard();
+
+        BoardPosition position = BoardUtils.getCoordinates(index);
+        gamePlayerCard.setCard(card);
+        gamePlayerCard.setGamePlayer(gamePlayer);
+        gamePlayerCard.setPositionX(position.row());
+        gamePlayerCard.setPositionY(position.col());
+        gamePlayerCard.setRotation(rotation);
         gamePlayerCard.setPlacedAt(LocalDateTime.now());
 
         return gamePlayerCard;

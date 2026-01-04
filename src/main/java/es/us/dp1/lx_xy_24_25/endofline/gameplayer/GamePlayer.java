@@ -39,8 +39,7 @@ public class GamePlayer extends BaseEntity {
     @Min(0)
     private Integer cardsPlayedThisRound = 0;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean canRequestDeckChange = true;
+    private Integer deckRequests = 0;
 
     @ElementCollection
     @CollectionTable(name = "game_player_skills", joinColumns = @JoinColumn(name = "game_player_id"))

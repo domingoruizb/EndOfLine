@@ -11,7 +11,7 @@ const COLOR_MAP = {
   WHITE: '#C5C6C6'    
 }
 
-export default function GameChat ({ gameId, jwt, user }) {
+export default function GameChat ({ game, jwt }) {
   const [messages, setMessages] = useState([])
   const [playerColors, setPlayerColors] = useState({}) // state to store username -> color mapping
   const [text, setText] = useState('')
@@ -27,7 +27,7 @@ export default function GameChat ({ gameId, jwt, user }) {
     // fetch players once on mount to get their colors
     async function fetchPlayers() {
       try {
-        const res = await fetch(`/api/v1/games/${gameId}`, {
+        const res = await fetch(`/api/v1/games/${game.gameId}`, {
           headers: { Authorization: `Bearer ${jwt}` }
         })
         if (res.ok) {
@@ -68,11 +68,11 @@ export default function GameChat ({ gameId, jwt, user }) {
       cancelled = true
       mounted.current = false
     }
-  }, [gameId, jwt])
+  }, [game.gameId, jwt])
 
   async function fetchMessages () {
     try {
-      const res = await fetch(`/api/v1/games/${gameId}/chat/messages?since=${lastTs}`, {
+      const res = await fetch(`/api/v1/games/${game.gameId}/chat/messages?since=${lastTs}`, {
         headers: {
           Authorization: `Bearer ${jwt}`
         }
@@ -113,7 +113,7 @@ export default function GameChat ({ gameId, jwt, user }) {
     if (!t) return
     setText('')
     try {
-      const res = await fetch(`/api/v1/games/${gameId}/chat`, {
+      const res = await fetch(`/api/v1/games/${game.gameId}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ export default function GameChat ({ gameId, jwt, user }) {
     }
   }
 
-  const senderName = user?.username || user?.name || user?.id
+  const senderName = game?.players?.find(p => p.userId === game.userId)?.username || null
 
   return (
     <div className='game-chat' style={{ width: '280px' }}>
