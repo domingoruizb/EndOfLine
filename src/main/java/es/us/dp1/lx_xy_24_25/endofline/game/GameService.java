@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
@@ -215,7 +216,7 @@ public class GameService {
 
         int finalCardsPerTurnLimit = cardsPerTurnLimit;
         boolean allPlayersFinished = players.stream()
-            .allMatch(gp -> gp.getCardsPlayedThisRound() >= finalCardsPerTurnLimit);
+            .allMatch(BoardUtils::getIsTurnFinished);
 
         if (allPlayersFinished) {
             startNextRound(game, players);
