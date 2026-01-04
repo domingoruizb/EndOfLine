@@ -16,7 +16,6 @@ export function useDeck (gameId, round) {
             const jwt = tokenService.getLocalAccessToken()
             // Send empty array for new deck, or current deck for more cards
             const body = requestNewDeck ? [] : deckRef.current
-            console.log(body)
 
             const response = await fetch(`/api/v1/board/${gameId}/deck`, {
                 method: 'POST',

@@ -201,12 +201,15 @@ public class BoardService {
         }
 
         List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
+        Game game = gamePlayer.getGame();
 
-        // If player has no energy left, they can't use REVERSE skill
-        return gamePlayer.getEnergy() > 0 ? BoardUtils.getValidIndexes(
-            reverseCard,
-            board
-        ) : List.of();
+        // If REVERSE skill is active, allow reversal regardless of energy
+        if (game.getSkill() == Skill.REVERSE) {
+            return BoardUtils.getValidIndexes(reverseCard, board);
+        }
+
+        // Otherwise, require energy > 0
+        return gamePlayer.getEnergy() > 0 ? BoardUtils.getValidIndexes(reverseCard, board) : List.of();
     }
 
     public void increaseDeckRequests (
