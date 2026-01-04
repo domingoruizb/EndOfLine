@@ -1,7 +1,6 @@
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
-function SpectatorEndModal({ isOpen, toggle, onConfirm, onCancel, winnerUsername }) {
+export default function SpectatorModal ({ isOpen, toggle, onConfirm, onCancel, winnerUsername }) {
     return (
         <Modal 
             isOpen={isOpen} 
@@ -52,7 +51,5 @@ function SpectatorEndModal({ isOpen, toggle, onConfirm, onCancel, winnerUsername
                 </Button>
             </ModalFooter>
         </Modal>
-    );
+    )
 }
-
-export default SpectatorEndModal;

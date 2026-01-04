@@ -4,7 +4,7 @@ import WinnerModal from './WinnerModal'
 import LoserModal from './LoserModal'
 import GiveUpModal from './GiveUpModal'
 import RulesModal from './RulesModal'
-import SpectatorEndModal from './SpectatorEndModal'
+import SpectatorModal from './SpectatorModal'
 import { giveUp } from '../gameUtils/api'
 
 const user = tokenService.getUser()
@@ -42,7 +42,7 @@ export default function Modals ({
                 isOpen={rulesOpen}
                 toggle={toggleRulesModal}
             />
-            <SpectatorEndModal
+            <SpectatorModal
                 isOpen={game.spectating && game.endedAt != null}
                 toggle={() => navigate(isAdmin ? '/games' : '/friends')}
                 onCancel={() => navigate(isAdmin ? '/games' : '/friends')}
