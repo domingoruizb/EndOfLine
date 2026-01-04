@@ -45,7 +45,6 @@ export default function GamePage () {
                 return
             }
 
-            // Place card
             await placeCard(gameId, selected, index)
 
             // Remove placed card from deck
