@@ -3,31 +3,28 @@ package es.us.dp1.lx_xy_24_25.endofline.friendship;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/friendships")
 @Tag(name = "Friendship", description = "API for the management of Friendships")
 public class FriendshipController {
 
-    @Autowired
-    FriendshipService friendshipService;
+    private final FriendshipService friendshipService;
+    private final UserService userService;
 
     @Autowired
-    UserService userService;
+    public FriendshipController (
+        FriendshipService friendshipService,
+        UserService userService
+    ) {
+        this.friendshipService = friendshipService;
+        this.userService = userService;
+    }
 
     @GetMapping("/myFriendships")
     @ResponseStatus(HttpStatus.OK)
@@ -54,15 +51,8 @@ public class FriendshipController {
     public void rejectFriendship(@PathVariable Integer id) {
         friendshipService.rejectFriendShip(id);
     }
-    /*
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Friendship findById(@PathVariable Integer id) {
-        return friendshipService.findById(id);
-    }
-     */
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Friendship create(@RequestBody @Valid FriendshipDTO friendshipDTO) {
         return friendshipService.create(friendshipDTO);

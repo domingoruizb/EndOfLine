@@ -1,11 +1,10 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards;
 
-import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerRepository;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,42 +13,37 @@ public class GamePlayerCardService {
 
     private final GamePlayerCardRepository gamePlayerCardRepository;
 
-    private final GamePlayerService gamePlayerService;
-    private final GameService gameService;
-
     @Autowired
     public GamePlayerCardService(
-        GamePlayerCardRepository gamePlayerCardRepository,
-        GamePlayerService gamePlayerService,
-        GameService gameService
+        GamePlayerCardRepository gamePlayerCardRepository
     ) {
         this.gamePlayerCardRepository = gamePlayerCardRepository;
-        this.gamePlayerService = gamePlayerService;
-        this.gameService = gameService;
     }
 
+    @Transactional(readOnly = true)
     public List<GamePlayerCard> getLastPlacedCards (GamePlayer gamePlayer) {
-        return gamePlayerCardRepository.findLastPlacedCards(gamePlayer);
+        return gamePlayerCardRepository.findLastPlacedCards(gamePlayer.getId());
     }
 
+    @Transactional(readOnly = true)
     public GamePlayerCard getLastPlacedCard (GamePlayer gamePlayer) {
         List<GamePlayerCard> lastPlacedCards = getLastPlacedCards(gamePlayer);
+
         return lastPlacedCards.isEmpty() ? null : lastPlacedCards.getFirst();
     }
 
-    // TODO: Not used anymore on frontend
-    public GamePlayerCard placeCard (
-        GamePlayerCard gamePlayerCard,
-        Boolean isTurnFinished
-    ) {
-        GamePlayerCard saved = gamePlayerCardRepository.save(gamePlayerCard);
+    @Transactional(readOnly = true)
+    public List<GamePlayerCard> getByGame (Game game) {
+        return gamePlayerCardRepository.findByGameId(game.getId());
+    }
 
-        gamePlayerService.incrementCardsPlayedThisRound(gamePlayerCard.getGamePlayer());
+    @Transactional(readOnly = true)
+    public List<Integer> getInitiatives (GamePlayer gamePlayer) {
+        return gamePlayerCardRepository.findInitiatives(gamePlayer.getId());
+    }
 
-        if (isTurnFinished) {
-            gameService.advanceTurn(gamePlayerCard.getGamePlayer().getGame());
-        }
-
-        return saved;
+    @Transactional
+    public GamePlayerCard save (GamePlayerCard gamePlayerCard) {
+        return gamePlayerCardRepository.save(gamePlayerCard);
     }
 }

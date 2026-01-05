@@ -42,13 +42,7 @@ public class BoardUtils {
     public static Boolean getIsIndexEmpty (Integer index, List<GamePlayerCard> board) {
         return board
             .stream()
-            .noneMatch(card ->
-                getIndex(
-                    card.getPositionX(),
-                    card.getPositionY()
-                )
-                    .equals(index)
-            );
+            .noneMatch(card -> getIndex(card.getPositionX(), card.getPositionY()).equals(index));
     }
 
     public static Integer getRotatedBits (Integer bits, Integer rotation) {
@@ -88,10 +82,7 @@ public class BoardUtils {
         }
 
         BoardPosition selectedPos = getCoordinates(index);
-        BoardPosition lastPos = new BoardPosition(
-            lastPlacedCard.getPositionX(),
-            lastPlacedCard.getPositionY()
-        );
+        BoardPosition lastPos = new BoardPosition(lastPlacedCard.getPositionX(), lastPlacedCard.getPositionY());
 
         Integer rowDelta = (selectedPos.row() - lastPos.row() + BOARD_SIZE) % BOARD_SIZE;
         Integer colDelta = (selectedPos.col() - lastPos.col() + BOARD_SIZE) % BOARD_SIZE;
@@ -117,10 +108,6 @@ public class BoardUtils {
 
     public static List<Integer> getValidIndexes (GamePlayerCard lastPlacedCard, List<GamePlayerCard> board) {
         String name = getName(lastPlacedCard);
-
-        if (name.equals("START")) {
-            return List.of();
-        }
 
         Integer lastBits = getNameToBinary(name);
         Integer lastRotatedBits = getRotatedBits(lastBits, lastPlacedCard.getRotation());

@@ -138,7 +138,9 @@ export default function GamePage () {
                                     rotate: getEnergyRotation(game) + 'deg'
                                 }}
                             />
-                            <GameChat game={game} jwt={jwt} />
+                            <GameChat
+                                game={game}
+                            />
                         </>
                     )
                 }

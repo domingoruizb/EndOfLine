@@ -1,8 +1,8 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
 
 import java.util.List;
 import java.util.Optional;

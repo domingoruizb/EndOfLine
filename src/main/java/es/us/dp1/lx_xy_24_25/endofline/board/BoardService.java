@@ -1,119 +1,52 @@
 package es.us.dp1.lx_xy_24_25.endofline.board;
 
+import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardStateDTO;
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
+import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GamePlayerNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.NotValidCardPlacementException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.NotValidDeckRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.NotValidTurnException;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
-import es.us.dp1.lx_xy_24_25.endofline.game.GameRepository;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerUtils;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class BoardService {
 
     private final GamePlayerCardService gamePlayerCardService;
-    GamePlayerCardRepository gamePlayerCardRepository;
-    GameRepository gameRepository;
-    GameService gameService;
-    GamePlayerService gamePlayerService;
+    private final GameService gameService;
+    private final GamePlayerService gamePlayerService;
+    private final CardService cardService;
 
     @Autowired
     public BoardService (
-        GamePlayerCardRepository gamePlayerCardRepository,
-        GameRepository gameRepository,
         GameService gameService,
         GamePlayerService gamePlayerService,
-        GamePlayerCardService gamePlayerCardService) {
-        this.gamePlayerCardRepository = gamePlayerCardRepository;
-        this.gameRepository = gameRepository;
+        GamePlayerCardService gamePlayerCardService,
+        CardService cardService
+    ) {
         this.gameService = gameService;
         this.gamePlayerService = gamePlayerService;
         this.gamePlayerCardService = gamePlayerCardService;
+        this.cardService = cardService;
     }
 
-    public List<GamePlayerCard> getBoard (Integer gameId) {
-        return gamePlayerCardRepository.findByGameId(gameId);
-    }
-
-    // TODO: Implement further ideas
-    public void placeCard (
-        GamePlayer gamePlayer,
-        Card card,
-        Integer index
-    ) {
-        Game game = gamePlayer.getGame();
-        User user = gamePlayer.getUser();
-
-        // Get the reference card to continue from (either reverse card or last placed)
-        Boolean isReversing = game.getSkill() == Skill.REVERSE;
-        GamePlayerCard referenceCard = isReversing
-            ? getReverseCard(gamePlayer)
-            : gamePlayerCardService.getLastPlacedCard(gamePlayer);
-
-        if (!getIsPlacementValid(
-            index,
-            gamePlayer,
-            referenceCard
-        )) {
-            throw new IllegalArgumentException("Invalid card placement");
-        }
-
-        Integer rotation = BoardUtils.getRotation(index, referenceCard);
-        GamePlayerCard selectedCard = GamePlayerCard.build(
-            gamePlayer,
-            card,
-            index,
-            rotation
-        );
-
-        gamePlayerCardRepository.save(selectedCard);
-
-        // Clear REVERSE skill after using it (it's a one-time use per activation)
-        if (isReversing) {
-            gameService.clearSkill(game);
-        }
-
-        List<GamePlayerCard> board = getBoard(game.getId());
-
-        // Check if current player has valid moves
-        List<Integer> validIndexes = BoardUtils.getValidIndexes(
-            selectedCard,
-            board
-        );
-
-        List<Integer> reversiblePositions = getReversiblePositions(gamePlayer);
-
-        if (validIndexes.isEmpty() && reversiblePositions.isEmpty()) {
-            gameService.giveUpOrLose(
-                game.getId(),
-                user.getId()
-            );
-        }
-
-        // Check if opponent has valid moves (they might be blocked)
-        GamePlayer opponent = gamePlayerService.getOpponent(gamePlayer);
-
-        if (opponent != null) {
-            checkOpponent(game, opponent, board);
-        }
-
-        gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
-
-        Boolean isTurnFinished = BoardUtils.getIsTurnFinished(gamePlayer);
-        if (isTurnFinished) {
-            gameService.advanceTurn(game);
-        }
-    }
-
-    public void checkOpponent (Game game, GamePlayer opponent, List<GamePlayerCard> board) {
+    @Transactional(readOnly = true)
+    public void checkOpponent (GamePlayer opponent, List<GamePlayerCard> board) {
         GamePlayerCard opponentLastCard = gamePlayerCardService.getLastPlacedCard(opponent);
 
         if (opponentLastCard != null) {
@@ -122,28 +55,25 @@ public class BoardService {
 
             if (opponentValidIndexes.isEmpty() && opponentReversiblePositions.isEmpty()) {
                 gameService.giveUpOrLose(
-                    game.getId(),
+                    opponent.getGame().getId(),
                     opponent.getUser().getId()
                 );
             }
         }
     }
 
+    @Transactional(readOnly = true)
     public Boolean getIsPlacementValid (
         Integer selectedIndex,
         GamePlayer gamePlayer,
         GamePlayerCard referenceCard
     ) {
-        List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
-        Boolean isHost = gamePlayerService.isHost(gamePlayer);
+        List<GamePlayerCard> board = gamePlayerCardService.getByGame(gamePlayer.getGame());
+        Boolean isHost = GamePlayerUtils.isHost(gamePlayer);
 
         // First card placement - check initial valid positions
         if (referenceCard == null) {
-            if (!BoardUtils.getInitialValidIndexes(isHost).contains(selectedIndex)) {
-                return false;
-            }
-
-            return true;
+            return BoardUtils.getInitialValidIndexes(isHost).contains(selectedIndex);
         }
 
         // Get valid indexes from the reference card (could be last placed or reverse card)
@@ -156,21 +86,7 @@ public class BoardService {
         return BoardUtils.getIsIndexEmpty(selectedIndex, board);
     }
 
-    // TODO: Possibly remove
-//    public Boolean getCanReverse (
-//        GamePlayer gamePlayer
-//    ) {
-//        List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
-//        GamePlayerCard reverseCard = getReverseCard(gamePlayer);
-//
-//        if (reverseCard == null) {
-//            return false;
-//        }
-//
-//        List<Integer> validIndexes = BoardUtils.getValidIndexes(reverseCard, board);
-//        return !validIndexes.isEmpty();
-//    }
-
+    @Transactional(readOnly = true)
     public GamePlayerCard getReverseCard (GamePlayer gamePlayer) {
         List<GamePlayerCard> lastPlacedCards = gamePlayerCardService.getLastPlacedCards(gamePlayer);
 
@@ -191,6 +107,7 @@ public class BoardService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     public List<Integer> getReversiblePositions (
         GamePlayer gamePlayer
     ) {
@@ -200,7 +117,7 @@ public class BoardService {
             return List.of();
         }
 
-        List<GamePlayerCard> board = getBoard(gamePlayer.getGame().getId());
+        List<GamePlayerCard> board = gamePlayerCardService.getByGame(gamePlayer.getGame());
         Game game = gamePlayer.getGame();
 
         // If REVERSE skill is active, allow reversal regardless of energy
@@ -212,11 +129,144 @@ public class BoardService {
         return gamePlayer.getEnergy() > 0 ? BoardUtils.getValidIndexes(reverseCard, board) : List.of();
     }
 
+    @Transactional
     public void increaseDeckRequests (
         GamePlayer gamePlayer
     ) {
         Integer deckRequests = gamePlayer.getDeckRequests();
         gamePlayer.setDeckRequests(deckRequests == null ? 1 : deckRequests + 1);
-        gamePlayerService.updateGamePlayer(gamePlayer);
+    }
+
+    // TODO: Implement further ideas
+    @Transactional
+    public void placeCard (
+        GamePlayer gamePlayer,
+        Card card,
+        Integer index
+    ) {
+        if (!GamePlayerUtils.isValidTurn(gamePlayer)) {
+            throw new NotValidTurnException();
+        }
+
+        Game game = gamePlayer.getGame();
+        User user = gamePlayer.getUser();
+
+        // Get the reference card to continue from (either reverse card or last placed)
+        Boolean isReversing = game.getSkill() == Skill.REVERSE;
+        GamePlayerCard referenceCard = isReversing ? getReverseCard(gamePlayer) : gamePlayerCardService.getLastPlacedCard(gamePlayer);
+
+        if (!getIsPlacementValid(index, gamePlayer, referenceCard)) {
+            throw new NotValidCardPlacementException();
+        }
+
+        Integer rotation = BoardUtils.getRotation(index, referenceCard);
+        GamePlayerCard selectedCard = GamePlayerCard.build(gamePlayer, card, index, rotation);
+
+        gamePlayerCardService.save(selectedCard);
+
+        // Clear REVERSE skill after using it (it's a one-time use per activation)
+        if (isReversing) {
+            game.setSkill(null);
+        }
+
+        List<GamePlayerCard> board = gamePlayerCardService.getByGame(game);
+
+        List<Integer> reversiblePositions = getReversiblePositions(gamePlayer);
+        List<Integer> validIndexes = BoardUtils.getValidIndexes(selectedCard, board);
+
+        if (validIndexes.isEmpty() && reversiblePositions.isEmpty()) {
+            gameService.giveUpOrLose(game.getId(), user.getId());
+        }
+
+        // Check if opponent has valid moves (they might be blocked)
+        GamePlayer opponent = gamePlayerService.getOpponent(gamePlayer);
+
+        if (opponent != null) {
+            checkOpponent(opponent, board);
+        }
+
+        gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
+
+        Boolean isTurnFinished = BoardUtils.getIsTurnFinished(gamePlayer);
+        if (isTurnFinished) {
+            gameService.advanceTurn(game);
+        }
+    }
+
+    @Transactional
+    public List<Card> getDeckCards (
+        GamePlayer gamePlayer,
+        List<Card> deck
+    ) {
+        // Check if deck is empty and if deck change is allowed
+        if (deck.isEmpty() && (gamePlayer.getDeckRequests() >= 2 || gamePlayer.getGame().getRound() > 1)) {
+            throw new NotValidDeckRequestException(gamePlayer);
+        }
+
+        // Check deck size based on active skill
+        Integer totalSize = gamePlayer.getGame().getSkill() == Skill.EXTRA_GAS ? 6 : 5;
+        Integer refillSize = totalSize - deck.size();
+
+        if (refillSize <= 0) {
+            return deck;
+        }
+
+        List<Integer> deckIds = deck.stream().map(Card::getId).toList();
+        List<Card> filteredCards = new ArrayList<>(
+            cardService
+                .getCardsByColor(gamePlayer.getColor().toString())
+                .stream()
+                .filter(card -> !deckIds.contains(card.getId()))
+                .toList()
+        );
+
+        Collections.shuffle(filteredCards);
+
+        List<Card> newCards = filteredCards.stream().limit(refillSize).toList();
+
+        // Add new cards to the existing deck
+        List<Card> fullDeck = new ArrayList<>(deck);
+        fullDeck.addAll(newCards);
+
+        // Disable further deck changes for this game player
+        increaseDeckRequests(gamePlayer);
+
+        return fullDeck;
+    }
+
+    @Transactional
+    public BoardStateDTO getState (
+        GamePlayer gamePlayer,
+        Game game,
+        Boolean isSpectating
+    ) {
+        if (gamePlayer == null) {
+            throw new GamePlayerNotFoundException();
+        }
+
+        GamePlayerCard lastPlacedCard = gamePlayerCardService.getLastPlacedCard(gamePlayer);
+
+        List<GamePlayerCard> board = gamePlayerCardService.getByGame(game);
+
+        Boolean isTurn = GamePlayerUtils.isValidTurn(gamePlayer);
+        Boolean isHost = GamePlayerUtils.isHost(gamePlayer);
+
+        // Don't return placeable positions if it's not the player's turn
+        // If it's the first turn, return initial valid positions
+        // Otherwise, return valid positions based on the last placed card
+        List<Integer> placeablePositions = isTurn ? (
+            lastPlacedCard != null ? BoardUtils.getValidIndexes(lastPlacedCard, board) : BoardUtils.getInitialValidIndexes(isHost)
+        ) : List.of();
+
+        // Only return reversible positions if it's the player's turn
+        List<Integer> reversiblePositions = isTurn && lastPlacedCard != null ? getReversiblePositions(gamePlayer) : List.of();
+
+        return BoardStateDTO.build(
+            gamePlayer,
+            board,
+            placeablePositions,
+            reversiblePositions,
+            isSpectating
+        );
     }
 }

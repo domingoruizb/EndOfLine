@@ -1,25 +1,25 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
 import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.SkillUsage;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 
 @Service
 public class GameService {
@@ -29,6 +29,7 @@ public class GameService {
     private final UserService userService;
     private final GamePlayerService gamePlayerService;
     private final AchievementUnlockService achievementUnlockService;
+    private final GamePlayerCardService gamePlayerCardService;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 6;
@@ -39,13 +40,15 @@ public class GameService {
         UserService userService,
         GamePlayerService gamePlayerService,
         GamePlayerCardRepository gpcRepository,
-        AchievementUnlockService achievementUnlockService
+        AchievementUnlockService achievementUnlockService,
+        GamePlayerCardService gamePlayerCardService
     ) {
         this.gameRepository = gameRepository;
         this.gpcRepository = gpcRepository;
         this.userService = userService;
         this.gamePlayerService = gamePlayerService;
         this.achievementUnlockService = achievementUnlockService;
+        this.gamePlayerCardService = gamePlayerCardService;
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +59,7 @@ public class GameService {
     @Transactional(readOnly = true)
     public Game getGameById(Integer id) {
         return gameRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Game", "id", id));
+            .orElseThrow(() -> new GameNotFoundException(id));
     }
 
     @Transactional(readOnly = true)
@@ -204,19 +207,7 @@ public class GameService {
 
         if (players.size() != 2) return;
 
-        GamePlayer currentPlayer = players.stream()
-            .filter(gp -> gp.getUser().getId().equals(game.getTurn()))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Current player not found."));
-
-        int cardsPerTurnLimit = getCardsPerTurnLimit(game, currentPlayer);
-        boolean isSkillUsed = checkIfSkillUsedAndReset(game, currentPlayer.getCardsPlayedThisRound());
-        if (isSkillUsed) {
-            cardsPerTurnLimit = getCardsPerTurnLimit(game, currentPlayer);
-        }
-
-        int finalCardsPerTurnLimit = cardsPerTurnLimit;
-        boolean allPlayersFinished = players.stream()
+        Boolean allPlayersFinished = players.stream()
             .allMatch(BoardUtils::getIsTurnFinished);
 
         if (allPlayersFinished) {
@@ -228,51 +219,24 @@ public class GameService {
         gameRepository.save(game);
     }
 
-    private int getCardsPerTurnLimit(Game game, GamePlayer player) {
-        return game.getRound() == 1 ? 1 : 2;
-    }
-
-    private void startNextRound(Game game, List<GamePlayer> players) {
+    @Transactional
+    public void startNextRound(Game game, List<GamePlayer> players) {
         game.setRound(game.getRound() + 1);
-        players.forEach(gp -> gp.setCardsPlayedThisRound(0));
+        players.forEach(gamePlayerService::resetCardsPlayedThisRound);
         game.setSkill(null);
 
-        if (game.getRound() > 1) {
-            game.setTurn(determineNextTurnByInitiative(game));
-        } else {
-            game.setTurn(game.getHost().getId());
-        }
+        game.setTurn(game.getRound() > 1 ?
+            determineNextTurnByInitiative(game) :
+            game.getHost().getId()
+        );
     }
 
-    private void advanceToNextPlayer(Game game, List<GamePlayer> players) {
-        Integer nextPlayerId = players.stream()
-            .filter(gp -> !gp.getUser().getId().equals(game.getTurn()))
-            .findFirst()
-            .map(gp -> gp.getUser().getId())
-            .orElseThrow(() -> new IllegalStateException("Missing opponent in game"));
+    @Transactional
+    public void advanceToNextPlayer(Game game, List<GamePlayer> players) {
+        GamePlayer nextPlayer = gamePlayerService.getNextPlayer(game);
 
         game.setSkill(null);
-        game.setTurn(nextPlayerId);
-    }
-
-    private boolean checkIfSkillUsedAndReset(Game game, int cardsPlayedAfterPlacement) {
-        if (game.getSkill() != null) {
-            int skillLimit;
-
-            if (game.getSkill() == Skill.SPEED_UP) {
-                skillLimit = 3;
-            } else if (game.getSkill() == Skill.BRAKE) {
-                skillLimit = 1;
-            } else {
-                return false;
-            }
-
-            if (cardsPlayedAfterPlacement >= skillLimit) {
-                game.setSkill(null);
-                return true;
-            }
-        }
-        return false;
+        game.setTurn(nextPlayer.getUser().getId());
     }
 
     @Transactional
@@ -304,9 +268,8 @@ public class GameService {
     }
 
     @Transactional
-    public void clearSkill(Game game) {
+    public void setSkillToNull (Game game) {
         game.setSkill(null);
-        gameRepository.save(game);
     }
 
     private Integer determineNextTurnByInitiative(Game game) {
@@ -314,78 +277,101 @@ public class GameService {
         GamePlayer player1 = players.get(0);
         GamePlayer player2 = players.get(1);
 
-        GamePlayerCard lastCard1 = getLastCard(player1);
-        GamePlayerCard lastCard2 = getLastCard(player2);
+        List<Integer> initiatives1 = gamePlayerCardService.getInitiatives(player1);
+        List<Integer> initiatives2 = gamePlayerCardService.getInitiatives(player2);
 
-        if (lastCard1 == null || lastCard2 == null) {
+        if (initiatives1.isEmpty() || initiatives2.isEmpty()) {
             return game.getHost().getId();
         }
 
-        Integer initiative1 = lastCard1.getCard().getInitiative();
-        Integer initiative2 = lastCard2.getCard().getInitiative();
+        int minHistorySize = Math.min(initiatives1.size(), initiatives2.size());
 
-        if (initiative1 < initiative2) {
-            return player1.getUser().getId();
-        } else if (initiative2 < initiative1) {
-            return player2.getUser().getId();
-        } else {
+        for (int i = 0; i < minHistorySize; i++) {
+            Integer init1 = initiatives1.get(i);
+            Integer init2 = initiatives2.get(i);
 
-            if (game.getRound() == 1) {
-                return game.getHost().getId();
-            } else {
-                return comparePreviousCardsRecursively(player1, player2);
+            if (init1 < init2) {
+                return player1.getUser().getId();
+            } else if (init2 < init1) {
+                return player2.getUser().getId();
             }
         }
+
+        // If all cards compared are equal or no cards exist, default to host
+        return game.getHost().getId();
     }
 
-    private Integer comparePreviousCardsRecursively(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
+    // TODO: Possibly remove
+//    private Integer determineNextTurnByInitiative(Game game) {
+//        List<GamePlayer> players = game.getGamePlayers();
+//        GamePlayer player1 = players.get(0);
+//        GamePlayer player2 = players.get(1);
+//
+//        GamePlayerCard lastCard1 = gamePlayerCardService.getLastPlacedCard(player1);
+//        GamePlayerCard lastCard2 = gamePlayerCardService.getLastPlacedCard(player2);
+//
+//        if (lastCard1 == null || lastCard2 == null) {
+//            return game.getHost().getId();
+//        }
+//
+//        Integer initiative1 = lastCard1.getCard().getInitiative();
+//        Integer initiative2 = lastCard2.getCard().getInitiative();
+//
+//        if (initiative1 < initiative2) {
+//            return player1.getUser().getId();
+//        } else if (initiative2 < initiative1) {
+//            return player2.getUser().getId();
+//        } else {
+//
+//            if (game.getRound() == 1) {
+//                return game.getHost().getId();
+//            } else {
+//                return comparePreviousCardsRecursively(player1, player2);
+//            }
+//        }
+//    }
+//
+//    private Integer comparePreviousCardsRecursively(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
+//
+//        List<GamePlayerCard> cards1 = gamePlayerCardService.getLastPlacedCards(gamePlayer1);
+//        List<GamePlayerCard> cards2 = gamePlayerCardService.getLastPlacedCards(gamePlayer2);
+//
+//        if (cards1.size() <= 1 && cards2.size() <= 1) {
+//            Game game = gamePlayer1.getGame();
+//            return game.getHost().getId();
+//        }
+//
+//        int index = 1;
+//
+//        while (true) {
+//            boolean hasCard1 = cards1.size() > index;
+//            boolean hasCard2 = cards2.size() > index;
+//
+//            if (!hasCard1 && !hasCard2) {
+//                Game game = gamePlayer1.getGame();
+//                return game.getHost().getId();
+//            }
+//
+//            if (hasCard1 && !hasCard2) {
+//                return cards1.size() > cards2.size() ?
+//                    cards2.get(0).getGamePlayer().getUser().getId() : cards1.get(0).getGamePlayer().getUser().getId();
+//            }
+//
+//            if (!hasCard1 && hasCard2) {
+//                return cards2.size() > cards1.size() ?
+//                    cards1.get(0).getGamePlayer().getUser().getId() : cards2.get(0).getGamePlayer().getUser().getId();
+//            }
+//
+//            Integer initiative1 = cards1.get(index).getCard().getInitiative();
+//            Integer initiative2 = cards2.get(index).getCard().getInitiative();
+//
+//            if (initiative1 < initiative2) {
+//                return cards1.get(index).getGamePlayer().getUser().getId();
+//            } else if (initiative2 < initiative1) {
+//                return cards2.get(index).getGamePlayer().getUser().getId();
+//            }
+//            index++;
+//        }
+//    }
 
-        List<GamePlayerCard> cards1 = getCards(gamePlayer1);
-        List<GamePlayerCard> cards2 = getCards(gamePlayer2);
-
-        if (cards1.size() <= 1 && cards2.size() <= 1) {
-            Game game = gamePlayer1.getGame();
-            return game.getHost().getId();
-        }
-
-        int index = 1;
-
-        while (true) {
-            boolean hasCard1 = cards1.size() > index;
-            boolean hasCard2 = cards2.size() > index;
-
-            if (!hasCard1 && !hasCard2) {
-                Game game = gamePlayer1.getGame();
-                return game.getHost().getId();
-            }
-
-            if (hasCard1 && !hasCard2) {
-                return cards1.size() > cards2.size() ?
-                    cards2.get(0).getGamePlayer().getUser().getId() : cards1.get(0).getGamePlayer().getUser().getId();
-            }
-
-            if (!hasCard1 && hasCard2) {
-                return cards2.size() > cards1.size() ?
-                    cards1.get(0).getGamePlayer().getUser().getId() : cards2.get(0).getGamePlayer().getUser().getId();
-            }
-
-            Integer initiative1 = cards1.get(index).getCard().getInitiative();
-            Integer initiative2 = cards2.get(index).getCard().getInitiative();
-
-            if (initiative1 < initiative2) {
-                return cards1.get(index).getGamePlayer().getUser().getId();
-            } else if (initiative2 < initiative1) {
-                return cards2.get(index).getGamePlayer().getUser().getId();
-            }
-            index++;
-        }
-    }
-
-    public GamePlayerCard getLastCard(GamePlayer gamePlayer) {
-        return gpcRepository.findPlacedCards(gamePlayer.getId()).getFirst();
-    }
-
-    public List<GamePlayerCard> getCards(GamePlayer gamePlayer) {
-        return gpcRepository.findPlacedCards(gamePlayer.getId());
-    }
 }

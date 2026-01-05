@@ -1,6 +1,8 @@
 package es.us.dp1.lx_xy_24_25.endofline.board.dto;
 
+import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +31,18 @@ public class BoardCardDTO {
         this.rotation = rotation;
         this.placedAt = placedAt;
         this.card = card;
+    }
+
+    public static BoardCardDTO build (
+        GamePlayerCard gamePlayerCard
+    ) {
+        return new BoardCardDTO(
+            gamePlayerCard.getGamePlayer().getId(),
+            BoardUtils.getIndex(gamePlayerCard.getPositionX(), gamePlayerCard.getPositionY()),
+            gamePlayerCard.getRotation(),
+            gamePlayerCard.getPlacedAt(),
+            gamePlayerCard.getCard()
+        );
     }
 
 }

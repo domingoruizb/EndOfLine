@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.board.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,10 @@ import lombok.Setter;
 @Setter
 public class BoardPlaceDTO {
 
+    @NotNull
     private Integer cardId;
+
+    @NotNull
     private Integer index;
 
     public BoardPlaceDTO(

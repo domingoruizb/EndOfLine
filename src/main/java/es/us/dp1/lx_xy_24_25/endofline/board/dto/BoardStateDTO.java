@@ -1,7 +1,10 @@
 package es.us.dp1.lx_xy_24_25.endofline.board.dto;
 
-import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerUtils;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,6 +79,39 @@ public class BoardStateDTO {
         this.players = players;
         this.cards = cards;
         this.spectating = spectating;
+    }
+
+    public static BoardStateDTO build (
+        GamePlayer gamePlayer,
+        List<GamePlayerCard> board,
+        List<Integer> placeable,
+        List<Integer> reversible,
+        Boolean spectating
+    ) {
+        Game game = gamePlayer.getGame();
+        User winner = gamePlayer.getGame().getWinner();
+        Skill skill = GamePlayerUtils.isValidTurn(gamePlayer) ? game.getSkill() : null;
+
+        return new BoardStateDTO(
+            gamePlayer.getUser().getId(),
+            game.getId(),
+            gamePlayer.getId(),
+            game.getStartedAt(),
+            game.getEndedAt(),
+            winner != null ? winner.getId() : null,
+            // Return reversible positions if REVERSE skill is active, otherwise placeable positions
+            skill == Skill.REVERSE ? reversible : placeable,
+            reversible,
+            gamePlayer.getEnergy(),
+            game.getTurn(),
+            game.getRound(),
+            skill,
+            GamePlayerUtils.isSkillAvailable(gamePlayer),
+            GamePlayerUtils.isDeckChangeAvailable(gamePlayer),
+            game.getGamePlayers().stream().map(BoardPlayerDTO::build).toList(),
+            board.stream().map(BoardCardDTO::build).toList(),
+            spectating
+        );
     }
 
 }

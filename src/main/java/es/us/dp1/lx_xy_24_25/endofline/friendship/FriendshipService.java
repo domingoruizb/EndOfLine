@@ -1,26 +1,19 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
-import static org.junit.Assert.fail;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
+import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserRepository;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FriendshipService {
@@ -63,12 +56,8 @@ public class FriendshipService {
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findFriendshipsByUserId(Integer id, FriendStatus friendState)
-            throws DataAccessException {
-        Iterable<Friendship> friendships = friendshipRepository.findFriendshipsByUserId(id);
-        return StreamSupport.stream(friendships.spliterator(), false)
-                .filter(friendship -> friendship.getFriendState().equals(friendState))
-                .collect(Collectors.toList());
+    public List<Friendship> getFriendships(User user, FriendStatus state) {
+        return friendshipRepository.findFriendshipsByUser(user.getId(), state);
     }
 
     private Boolean checkFriendship(Integer sender_id, Integer receiver_id) throws DataAccessException {

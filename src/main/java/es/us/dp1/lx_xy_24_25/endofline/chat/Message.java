@@ -1,11 +1,13 @@
 package es.us.dp1.lx_xy_24_25.endofline.chat;
 
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.model.BaseEntity;
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.Instant;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
@@ -17,26 +19,22 @@ public class Message extends BaseEntity {
     private String body;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime sentAt;
 
     @ManyToOne
-    @JoinColumn(name = "game_player_id", nullable = true)
-    private GamePlayer gamePlayer;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "game_id", nullable = true)
-    private Integer gameId;
-
-    @Column(name = "sender_username", nullable = true, length = 255)
-    private String senderUsername;
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
 
     public Message() {}
 
-    public Message(String body, Instant createdAt, GamePlayer gamePlayer) {
+    public Message(String body, LocalDateTime sentAt, User user, Game game) {
         this.body = body;
-        this.createdAt = createdAt;
-        this.gamePlayer = gamePlayer;
-        if (gamePlayer != null) {
-            this.gameId = gamePlayer.getGame().getId();
-        }
+        this.sentAt = sentAt;
+        this.user = user;
+        this.game = game;
     }
 }

@@ -1,32 +1,26 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
-import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.friendship.Friendship;
-import es.us.dp1.lx_xy_24_25.endofline.friendship.FriendshipService;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GamePlayerNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.StreamSupport;
+import java.util.Optional;
 
 @Service
 public class GamePlayerService {
 
     private final GamePlayerRepository gamePlayerRepository;
-    private final FriendshipService friendshipService;
 
     @Autowired
     public GamePlayerService(
-        GamePlayerRepository gamePlayerRepository,
-        FriendshipService friendshipService
+        GamePlayerRepository gamePlayerRepository
     ) {
         this.gamePlayerRepository = gamePlayerRepository;
-        this.friendshipService = friendshipService;
     }
 
     @Transactional(readOnly = true)
@@ -52,14 +46,34 @@ public class GamePlayerService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<GamePlayer> getGamePlayerAux(Integer gameId, Integer userId) {
+        return gamePlayerRepository.findByGameIdAndUserId(gameId, userId);
+    }
+
+    @Transactional(readOnly = true)
     public GamePlayer getGamePlayer(Integer gameId, Integer userId) {
-        return gamePlayerRepository.findByGameIdAndUserId(gameId, userId).orElse(null);
+        return getGamePlayerAux(gameId, userId)
+            .orElseThrow(() -> new GamePlayerNotFoundException(userId, gameId));
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isSpectating(Game game, User user) {
+        return getGamePlayerAux(game.getId(), user.getId()).isEmpty();
+    }
+
+    @Transactional(readOnly = true)
+    public GamePlayer getGamePlayerOrFriend(Game game, User user) {
+        GamePlayer possiblePlayer = getGamePlayerAux(game.getId(), user.getId())
+            .orElse(null);
+
+        GamePlayer gamePlayer = possiblePlayer == null ? getFriendInGame(user, game) : possiblePlayer;
+
+        return gamePlayer;
     }
 
     @Transactional
     public void incrementCardsPlayedThisRound(GamePlayer gamePlayer) {
         gamePlayer.setCardsPlayedThisRound(gamePlayer.getCardsPlayedThisRound() + 1);
-        gamePlayerRepository.save(gamePlayer);
     }
 
     @Transactional
@@ -68,45 +82,27 @@ public class GamePlayerService {
         gamePlayerRepository.save(gamePlayer);
     }
 
-    public Boolean isValidTurn (
-        GamePlayer gamePlayer
-    ) {
-        return gamePlayer.getGame().getTurn().equals(gamePlayer.getUser().getId());
-    }
-
-    public Boolean isHost (
-        GamePlayer gamePlayer
-    ) {
-        return gamePlayer.getGame().getHost().getId().equals(gamePlayer.getUser().getId());
+    @Transactional(readOnly = true)
+    public GamePlayer getOpponent (GamePlayer gamePlayer) {
+        return gamePlayerRepository.findOpponent(gamePlayer.getGame().getId(), gamePlayer.getId())
+            .orElseThrow(GamePlayerNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public GamePlayer getOpponent(GamePlayer gamePlayer) {
-        return gamePlayer.getGame().getGamePlayers()
-            .stream()
-            .filter(gp -> !gp.getId().equals(gamePlayer.getId()))
-            .findFirst()
-            .orElse(null);
+    public GamePlayer getNextPlayer (Game game) {
+        return gamePlayerRepository.findNextPlayer(game.getId(), game.getTurn())
+            .orElseThrow(GamePlayerNotFoundException::new);
+    }
+
+    @Transactional
+    public void resetCardsPlayedThisRound (GamePlayer gamePlayer) {
+        gamePlayer.setCardsPlayedThisRound(0);
     }
 
     @Transactional(readOnly = true)
     public GamePlayer getFriendInGame(User user, Game game) {
-        Iterable<Friendship> friendships = friendshipService.findFriendshipsByUserId(
-            user.getId(),
-            FriendStatus.ACCEPTED
-        );
-
-        // Collect friend user IDs
-        List<Integer> friendIds = StreamSupport.stream(friendships.spliterator(), false)
-            .map(f -> f.getSender().getId().equals(user.getId()) ? f.getReceiver().getId() : f.getSender().getId())
-            .toList();
-
-        // Find a game player who is a friend
-        return game.getGamePlayers()
-            .stream()
-            .filter(gp -> friendIds.contains(gp.getUser().getId()))
-            .findFirst()
-            .orElse(null);
+        return gamePlayerRepository.findFriendInGame(user.getId(), game.getId())
+            .orElseThrow(GamePlayerNotFoundException::new);
     }
 
     @Transactional
