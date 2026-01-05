@@ -84,7 +84,6 @@ export default function GamePage () {
                     game != null && (
                         <GameInfo
                             game={game}
-                            isSpectator={false}
                         />
                     )
                 }

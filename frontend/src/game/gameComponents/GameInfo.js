@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react'
 import { getHost, getTime } from '../gameUtils/utils'
 
 export default function GameInfo ({
-    game,
-    isSpectator
+    game
 }) {
     const [elapsed, setElapsed] = useState(0)
     const host = getHost(game)
@@ -35,23 +34,23 @@ export default function GameInfo ({
         <>
             Host:
             <span style={{
-                borderColor: isSpectator && game.turn === host.id ? '#b1d12d' : 'var(--main-orange-color)',
+                borderColor: game.spectating && game.turn === host.userId ? '#b1d12d' : 'var(--main-orange-color)',
                 borderWidth: '2px',
                 borderStyle: 'solid',
                 borderRadius: '10px',
                 padding: '5px 10px',
-                backgroundColor: isSpectator && game.turn === host.id ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
+                backgroundColor: game.spectating && game.turn === host.userId ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
             }}>
                 {host.username}
             </span>
             Guest:
             <span style={{
-                borderColor: isSpectator && game.turn !== host.id ? '#b1d12d' : 'var(--main-orange-color)',
+                borderColor: game.spectating && game.turn !== host.userId ? '#b1d12d' : 'var(--main-orange-color)',
                 borderWidth: '2px',
                 borderStyle: 'solid',
                 borderRadius: '10px',
                 padding: '5px 10px',
-                backgroundColor: isSpectator && game.turn !== host.id ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
+                backgroundColor: game.spectating && game.turn !== host.userId ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
             }}>
                 {
                     game.players
