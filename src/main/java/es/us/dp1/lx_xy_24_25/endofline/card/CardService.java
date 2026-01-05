@@ -1,7 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.CardNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -2,10 +2,10 @@ package es.us.dp1.lx_xy_24_25.endofline.chat;
 
 import es.us.dp1.lx_xy_24_25.endofline.chat.dto.MessageRequestDTO;
 import es.us.dp1.lx_xy_24_25.endofline.chat.dto.MessageResponseDTO;
-import es.us.dp1.lx_xy_24_25.endofline.configuration.DecodeJWT;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +21,19 @@ public class MessageController {
     private final MessageRepository messageRepository;
     private final GameService gameService;
     private final MessageService messageService;
+    private final UserService userService;
 
     @Autowired
     public MessageController(
         MessageRepository messageRepository,
         GameService gameService,
-        MessageService messageService
+        MessageService messageService,
+        UserService userService
     ) {
         this.messageRepository = messageRepository;
         this.gameService = gameService;
         this.messageService = messageService;
+        this.userService = userService;
     }
 
     @PostMapping("/{gameId}")
@@ -38,7 +41,7 @@ public class MessageController {
         @PathVariable Integer gameId,
         @RequestBody @Valid MessageRequestDTO request
     ) {
-        User user = DecodeJWT.getUserFromJWT();
+        User user = userService.findCurrentUser();
         Game game = gameService.getGameById(gameId);
 
         MessageResponseDTO response = messageService.saveMessage(request, user, game);

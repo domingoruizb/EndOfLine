@@ -16,16 +16,12 @@ public class FriendshipDTO {
     Integer id;
 
     @NotNull
-    Integer sender;
-
-    @NotNull
     Integer receiver;
 
     @Enumerated(EnumType.STRING)
     FriendStatus friendship_state;
 
-    public FriendshipDTO(Integer senderId, Integer receiverId) {
-        this.sender = senderId;
+    public FriendshipDTO(Integer receiverId) {
         this.receiver = receiverId;
     }
 }

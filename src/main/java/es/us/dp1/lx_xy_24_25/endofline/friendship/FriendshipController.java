@@ -28,14 +28,14 @@ public class FriendshipController {
 
     @GetMapping("/myFriendships")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Friendship> findAcceptedFriendships() throws Exception {
+    public Iterable<Friendship> findAcceptedFriendships() {
         Integer id = userService.findCurrentUser().getId();
         return friendshipService.findFriendshipsOf(id);
     }
 
     @GetMapping("/myPendingReceivedFriendships")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Friendship> findPendingReceivedFriendships() throws Exception {
+    public Iterable<Friendship> findPendingReceivedFriendships() {
         Integer id = userService.findCurrentUser().getId();
         return friendshipService.findPendingReceivedFriendships(id);
     }
@@ -43,30 +43,28 @@ public class FriendshipController {
     @PutMapping("/{id}/acceptFriendship")
     @ResponseStatus(HttpStatus.OK)
     public Friendship acceptFriendship(@PathVariable Integer id) {
-        return friendshipService.acceptFriendShip(id);
+        Friendship friendship = friendshipService.findById(id);
+        return friendshipService.acceptFriendShip(friendship);
     }
 
     @DeleteMapping("/{id}/rejectFriendship")
     @ResponseStatus(HttpStatus.OK)
     public void rejectFriendship(@PathVariable Integer id) {
-        friendshipService.rejectFriendShip(id);
+        Friendship friendship = friendshipService.findById(id);
+        friendshipService.rejectFriendShip(friendship);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Friendship create(@RequestBody @Valid FriendshipDTO friendshipDTO) {
-        return friendshipService.create(friendshipDTO);
+        User receiver = userService.findUser(friendshipDTO.getReceiver());
+        return friendshipService.create(receiver);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer id) {
         Friendship friendship = friendshipService.findById(id);
-        User currentUser = userService.findCurrentUser();
-        if (currentUser.equals(friendship.getSender()) || currentUser.equals(friendship.getReceiver())) {
-            friendshipService.delete(id);
-        } else {
-            throw new AccessDeniedException("You are not authorized to delete this friendship.");
-        }
+        friendshipService.delete(friendship);
     }
 }

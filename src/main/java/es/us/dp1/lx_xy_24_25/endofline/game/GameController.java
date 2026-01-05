@@ -1,8 +1,5 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
-import es.us.dp1.lx_xy_24_25.endofline.board.BoardService;
-import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +16,17 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
-    private final BoardService boardService;
-    private final GamePlayerService gamePlayerService;
-    private final CardService cardService;
 
     @Autowired
     public GameController(
-        GameService gameService,
-        BoardService boardService,
-        GamePlayerService gamePlayerService,
-        CardService cardService
+        GameService gameService
     ) {
         this.gameService = gameService;
-        this.boardService = boardService;
-        this.gamePlayerService = gamePlayerService;
-        this.cardService = cardService;
     }
 
     @GetMapping
     public ResponseEntity<List<Game>> findAll() {
-        return new ResponseEntity<>((List<Game>) this.gameService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(gameService.findAll());
     }
 
     @GetMapping("/{id}")
@@ -47,12 +35,14 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
+    // TODO: Use authenticated user as host
     @PostMapping("/create/{hostId}")
     public ResponseEntity<Game> createGame(@PathVariable Integer hostId) {
         Game game = gameService.createGame(hostId);
         return ResponseEntity.ok(game);
     }
 
+    // TODO: Use authenticated user as joining user
     @PostMapping("/join/{userId}/{code}")
     public ResponseEntity<Game> joinGame(@PathVariable Integer userId, @PathVariable String code) {
         Game game = gameService.joinGameByCode(userId, code);
@@ -65,18 +55,7 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
-    @PostMapping("/{id}/next-turn")
-    public ResponseEntity<Game> nextTurn(@PathVariable Integer id) {
-        Game game = gameService.getGameById(id);
-        gameService.advanceTurn(game);
-        return ResponseEntity.ok(gameService.getGameById(id));
-    }
-
-    @PostMapping("/{id}/end/{winnerId}")
-    public ResponseEntity<Game> endGame(@PathVariable Integer id, @PathVariable Integer winnerId) {
-        return ResponseEntity.ok(gameService.endGame(id, winnerId));
-    }
-
+    // TODO: Use authenticated user as giving up user
     @PutMapping("/{gameId}/{userId}/giveup")
     public ResponseEntity<Game> giveUp(@PathVariable Integer gameId, @PathVariable Integer userId) {
         // Handle spectating users trying to give up
@@ -91,12 +70,7 @@ public class GameController {
         return ResponseEntity.ok(updatedGame);
     }
 
-    @PutMapping("/{gameId}/{userId}/lose")
-    public ResponseEntity<Game> lose(@PathVariable Integer gameId, @PathVariable Integer userId) {
-        Game game = gameService.giveUpOrLose(gameId, userId);
-        return ResponseEntity.ok(game);
-    }
-
+    // TODO: Use authenticated user as setting up skill user
     @PutMapping("/{gameId}/{userId}/setUpSkill")
     public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody SkillRequestDTO dto) {
         Game game = gameService.setUpSkill(gameId, userId, dto.getSkill());
@@ -104,8 +78,8 @@ public class GameController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable Integer id) {
-        gameService.deleteGame(id);
-        return ResponseEntity.noContent().build();
+    public void deleteGame(@PathVariable Integer id) {
+        Game game = gameService.getGameById(id);
+        gameService.deleteGame(game);
     }
 }

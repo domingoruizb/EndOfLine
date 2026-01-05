@@ -23,20 +23,19 @@ public class DevelopersController {
     public List<Developer> getDevelopers(){
         if(developers==null)
             loadDevelopers();
-        return developers;        
+        return developers;
     }
 
-    private void loadDevelopers(){        
+    private void loadDevelopers(){
         MavenXpp3Reader reader = new MavenXpp3Reader();
         try {
             Model model = reader.read(new FileReader("pom.xml"));
             Person p=null;
-            developers=model.getDevelopers();                                            
+            developers=model.getDevelopers();
         } catch (IOException | XmlPullParserException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
     }
 
 

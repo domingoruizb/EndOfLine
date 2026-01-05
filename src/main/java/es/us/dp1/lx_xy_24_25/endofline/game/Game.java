@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -52,5 +53,23 @@ public class Game extends BaseEntity {
     public void markAsEnded(User winner) {
         this.winner = winner;
         this.endedAt = LocalDateTime.now();
+    }
+
+    public static Game build (
+        String code,
+        User host
+    ) {
+        Game game = new Game();
+        game.setRound(0);
+        game.setCode(code);
+        game.setHost(host);
+        game.setStartedAt(LocalDateTime.now());
+
+        GamePlayer hostGamePlayer = GamePlayer.build(game, host);
+
+        game.setGamePlayers(new ArrayList<>());
+        game.getGamePlayers().add(hostGamePlayer);
+
+        return game;
     }
 }

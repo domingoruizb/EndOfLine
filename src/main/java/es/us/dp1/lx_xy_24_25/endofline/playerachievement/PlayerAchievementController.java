@@ -45,7 +45,7 @@ public class PlayerAchievementController {
         return new ResponseEntity<>(new PlayerAchievementDTO(playerAchievement), HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PlayerAchievementDTO> create (
         @RequestBody @Valid PlayerAchievementDTO playerAchievementDTO

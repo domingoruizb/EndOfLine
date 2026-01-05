@@ -44,4 +44,14 @@ public class GamePlayer extends BaseEntity {
     @ElementCollection
     @CollectionTable(name = "game_player_skills", joinColumns = @JoinColumn(name = "game_player_id"))
     private List<SkillUsage> skillsUsed = new ArrayList<>();
+
+    public static GamePlayer build(
+        Game game,
+        User user
+    ) {
+        GamePlayer gamePlayer = new GamePlayer();
+        gamePlayer.setGame(game);
+        gamePlayer.setUser(user);
+        return gamePlayer;
+    }
 }

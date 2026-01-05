@@ -17,4 +17,14 @@ public class SkillUsage {
 
     private Integer round;
 
+    public static SkillUsage build(
+        Skill skill,
+        Integer round
+    ) {
+        SkillUsage skillUsage = new SkillUsage();
+        skillUsage.setSkill(skill);
+        skillUsage.setRound(round);
+        return skillUsage;
+    }
+
 }

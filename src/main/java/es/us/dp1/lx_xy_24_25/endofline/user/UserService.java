@@ -15,12 +15,11 @@
  */
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
-import java.util.List;
-import java.util.Optional;
-
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotAuthenticatedException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import jakarta.validation.Valid;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -30,9 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.game.Game;
-import es.us.dp1.lx_xy_24_25.endofline.game.GameRepository;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -51,37 +48,34 @@ public class UserService {
 
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {
-		userRepository.save(user);
-		return user;
+		return userRepository.save(user);
 	}
 
 	@Transactional(readOnly = true)
 	public User findUser(String username) {
 		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+				.orElseThrow(() -> new UserNotFoundException(username));
 	}
 
 	@Transactional(readOnly = true)
 	public User findUser(Integer id) {
-		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 	}
 
 	@Transactional(readOnly = true)
 	public User findCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null)
-			throw new ResourceNotFoundException("Nobody authenticated!");
-		else
-			return userRepository.findByUsername(auth.getName())
-					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
+		if (auth == null) {
+            throw new UserNotAuthenticatedException();
+        } else {
+            return userRepository
+                .findByUsername(auth.getName())
+                .orElseThrow(() -> new UserNotFoundException(auth.getName()));
+        }
 	}
 
 	public Boolean existsUser(String username) {
 		return userRepository.existsByUsername(username);
-	}
-
-	public Boolean existsUser(Integer id) {
-		return userRepository.existsUserById(id);
 	}
 
 	@Transactional(readOnly = true)
@@ -106,10 +100,10 @@ public class UserService {
 	public User updateCurrentUser(@Valid User user) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth == null) {
-			throw new ResourceNotFoundException("Nobody authenticated!");
+			throw new UserNotAuthenticatedException();
 		} else {
 			User currentUser = userRepository.findByUsername(auth.getName())
-					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
+					.orElseThrow(() -> new UserNotFoundException(auth.getName()));
 			User toUpdate = findUser(currentUser.getId());
 			BeanUtils.copyProperties(user, toUpdate, "id");
 			userRepository.save(toUpdate);

@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.FORBIDDEN)
-public class NotValidTurnException extends RuntimeException {
-    public NotValidTurnException() {
-        super("Not valid turn!");
+public class TurnNotValidException extends RuntimeException {
+    public TurnNotValidException() {
+        super("Not a valid turn");
     }
 }

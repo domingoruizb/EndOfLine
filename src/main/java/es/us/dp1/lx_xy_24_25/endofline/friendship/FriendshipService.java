@@ -3,7 +3,8 @@ package es.us.dp1.lx_xy_24_25.endofline.friendship;
 import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipNotValidException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,124 +13,111 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class FriendshipService {
 
-    @Autowired
-    FriendshipRepository friendshipRepository;
+    private final FriendshipRepository friendshipRepository;
+    private final UserService userService;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    public FriendshipService(FriendshipRepository friendshipRepository) {
+    public FriendshipService(
+        FriendshipRepository friendshipRepository,
+        UserService userService
+    ) {
         this.friendshipRepository = friendshipRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
-    public Friendship findById(Integer id) throws DataAccessException {
+    public Friendship findById(Integer id) {
         return friendshipRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Friendship", "id", id));
+                .orElseThrow(() -> new FriendshipNotFoundException(id));
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findAll() throws DataAccessException {
-        return friendshipRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Iterable<Friendship> findFriendshipsOf(Integer id) throws DataAccessException {
+    public Iterable<Friendship> findFriendshipsOf(Integer id) {
         return friendshipRepository.findFriendshipsByUserId(id);
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findReceivedIterableFriendships(Integer id) throws DataAccessException {
-        return friendshipRepository.findFriendshipsByUserId(id);
-    }
-
-    @Transactional(readOnly = true)
-    public Iterable<Friendship> findPendingReceivedFriendships(@Param("userId") Integer userId){
+    public Iterable<Friendship> findPendingReceivedFriendships(@Param("userId") Integer userId) {
         return friendshipRepository.findPendingReceivedFriendships(userId);
     }
 
-    @Transactional(readOnly = true)
-    public List<Friendship> getFriendships(User user, FriendStatus state) {
-        return friendshipRepository.findFriendshipsByUser(user.getId(), state);
-    }
-
-    private Boolean checkFriendship(Integer sender_id, Integer receiver_id) throws DataAccessException {
-        if (sender_id.equals(receiver_id))
-            throw new BadRequestException("You cannot create a friendship with yourself.");
-
-        if (!userService.existsUser(sender_id) || !userService.existsUser(receiver_id))
-            throw new BadRequestException("User with id " + sender_id + " or " + receiver_id + " does not exist.");
-
-        Optional<Friendship> optionalFriendship = friendshipRepository.findFriendshipBySenderAndReceiver(sender_id,
-                receiver_id);
-        if (optionalFriendship.isPresent()) {
-            FriendStatus friendStatus = optionalFriendship.get().getFriendState();
-            switch (friendStatus) {
-                case PENDING:
-                    throw new BadRequestException("There is already a pending friendship request with this user.");
-                default:
-                    throw new BadRequestException("You are already friends with this user.");
-            }
+    private Boolean checkFriendship(User sender, User receiver) {
+        if (sender.getId().equals(receiver.getId())) {
+            throw new FriendshipNotValidException(sender, receiver);
         }
-        return true;
+
+        Optional<Friendship> optionalFriendship = friendshipRepository.findFriendshipBySenderAndReceiver(sender.getId(), receiver.getId());
+        if (!optionalFriendship.isPresent()) {
+            return true;
+        }
+
+        FriendStatus friendStatus = optionalFriendship.get().getFriendState();
+        switch (friendStatus) {
+            case PENDING:
+                throw new FriendshipNotValidException("There is already a pending friendship request with this user");
+            default:
+                throw new FriendshipNotValidException("You are already friends with this user");
+        }
     }
 
     @Transactional
-    public Friendship create(FriendshipDTO friendshipDTO) throws DataAccessException {
-        checkFriendship(friendshipDTO.sender, friendshipDTO.receiver);
-        userService.existsUser(friendshipDTO.sender);
-        userService.existsUser(friendshipDTO.receiver);
+    public Friendship create(User receiver) {
+        User sender = userService.findCurrentUser();
+
+        checkFriendship(sender, receiver);
+
         Friendship newFriendship = new Friendship();
-        newFriendship.setSender(userService.findUser(friendshipDTO.sender));
-        newFriendship.setReceiver(userService.findUser(friendshipDTO.receiver));
+        newFriendship.setSender(sender);
+        newFriendship.setReceiver(receiver);
         newFriendship.setFriendState(FriendStatus.PENDING);
+
         return friendshipRepository.save(newFriendship);
     }
 
     @Transactional
-    public Friendship acceptFriendShip(Integer id) throws DataAccessException {
-        Friendship friendshipToAccept = findById(id);
+    public Friendship acceptFriendShip(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
-        if (friendshipToAccept.getFriendState() != FriendStatus.PENDING) {
-            throw new BadRequestException("The friendship has already been accepted.");
+        if (friendship.getFriendState() != FriendStatus.PENDING) {
+            throw new FriendshipNotValidException("The friendship has already been accepted");
         }
 
-        if (!currentUser.getId().equals(friendshipToAccept.getReceiver().getId())) {
-            throw new AccessDeniedException("Only the receiver can accept the friendship.");
+        if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
+            throw new FriendshipNotValidException("Only the receiver can accept the friendship");
         }
 
-        friendshipToAccept.setFriendState(FriendStatus.ACCEPTED);
-        return friendshipRepository.save(friendshipToAccept);
-
+        friendship.setFriendState(FriendStatus.ACCEPTED);
+        return friendshipRepository.save(friendship);
     }
 
     @Transactional
-    public void rejectFriendShip(Integer id) throws DataAccessException {
-        Friendship friendshipToReject = findById(id);
+    public void rejectFriendShip(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
-        if (!currentUser.getId().equals(friendshipToReject.getReceiver().getId())) {
-            throw new AccessDeniedException("Only the receiver can reject the friendship.");
+        if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
+            throw new FriendshipNotValidException("Only the receiver can reject the friendship");
         }
-        friendshipRepository.delete(friendshipToReject);
+        friendshipRepository.delete(friendship);
     }
 
 
     @Transactional
-    public Friendship update(Integer id, FriendshipDTO friendshipDTO) throws DataAccessException {
+    public Friendship update(Integer id, FriendshipDTO friendshipDTO) {
         Friendship friendshipToUpdate = findById(id);
         friendshipToUpdate.setFriendState(friendshipDTO.getFriendship_state());
         return friendshipRepository.save(friendshipToUpdate);
     }
 
     @Transactional
-    public void delete(Integer id) throws DataAccessException {
-            friendshipRepository.deleteById(id);
+    public void delete(Friendship friendship) {
+        User currentUser = userService.findCurrentUser();
+        if (currentUser.equals(friendship.getSender()) || currentUser.equals(friendship.getReceiver())) {
+            friendshipRepository.deleteById(friendship.getId());
+        } else {
+            throw new AccessDeniedException("You are not authorized to delete this friendship.");
+        }
     }
 }

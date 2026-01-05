@@ -3,8 +3,11 @@ package es.us.dp1.lx_xy_24_25.endofline.game;
 import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
 import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotValidException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.gameplayer.GamePlayerNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.skill.SkillNotValidRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.SkillUsage;
@@ -16,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -52,8 +53,8 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Game> findAll() {
-        return gameRepository.findAll();
+    public List<Game> findAll() {
+        return (List<Game>) gameRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -78,44 +79,28 @@ public class GameService {
     }
 
     @Transactional
-    public void deleteGame(Integer id) {
-        if (gameRepository.existsById(id)) {
-            gameRepository.deleteById(id);
-        } else {
-            throw new ResourceNotFoundException("Game", "id", id);
-        }
+    public void deleteGame(Game game) {
+        gameRepository.deleteById(game.getId());
     }
 
     @Transactional(readOnly = true)
     public Game getGameByCode(String code) {
         return gameRepository.getGameByCode(code)
-            .orElseThrow(() -> new ResourceNotFoundException("Game", "code", code));
+            .orElseThrow(() -> new GameNotFoundException(code));
     }
 
     private String generateRandomCode() {
-        StringBuilder code = new StringBuilder(CODE_LENGTH);
-        for (int i = 0; i < CODE_LENGTH; i++) {
-            int index = random.nextInt(CHARACTERS.length());
-            code.append(CHARACTERS.charAt(index));
-        }
-        return code.toString();
+        return random.ints(CODE_LENGTH, 0, CHARACTERS.length())
+            .mapToObj(CHARACTERS::charAt)
+            .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+            .toString();
     }
 
     @Transactional
     public Game createGame(Integer hostId) {
         User host = userService.findUser(hostId);
-        Game game = new Game();
-        game.setRound(0);
         String newCode = generateRandomCode();
-        game.setCode(newCode);
-        game.setHost(host);
-        game.setStartedAt(LocalDateTime.now());
-        game.setEndedAt(null);
-        GamePlayer hostGamePlayer = new GamePlayer();
-        hostGamePlayer.setUser(host);
-        hostGamePlayer.setGame(game);
-        game.setGamePlayers(new ArrayList<>());
-        game.getGamePlayers().add(hostGamePlayer);
+        Game game = Game.build(newCode, host);
         return gameRepository.save(game);
     }
 
@@ -123,10 +108,7 @@ public class GameService {
     public Game joinGameByCode(Integer userId, String code) {
         Game game = getGameByCode(code);
         User player = userService.findUser(userId);
-
-        GamePlayer gamePlayer = new GamePlayer();
-        gamePlayer.setUser(player);
-        gamePlayer.setGame(game);
+        GamePlayer gamePlayer = GamePlayer.build(game, player);
         game.getGamePlayers().add(gamePlayer);
         return gameRepository.save(game);
     }
@@ -181,7 +163,7 @@ public class GameService {
             .map(GamePlayer::getUser)
             .filter(u -> !u.getId().equals(userId))
             .findFirst()
-            .orElseThrow(() -> new IllegalStateException("No opponent found"));
+            .orElseThrow(GamePlayerNotFoundException::new);
 
         return finalizeGame(game, winner);
     }
@@ -190,10 +172,10 @@ public class GameService {
     public Game startGame(Integer id) {
         Game game = getGameById(id);
         if (game.getGamePlayers().size() != 2) {
-            throw new IllegalStateException("Game needs to have 2 players");
+            throw new GameNotValidException("Game needs to have 2 players");
         }
         if (game.getRound() != 0) {
-            throw new IllegalStateException("Round needs to be 0");
+            throw new GameNotValidException("Round needs to be 0");
         }
 
         game.markAsStarted();
@@ -215,8 +197,6 @@ public class GameService {
         } else {
             advanceToNextPlayer(game, players);
         }
-
-        gameRepository.save(game);
     }
 
     @Transactional
@@ -246,30 +226,22 @@ public class GameService {
         GamePlayer gamePlayer = game.getGamePlayers().stream()
             .filter(gp -> gp.getUser().getId().equals(userId))
             .findFirst()
-            .orElseThrow(() -> new RuntimeException("User is not a player in this game"));
+            .orElseThrow(() -> new UserNotFoundException(userId));
 
         if (gamePlayer.getEnergy() <= 0) {
-            throw new IllegalStateException("Not enough energy to set up skill");
+            throw new SkillNotValidRequestException("Not enough energy to set up skill");
         }
 
         gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);
         Skill skillEnum = Skill.valueOf(skill);
+        SkillUsage skillUsage = SkillUsage.build(skillEnum, game.getRound());
+
         game.setSkill(skillEnum);
-
-        SkillUsage skillUsage = new SkillUsage();
-        skillUsage.setSkill(skillEnum);
-        skillUsage.setRound(game.getRound());
-
         gamePlayer.getSkillsUsed().add(skillUsage);
 
         gamePlayerService.updateGamePlayer(gamePlayer);
 
         return gameRepository.save(game);
-    }
-
-    @Transactional
-    public void setSkillToNull (Game game) {
-        game.setSkill(null);
     }
 
     private Integer determineNextTurnByInitiative(Game game) {
@@ -300,78 +272,5 @@ public class GameService {
         // If all cards compared are equal or no cards exist, default to host
         return game.getHost().getId();
     }
-
-    // TODO: Possibly remove
-//    private Integer determineNextTurnByInitiative(Game game) {
-//        List<GamePlayer> players = game.getGamePlayers();
-//        GamePlayer player1 = players.get(0);
-//        GamePlayer player2 = players.get(1);
-//
-//        GamePlayerCard lastCard1 = gamePlayerCardService.getLastPlacedCard(player1);
-//        GamePlayerCard lastCard2 = gamePlayerCardService.getLastPlacedCard(player2);
-//
-//        if (lastCard1 == null || lastCard2 == null) {
-//            return game.getHost().getId();
-//        }
-//
-//        Integer initiative1 = lastCard1.getCard().getInitiative();
-//        Integer initiative2 = lastCard2.getCard().getInitiative();
-//
-//        if (initiative1 < initiative2) {
-//            return player1.getUser().getId();
-//        } else if (initiative2 < initiative1) {
-//            return player2.getUser().getId();
-//        } else {
-//
-//            if (game.getRound() == 1) {
-//                return game.getHost().getId();
-//            } else {
-//                return comparePreviousCardsRecursively(player1, player2);
-//            }
-//        }
-//    }
-//
-//    private Integer comparePreviousCardsRecursively(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
-//
-//        List<GamePlayerCard> cards1 = gamePlayerCardService.getLastPlacedCards(gamePlayer1);
-//        List<GamePlayerCard> cards2 = gamePlayerCardService.getLastPlacedCards(gamePlayer2);
-//
-//        if (cards1.size() <= 1 && cards2.size() <= 1) {
-//            Game game = gamePlayer1.getGame();
-//            return game.getHost().getId();
-//        }
-//
-//        int index = 1;
-//
-//        while (true) {
-//            boolean hasCard1 = cards1.size() > index;
-//            boolean hasCard2 = cards2.size() > index;
-//
-//            if (!hasCard1 && !hasCard2) {
-//                Game game = gamePlayer1.getGame();
-//                return game.getHost().getId();
-//            }
-//
-//            if (hasCard1 && !hasCard2) {
-//                return cards1.size() > cards2.size() ?
-//                    cards2.get(0).getGamePlayer().getUser().getId() : cards1.get(0).getGamePlayer().getUser().getId();
-//            }
-//
-//            if (!hasCard1 && hasCard2) {
-//                return cards2.size() > cards1.size() ?
-//                    cards1.get(0).getGamePlayer().getUser().getId() : cards2.get(0).getGamePlayer().getUser().getId();
-//            }
-//
-//            Integer initiative1 = cards1.get(index).getCard().getInitiative();
-//            Integer initiative2 = cards2.get(index).getCard().getInitiative();
-//
-//            if (initiative1 < initiative2) {
-//                return cards1.get(index).getGamePlayer().getUser().getId();
-//            } else if (initiative2 < initiative1) {
-//                return cards2.get(index).getGamePlayer().getUser().getId();
-//            }
-//            index++;
-//        }
-//    }
 
 }

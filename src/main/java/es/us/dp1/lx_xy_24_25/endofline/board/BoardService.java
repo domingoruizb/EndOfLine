@@ -4,10 +4,10 @@ import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardStateDTO;
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GamePlayerNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.NotValidCardPlacementException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.NotValidDeckRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.NotValidTurnException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.gameplayer.GamePlayerNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotValidPlacementException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotValidRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.TurnNotValidException;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
@@ -137,7 +137,6 @@ public class BoardService {
         gamePlayer.setDeckRequests(deckRequests == null ? 1 : deckRequests + 1);
     }
 
-    // TODO: Implement further ideas
     @Transactional
     public void placeCard (
         GamePlayer gamePlayer,
@@ -145,7 +144,7 @@ public class BoardService {
         Integer index
     ) {
         if (!GamePlayerUtils.isValidTurn(gamePlayer)) {
-            throw new NotValidTurnException();
+            throw new TurnNotValidException();
         }
 
         Game game = gamePlayer.getGame();
@@ -156,7 +155,7 @@ public class BoardService {
         GamePlayerCard referenceCard = isReversing ? getReverseCard(gamePlayer) : gamePlayerCardService.getLastPlacedCard(gamePlayer);
 
         if (!getIsPlacementValid(index, gamePlayer, referenceCard)) {
-            throw new NotValidCardPlacementException();
+            throw new CardNotValidPlacementException();
         }
 
         Integer rotation = BoardUtils.getRotation(index, referenceCard);
@@ -200,7 +199,7 @@ public class BoardService {
     ) {
         // Check if deck is empty and if deck change is allowed
         if (deck.isEmpty() && (gamePlayer.getDeckRequests() >= 2 || gamePlayer.getGame().getRound() > 1)) {
-            throw new NotValidDeckRequestException(gamePlayer);
+            throw new DeckNotValidRequestException(gamePlayer);
         }
 
         // Check deck size based on active skill

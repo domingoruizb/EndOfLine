@@ -50,23 +50,6 @@ public class GamePlayerCard extends BaseEntity {
     private Card card;
 
     public static GamePlayerCard build (
-        GamePlayerCardDTO gamePlayerCardDTO,
-        GamePlayer gamePlayer,
-        Card card
-    ) {
-        GamePlayerCard gamePlayerCard = new GamePlayerCard();
-
-        gamePlayerCard.setCard(card);
-        gamePlayerCard.setGamePlayer(gamePlayer);
-        gamePlayerCard.setPositionX(gamePlayerCardDTO.getPositionX());
-        gamePlayerCard.setPositionY(gamePlayerCardDTO.getPositionY());
-        gamePlayerCard.setRotation(gamePlayerCardDTO.getRotation());
-        gamePlayerCard.setPlacedAt(LocalDateTime.now());
-
-        return gamePlayerCard;
-    }
-
-    public static GamePlayerCard build (
         GamePlayer gamePlayer,
         Card card,
         Integer index,

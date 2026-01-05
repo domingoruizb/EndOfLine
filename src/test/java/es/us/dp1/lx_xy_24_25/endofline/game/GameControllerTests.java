@@ -29,7 +29,6 @@ import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardDTO;
 import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
 import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
