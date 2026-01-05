@@ -49,21 +49,16 @@
 
 .button-style {
     background-color: rgba(34, 34, 34, 0.67);
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 20px;
     color: #FE5B02;
     border: 2px solid #FE5B02;
-    padding: 20px 100px;
     cursor: pointer;
     font-size: 28px;
     border-radius: 10px;
     transition: all 0.3s ease 0s;
     width: 320px;
     height: 70px;
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .button-style:hover {
@@ -77,30 +72,30 @@
     background-color: transparent;
     color: white;
   }
-  
+
   .transparent-cell {
     background-color: transparent;
   }
-  
+
   .white-text {
     color: white;
   }
-  
+
   .text-center {
     text-align: center;
   }
-  
+
   .table-cell {
     padding: 20px;
   }
-  
+
 
   .loading {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
-    font-size: 24px; 
+    height: 100vh;
+    font-size: 24px;
 }
 
   /* Estilo para todos los navegadores */
@@ -136,22 +131,22 @@
 .color-image-container {
     width: 120px;
     height: 120px;
-    overflow: hidden; 
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #333; 
+    border: 2px solid #333;
     border-radius: 8px;
     margin: 5px;
     transition: all ease-in-out 0.1s;
 }
 
 .card-image {
-    width: 100%; 
+    width: 100%;
     height: 100%;
     object-fit: contain;
     object-position: center;
-    border-radius: inherit; 
+    border-radius: inherit;
 }
 
 
@@ -378,7 +373,7 @@
 .scrollable-content::-webkit-scrollbar-thumb {
   background-color: #b1d12d;
   border-radius: 6px;
-  
+
 }
 
 .scrollable-content::-webkit-scrollbar-thumb:hover {
