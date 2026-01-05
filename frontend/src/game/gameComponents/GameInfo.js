@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getHost, getTime } from '../gameUtils/utils'
+import '../../static/css/game/gameInfo.css'
 
 export default function GameInfo ({
     game
@@ -8,7 +9,7 @@ export default function GameInfo ({
     const host = getHost(game)
 
     useEffect(() => {
-        if (game.startedAt == null) {
+        if (game?.startedAt == null) {
             return
         }
 
@@ -22,7 +23,7 @@ export default function GameInfo ({
         const interval = setInterval(updateElapsed, 1000)
 
         return () => clearInterval(interval)
-    }, [game.startedAt])
+    }, [game?.startedAt])
 
     const {
         seconds,
@@ -30,44 +31,50 @@ export default function GameInfo ({
         hours
     } = getTime(elapsed)
 
-    return (
-        <>
-            Host:
-            <span style={{
-                borderColor: game.spectating && game.turn === host.userId ? '#b1d12d' : 'var(--main-orange-color)',
-                borderWidth: '2px',
-                borderStyle: 'solid',
-                borderRadius: '10px',
-                padding: '5px 10px',
-                backgroundColor: game.spectating && game.turn === host.userId ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
-            }}>
-                {host.username}
-            </span>
-            Guest:
-            <span style={{
-                borderColor: game.spectating && game.turn !== host.userId ? '#b1d12d' : 'var(--main-orange-color)',
-                borderWidth: '2px',
-                borderStyle: 'solid',
-                borderRadius: '10px',
-                padding: '5px 10px',
-                backgroundColor: game.spectating && game.turn !== host.userId ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
-            }}>
-                {
-                    game.players
-                        .find(player => !player.isHost)
-                        ?.username ?? 'Waiting for guest...'
-                }
-            </span>
-            Elapsed:
-            <span>
-                {hours.toString().padStart(2, '0')}:
-                {minutes.toString().padStart(2, '0')}:
-                {seconds.toString().padStart(2, '0')}
-            </span>
-            Round:
-            <span>
-                {game.round}
-            </span>
-        </>
+    return game != null && (
+        <div
+            className='game-info-container'
+        >
+            <div>
+                Host:
+                <span
+                    style={{
+                        borderColor: game.spectating && game.turn === host.userId ? '#b1d12d' : 'var(--main-orange-color)',
+                        backgroundColor: game.spectating && game.turn === host.userId ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
+                    }}
+                >
+                    {host.username}
+                </span>
+            </div>
+            <div>
+                Guest:
+                <span
+                    style={{
+                        borderColor: game.spectating && game.turn !== host.userId ? '#b1d12d' : 'var(--main-orange-color)',
+                        backgroundColor: game.spectating && game.turn !== host.userId ? 'rgba(177, 209, 45, 0.2)' : 'transparent'
+                    }}
+                >
+                    {
+                        game.players
+                            .find(player => !player.isHost)
+                            ?.username ?? 'Waiting for guest...'
+                    }
+                </span>
+            </div>
+            <div>
+                Elapsed:
+                <span>
+                    {hours.toString().padStart(2, '0')}:
+                    {minutes.toString().padStart(2, '0')}:
+                    {seconds.toString().padStart(2, '0')}
+                </span>
+            </div>
+            <div>
+                Round:
+                <span>
+                    {game.round}
+                </span>
+            </div>
+        </div>
     )
 }

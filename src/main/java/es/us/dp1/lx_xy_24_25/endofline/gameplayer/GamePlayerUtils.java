@@ -17,7 +17,7 @@ public class GamePlayerUtils {
         Integer round = gamePlayer.getGame().getRound();
         Skill skill = isTurn ? gamePlayer.getGame().getSkill() : null;
 
-        return isTurn && round > 1 && skill == null && gamePlayer.getCardsPlayedThisRound() == 0;
+        return isTurn && round > 1 && skill == null && gamePlayer.getCardsPlayedThisRound() == 0 && gamePlayer.getEnergy() > 0;
     }
 
     public static Boolean isDeckChangeAvailable (GamePlayer gamePlayer) {

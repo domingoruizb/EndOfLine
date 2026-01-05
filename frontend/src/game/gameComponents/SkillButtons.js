@@ -1,4 +1,5 @@
 import SkillButton from './SkillButton'
+import '../../static/css/game/gameSkill.css'
 
 const skills = [
     'Speed Up',

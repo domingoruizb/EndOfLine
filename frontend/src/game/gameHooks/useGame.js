@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import tokenService from '../../services/token.service'
 
-const pollingInterval = 1000
+const pollingInterval = 100
 
 export function useGame (gameId) {
     const [game, setGame] = useState(null)

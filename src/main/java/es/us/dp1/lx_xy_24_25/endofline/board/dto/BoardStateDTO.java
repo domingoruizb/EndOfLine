@@ -100,8 +100,8 @@ public class BoardStateDTO {
             game.getEndedAt(),
             winner != null ? winner.getId() : null,
             // Return reversible positions if REVERSE skill is active, otherwise placeable positions
-            skill == Skill.REVERSE ? reversible : placeable,
-            reversible,
+            spectating ? List.of() : (skill == Skill.REVERSE ? reversible : placeable),
+            spectating ? List.of() : reversible,
             gamePlayer.getEnergy(),
             game.getTurn(),
             game.getRound(),

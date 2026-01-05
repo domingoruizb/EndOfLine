@@ -19,7 +19,6 @@ export default function DeckCards ({
                             card={card}
                             selected={selected}
                             setSelected={setSelected}
-                            isCentered={deck.length === 5 && index === 4}
                         />
                     ))
                 )

@@ -1,9 +1,9 @@
 export function getHost (game) {
-    return game.players.find(player => player.isHost)
+    return game?.players.find(player => player.isHost)
 }
 
 export function getGuest (game) {
-    return game.players.find(player => !player.isHost)
+    return game?.players.find(player => !player.isHost)
 }
 
 export function isHost (game) {

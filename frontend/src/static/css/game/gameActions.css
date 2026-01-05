@@ -1,0 +1,49 @@
+.game-actions-container {
+    position: absolute;
+    top: 1.25vh;
+    right: 1vw;
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+}
+
+.action-button {
+    padding: 0.5vh 1vw;
+    font-size: 2vh;
+    border: 2px solid;
+    border-color: var(--main-orange-color);
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    transition: ease-in-out 0.1s;
+}
+
+.action-button:hover {
+    background-color: var(--main-orange-color);
+    color: black;
+}
+
+.spectator-badge {
+    border-color: var(--main-green-color);
+    background-color: rgba(177, 209, 45, 0.2);
+    color: var(--main-green-color);
+    cursor: default;
+    animation: pulse-spectator 2s infinite;
+}
+
+.spectator-badge:hover {
+    background-color: rgba(177, 209, 45, 0.4);
+    color: var(--main-green-color);
+}
+
+@keyframes pulse-spectator {
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(177, 209, 45, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(177, 209, 45, 0.6);
+    }
+}

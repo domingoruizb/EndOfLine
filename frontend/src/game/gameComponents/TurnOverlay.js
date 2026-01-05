@@ -1,4 +1,5 @@
 import { isTurn } from '../gameUtils/utils'
+import '../../static/css/game/gameOverlay.css'
 
 export default function TurnOverlay ({
     game

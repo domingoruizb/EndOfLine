@@ -95,7 +95,9 @@ public class GamePlayerService {
 
     @Transactional(readOnly = true)
     public GamePlayer getFriendInGame(User user, Game game) {
-        return gamePlayerRepository.findFriendInGame(user.getId(), game.getId())
+        return gamePlayerRepository.findFriendsInGame(user.getId(), game.getId())
+            .stream()
+            .findFirst()
             .orElseThrow(GamePlayerNotFoundException::new);
     }
 

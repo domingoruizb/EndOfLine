@@ -3,15 +3,13 @@ import { getCardName } from '../gameUtils/utils'
 export default function DeckCard ({
     card,
     selected,
-    setSelected,
-    isCentered
+    setSelected
 }) {
     const isSelected = selected?.id === card.id
 
     const name = getCardName(card)
 
-    const centeredStyle = isCentered ? 'centered-last' : ''
-    const className = `card-button ${isSelected ? 'selected' : ''} ${centeredStyle}`
+    const className = `card-button ${isSelected ? 'selected' : ''}`
 
     const handleCardSelect = () => {
         setSelected(prev => (prev?.id === card.id ? null : card))

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import tokenService from '../services/token.service'
 import { useBoard } from './gameHooks/useBoard'
 import { useDeck } from './gameHooks/useDeck'
 import { useGame } from './gameHooks/useGame'
@@ -15,8 +14,6 @@ import GameChat from './gameComponents/GameChat'
 import Modals from './gameComponents/Modals'
 import GameActions from './gameComponents/GameActions'
 import '../static/css/game/game.css'
-
-const jwt = tokenService.getLocalAccessToken()
 
 export default function GamePage () {
     const navigate = useNavigate()
@@ -60,6 +57,9 @@ export default function GamePage () {
         <div
             className='game-page-container'
         >
+            <GameInfo
+                game={game}
+            />
             <Modals
                 game={game}
                 giveUpOpen={giveUpOpen}
@@ -67,27 +67,12 @@ export default function GamePage () {
                 rulesOpen={rulesOpen}
                 toggleRulesModal={toggleRulesModal}
             />
-            <div
-                className='floating-game-actions'
-            >
-                <GameActions
-                    game={game}
-                    toggleRulesModal={toggleRulesModal}
-                    toggleGiveUpModal={toggleGiveUpModal}
-                    requestNewDeck={requestNewDeck}
-                />
-            </div>
-            <div
-                className='game-data-container'
-            >
-                {
-                    game != null && (
-                        <GameInfo
-                            game={game}
-                        />
-                    )
-                }
-            </div>
+            <GameActions
+                game={game}
+                toggleRulesModal={toggleRulesModal}
+                toggleGiveUpModal={toggleGiveUpModal}
+                requestNewDeck={requestNewDeck}
+            />
             <div
                 className='side-container'
             >

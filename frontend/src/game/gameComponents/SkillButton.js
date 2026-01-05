@@ -8,7 +8,7 @@ export default function SkillButton ({
     const enabled = skill === 'Reverse' ? (
         game.skillsAvailable && game.reversible?.length > 0
     ) : (
-        game.skillsAvailable
+        game.skillsAvailable && game.placeable?.length > 0
     )
 
     const formattedSkill = skill.toUpperCase().replace(' ', '_')
@@ -26,18 +26,17 @@ export default function SkillButton ({
     const buttonSkillName = skill.toUpperCase().replace(' ', '_')
     const isActive = game.skill === buttonSkillName
 
-    const buttonClasses = `skill-button 
-        ${!enabled ? 'skill-button-disabled' : ''} 
-        ${isActive ? 'skill-button-active' : ''}
+    const buttonClasses = `skill-button
+        ${formattedSkill === 'REVERSE' ? 'reverse-button' : ''}
+        ${!enabled ? 'skill-button-disabled' : ''}
+        ${isActive ? (formattedSkill === 'REVERSE' ? 'reverse-button-active' : 'skill-button-active') : ''}
     `
+
     return (
         <button
             className={buttonClasses}
             onClick={handleClick}
             disabled={!enabled}
-            style={{
-                border: formattedSkill === 'REVERSE'  ? '2px dashed #00BCD4' : '2px solid var(--main-orange-color)'
-            }}
         >
             {skill}
         </button>
