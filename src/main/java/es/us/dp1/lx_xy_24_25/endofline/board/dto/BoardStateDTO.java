@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.board.dto;
 
+import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
@@ -40,6 +41,7 @@ public class BoardStateDTO {
 
     private List<BoardPlayerDTO> players;
     private List<BoardCardDTO> cards;
+    private List<Card> deck;
 
     private Boolean spectating;
 
@@ -60,6 +62,7 @@ public class BoardStateDTO {
         Boolean deckChangeAvailable,
         List<BoardPlayerDTO> players,
         List<BoardCardDTO> cards,
+        List<Card> deck,
         Boolean spectating
     ) {
         this.userId = userId;
@@ -78,6 +81,7 @@ public class BoardStateDTO {
         this.deckChangeAvailable = deckChangeAvailable;
         this.players = players;
         this.cards = cards;
+        this.deck = deck;
         this.spectating = spectating;
     }
 
@@ -86,6 +90,7 @@ public class BoardStateDTO {
         List<GamePlayerCard> board,
         List<Integer> placeable,
         List<Integer> reversible,
+        List<Card> deck,
         Boolean spectating
     ) {
         Game game = gamePlayer.getGame();
@@ -110,6 +115,7 @@ public class BoardStateDTO {
             GamePlayerUtils.isDeckChangeAvailable(gamePlayer),
             game.getGamePlayers().stream().map(BoardPlayerDTO::build).toList(),
             board.stream().map(BoardCardDTO::build).toList(),
+            spectating ? List.of() : deck,
             spectating
         );
     }

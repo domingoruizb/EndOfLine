@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useBoard } from './gameHooks/useBoard'
-import { useDeck } from './gameHooks/useDeck'
 import { useGame } from './gameHooks/useGame'
 import { placeCard } from './gameUtils/api'
 import { getEnergyRotation, getOwnColor } from './gameUtils/utils'
@@ -14,13 +13,13 @@ import GameChat from './gameComponents/GameChat'
 import Modals from './gameComponents/Modals'
 import GameActions from './gameComponents/GameActions'
 import '../static/css/game/game.css'
+import EnergyCard from './gameComponents/EnergyCard'
 
 export default function GamePage () {
     const navigate = useNavigate()
     const { gameId } = useParams()
     const { game } = useGame(gameId)
     const { board } = useBoard(game)
-    const { deck, removeCard, requestNewDeck, requestMoreCards } = useDeck(gameId, game?.round)
     const [selected, setSelected] = useState(null)
     const [rulesOpen, setRulesOpen] = useState(false)
     const [giveUpOpen, setGiveUpOpen] = useState(false)
@@ -45,8 +44,6 @@ export default function GamePage () {
             // Place the card via API
             await placeCard(gameId, selected, index)
 
-            // Remove placed card from deck
-            removeCard(selected.id)
             setSelected(null)
         } catch (err) {
             console.error('Error placing card:', err)
@@ -71,22 +68,23 @@ export default function GamePage () {
                 game={game}
                 toggleRulesModal={toggleRulesModal}
                 toggleGiveUpModal={toggleGiveUpModal}
-                requestNewDeck={requestNewDeck}
             />
-            <div
-                className='side-container'
-            >
-                <SkillButtons
-                    game={game}
-                    requestMoreCards={requestMoreCards}
-                />
-                <DeckCards
-                    game={game}
-                    deck={deck}
-                    selected={selected}
-                    setSelected={setSelected}
-                />
-            </div>
+            {
+                game != null && !game.spectating && (
+                    <div
+                        className='side-container'
+                    >
+                        <SkillButtons
+                            game={game}
+                        />
+                        <DeckCards
+                            game={game}
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
+                    </div>
+                )
+            }
             <div
                 className='game-board-container'
             >
@@ -109,27 +107,20 @@ export default function GamePage () {
                     game={game}
                 />
             </div>
-            <div
-                className='side-container'
-            >
-                {
-                    game != null && (
-                        <>
-                            <img
-                                src={`/cardImages/C${getOwnColor(game)}_ENERGY.png`}
-                                alt='Energy Symbol'
-                                className='card-button'
-                                style={{
-                                    rotate: getEnergyRotation(game) + 'deg'
-                                }}
-                            />
-                            <GameChat
-                                game={game}
-                            />
-                        </>
-                    )
-                }
-            </div>
+            {
+                game != null && (
+                    <div
+                        className='side-container'
+                    >
+                        <EnergyCard
+                            game={game}
+                        />
+                        <GameChat
+                            game={game}
+                        />
+                    </div>
+                )
+            }
         </div>
     )
 }

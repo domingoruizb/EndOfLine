@@ -21,7 +21,11 @@ public class GamePlayerUtils {
     }
 
     public static Boolean isDeckChangeAvailable (GamePlayer gamePlayer) {
-        return gamePlayer.getDeckRequests() < 2 && gamePlayer.getGame().getRound() < 2;
+        return gamePlayer.getCanRequestDeck() && gamePlayer.getGame().getRound() < 2;
+    }
+
+    public static Boolean isExtraGasEnabled (GamePlayer gamePlayer) {
+        return gamePlayer.getGame().getSkill() == Skill.EXTRA_GAS;
     }
 
 }

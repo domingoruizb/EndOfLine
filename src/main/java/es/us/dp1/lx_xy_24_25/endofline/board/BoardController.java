@@ -60,19 +60,16 @@ public class BoardController {
         return ResponseEntity.ok(state);
     }
 
-    @PostMapping("/{gameId}/deck")
-    public ResponseEntity<List<Card>> getDeckCards (
-        @PathVariable Integer gameId,
-        @RequestBody List<Card> deck
+    @PostMapping("/{gameId}/change")
+    public ResponseEntity<List<Card>> changeDeckCards (
+        @PathVariable Integer gameId
     ) {
         User user = userService.findCurrentUser();
-        Game game = gameService.getGameById(gameId);
-        Boolean isSpectating = gamePlayerService.isSpectating(game, user);
+        GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
 
-        GamePlayer gamePlayer = isSpectating ? null : gamePlayerService.getGamePlayer(gameId, user.getId());
-        List<Card> updatedDeck = isSpectating ? List.of() : boardService.getDeckCards(gamePlayer, deck);
+        cardService.changeDeck(gamePlayer);
 
-        return ResponseEntity.ok(updatedDeck);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{gameId}/place")
@@ -83,7 +80,7 @@ public class BoardController {
         User user = userService.findCurrentUser();
         GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
 
-        Card card = cardService.findById(boardPlaceDTO.getCardId());
+        Card card = cardService.getById(boardPlaceDTO.getCardId());
 
         boardService.placeCard(gamePlayer, card, boardPlaceDTO.getIndex());
 

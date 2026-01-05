@@ -31,7 +31,7 @@ export default function GameChat ({ game }) {
 			<div
 				className='chat-header'
 			>
-				Chat
+				CHAT
 			</div>
 			<div
 				ref={listRef}
@@ -39,13 +39,11 @@ export default function GameChat ({ game }) {
 			>
 				{
 					messages.length === 0 ? (
-						<div
-                            style={{
-							    color: '#888', fontSize: '13px'
-						    }}
+						<span
+                            className='no-messages'
                         >
 							No messages yet
-						</div>
+						</span>
 					) : (
 						messages.map((message) => (
                             <GameMessage

@@ -86,3 +86,17 @@ export async function setUpSkill (skill, gameId, userId) {
         alert(`Error setting up skill: ${error.message}`)
     }
 }
+
+export async function changeDeck (gameId) {
+    try {
+        await fetch(`/api/v1/board/${gameId}/change`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${jwt}`
+            }
+        })
+    } catch (err) {
+        console.error('Error fetching deck:', err)
+    }
+}

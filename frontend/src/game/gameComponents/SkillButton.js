@@ -2,8 +2,7 @@ import { setUpSkill } from '../gameUtils/api'
 
 export default function SkillButton ({
     skill,
-    game,
-    requestMoreCards
+    game
 }) {
     const enabled = skill === 'Reverse' ? (
         game.skillsAvailable && game.reversible?.length > 0
@@ -16,10 +15,6 @@ export default function SkillButton ({
     const handleClick = async () => {
         if (enabled) {
             await setUpSkill(formattedSkill, game.gameId, game.userId)
-
-            if (formattedSkill === 'EXTRA_GAS') {
-                await requestMoreCards()
-            }
         }
     }
 

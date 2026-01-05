@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import tokenService from '../../services/token.service'
 import { isTurn } from '../gameUtils/utils'
+import { changeDeck } from '../gameUtils/api'
 import '../../static/css/game/gameActions.css'
 
 const user = tokenService.getUser();
@@ -9,8 +10,7 @@ const isAdmin = user && user.roles ? user.roles.includes('ADMIN') : false;
 export default function GameActions ({
     game,
     toggleRulesModal,
-    toggleGiveUpModal,
-    requestNewDeck
+    toggleGiveUpModal
 }) {
     const navigate = useNavigate()
 
@@ -25,7 +25,7 @@ export default function GameActions ({
                             game.deckChangeAvailable && isTurn(game) && (
                                 <button
                                     className='action-button'
-                                    onClick={requestNewDeck}
+                                    onClick={() => changeDeck(game.gameId)}
                                 >
                                     CHANGE DECK
                                 </button>

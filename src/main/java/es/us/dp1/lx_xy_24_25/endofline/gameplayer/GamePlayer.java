@@ -39,11 +39,15 @@ public class GamePlayer extends BaseEntity {
     @Min(0)
     private Integer cardsPlayedThisRound = 0;
 
-    private Integer deckRequests = 0;
+    private Boolean canRequestDeck = true;
 
     @ElementCollection
     @CollectionTable(name = "game_player_skills", joinColumns = @JoinColumn(name = "game_player_id"))
     private List<SkillUsage> skillsUsed = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "game_player_deck_cards", joinColumns = @JoinColumn(name = "game_player_id"))
+    private List<Integer> deckCards = new ArrayList<>();
 
     public static GamePlayer build(
         Game game,

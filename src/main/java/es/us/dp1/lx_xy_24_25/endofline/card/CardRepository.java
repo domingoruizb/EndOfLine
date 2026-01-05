@@ -13,4 +13,7 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
     @Query("SELECT c FROM Card c WHERE c.color = :color AND c.initiative IS NOT NULL")
     List<Card> findByColor(Color color);
 
+    @Query("SELECT c FROM Card c WHERE c.color = :color AND c.initiative IS NOT NULL AND c.id NOT IN :excludedIds")
+    List<Card> findAvailableCards(Color color, List<Integer> excludedIds);
+
 }

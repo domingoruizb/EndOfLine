@@ -9,8 +9,7 @@ const skills = [
 ]
 
 export default function SkillButtons ({
-    game,
-    requestMoreCards
+    game
 }) {
     return game != null && !game.spectating && (
         <div
@@ -23,7 +22,6 @@ export default function SkillButtons ({
                             key={index}
                             skill={skill}
                             game={game}
-                            requestMoreCards={requestMoreCards}
                         />
                     )
                 })

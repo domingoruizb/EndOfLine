@@ -2,7 +2,6 @@ import DeckCard from './DeckCard'
 
 export default function DeckCards ({
     game,
-    deck,
     selected,
     setSelected
 }) {
@@ -12,8 +11,8 @@ export default function DeckCards ({
         >
 
             {
-                deck != null && !game.spectating && (
-                    deck.map((card, index) => (
+                !game.spectating && (
+                    game.deck.map((card, index) => (
                         <DeckCard
                             key={index}
                             card={card}

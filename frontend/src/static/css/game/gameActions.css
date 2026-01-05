@@ -4,7 +4,8 @@
     right: 1vw;
     display: flex;
     flex-direction: row;
-    gap: 1vw;
+    gap: 0.5vw;
+    z-index: 20;
 }
 
 .action-button {
@@ -13,7 +14,7 @@
     border: 2px solid;
     border-color: var(--main-orange-color);
     border-radius: 10px;
-    background-color: transparent;
+    background-color: black;
     color: white;
     cursor: pointer;
     transition: ease-in-out 0.1s;

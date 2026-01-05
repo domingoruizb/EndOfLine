@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.exceptions;
 
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotValidRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotValidPlacementException;
@@ -200,6 +201,15 @@ public class ExceptionHandlerController {
             request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = DeckNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorMessage> deckNotFoundException(DeckNotFoundException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(),
+            request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
 }

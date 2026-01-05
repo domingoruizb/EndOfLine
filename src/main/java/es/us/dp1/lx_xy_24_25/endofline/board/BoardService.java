@@ -130,14 +130,6 @@ public class BoardService {
     }
 
     @Transactional
-    public void increaseDeckRequests (
-        GamePlayer gamePlayer
-    ) {
-        Integer deckRequests = gamePlayer.getDeckRequests();
-        gamePlayer.setDeckRequests(deckRequests == null ? 1 : deckRequests + 1);
-    }
-
-    @Transactional
     public void placeCard (
         GamePlayer gamePlayer,
         Card card,
@@ -161,6 +153,7 @@ public class BoardService {
         Integer rotation = BoardUtils.getRotation(index, referenceCard);
         GamePlayerCard selectedCard = GamePlayerCard.build(gamePlayer, card, index, rotation);
 
+        cardService.removeFromDeck(gamePlayer, card);
         gamePlayerCardService.save(selectedCard);
 
         // Clear REVERSE skill after using it (it's a one-time use per activation)
@@ -193,47 +186,6 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Card> getDeckCards (
-        GamePlayer gamePlayer,
-        List<Card> deck
-    ) {
-        // Check if deck is empty and if deck change is allowed
-        if (deck.isEmpty() && (gamePlayer.getDeckRequests() >= 2 || gamePlayer.getGame().getRound() > 1)) {
-            throw new DeckNotValidRequestException(gamePlayer);
-        }
-
-        // Check deck size based on active skill
-        Integer totalSize = gamePlayer.getGame().getSkill() == Skill.EXTRA_GAS ? 6 : 5;
-        Integer refillSize = totalSize - deck.size();
-
-        if (refillSize <= 0) {
-            return deck;
-        }
-
-        List<Integer> deckIds = deck.stream().map(Card::getId).toList();
-        List<Card> filteredCards = new ArrayList<>(
-            cardService
-                .getCardsByColor(gamePlayer.getColor().toString())
-                .stream()
-                .filter(card -> !deckIds.contains(card.getId()))
-                .toList()
-        );
-
-        Collections.shuffle(filteredCards);
-
-        List<Card> newCards = filteredCards.stream().limit(refillSize).toList();
-
-        // Add new cards to the existing deck
-        List<Card> fullDeck = new ArrayList<>(deck);
-        fullDeck.addAll(newCards);
-
-        // Disable further deck changes for this game player
-        increaseDeckRequests(gamePlayer);
-
-        return fullDeck;
-    }
-
-    @Transactional
     public BoardStateDTO getState (
         GamePlayer gamePlayer,
         Game game,
@@ -259,12 +211,14 @@ public class BoardService {
 
         // Only return reversible positions if it's the player's turn
         List<Integer> reversiblePositions = isTurn && lastPlacedCard != null ? getReversiblePositions(gamePlayer) : List.of();
+        List<Card> deck = cardService.getDeckCards(gamePlayer);
 
         return BoardStateDTO.build(
             gamePlayer,
             board,
             placeablePositions,
             reversiblePositions,
+            deck,
             isSpectating
         );
     }

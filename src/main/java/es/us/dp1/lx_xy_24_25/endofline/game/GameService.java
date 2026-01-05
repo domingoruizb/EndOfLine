@@ -2,6 +2,8 @@ package es.us.dp1.lx_xy_24_25.endofline.game;
 
 import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
 import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
+import es.us.dp1.lx_xy_24_25.endofline.card.Card;
+import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotValidException;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -26,30 +29,31 @@ import java.util.Random;
 public class GameService {
 
     private final GameRepository gameRepository;
-    private final GamePlayerCardRepository gpcRepository;
     private final UserService userService;
     private final GamePlayerService gamePlayerService;
     private final AchievementUnlockService achievementUnlockService;
     private final GamePlayerCardService gamePlayerCardService;
+    private final CardService cardService;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 6;
+
     private final Random random = new Random();
 
     public GameService(
         GameRepository gameRepository,
         UserService userService,
         GamePlayerService gamePlayerService,
-        GamePlayerCardRepository gpcRepository,
         AchievementUnlockService achievementUnlockService,
-        GamePlayerCardService gamePlayerCardService
+        GamePlayerCardService gamePlayerCardService,
+        CardService cardService
     ) {
         this.gameRepository = gameRepository;
-        this.gpcRepository = gpcRepository;
         this.userService = userService;
         this.gamePlayerService = gamePlayerService;
         this.achievementUnlockService = achievementUnlockService;
         this.gamePlayerCardService = gamePlayerCardService;
+        this.cardService = cardService;
     }
 
     @Transactional(readOnly = true)
@@ -178,6 +182,7 @@ public class GameService {
             throw new GameNotValidException("Round needs to be 0");
         }
 
+        game.getGamePlayers().forEach(cardService::initializeDeck);
         game.markAsStarted();
         game.setTurn(game.getHost().getId());
         return gameRepository.save(game);
@@ -202,7 +207,11 @@ public class GameService {
     @Transactional
     public void startNextRound(Game game, List<GamePlayer> players) {
         game.setRound(game.getRound() + 1);
-        players.forEach(gamePlayerService::resetCardsPlayedThisRound);
+        players.forEach(p -> {
+            gamePlayerService.resetCardsPlayedThisRound(p);
+            cardService.refillDeck(p);
+        });
+
         game.setSkill(null);
 
         game.setTurn(game.getRound() > 1 ?
@@ -239,6 +248,7 @@ public class GameService {
         game.setSkill(skillEnum);
         gamePlayer.getSkillsUsed().add(skillUsage);
 
+        cardService.refillDeck(gamePlayer);
         gamePlayerService.updateGamePlayer(gamePlayer);
 
         return gameRepository.save(game);

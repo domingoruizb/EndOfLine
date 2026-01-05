@@ -20,10 +20,10 @@ export default function GameMessage ({
     const isOwnMessage = message.sender === user.username
     const player = game.players.find(p => p.username === message.sender)
     const isSpectator = player == null
-    const bubbleColor = isSpectator ? (
-        COLOR_MAP.WHITE
+    const bubbleColor = isOwnMessage ? (
+        'var(--main-orange-color)'
     ) : (
-        COLOR_MAP[player.color] ?? (isOwnMessage ? '#FE5B02' : '#2ECC71')
+        isSpectator ? COLOR_MAP.WHITE : (COLOR_MAP[player.color] ?? '#2ECC71')
     )
 
     return (
@@ -36,20 +36,18 @@ export default function GameMessage ({
         >
             {
                 !isOwnMessage && (
-                    <div
+                    <span
                         className='chat-sender'
                     >
-                        <strong>
-                            {message.sender}{isSpectator && ' (spectating)'}
-                        </strong>
-                    </div>
+                        {message.sender}{isSpectator && ' (SPECTATOR)'}
+                    </span>
                 )
             }
-            <div
+            <span
                 className='chat-text'
             >
                 {message.body}
-            </div>
+            </span>
         </div>
     )
 }
