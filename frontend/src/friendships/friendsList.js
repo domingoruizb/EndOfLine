@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify";
 import tokenService from "../services/token.service";
@@ -13,7 +13,7 @@ export default function FriendshipList() {
     const user = tokenService.getUser();
     const [friendshipType, setFriendshipType] = useState("ACCEPTED");
     const [friendships, setFriendships] = useFetchState(null, `/api/v1/friendships/myFriendships`, jwt);
-    const [activeGames, setActiveGames] = useFetchState([], `/api/v1/games`, jwt);
+    const [activeGames] = useFetchState([], `/api/v1/games`, jwt);
     const [currentPage, setCurrentPage] = useState(1);
     const [friendshipsPerPage] = useState(5);
     const notifiedPendingRef = useRef(new Set());
@@ -80,7 +80,6 @@ export default function FriendshipList() {
     const indexOfLastFriendship = currentPage * friendshipsPerPage;
     const indexOfFirstFriendship = indexOfLastFriendship - friendshipsPerPage;
     const currentFriendships = sortedFriendships.slice(indexOfFirstFriendship, indexOfLastFriendship);
-    const paginate = pageNumber => setCurrentPage(pageNumber);
 
     const modal = getErrorModal(setVisible, visible, message);
 

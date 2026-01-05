@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Modal, ModalHeader, Container, ModalBody, Button, Input, Label, ModalFooter } from "reactstrap";
+import { Container, Input, Label } from "reactstrap";
 import DeleteProfileModal from "./DeleteProfileModal";
 import tokenService from "../services/token.service";
 import "../static/css/admin/adminPage.css";
@@ -60,11 +60,6 @@ export default function MyProfile() {
   }, [jwt, setPlayer]);
 
   const modal = getErrorModal(setVisible, visible, message);
-
-  const formatDate = (date) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(date).toLocaleDateString(undefined, options);
-  };
 
   const handleNameChange = (event) => {
     const newName = event.target.value;

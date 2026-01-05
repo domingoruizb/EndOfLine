@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, Label } from "reactstrap";
+import { Form, Input, Label } from "reactstrap";
 import { toast } from "react-toastify";
 import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
@@ -9,10 +9,9 @@ import "../static/css/friendships/friendsList.css";
 export default function FriendshipCreation() {
     const jwt = tokenService.getLocalAccessToken();
     const user = tokenService.getUser();
-    const [message, setMessage] = useState(null);
+    const [message] = useState(null);
     const [visible, setVisible] = useState(false);
     const [username, setUsername] = useState("");
-    const [error, setError] = useState("");
 
     const modal = getErrorModal(setVisible, visible, message);
 

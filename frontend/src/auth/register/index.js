@@ -1,5 +1,4 @@
 import { useState } from "react";
-import tokenService from "../../services/token.service";
 import { Input, Label, Container } from "reactstrap";
 import getErrorModal from "../../util/getErrorModal";
 import "../../static/css/auth/login.css";
@@ -7,11 +6,8 @@ import "../../static/css/auth/authPage.css"
 import "../../static/css/myProfile/myProfile.css"
 
 export default function Register() {
-const jwt = tokenService.getLocalAccessToken();
-  const [player, setPlayer] = useState({});
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
-  const [alerts, setAlerts] = useState([]);
    const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [surname, setSurname] = useState("");
@@ -28,11 +24,6 @@ const jwt = tokenService.getLocalAccessToken();
   const [birthdateError, setBirthdateError] = useState("");
 
   const modal = getErrorModal(setVisible, visible, message);
-
-  const formatDate = (date) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(date).toLocaleDateString(undefined, options);
-  };
 
   const handleNameChange = (event) => {
     const newName = event.target.value;

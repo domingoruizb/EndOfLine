@@ -3,7 +3,7 @@ import useFetchState from "../util/useFetchState";
 import "../static/css/developers/developersList.css";
 
 export default function DeveloperList() {
-    const [developers, setDevelopers] = useFetchState(
+    const [developers] = useFetchState(
         [],
         '/api/v1/developers'
     );

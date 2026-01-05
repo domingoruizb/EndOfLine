@@ -283,9 +283,6 @@ const copyGameCode = async () => {
   const bothColorsSelected = !!selectedColor1 && !!selectedColor2;
 
   const isHost = gameData.host.id === user.id;
-  const friendGamePlayer = gameData.gamePlayers.find(gp => gp.user.id !== gameData.host.id)
-
-  const isCurrentPlayerFriend = isFriendJoined && user.id === friendGamePlayer?.user.id;
 
   let myColorState = selectedColor1;
   let myHandler = isHost ? handleSelectColor1 : () => {};
