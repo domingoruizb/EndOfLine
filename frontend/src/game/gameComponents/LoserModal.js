@@ -6,7 +6,6 @@ export default function LoserModal({ isOpen, toggle, onConfirm }) {
             isOpen={isOpen} 
             toggle={toggle} 
             centered={true}
-            dark
         >
             <ModalHeader 
                 toggle={toggle} 

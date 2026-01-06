@@ -1,22 +1,16 @@
 import SkillButton from './SkillButton'
+import { SKILLS } from '../gameUtils/utils'
 import '../../static/css/game/gameSkill.css'
-
-const skills = [
-    'Speed Up',
-    'Brake',
-    'Extra Gas',
-    'Reverse'
-]
 
 export default function SkillButtons ({
     game
 }) {
-    return game != null && !game.spectating && (
+    return !game.spectating && (
         <div
             className='skills-container'
         >
             {
-                skills.map((skill, index) => {
+                SKILLS.map((skill, index) => {
                     return (
                         <SkillButton
                             key={index}

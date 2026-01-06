@@ -5,7 +5,7 @@ export default function DeckCards ({
     selected,
     setSelected
 }) {
-    return game != null && (
+    return (
         <div
             className='cards-container'
         >

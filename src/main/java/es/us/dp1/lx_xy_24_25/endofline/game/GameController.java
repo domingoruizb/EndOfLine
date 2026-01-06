@@ -1,5 +1,9 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +20,17 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+    private final UserService userService;
+    private final GamePlayerService gamePlayerService;
 
     @Autowired
     public GameController(
-        GameService gameService
-    ) {
+        GameService gameService,
+        UserService userService,
+        GamePlayerService gamePlayerService) {
         this.gameService = gameService;
+        this.userService = userService;
+        this.gamePlayerService = gamePlayerService;
     }
 
     @GetMapping
@@ -49,37 +58,33 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
+    // TODO: Check that only host can start the game
     @PostMapping("/{id}/start")
     public ResponseEntity<Game> startGame(@PathVariable Integer id) {
         Game game = gameService.startGame(id);
         return ResponseEntity.ok(game);
     }
 
-    // TODO: Use authenticated user as giving up user
-    @PutMapping("/{gameId}/{userId}/giveup")
-    public ResponseEntity<Game> giveUp(@PathVariable Integer gameId, @PathVariable Integer userId) {
-        // Handle spectating users trying to give up
-        Game game = gameService.getGameById(gameId);
-        List<Integer> user = game.getGamePlayers().stream().map(p -> p.getUser().getId()).toList();
-
-        if (!user.contains(userId)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        Game updatedGame = gameService.giveUpOrLose(gameId, userId);
+    @PutMapping("/{gameId}/giveup")
+    public ResponseEntity<Game> giveUp(@PathVariable Integer gameId) {
+        User user = userService.findCurrentUser();
+        GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
+        Game updatedGame = gameService.giveUpOrLose(gamePlayer);
         return ResponseEntity.ok(updatedGame);
     }
 
-    // TODO: Use authenticated user as setting up skill user
-    @PutMapping("/{gameId}/{userId}/setUpSkill")
-    public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody SkillRequestDTO dto) {
-        Game game = gameService.setUpSkill(gameId, userId, dto.getSkill());
+    @PutMapping("/{gameId}/setUpSkill")
+    public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @RequestBody SkillRequestDTO dto) {
+        User user = userService.findCurrentUser();
+        GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
+        Game game = gameService.setUpSkill(gamePlayer, dto.toSkillEnum());
         return ResponseEntity.ok(game);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteGame(@PathVariable Integer id) {
-        Game game = gameService.getGameById(id);
+    // TODO: Check that only host can finalize the game
+    @DeleteMapping("/{gameId}")
+    public void deleteGame(@PathVariable Integer gameId) {
+        Game game = gameService.getGameById(gameId);
         gameService.deleteGame(game);
     }
 }

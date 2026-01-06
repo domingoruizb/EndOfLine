@@ -1,12 +1,11 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
-export default function SpectatorModal ({ isOpen, toggle, onConfirm, onCancel, winnerUsername }) {
+export default function SpectatorModal ({ isOpen, toggle, onConfirm, onCancel, winner }) {
     return (
         <Modal
             isOpen={isOpen}
             toggle={toggle}
             centered={true}
-            dark
         >
             <ModalHeader
                 toggle={toggle}
@@ -26,7 +25,7 @@ export default function SpectatorModal ({ isOpen, toggle, onConfirm, onCancel, w
                     fontSize: '1.2rem'
                 }}
             >
-                The winner is: <strong style={{ color: '#b1d12d' }}>{winnerUsername || 'N/A'}</strong>
+                The winner is: <strong style={{ color: '#b1d12d' }}>{winner?.username || 'N/A'}</strong>
                 <br/><br/>
                 Thanks for spectating!
             </ModalBody>

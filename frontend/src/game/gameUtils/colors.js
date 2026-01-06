@@ -1,0 +1,10 @@
+export const COLOR_MAP = {
+    RED: '#E31E25',
+    ORANGE: '#F39514',
+    YELLOW: '#FFEF47',
+    GREEN: '#50B15F',
+    BLUE: '#00A0E3',
+    MAGENTA: '#E5087F',
+    VIOLET: '#C48FBF',
+    WHITE: '#C5C6C6'
+}

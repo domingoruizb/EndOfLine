@@ -14,7 +14,11 @@ export default function GameActions ({
 }) {
     const navigate = useNavigate()
 
-    return game != null && (
+    const handleChangeDeck = () => {
+        changeDeck(game)
+    }
+
+    return (
         <div
             className='game-actions-container'
         >
@@ -25,7 +29,7 @@ export default function GameActions ({
                             game.deckChangeAvailable && isTurn(game) && (
                                 <button
                                     className='action-button'
-                                    onClick={() => changeDeck(game.gameId)}
+                                    onClick={handleChangeDeck}
                                 >
                                     CHANGE DECK
                                 </button>

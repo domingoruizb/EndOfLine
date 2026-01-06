@@ -7,8 +7,8 @@ import RulesModal from './RulesModal'
 import SpectatorModal from './SpectatorModal'
 import { giveUp } from '../gameUtils/api'
 
-const user = tokenService.getUser();
-const isAdmin = user && user.roles ? user.roles.includes('ADMIN') : false;
+const user = tokenService.getUser()
+const isAdmin = user && user.roles ? user.roles.includes('ADMIN') : false
 
 export default function Modals ({
     game,
@@ -19,24 +19,25 @@ export default function Modals ({
 }) {
     const navigate = useNavigate()
 
-    return game != null && (
+    const handleGiveUp = async () => {
+        toggleGiveUpModal()
+        await giveUp(game, navigate)
+    }
+
+    return (
         <>
             <WinnerModal
-                isOpen={game.endedAt != null && game.winnerId === game.userId}
+                isOpen={game.endedAt != null && game.winner?.userId === game.userId}
                 onConfirm={() => navigate('/creategame')}
             />
             <LoserModal
-                isOpen={game.endedAt != null && game.winnerId !== game.userId}
+                isOpen={game.endedAt != null && game.winner?.userId !== game.userId}
                 onConfirm={() => navigate('/creategame')}
             />
             <GiveUpModal
                 isOpen={giveUpOpen}
                 toggle={toggleGiveUpModal}
-                onConfirm={() => giveUp(
-                    game.gameId,
-                    toggleGiveUpModal,
-                    navigate
-                )}
+                onConfirm={handleGiveUp}
             />
             <RulesModal
                 isOpen={rulesOpen}
@@ -47,7 +48,7 @@ export default function Modals ({
                 toggle={() => navigate(isAdmin ? '/games' : '/friends')}
                 onCancel={() => navigate(isAdmin ? '/games' : '/friends')}
                 onConfirm={() => navigate('/')}
-                winnerUsername={game.players?.find(p => p.userId === game.winnerId)?.username}
+                winner={game.winner}
             />
         </>
     )

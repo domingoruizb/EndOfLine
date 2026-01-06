@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.endofline.gameplayer;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 
 public class GamePlayerUtils {
 
@@ -26,6 +27,19 @@ public class GamePlayerUtils {
 
     public static Boolean isExtraGasEnabled (GamePlayer gamePlayer) {
         return gamePlayer.getGame().getSkill() == Skill.EXTRA_GAS;
+    }
+
+    public static GamePlayer getWinner (Game game) {
+        Integer winnerId = game.getWinner() != null ? game.getWinner().getId() : null;
+
+        if (winnerId == null) {
+            return null;
+        }
+
+        return game.getGamePlayers().stream()
+            .filter(gp -> gp.getUser().getId().equals(winnerId))
+            .findFirst()
+            .orElse(null);
     }
 
 }

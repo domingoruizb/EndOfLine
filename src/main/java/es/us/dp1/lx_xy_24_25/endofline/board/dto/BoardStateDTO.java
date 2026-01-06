@@ -24,7 +24,7 @@ public class BoardStateDTO {
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 
-    private Integer winnerId;
+    private BoardPlayerDTO winner;
 
     private List<Integer> placeable;
     private List<Integer> reversible;
@@ -51,7 +51,7 @@ public class BoardStateDTO {
         Integer playerId,
         LocalDateTime startedAt,
         LocalDateTime endedAt,
-        Integer winnerId,
+        BoardPlayerDTO winner,
         List<Integer> placeable,
         List<Integer> reversible,
         Integer energy,
@@ -70,7 +70,7 @@ public class BoardStateDTO {
         this.playerId = playerId;
         this.startedAt = startedAt;
         this.endedAt = endedAt;
-        this.winnerId = winnerId;
+        this.winner = winner;
         this.placeable = placeable;
         this.reversible = reversible;
         this.energy = energy;
@@ -94,7 +94,7 @@ public class BoardStateDTO {
         Boolean spectating
     ) {
         Game game = gamePlayer.getGame();
-        User winner = gamePlayer.getGame().getWinner();
+        GamePlayer winner = GamePlayerUtils.getWinner(game);
         Skill skill = GamePlayerUtils.isValidTurn(gamePlayer) ? game.getSkill() : null;
 
         return new BoardStateDTO(
@@ -103,7 +103,7 @@ public class BoardStateDTO {
             gamePlayer.getId(),
             game.getStartedAt(),
             game.getEndedAt(),
-            winner != null ? winner.getId() : null,
+            winner != null ? BoardPlayerDTO.build(winner) : null,
             // Return reversible positions if REVERSE skill is active, otherwise placeable positions
             spectating ? List.of() : (skill == Skill.REVERSE ? reversible : placeable),
             spectating ? List.of() : reversible,

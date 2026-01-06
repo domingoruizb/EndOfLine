@@ -13,9 +13,7 @@ export default function SkillButton ({
     const formattedSkill = skill.toUpperCase().replace(' ', '_')
 
     const handleClick = async () => {
-        if (enabled) {
-            await setUpSkill(formattedSkill, game.gameId, game.userId)
-        }
+        await setUpSkill(game, formattedSkill)
     }
 
     const buttonSkillName = skill.toUpperCase().replace(' ', '_')

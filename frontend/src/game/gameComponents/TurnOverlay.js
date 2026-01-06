@@ -4,9 +4,13 @@ import '../../static/css/game/gameOverlay.css'
 export default function TurnOverlay ({
     game
 }) {
-    return game != null && !isTurn(game) && game.endedAt == null && !game.spectating && (
-        <div className='turn-overlay'>
-            <span className='overlay-text'>
+    return !isTurn(game) && game.endedAt == null && !game.spectating && (
+        <div
+            className='turn-overlay'
+        >
+            <span
+                className='overlay-text'
+            >
                 ⏳ Waiting for opponent's turn...
             </span>
         </div>

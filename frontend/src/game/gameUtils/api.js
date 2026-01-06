@@ -3,34 +3,31 @@ import tokenService from '../../services/token.service'
 const jwt = tokenService.getLocalAccessToken()
 const user = tokenService.getUser()
 
-export async function placeCard (gameId, selected, index) {
-    const response = await fetch(`/api/v1/board/${gameId}/place`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`
-        },
-        body: JSON.stringify({
-            cardId: selected.id,
-            index: index
-        })
-    })
+export async function placeCard (game, selected, index) {
+    const response = await fetch(
+        `/api/v1/board/${game.gameId}/place`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${jwt}`
+            },
+            body: JSON.stringify({
+                cardId: selected.id,
+                index: index
+            })
+        }
+    )
 
     if (!response.ok) {
         throw new Error(`Error placing card: ${response.status}`)
     }
 }
 
-export async function giveUp (
-    gameId,
-    toggleGiveUpModal,
-    navigate
-) {
-    toggleGiveUpModal()
-
+export async function giveUp (game, navigate) {
     try {
         const res = await fetch(
-            `/api/v1/games/${gameId}/${user.id}/giveup`,
+            `/api/v1/games/${game.gameId}/giveup`,
             {
                 method: 'PUT',
                 headers: {
@@ -57,17 +54,19 @@ export async function giveUp (
     }
 }
 
-export async function setUpSkill (skill, gameId, userId) {
+export async function setUpSkill (game, skill) {
     try {
         const res = await fetch(
-            `/api/v1/games/${gameId}/${userId}/setUpSkill`,
+            `/api/v1/games/${game.gameId}/setUpSkill`,
             {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${jwt}`,
                 },
-                body: JSON.stringify({ skill: skill })
+                body: JSON.stringify({
+                    skill: skill
+                })
             }
         )
 
@@ -87,15 +86,18 @@ export async function setUpSkill (skill, gameId, userId) {
     }
 }
 
-export async function changeDeck (gameId) {
+export async function changeDeck (game) {
     try {
-        await fetch(`/api/v1/board/${gameId}/change`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${jwt}`
+        await fetch(
+            `/api/v1/board/${game.gameId}/change`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${jwt}`
+                }
             }
-        })
+        )
     } catch (err) {
         console.error('Error fetching deck:', err)
     }

@@ -9,7 +9,7 @@ export default function GameInfo ({
     const host = getHost(game)
 
     useEffect(() => {
-        if (game?.startedAt == null) {
+        if (game.startedAt == null) {
             return
         }
 
@@ -20,10 +20,14 @@ export default function GameInfo ({
 
         updateElapsed()
 
+        if (game.endedAt != null) {
+            return
+        }
+
         const interval = setInterval(updateElapsed, 1000)
 
         return () => clearInterval(interval)
-    }, [game?.startedAt])
+    }, [game.startedAt, game.endedAt])
 
     const {
         seconds,
@@ -31,7 +35,7 @@ export default function GameInfo ({
         hours
     } = getTime(elapsed)
 
-    return game != null && (
+    return (
         <div
             className='game-info-container'
         >

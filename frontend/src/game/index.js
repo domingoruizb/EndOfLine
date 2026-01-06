@@ -2,17 +2,15 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useBoard } from './gameHooks/useBoard'
 import { useGame } from './gameHooks/useGame'
-import { placeCard } from './gameUtils/api'
 import GameInfo from './gameComponents/GameInfo'
 import DeckCards from './gameComponents/DeckCards'
 import BoardCell from './gameComponents/BoardCell'
 import TurnOverlay from './gameComponents/TurnOverlay'
 import SkillButtons from './gameComponents/SkillButtons'
 import GameChat from './gameComponents/GameChat'
-import Modals from './gameComponents/Modals'
-import GameActions from './gameComponents/GameActions'
-import '../static/css/game/game.css'
 import EnergyCard from './gameComponents/EnergyCard'
+import ActionsModals from './gameComponents/ActionsModals'
+import '../static/css/game/game.css'
 
 export default function GamePage () {
     const navigate = useNavigate()
@@ -20,56 +18,23 @@ export default function GamePage () {
     const { game } = useGame(gameId)
     const { board } = useBoard(game)
     const [selected, setSelected] = useState(null)
-    const [rulesOpen, setRulesOpen] = useState(false)
-    const [giveUpOpen, setGiveUpOpen] = useState(false)
-
-    const toggleRulesModal = () => setRulesOpen(!rulesOpen)
-    const toggleGiveUpModal = () => setGiveUpOpen(!giveUpOpen)
 
     if (game != null && game.startedAt == null) {
         navigate(`/lobby/${gameId}`)
     }
 
-    const handlePlaceCard = async (index) => {
-        try {
-            if (selected == null) {
-                return
-            }
-
-            if (!game.placeable.includes(index)) {
-                return
-            }
-
-            // Place the card via API
-            await placeCard(gameId, selected, index)
-
-            setSelected(null)
-        } catch (err) {
-            console.error('Error placing card:', err)
-        }
-    }
-
-    return (
+    return game != null && (
         <div
             className='game-page-container'
         >
             <GameInfo
                 game={game}
             />
-            <Modals
+            <ActionsModals
                 game={game}
-                giveUpOpen={giveUpOpen}
-                toggleGiveUpModal={toggleGiveUpModal}
-                rulesOpen={rulesOpen}
-                toggleRulesModal={toggleRulesModal}
-            />
-            <GameActions
-                game={game}
-                toggleRulesModal={toggleRulesModal}
-                toggleGiveUpModal={toggleGiveUpModal}
             />
             {
-                game != null && !game.spectating && (
+                !game.spectating && (
                     <div
                         className='side-container'
                     >
@@ -91,13 +56,14 @@ export default function GamePage () {
                     className='game-board'
                 >
                     {
-                        board.map((card, index) => (
+                        board.map((cell, index) => (
                             <BoardCell
                                 key={index}
                                 game={game}
-                                card={card}
+                                cell={cell}
                                 index={index}
-                                handlePlaceCard={handlePlaceCard}
+                                selected={selected}
+                                setSelected={setSelected}
                             />
                         ))
                     }
@@ -106,20 +72,16 @@ export default function GamePage () {
                     game={game}
                 />
             </div>
-            {
-                game != null && (
-                    <div
-                        className='side-container'
-                    >
-                        <EnergyCard
-                            game={game}
-                        />
-                        <GameChat
-                            game={game}
-                        />
-                    </div>
-                )
-            }
+            <div
+                className='side-container'
+            >
+                <EnergyCard
+                    game={game}
+                />
+                <GameChat
+                    game={game}
+                />
+            </div>
         </div>
     )
 }

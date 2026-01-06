@@ -54,10 +54,7 @@ public class BoardService {
             List<Integer> opponentReversiblePositions = getReversiblePositions(opponent);
 
             if (opponentValidIndexes.isEmpty() && opponentReversiblePositions.isEmpty()) {
-                gameService.giveUpOrLose(
-                    opponent.getGame().getId(),
-                    opponent.getUser().getId()
-                );
+                gameService.giveUpOrLose(opponent);
             }
         }
     }
@@ -140,7 +137,6 @@ public class BoardService {
         }
 
         Game game = gamePlayer.getGame();
-        User user = gamePlayer.getUser();
 
         // Get the reference card to continue from (either reverse card or last placed)
         Boolean isReversing = game.getSkill() == Skill.REVERSE;
@@ -167,15 +163,12 @@ public class BoardService {
         List<Integer> validIndexes = BoardUtils.getValidIndexes(selectedCard, board);
 
         if (validIndexes.isEmpty() && reversiblePositions.isEmpty()) {
-            gameService.giveUpOrLose(game.getId(), user.getId());
+            gameService.giveUpOrLose(gamePlayer);
         }
 
         // Check if opponent has valid moves (they might be blocked)
         GamePlayer opponent = gamePlayerService.getOpponent(gamePlayer);
-
-        if (opponent != null) {
-            checkOpponent(opponent, board);
-        }
+        checkOpponent(opponent, board);
 
         gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
 

@@ -117,9 +117,12 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    private Game finalizeGame(Game game, User winner) {
-        game.markAsEnded(winner);
-        Game savedGame = gameRepository.save(game);
+    @Transactional
+    public Game finalizeGame(GamePlayer winner) {
+        Game game = winner.getGame();
+        User user = winner.getUser();
+
+        game.markAsEnded(user);
 
         for (GamePlayer gamePlayer : game.getGamePlayers()) {
             User player = gamePlayer.getUser();
@@ -135,7 +138,7 @@ public class GameService {
             );
         }
 
-        return savedGame;
+        return game;
     }
 
     private long calculateTotalDurationMinutes(Integer userId) {
@@ -153,23 +156,9 @@ public class GameService {
     }
 
     @Transactional
-    public Game endGame(Integer gameId, Integer winnerId) {
-        Game game = getGameById(gameId);
-        User winner = userService.findUser(winnerId);
-        return finalizeGame(game, winner);
-    }
-
-    @Transactional
-    public Game giveUpOrLose(Integer gameId, Integer userId) {
-        Game game = getGameById(gameId);
-
-        User winner = game.getGamePlayers().stream()
-            .map(GamePlayer::getUser)
-            .filter(u -> !u.getId().equals(userId))
-            .findFirst()
-            .orElseThrow(GamePlayerNotFoundException::new);
-
-        return finalizeGame(game, winner);
+    public Game giveUpOrLose(GamePlayer loser) {
+        GamePlayer winner = gamePlayerService.getOpponent(loser);
+        return finalizeGame(winner);
     }
 
     @Transactional
@@ -229,23 +218,17 @@ public class GameService {
     }
 
     @Transactional
-    public Game setUpSkill(Integer gameId, Integer userId, String skill) {
-        Game game = getGameById(gameId);
-
-        GamePlayer gamePlayer = game.getGamePlayers().stream()
-            .filter(gp -> gp.getUser().getId().equals(userId))
-            .findFirst()
-            .orElseThrow(() -> new UserNotFoundException(userId));
+    public Game setUpSkill(GamePlayer gamePlayer, Skill skill) {
+        Game game = gamePlayer.getGame();
 
         if (gamePlayer.getEnergy() <= 0) {
             throw new SkillNotValidRequestException("Not enough energy to set up skill");
         }
 
         gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);
-        Skill skillEnum = Skill.valueOf(skill);
-        SkillUsage skillUsage = SkillUsage.build(skillEnum, game.getRound());
+        SkillUsage skillUsage = SkillUsage.build(skill, game.getRound());
 
-        game.setSkill(skillEnum);
+        game.setSkill(skill);
         gamePlayer.getSkillsUsed().add(skillUsage);
 
         cardService.refillDeck(gamePlayer);
