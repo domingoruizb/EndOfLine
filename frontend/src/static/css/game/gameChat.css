@@ -6,7 +6,6 @@
     height: 100%;
     background: #121212;
     color: #fff;
-    /* padding: 0 1vh; */
     border-radius: 10px;
     border: 2px solid var(--main-orange-color);
     overflow: hidden;
@@ -34,12 +33,6 @@
     display: none;
 }
 
-.chat-sender {
-    margin-bottom: 0.5vh;
-    font-size: 1.5vh;
-    font-weight: bold;
-}
-
 .chat-message {
     max-width: 85%;
     border-radius: 10px;
@@ -50,6 +43,16 @@
     font-weight: 500;
     margin-bottom: 1vh;
     padding: 1vh 0.5vw;
+}
+
+.chat-sender {
+    display: block;
+    width: 100%;
+    padding-bottom: 0.2vh;
+    margin-bottom: 0.5vh;
+    font-size: 1.5vh;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .chat-message.me {
@@ -64,9 +67,11 @@
     margin-left: 1vh;
 }
 
-.chat-text {
+.chat-timestamp {
+    font-size: 1.25vh;
+    padding-top: 0.5vh;
+    text-align: right;
     display: block;
-    padding: 0.5vh 0.5vw;
 }
 
 .game-chat form {

@@ -7,6 +7,7 @@ import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class MessageService {
         Message msg = new Message();
 
         msg.setBody(request.trimmedText());
-        msg.setSentAt(LocalDateTime.now());
+        msg.setSentAt(Instant.now().toEpochMilli());
         msg.setGame(game);
         msg.setUser(user);
 
@@ -36,7 +37,7 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageResponseDTO> getMessages (Integer gameId, LocalDateTime since) {
+    public List<MessageResponseDTO> getMessages (Integer gameId, Long since) {
         List<Message> messages = messageRepository.findMessages(gameId, since);
 
         return messages

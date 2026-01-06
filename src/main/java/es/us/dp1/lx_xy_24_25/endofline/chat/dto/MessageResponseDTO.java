@@ -4,7 +4,9 @@ import es.us.dp1.lx_xy_24_25.endofline.chat.Message;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 // DTO for returning messages to player
 // 'body' for message text, 'timestamp' as epoch milliseconds
@@ -15,9 +17,9 @@ public class MessageResponseDTO {
     private Integer id;
     private String sender;
     private String body;
-    private LocalDateTime sentAt;
+    private Long sentAt;
 
-    public MessageResponseDTO(Integer id, String sender, String body, LocalDateTime sentAt) {
+    public MessageResponseDTO(Integer id, String sender, String body, Long sentAt) {
         this.id = id;
         this.sender = sender;
         this.body = body;

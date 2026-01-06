@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import tokenService from '../../services/token.service'
 
 const pollingInterval = 3000
@@ -6,11 +6,12 @@ const jwt = tokenService.getLocalAccessToken()
 
 export function useGameMessages (gameId) {
     const [messages, setMessages] = useState([])
-    const [lastSentAt, setLastSentAt] = useState(null)
+    const lastSentAtRef = useRef(null)
 
     const fetchMessages = async () => {
         try {
-            const response = await fetch(`/api/v1/messages/${gameId}${lastSentAt != null ? `?since=${new Date(lastSentAt).toISOString().slice(0, -1)}` : ''}`, {
+            const lastSentAt = lastSentAtRef.current
+            const response = await fetch(`/api/v1/messages/${gameId}${lastSentAt != null ? `?since=${lastSentAt}` : ''}`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -33,14 +34,14 @@ export function useGameMessages (gameId) {
                 return [...prev, ...newFiltered]
             })
 
-            const maxSentAt = Math.max(...data.map(d => new Date(d.sentAt).getTime()))
-            setLastSentAt(maxSentAt)
+            const maxSentAt = Math.max(...data.map(m => m.sentAt))
+            lastSentAtRef.current = maxSentAt
         } catch (err) {
             console.error('Error fetching messages:', err)
         }
     }
 
-    const sendMessage = async (text, setText) => {
+    const sendMessage = async (text, clearInput) => {
         try {
             const response = await fetch(`/api/v1/messages/${gameId}`, {
                 method: 'POST',
@@ -59,13 +60,16 @@ export function useGameMessages (gameId) {
 
             const saved = await response.json()
             setMessages(prev => [...prev, saved])
-            setText('')
+            clearInput()
         } catch (err) {
             console.error('Error sending message:', err)
         }
     }
 
     useEffect(() => {
+        lastSentAtRef.current = null
+        setMessages([])
+
         fetchMessages()
 
         const intervalId = setInterval(fetchMessages, pollingInterval)

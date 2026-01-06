@@ -8,6 +8,10 @@ export default function GameChat ({ game }) {
 	const listRef = useRef(null)
 	const { messages, sendMessage } = useGameMessages(game.gameId)
 
+	const clearInput = () => {
+		setText('')
+	}
+
 	async function handleSendMessage (e) {
 		e.preventDefault()
 
@@ -15,7 +19,7 @@ export default function GameChat ({ game }) {
 			return
 		}
 
-		await sendMessage(text.trim(), setText)
+		await sendMessage(text.trim(), clearInput)
 	}
 
 	useEffect(() => {

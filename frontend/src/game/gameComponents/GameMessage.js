@@ -48,6 +48,16 @@ export default function GameMessage ({
             >
                 {message.body}
             </span>
+            <span
+                className='chat-timestamp'
+            >
+                {
+                    new Date(message.sentAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                }
+            </span>
         </div>
     )
 }

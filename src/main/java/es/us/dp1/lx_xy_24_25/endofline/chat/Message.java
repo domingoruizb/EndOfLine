@@ -19,7 +19,7 @@ public class Message extends BaseEntity {
     private String body;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime sentAt;
+    private Long sentAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -31,7 +31,7 @@ public class Message extends BaseEntity {
 
     public Message() {}
 
-    public Message(String body, LocalDateTime sentAt, User user, Game game) {
+    public Message(String body, Long sentAt, User user, Game game) {
         this.body = body;
         this.sentAt = sentAt;
         this.user = user;

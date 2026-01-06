@@ -54,8 +54,8 @@ public class MessageController {
         @PathVariable Integer gameId,
         @RequestParam(required = false) String since
     ) {
-        LocalDateTime sinceDateTime = since == null ? null : LocalDateTime.parse(since);
-        List<MessageResponseDTO> response = messageService.getMessages(gameId, sinceDateTime);
+        Long sinceValue = (since == null) ? null : Long.valueOf(since);
+        List<MessageResponseDTO> response = messageService.getMessages(gameId, sinceValue);
 
         return ResponseEntity.ok(response);
     }

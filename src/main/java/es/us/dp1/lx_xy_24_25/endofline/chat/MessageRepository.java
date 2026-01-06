@@ -14,5 +14,5 @@ public interface MessageRepository extends CrudRepository<Message, Integer> {
         AND (:since IS NULL OR m.sentAt > :since)
         ORDER BY m.sentAt ASC
     """)
-    List<Message> findMessages(Integer gameId, LocalDateTime since);
+    List<Message> findMessages(Integer gameId, Long since);
 }
