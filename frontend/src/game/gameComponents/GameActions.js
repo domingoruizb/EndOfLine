@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import tokenService from '../../services/token.service'
 import { isTurn } from '../gameUtils/utils'
-import { changeDeck } from '../gameUtils/api'
+import { useFetchResource } from '../../util/useFetchResource'
 import '../../static/css/game/gameActions.css'
 
 const user = tokenService.getUser();
@@ -13,9 +13,13 @@ export default function GameActions ({
     toggleGiveUpModal
 }) {
     const navigate = useNavigate()
+    const { getData } = useFetchResource()
 
-    const handleChangeDeck = () => {
-        changeDeck(game)
+    const handleChangeDeck = async () => {
+        await getData(
+            `/api/v1/board/${game.gameId}/change`,
+            'POST'
+        )
     }
 
     return (

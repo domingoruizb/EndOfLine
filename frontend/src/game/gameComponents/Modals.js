@@ -5,7 +5,7 @@ import LoserModal from './LoserModal'
 import GiveUpModal from './GiveUpModal'
 import RulesModal from './RulesModal'
 import SpectatorModal from './SpectatorModal'
-import { giveUp } from '../gameUtils/api'
+import { useFetchResource } from '../../util/useFetchResource'
 
 const user = tokenService.getUser()
 const isAdmin = user && user.roles ? user.roles.includes('ADMIN') : false
@@ -18,10 +18,19 @@ export default function Modals ({
     toggleRulesModal
 }) {
     const navigate = useNavigate()
+    const { getData } = useFetchResource()
 
     const handleGiveUp = async () => {
         toggleGiveUpModal()
-        await giveUp(game, navigate)
+
+        const data = await getData(
+            `/api/v1/games/${game.gameId}/giveup`,
+            'PUT'
+        )
+
+        if (data != null) {
+            navigate('/creategame')
+        }
     }
 
     return (

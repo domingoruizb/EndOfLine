@@ -84,7 +84,7 @@ public class BoardController {
 
         boardService.placeCard(gamePlayer, card, boardPlaceDTO.getIndex());
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }

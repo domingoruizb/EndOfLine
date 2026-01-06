@@ -221,8 +221,8 @@ public class GameService {
     public Game setUpSkill(GamePlayer gamePlayer, Skill skill) {
         Game game = gamePlayer.getGame();
 
-        if (gamePlayer.getEnergy() <= 0) {
-            throw new SkillNotValidRequestException("Not enough energy to set up skill");
+        if (gamePlayer.getEnergy() <= 0 || game.getRound() == 1) {
+            throw new SkillNotValidRequestException();
         }
 
         gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);

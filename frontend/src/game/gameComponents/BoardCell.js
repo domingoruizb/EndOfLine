@@ -1,4 +1,4 @@
-import { placeCard } from '../gameUtils/api'
+import { useFetchResource } from '../../util/useFetchResource'
 import { isTurn } from '../gameUtils/utils'
 
 export default function BoardCell ({
@@ -8,6 +8,8 @@ export default function BoardCell ({
     selected,
     setSelected
 }) {
+    const { getData } = useFetchResource()
+
     const isPlayerTurn = isTurn(game)
     const isPlaceable = isPlayerTurn && game.placeable.includes(index)
     const isReversible = isPlayerTurn && game.reversible.includes(index)
@@ -22,7 +24,17 @@ export default function BoardCell ({
                 return
             }
 
-            await placeCard(game, selected, index)
+            const body = {
+                cardId: selected.id,
+                index: index
+            }
+
+            await getData(
+                `/api/v1/board/${game.gameId}/place`,
+                'POST',
+                body
+            )
+
             setSelected(null)
         } catch (err) {
             console.error('Error placing card:', err)

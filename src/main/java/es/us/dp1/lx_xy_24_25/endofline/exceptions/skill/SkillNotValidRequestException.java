@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class SkillNotValidRequestException extends RuntimeException {
+    public SkillNotValidRequestException() {
+        super("Not possible to request a skill");
+    }
+
     public SkillNotValidRequestException(String message) {
         super(message);
     }
