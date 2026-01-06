@@ -1,3 +1,5 @@
+// TODO: Maybe use dynamic strings for image paths, instead of importing each one
+// Since images can be loaded with a route
 import blueImage from '../../static/images/cards/CB_BACK.png';
 import greenImage from '../../static/images/cards/CG_BACK.png';
 import magentaImage from '../../static/images/cards/CM_BACK.png';

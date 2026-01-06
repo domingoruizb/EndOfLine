@@ -1,3 +1,5 @@
+// TODO: Probably should be refactored (201 lines)
+// Possibly extract components to reuse them
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Form, Input, Label } from "reactstrap";

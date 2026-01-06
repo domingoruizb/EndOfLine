@@ -1,3 +1,5 @@
+// TODO: Probably should be refactored (292 lines)
+// Possibly extract api calls/toasts to a custom file/custom functions to reuse them
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "reactstrap";

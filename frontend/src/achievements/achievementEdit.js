@@ -1,3 +1,5 @@
+// TODO: Probably should be refactored
+// Possibly extract components to reuse them
 import { useState } from "react";
 import tokenService from "../services/token.service";
 import { Link } from "react-router-dom";

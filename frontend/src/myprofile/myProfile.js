@@ -1,3 +1,6 @@
+// TODO: Probably should be refactored (324 lines) (along with its css (207 lines))
+// Suggested changes:
+// https://chatgpt.com/share/695c5301-3474-8010-b72f-81e171c0fcba
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Input, Label } from "reactstrap";

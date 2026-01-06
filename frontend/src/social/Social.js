@@ -1,3 +1,5 @@
+// TODO: Probably should be refactored (along with its css (255 lines))
+// Possibly extract StatCard to a general components folder since UserStats also uses it
 import React, { useState } from 'react';
 import { Card, CardBody, CardTitle, CardText, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
 import '../static/css/social/Social.css'

@@ -1,3 +1,5 @@
+// TODO: Probably should be refactored (283 lines)
+// Possibly extract styles to css files
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import tokenService from '../services/token.service';

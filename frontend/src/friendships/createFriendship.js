@@ -1,3 +1,6 @@
+// TODO: Probably should be refactored (200 lines)
+// Possibly extract api calls/toasts to a custom file/custom functions to reuse them
+// Possibly remove extra api calls since backend could handle them
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Label } from "reactstrap";

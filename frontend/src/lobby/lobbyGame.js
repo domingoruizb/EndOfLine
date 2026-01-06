@@ -1,3 +1,4 @@
+// TODO: Probably should be refactored (432 lines) (along with its css (385 lines))
 import React from 'react';
 import '../App.css';
 import '../static/css/newGame/newGame.css'; 

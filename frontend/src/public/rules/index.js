@@ -1,3 +1,5 @@
+// TODO: No use in refactoring this file since rules are rules
+// But probably should be moved to a custom rules folder
 import React from "react";
 import { Container } from "reactstrap";
 import "../../static/css/auth/authPage.css";

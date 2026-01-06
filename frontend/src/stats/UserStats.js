@@ -1,3 +1,5 @@
+// TODO: Probably should be refactored
+// Possibly extract StatCard to a general components folder since Social also uses it
 import React from 'react';
 import { Card, CardBody, CardTitle, CardText, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
 import '../static/css/stats/UserStats.css';
