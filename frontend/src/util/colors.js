@@ -8,3 +8,8 @@ export const COLOR_MAP = {
     VIOLET: '#C48FBF',
     WHITE: '#C5C6C6'
 }
+
+export const colorImages = Object.keys(COLOR_MAP).map(color => ({
+    color: color,
+    image: `/cardImages/C${color.charAt(0)}_BACK.png`
+}))

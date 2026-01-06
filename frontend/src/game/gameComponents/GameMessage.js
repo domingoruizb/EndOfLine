@@ -1,5 +1,5 @@
 import tokenService from '../../services/token.service'
-import { COLOR_MAP } from '../gameUtils/colors'
+import { COLOR_MAP } from '../../util/colors.js'
 
 const user = tokenService.getUser()
 

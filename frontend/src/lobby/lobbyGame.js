@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { Modal } from 'reactstrap';
 import tokenService from "../services/token.service.js";
 import getErrorModal from "../util/getErrorModal.js";
-import { GameGamePlayerFormInputs } from "./forms/colors.js";
+import { colorImages } from '../util/colors.js';
 import { useNavigate, useParams } from 'react-router-dom';
 
 
@@ -370,7 +370,7 @@ const copyGameCode = async () => {
                         <div className="row">
                             <div className="colors"
                             style={selectorHostStyle}>
-                                {GameGamePlayerFormInputs.map((choice) => (
+                                {colorImages.map((choice) => (
                                     <div
                                         key={choice.color}
                                         className={`color-image-container ${myColorState === choice.color ? "selected-color-container" : ""}`}
@@ -387,7 +387,7 @@ const copyGameCode = async () => {
                             </div>
                             
                             <div className="colors" style={selectorFriendStyle}>
-                                {GameGamePlayerFormInputs.map((choice) => (
+                                {colorImages.map((choice) => (
                                     <div
                                         key={choice.color}
                                         className={`color-image-container ${friendColorState === choice.color ? "selected-color-container" : ""}`}
