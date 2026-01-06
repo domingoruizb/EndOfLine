@@ -26,7 +26,7 @@ export default function Home(){
         <div className="home-page-container">
             <div className="hero-div">
                 <h1>END OF LINE</h1>
-                <img src={'/images/logo.png'} alt="Logo" style={{ width: '500px', height: 'auto', borderRadius: '50px' }} />
+                <img src='/images/logo.png' alt="Logo" style={{ width: '500px', height: 'auto', borderRadius: '50px' }} />
             </div>
         </div>
         </>

@@ -67,7 +67,7 @@ export default function CreateGame(){
         <div className="home-page-container">
             <div className="hero-div">
                 <h1>END OF LINE</h1>
-                <img src={'/images/logo.png'} alt="Logo" style={{ width: '500px', height: 'auto', borderRadius: '50px' }} />
+                <img src='/images/logo.png' alt="Logo" style={{ width: '500px', height: 'auto', borderRadius: '50px' }} />
                 {
                     <div className="options-row">
                         <Link className="auth-button" to="/joingame" style={{textDecoration: "none"}}>

@@ -93,7 +93,7 @@ export default function RulesPage({ embed = false }) {
                     <h3 style={{ color: "#B1D12D", fontWeight: 700 }}>COMPONENTS <span style={{ color: "#FE5B02" }}>(54 CARDS)</span></h3>
                     <div style={{ textAlign: "center", margin: "1rem 0" }}>
                         <img
-                            src={'/images/rules.png'}
+                            src='/images/rules.png'
                             alt="Rule illustration"
                             style={{
                                 maxWidth: "80%",
