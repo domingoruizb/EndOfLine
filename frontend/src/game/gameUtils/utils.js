@@ -80,14 +80,14 @@ export function getStartingCards (game) {
             index: 30,
             card: {
                 color: host.color,
-                image: `/cardImages/C${hostColor}_START.png`
+                image: `/cards/C${hostColor}_START.png`
             }
         },
         {
             index: 32,
             card: {
                 color: guest.color,
-                image: `/cardImages/C${guestColor}_START.png`
+                image: `/cards/C${guestColor}_START.png`
             }
         }
     ]

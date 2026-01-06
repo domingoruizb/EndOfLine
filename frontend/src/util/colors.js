@@ -11,5 +11,5 @@ export const COLOR_MAP = {
 
 export const colorImages = Object.keys(COLOR_MAP).map(color => ({
     color: color,
-    image: `/cardImages/C${color.charAt(0)}_BACK.png`
+    image: `/cards/C${color.charAt(0)}_BACK.png`
 }))

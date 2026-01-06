@@ -5,7 +5,7 @@ export default function EnergyCard ({
 }) {
     return !game.spectating && (
         <img
-            src={`/cardImages/C${getOwnColor(game)}_ENERGY.png`}
+            src={`/cards/C${getOwnColor(game)}_ENERGY.png`}
             alt='Energy Symbol'
             className='card-button'
             style={{

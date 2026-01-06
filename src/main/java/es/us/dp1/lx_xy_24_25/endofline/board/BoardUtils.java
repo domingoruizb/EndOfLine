@@ -18,7 +18,7 @@ public class BoardUtils {
         return gamePlayerCard
             .getCard()
             .getImage()
-            .replace("/cardImages/", "")
+            .replace("/cards/", "")
             .replace(".png", "");
     }
 
