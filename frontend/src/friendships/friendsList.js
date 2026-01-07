@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FriendTableRow from "./friendshipUtils/FriendTableRow";
-import FriendPagination from "./FriendPagination";
+import FriendPagination from "./friendshipUtils/FriendPagination";
 import { filterAndSortFriendships, paginate } from "./friendshipUtils/friendshipListUtils";
 import { showSuccessToast, showErrorToast } from "./friendshipUtils/toastUtils";
 import useFriendshipNotifications from "./friendshipUtils/useFriendshipNotifications";

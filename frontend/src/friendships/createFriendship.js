@@ -1,11 +1,12 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form } from "reactstrap";
-import FriendFormInput from "./friendshipUtils/FriendFormInput";
 import { showSuccessToast, showErrorToast } from "./friendshipUtils/toastUtils";
 import { getUserByUsername, getMyFriendships, sendFriendshipRequest } from "./friendshipUtils/friendshipApi";
 import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
+import FormGenerator from "../components/formGenerator/formGenerator";
+import createFriendshipInputs from "./friendshipUtils/createFriendshipInputs";
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipCreation() {
@@ -13,25 +14,25 @@ export default function FriendshipCreation() {
     const user = tokenService.getUser();
     const [message] = useState(null);
     const [visible, setVisible] = useState(false);
+
     const [username, setUsername] = useState("");
 
     const modal = getErrorModal(setVisible, visible, message);
 
-    const handleChange = (event) => {
-        setUsername(event.target.value);
-    };
+
 
     let navigate = useNavigate();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+
+    const handleSubmit = async ({ values }) => {
+        const usernameValue = values.username;
         try {
-            const player = await getUserByUsername(username, jwt);
+            const player = await getUserByUsername(usernameValue, jwt);
             const friendshipsJson = await getMyFriendships(jwt);
             if (friendshipsJson.some(friendship => friendship.sender.id === player.id || friendship.receiver.id === player.id))
                 throw new Error('You are already friends or you have a pending friendship request from this player.');
             await sendFriendshipRequest(user.id, player.id, jwt);
-            showSuccessToast(`Friendship request sent to ${username}!`);
+            showSuccessToast(`Friendship request sent to ${usernameValue}!`);
             setTimeout(() => {
                 navigate("/friends");
             }, 500);
@@ -48,25 +49,23 @@ export default function FriendshipCreation() {
                     <h1 className="create-friendship-title">
                         Send Friendship
                     </h1>
-                {modal}
-                <Form onSubmit={handleSubmit} className="create-friendship-form">
-                    <FriendFormInput value={username} onChange={handleChange} />
-                    <div className="create-friendship-buttons">
+                    {modal}
+                    <FormGenerator
+                        inputs={createFriendshipInputs(username)}
+                        onSubmit={handleSubmit}
+                        numberOfColumns={1}
+                        buttonText="Send"
+                        buttonClassName="create-friendship-send-button"
+                    >
                         <button
                             type="button"
                             onClick={() => navigate("/friends")}
                             className="create-friendship-cancel-button"
+                            style={{ marginLeft: '1rem' }}
                         >
                             Cancel
                         </button>
-                        <button
-                            type="submit"
-                            className="create-friendship-send-button"
-                        >
-                            Send
-                        </button>
-                    </div>
-                </Form>
+                    </FormGenerator>
                 </div>
             </div>
         </div>

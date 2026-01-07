@@ -1,63 +1,38 @@
-import React from "react";
-import { Form } from "reactstrap";
-import UserFormInput from "./UserFormInput";
+
+import React, { useRef } from "react";
+import FormGenerator from "../../../components/formGenerator/formGenerator";
+import userFormInputs from "./userFormInputs";
 
 export default function UserForm({ user, onChange, onSubmit, auths, isEdit }) {
+  const formRef = useRef();
+
+  const handleSubmit = ({ values }) => {
+    if (onChange) {
+      Object.entries(values).forEach(([name, value]) => {
+        onChange({ target: { name, value } });
+      });
+    }
+    if (onSubmit) {
+      onSubmit({
+        preventDefault: () => {},
+        target: { elements: values },
+        values,
+      });
+    }
+  };
+
   return (
-    <Form onSubmit={onSubmit}>
-      <UserFormInput
-        label="Username"
-        name="username"
-        type="text"
-        value={user.username || ""}
-        onChange={onChange}
-        required
-      />
-      <UserFormInput
-        label="Name"
-        name="name"
-        type="text"
-        value={user.name || ""}
-        onChange={onChange}
-        required
-      />
-      <UserFormInput
-        label="Surname"
-        name="surname"
-        type="text"
-        value={user.surname || ""}
-        onChange={onChange}
-        required
-      />
-      <UserFormInput
-        label="Email"
-        name="email"
-        type="text"
-        value={user.email || ""}
-        onChange={onChange}
-        required
-      />
-      <UserFormInput
-        label="BirthDate"
-        name="birthdate"
-        type="date"
-        value={user.birthdate || ""}
-        onChange={onChange}
-        required
-      />
-      <UserFormInput
-        label="Authority"
-        name="authority"
-        type="select"
-        value={user.authority?.id || ""}
-        onChange={onChange}
-        required
-        options={auths.map(auth => ({ value: auth.id, label: auth.authority }))}
-      />
-      <div className="custom-button-row">
-        <button className="user-add-button" type="submit">Save</button>
-        <a href="/users" className="cancel-link">Cancel</a>
-      </div>
-    </Form>
+    <div>
+      <FormGenerator
+        ref={formRef}
+        inputs={userFormInputs(auths, user, isEdit)}
+        onSubmit={handleSubmit}
+        numberOfColumns={1}
+        buttonText="Save"
+        buttonClassName="user-add-button"
+      >
+        <a href="/users" className="cancel-link" style={{ marginLeft: '1rem' }}>Cancel</a>
+      </FormGenerator>
+    </div>
   );
 }

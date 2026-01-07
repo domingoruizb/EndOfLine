@@ -48,7 +48,7 @@ export default function JoinGame(){
         try {
 
             const response = await fetch(
-                `/api/v1/games/join/${user.id}/${cleanCode}`,
+                `/api/v1/games/join/${cleanCode}`,
                 {
                     method: "POST",
                     headers: {

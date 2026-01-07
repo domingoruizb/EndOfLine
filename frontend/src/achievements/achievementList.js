@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
-import AchievementPlayersModal from './AchievementPlayersModal';
+import AchievementPlayersModal from './achievementComponents/AchievementPlayersModal';
 import AchievementCard from './achievementComponents/AchievementCard';
 import AchievementTableRow from './achievementComponents/AchievementTableRow';
 import '../static/css/achievements/achievementList.css';
