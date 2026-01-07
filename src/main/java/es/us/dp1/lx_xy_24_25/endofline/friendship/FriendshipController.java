@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/friendships")
@@ -26,32 +27,33 @@ public class FriendshipController {
         this.userService = userService;
     }
 
+    // TODO: Accepted or all friendships?
     @GetMapping("/myFriendships")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Friendship> findAcceptedFriendships() {
-        Integer id = userService.findCurrentUser().getId();
-        return friendshipService.findFriendshipsOf(id);
+    public List<Friendship> findAcceptedFriendships() {
+        User user = userService.findCurrentUser();
+        return friendshipService.getFriendships(user);
     }
 
     @GetMapping("/myPendingReceivedFriendships")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Friendship> findPendingReceivedFriendships() {
-        Integer id = userService.findCurrentUser().getId();
-        return friendshipService.findPendingReceivedFriendships(id);
+    public List<Friendship> findPendingReceivedFriendships() {
+        User user = userService.findCurrentUser();
+        return friendshipService.getPendingFriendships(user);
     }
 
     @PutMapping("/{id}/acceptFriendship")
     @ResponseStatus(HttpStatus.OK)
     public Friendship acceptFriendship(@PathVariable Integer id) {
-        Friendship friendship = friendshipService.findById(id);
-        return friendshipService.acceptFriendShip(friendship);
+        Friendship friendship = friendshipService.getFriendship(id);
+        return friendshipService.accept(friendship);
     }
 
     @DeleteMapping("/{id}/rejectFriendship")
     @ResponseStatus(HttpStatus.OK)
     public void rejectFriendship(@PathVariable Integer id) {
-        Friendship friendship = friendshipService.findById(id);
-        friendshipService.rejectFriendShip(friendship);
+        Friendship friendship = friendshipService.getFriendship(id);
+        friendshipService.reject(friendship);
     }
 
     @PostMapping
@@ -64,7 +66,7 @@ public class FriendshipController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer id) {
-        Friendship friendship = friendshipService.findById(id);
+        Friendship friendship = friendshipService.getFriendship(id);
         friendshipService.delete(friendship);
     }
 }
