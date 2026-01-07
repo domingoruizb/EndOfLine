@@ -1,71 +1,4 @@
- .social-page {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../../images/home_background.png');
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 2rem 0;
-}
-
-.social-container {
-  width: 95%;
-  max-width: 1000px;
-  margin: 2rem auto;
-  background: rgba(20, 20, 20, 0.85);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(254, 91, 2, 0.1);
-  border: 1px solid rgba(254, 91, 2, 0.2);
-  color: #fff;
-}
-
-.social-container h2 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #fe5b02;
-  text-align: center;
-}
-
-.social-container .text-muted {
-  color: #ddd !important;
-  text-align: center;
-}
-
-.stat-card {
-  border-radius: 12px;
-  text-align: center;
-  background: rgba(34, 34, 34, 0.85);
-  --bs-card-bg: rgba(34, 34, 34, 0.85);
-  --bs-card-color: #ffffff;
-  border: 1px solid rgba(254, 91, 2, 0.2);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-
-.stat-title {
-  color: #fe5b02;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.stat-number {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.list-group-item {
-  background: rgba(34, 34, 34, 0.8);
-  --bs-list-group-bg: rgba(34, 34, 34, 0.8);
-  --bs-list-group-color: #ffffff;
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-/* Player Rankings Styles */
+/* Player Rankings Table and Pagination Styles */
 .ranking-table {
   width: 100%;
   margin-top: 1rem;
@@ -151,7 +84,6 @@
   border-color: rgba(205, 127, 50, 0.5);
 }
 
-/* Ranking Pagination Styles */
 .ranking-pagination {
   display: flex;
   justify-content: center;
@@ -201,36 +133,14 @@
     padding: 0.6rem 0.8rem;
     font-size: 0.85rem;
   }
-
-  .ranking-header {
-    font-size: 0.75rem;
-  }
-
-  .rank-col {
-    font-size: 1rem;
-  }
-
-  .ranking-pagination {
-    gap: 1rem;
-  }
-
-  .ranking-pagination-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-  }
-
-  .ranking-pagination-info {
-    font-size: 0.85rem;
-  }
+  .ranking-header { font-size: 0.75rem; }
+  .rank-col { font-size: 1rem; }
+  .ranking-pagination { gap: 1rem; }
+  .ranking-pagination-button { padding: 0.5rem 1rem; font-size: 0.85rem; }
+  .ranking-pagination-info { font-size: 0.85rem; }
 }
 
 @media (max-width: 576px) {
-  .social-container {
-    padding: 1.5rem 1rem;
-  }
-  .social-container h2 { font-size: 2.2rem; }
-  .stat-number { font-size: 1.4rem; }
-  
   .ranking-header,
   .ranking-row {
     grid-template-columns: 50px 1fr 60px 80px;
@@ -238,17 +148,7 @@
     padding: 0.5rem;
     font-size: 0.8rem;
   }
-
-  .games-col {
-    display: none;
-  }
-
-  .ranking-pagination {
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .ranking-pagination-button {
-    width: 100%;
-  }
+  .games-col { display: none; }
+  .ranking-pagination { flex-direction: column; gap: 0.8rem; }
+  .ranking-pagination-button { width: 100%; }
 }

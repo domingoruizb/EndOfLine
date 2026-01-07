@@ -1,10 +1,9 @@
-// TODO: Probably should be refactored (200 lines)
-// Possibly extract api calls/toasts to a custom file/custom functions to reuse them
-// Possibly remove extra api calls since backend could handle them
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Label } from "reactstrap";
-import { toast } from "react-toastify";
+import { Form } from "reactstrap";
+import FriendFormInput from "./friendshipUtils/FriendFormInput";
+import { showSuccessToast, showErrorToast } from "./friendshipUtils/toastUtils";
+import { getUserByUsername, getMyFriendships, sendFriendshipRequest } from "./friendshipUtils/friendshipApi";
 import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
 import "../static/css/friendships/friendsList.css";
@@ -27,64 +26,17 @@ export default function FriendshipCreation() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const idResponse = await fetch(`/api/v1/users/username/${username}`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!idResponse.ok)
-                throw new Error(`Player with username ${username} does not exist.`);
-
-            const player = await idResponse.json();
-            const friendshipsResponse = await fetch(`/api/v1/friendships/myFriendships`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const friendshipsJson = await friendshipsResponse.json();
+            const player = await getUserByUsername(username, jwt);
+            const friendshipsJson = await getMyFriendships(jwt);
             if (friendshipsJson.some(friendship => friendship.sender.id === player.id || friendship.receiver.id === player.id))
                 throw new Error('You are already friends or you have a pending friendship request from this player.');
-
-            const response = await fetch(`/api/v1/friendships`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    sender: user.id,
-                    receiver: player.id
-                })
-            });
-
-            if (!response.ok)
-                throw new Error('Failed to send friendship request.');
-
-            toast.success(`🎉 Friendship request sent to ${username}!`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-            
+            await sendFriendshipRequest(user.id, player.id, jwt);
+            showSuccessToast(`Friendship request sent to ${username}!`);
             setTimeout(() => {
                 navigate("/friends");
             }, 500);
         } catch (error) {
-            toast.error(`❌ ${error.message}`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+            showErrorToast(error.message);
         }
     };
 
@@ -98,20 +50,7 @@ export default function FriendshipCreation() {
                     </h1>
                 {modal}
                 <Form onSubmit={handleSubmit} className="create-friendship-form">
-                    <div className="custom-form-input">
-                        <Label for="username" className="create-friendship-label">
-                            Friend's Username
-                        </Label>
-                        <Input
-                            type="text"
-                            required
-                            name="username"
-                            id="username"
-                            value={username}
-                            onChange={handleChange}
-                            className="create-friendship-input"
-                        />
-                    </div>
+                    <FriendFormInput value={username} onChange={handleChange} />
                     <div className="create-friendship-buttons">
                         <button
                             type="button"

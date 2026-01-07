@@ -1,21 +1,15 @@
-// TODO: Probably should be refactored (along with its css (255 lines))
-// Possibly extract StatCard to a general components folder since UserStats also uses it
 import React, { useState } from 'react';
-import { Card, CardBody, CardTitle, CardText, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
-import '../static/css/social/Social.css'
+import { Card, CardBody, CardTitle, Row, Col } from 'reactstrap';
+import '../static/css/social/SocialLayout.css';
+import '../static/css/social/StatCard.css';
+import '../static/css/social/RankingTable.css';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
-
-function StatCard({ title, children }) {
-  return (
-    <Card className="mb-3 stat-card">
-      <CardBody>
-        <CardTitle tag="h6" className="stat-title">{title}</CardTitle>
-        <CardText className="stat-number">{children}</CardText>
-      </CardBody>
-    </Card>
-  );
-}
+import StatCard from '../components/statsComponents/StatCard';
+import RankingTable from '../components/statsComponents/RankingTable';
+import GamesGlobalCard from '../components/statsComponents/GamesGlobalCard';
+import DurationsGlobalCard from '../components/statsComponents/DurationsGlobalCard';
+import { fmtHours, fmtMins } from '../util/formatters';
 
 export default function Social() {
   const jwt = tokenService.getLocalAccessToken();
@@ -23,19 +17,6 @@ export default function Social() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rankingsPerPage] = useState(10);
 
-  const fmtHours = (mins) => (mins / 60).toFixed(1);
-  const fmtMins = (n) => Math.round(n);
-  const fmtSkill = (s) => {
-    if (!s) return '—';
-    try {
-      return String(s)
-        .replace(/_/g, ' ')
-        .toLowerCase()
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-    } catch {
-      return s;
-    }
-  };
 
   if (!stats || !stats.global) {
     return (
@@ -75,47 +56,18 @@ export default function Social() {
 
         <Row className="mt-3">
           <Col xs={12} md={6}>
-            <Card className="mb-3 stat-card">
-              <CardBody>
-                <CardTitle tag="h6" className="stat-title">Games — Global</CardTitle>
-                <ListGroup flush>
-                  <ListGroupItem className="d-flex justify-content-between align-items-center">
-                    <span>Max games by a player</span>
-                    <strong>{global.maxGamesByPlayer}</strong>
-                  </ListGroupItem>
-                  <ListGroupItem className="d-flex justify-content-between align-items-center">
-                    <span>Min games by a player</span>
-                    <strong>{global.minGamesByPlayer}</strong>
-                  </ListGroupItem>
-                  <ListGroupItem className="d-flex justify-content-between align-items-center">
-                    <span>Favourite skill</span>
-                    <strong>{fmtSkill(global.favoriteSkill)}</strong>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardBody>
-            </Card>
+            <GamesGlobalCard
+              maxGamesByPlayer={global.maxGamesByPlayer}
+              minGamesByPlayer={global.minGamesByPlayer}
+              favoriteSkill={global.favoriteSkill}
+            />
           </Col>
-
           <Col xs={12} md={6}>
-            <Card className="mb-3 stat-card">
-              <CardBody>
-                <CardTitle tag="h6" className="stat-title">Durations — Global</CardTitle>
-                <ListGroup flush>
-                  <ListGroupItem className="d-flex justify-content-between align-items-center">
-                    <span>Avg duration per game (min)</span>
-                    <strong>{fmtMins(global.avgDurationMinutes)}</strong>
-                  </ListGroupItem>
-                  <ListGroupItem className="d-flex justify-content-between align-items-center">
-                    <span>Max duration (min)</span>
-                    <strong>{fmtMins(global.maxDurationMinutes)}</strong>
-                  </ListGroupItem>
-                  <ListGroupItem className="d-flex justify-content-between align-items-center">
-                    <span>Min duration (min)</span>
-                    <strong>{fmtMins(global.minDurationMinutes)}</strong>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardBody>
-            </Card>
+            <DurationsGlobalCard
+              avgDurationMinutes={global.avgDurationMinutes}
+              maxDurationMinutes={global.maxDurationMinutes}
+              minDurationMinutes={global.minDurationMinutes}
+            />
           </Col>
         </Row>
 
@@ -128,61 +80,13 @@ export default function Social() {
                   Players ranked by total number of games won
                 </p>
                 {global.rankings && global.rankings.length > 0 ? (
-                  <>
-                    <div className="ranking-table">
-                      <div className="ranking-header">
-                        <span className="rank-col">Rank</span>
-                        <span className="player-col">Player</span>
-                        <span className="wins-col">Wins</span>
-                        <span className="games-col">Games</span>
-                        <span className="winrate-col">Win Rate</span>
-                      </div>
-                      {currentRankings.map((player) => {
-                        const winRate = player.gamesPlayed > 0 
-                          ? ((player.gamesWon / player.gamesPlayed) * 100).toFixed(1) 
-                          : '0.0';
-                        const rankClass = player.rank === 1 ? 'rank-first' : 
-                                         player.rank === 2 ? 'rank-second' : 
-                                         player.rank === 3 ? 'rank-third' : '';
-                        
-                        return (
-                          <div key={player.userId} className={`ranking-row ${rankClass}`}>
-                            <span className="rank-col">
-                              {player.rank === 1 && '🥇'}
-                              {player.rank === 2 && '🥈'}
-                              {player.rank === 3 && '🥉'}
-                              {player.rank > 3 && `#${player.rank}`}
-                            </span>
-                            <span className="player-col">{player.username}</span>
-                            <span className="wins-col">{player.gamesWon}</span>
-                            <span className="games-col">{player.gamesPlayed}</span>
-                            <span className="winrate-col">{winRate}%</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {totalPages > 1 && (
-                      <div className="ranking-pagination text-center mt-4">
-                        <button
-                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                          disabled={currentPage === 1}
-                          className="ranking-pagination-button"
-                        >
-                          Previous
-                        </button>
-                        <span className="ranking-pagination-info">
-                          Page {currentPage} of {totalPages}
-                        </span>
-                        <button
-                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                          disabled={currentPage === totalPages}
-                          className="ranking-pagination-button"
-                        >
-                          Next
-                        </button>
-                      </div>
-                    )}
-                  </>
+                  <RankingTable
+                    rankings={global.rankings}
+                    currentRankings={currentRankings}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    setCurrentPage={setCurrentPage}
+                  />
                 ) : (
                   <p className="text-muted text-center">No rankings available yet</p>
                 )}

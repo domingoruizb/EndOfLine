@@ -32,13 +32,13 @@ public class AchievementServiceTests {
     @Test
     void findAllAchievementsTest() {
         List<Achievement> achievements = this.achievementService.getAchievements();
-        assertEquals(3, achievements.size());
+        assertEquals(9, achievements.size());
     }
 
     @Test
     void findAchievementByIdTest() {
         Achievement achievement = this.achievementService.getById(1);
-        assertEquals("Principiante", achievement.getName());
+        assertEquals("Rookie", achievement.getName());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class AchievementServiceTests {
 
     @Test
     void findByNameExistingTest() {
-        Achievement achievement = achievementService.getAchievementByName("Principiante");
+        Achievement achievement = achievementService.getAchievementByName("Rookie");
         assertNotNull(achievement);
         assertEquals(1, achievement.getId());
     }

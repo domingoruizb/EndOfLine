@@ -1,0 +1,26 @@
+/* StatCard and stat number styles */
+.stat-card {
+  border-radius: 12px;
+  text-align: center;
+  background: rgba(34, 34, 34, 0.85);
+  --bs-card-bg: rgba(34, 34, 34, 0.85);
+  --bs-card-color: #ffffff;
+  border: 1px solid rgba(254, 91, 2, 0.2);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.stat-title {
+  color: #fe5b02;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+@media (max-width: 576px) {
+  .stat-number { font-size: 1.4rem; }
+}

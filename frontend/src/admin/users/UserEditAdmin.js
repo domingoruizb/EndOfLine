@@ -1,10 +1,10 @@
-// TODO: Probably should be refactored (201 lines)
-// Possibly extract components to reuse them
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Form, Input, Label } from "reactstrap";
+import UserForm from "./adminComponents/UserForm";
 import tokenService from "../../services/token.service";
 import "../../static/css/admin/adminPage.css";
+import "../../static/css/admin/userEditAdmin.css";
+import "../../static/css/admin/userListAdmin.css";
 import getErrorModal from "../../util/getErrorModal";
 import getIdFromUrl from "../../util/getIdFromUrl";
 import useFetchData from "../../util/useFetchData";
@@ -81,116 +81,13 @@ export default function UserEditAdmin() {
       {<h1 className="text-center user-list-title">{user.id ? "Edit User" : "Add User"}</h1>}
       {modal}
       <div className="auth-form-container">
-        <Form onSubmit={handleSubmit}>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Username
-            </Label>
-            <Input
-              type="text"
-              required
-              name="username"
-              id="username"
-              value={user.username || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Name
-            </Label>
-            <Input
-              type="text"
-              required
-              name="name"
-              id="name"
-              value={user.name || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Surname
-            </Label>
-            <Input
-              type="text"
-              required
-              name="surname"
-              id="surname"
-              value={user.surname || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Email
-            </Label>
-            <Input
-              type="text"
-              required
-              name="email"
-              id="email"
-              value={user.email || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              BirthDate
-            </Label>
-            <Input
-              type="date"
-              required
-              name="birthdate"
-              id="birthdate"
-              value={user.birthdate || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-          <Label for="authority" className="custom-form-input-label">
-            Authority
-          </Label>
-          <div className="custom-form-input">
-              <Input
-                type="select"
-                required
-                name="authority"
-                id="authority"
-                value={user.authority?.id || ""}
-                onChange={handleChange}
-                className="custom-input black-select"
-              >
-                {authOptions}
-              </Input>
-          </div>
-          </div>
-          <div className="custom-button-row" style={{ alignItems: "center" }}>
-            <button className="user-add-button" type="submit" style={{ margin: "0" }}>Save</button>
-            <Link
-              to={`/users`}
-              style={{ 
-                textDecoration: "none", 
-                background: "#555", 
-                color: "#fff", 
-                border: "none",
-                borderRadius: "5px",
-                padding: "10px 20px",
-                fontWeight: "bold",
-                display: "inline-block",
-                marginTop: "15px",
-              }}
-            >
-              Cancel
-            </Link>
-          </div>
-        </Form>
+        <UserForm
+          user={user}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          auths={auths}
+          isEdit={!!user.id}
+        />
       </div>
     </div>
     </div>

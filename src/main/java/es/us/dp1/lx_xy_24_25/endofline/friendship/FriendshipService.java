@@ -48,7 +48,7 @@ public class FriendshipService {
 
     private Boolean checkFriendship(User sender, User receiver) {
         if (sender.getId().equals(receiver.getId())) {
-            throw new FriendshipNotValidException(sender, receiver);
+            throw new FriendshipNotValidException("You cannot be friends with yourself");
         }
 
         Optional<Friendship> optionalFriendship = friendshipRepository.findFriendshipBySenderAndReceiver(sender.getId(), receiver.getId());
@@ -87,7 +87,7 @@ public class FriendshipService {
         }
 
         if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
-            throw new FriendshipNotValidException("Only the receiver can accept the friendship");
+            throw new es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipForbiddenException("Only the receiver can accept the friendship");
         }
 
         friendship.setFriendState(FriendStatus.ACCEPTED);
@@ -98,7 +98,7 @@ public class FriendshipService {
     public void rejectFriendShip(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
         if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
-            throw new FriendshipNotValidException("Only the receiver can reject the friendship");
+            throw new es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipForbiddenException("Only the receiver can reject the friendship");
         }
         friendshipRepository.delete(friendship);
     }

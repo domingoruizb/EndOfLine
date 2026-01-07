@@ -1,39 +1,14 @@
-// TODO: Probably should be refactored
-// Possibly extract StatCard to a general components folder since Social also uses it
 import React from 'react';
-import { Card, CardBody, CardTitle, CardText, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
+import { Card, CardBody, CardTitle, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
 import '../static/css/stats/UserStats.css';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
-
-function StatCard({ title, children }) {
-  return (
-    <Card className="mb-3 stat-card">
-      <CardBody>
-        <CardTitle tag="h6" className="stat-title">{title}</CardTitle>
-        <CardText className="stat-number">{children}</CardText>
-      </CardBody>
-    </Card>
-  )
-}
+import StatCard from '../components/statsComponents/StatCard';
+import { fmtHours, fmtMins, fmtSkill } from '../util/formatters';
 
 export default function UserStats() {
   const jwt = tokenService.getLocalAccessToken();
   const [stats] = useFetchState(null, '/api/v1/stats', jwt, null, null);
-
-  const fmtHours = (mins) => (mins / 60).toFixed(1);
-  const fmtMins = (n) => Math.round(n);
-  const fmtSkill = (s) => {
-    if (!s) return '—';
-    try {
-      return String(s)
-        .replace(/_/g, ' ')
-        .toLowerCase()
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-    } catch {
-      return s;
-    }
-  };
 
   if (!stats || !stats.user) {
     return (
@@ -68,7 +43,6 @@ export default function UserStats() {
             <StatCard title="My Avg Duration (min)">{fmtMins(user.avgDurationMinutes)}</StatCard>
           </Col>
         </Row>
-
 
         <Row className="mt-3">
           <Col xs={12} md={6}>

@@ -1,11 +1,12 @@
-// TODO: Probably should be refactored (283 lines)
-// Possibly extract styles to css files
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
 import AchievementPlayersModal from './AchievementPlayersModal';
+import AchievementCard from './achievementComponents/AchievementCard';
+import AchievementTableRow from './achievementComponents/AchievementTableRow';
 import '../static/css/achievements/achievementList.css';
+import '../static/css/achievements/adminActionsBar.css';
 
 const AchievementList = () => {
   const jwt = tokenService.getLocalAccessToken();
@@ -75,39 +76,19 @@ const AchievementList = () => {
         <h1>ACHIEVEMENTS</h1>
 
         {isAdmin && (
-          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-            <Link to="/achievements/new" style={{ marginRight: '1rem' }}>
+          <div className="admin-actions-bar">
+            <Link to="/achievements/new" className="create-button">
               <button className="create-button">Create Achievement</button>
             </Link>
             <button
               onClick={() => setViewMode('grid')}
-              style={{
-                margin: '0 0.5rem',
-                padding: '0.5rem 1rem',
-                background: viewMode === 'grid' ? '#fe5b02' : 'transparent',
-                border: '2px solid #fe5b02',
-                color: viewMode === 'grid' ? 'black' : '#fe5b02',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'all 0.2s ease',
-              }}
+              className={`view-toggle-btn${viewMode === 'grid' ? ' active' : ''}`}
             >
               Grid View
             </button>
             <button
               onClick={() => setViewMode('table')}
-              style={{
-                margin: '0 0.5rem',
-                padding: '0.5rem 1rem',
-                background: viewMode === 'table' ? '#fe5b02' : 'transparent',
-                border: '2px solid #fe5b02',
-                color: viewMode === 'table' ? 'black' : '#fe5b02',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'all 0.2s ease',
-              }}
+              className={`view-toggle-btn${viewMode === 'table' ? ' active' : ''}`}
             >
               Table View
             </button>
@@ -119,76 +100,14 @@ const AchievementList = () => {
             {viewMode === 'grid' ? (
               <div className="achievements-grid">
                 {achievements.map((achievement) => (
-                  <div
+                  <AchievementCard
                     key={achievement.id}
-                    className={`achievement-card ${
-                      isAchievementUnlocked(achievement.id) ? 'unlocked' : 'locked'
-                    }`}
-                  >
-                    <div className="achievement-badge">
-                      {achievement.badgeImage && (
-                        <img
-                          src={achievement.badgeImage}
-                          alt={achievement.name}
-                          onError={(e) => {
-                            e.target.src =
-                              'https://cdn-icons-png.flaticon.com/512/5778/5778223.png';
-                          }}
-                        /> 
-                      )}
-                      <div className="achievement-status">
-                        {isAchievementUnlocked(achievement.id) ? '✓' : '🔒'}
-                      </div>
-                    </div>
-                    <div className="achievement-name">{achievement.name}</div>
-                    <div className="achievement-description">{achievement.description}</div>
-                    <div className="achievement-meta">
-                      {achievement.category && (
-                        <span className="achievement-category">{achievement.category}</span>
-                      )}
-                      {achievement.threshold && (
-                        <span className="achievement-threshold">Threshold: {achievement.threshold}</span>
-                      )}
-                    </div>
-                    {isAdmin && (
-                      <div
-                        style={{
-                          marginTop: '1rem',
-                          paddingTop: '1rem',
-                          borderTop: '1px solid rgba(254, 91, 2, 0.1)',
-                          display: 'flex',
-                          gap: '0.5rem',
-                          justifyContent: 'center',
-                          flexWrap: 'wrap',
-                        }}
-                      >
-                        <Link to={`/achievements/${achievement.id}`}>
-                          <button className="edit-button">Edit</button>
-                        </Link>
-                        <button
-                          className="view-button"
-                          onClick={() => handleViewPlayers(achievement.id)}
-                          style={{
-                            padding: '0.5rem 1rem',
-                            background: '#b1d12d',
-                            color: '#000',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '0.9rem',
-                          }}
-                        >
-                          View Players
-                        </button>
-                        <button
-                          className="delete-button"
-                          onClick={() => handleDeleteAchievement(achievement.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                    achievement={achievement}
+                    isUnlocked={isAchievementUnlocked(achievement.id)}
+                    isAdmin={isAdmin}
+                    onViewPlayers={handleViewPlayers}
+                    onDelete={handleDeleteAchievement}
+                  />
                 ))}
               </div>
             ) : (
@@ -206,62 +125,14 @@ const AchievementList = () => {
                 </thead>
                 <tbody>
                   {achievements.map((achievement) => (
-                    <tr key={achievement.id}>
-                      <td>
-                        {achievement.badgeImage && (
-                          <img
-                            src={achievement.badgeImage}
-                            alt={achievement.name}
-                            onError={(e) => {
-                              e.target.src =
-                                'https://cdn-icons-png.flaticon.com/512/5778/5778223.png';
-                            }}
-                          />
-                        )}
-                      </td>
-                      <td>{achievement.name}</td>
-                      <td>{achievement.description}</td>
-                      <td>{achievement.category || 'N/A'}</td>
-                      <td>{achievement.threshold || 'N/A'}</td>
-                      <td
-                        style={{
-                          color: isAchievementUnlocked(achievement.id) ? '#4CAF50' : '#999',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        {isAchievementUnlocked(achievement.id) ? '✓ Unlocked' : '🔒 Locked'}
-                      </td>
-                      {isAdmin && (
-                        <td>
-                          <div className="admin-buttons" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                            <Link to={`/achievements/${achievement.id}`}>
-                              <button className="edit-button">Edit</button>
-                            </Link>
-                            <button
-                              className="view-button"
-                              onClick={() => handleViewPlayers(achievement.id)}
-                              style={{
-                                padding: '0.5rem 1rem',
-                                background: '#b1d12d',
-                                color: '#000',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '0.9rem',
-                              }}
-                            >
-                              Players
-                            </button>
-                            <button
-                              className="delete-button"
-                              onClick={() => handleDeleteAchievement(achievement.id)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
+                      <AchievementTableRow
+                        key={achievement.id}
+                        achievement={achievement}
+                        isUnlocked={isAchievementUnlocked(achievement.id)}
+                        isAdmin={isAdmin}
+                        onViewPlayers={handleViewPlayers}
+                        onDelete={handleDeleteAchievement}
+                      />
                   ))}
                 </tbody>
               </table>

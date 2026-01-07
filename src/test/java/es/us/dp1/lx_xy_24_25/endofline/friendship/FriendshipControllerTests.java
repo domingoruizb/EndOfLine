@@ -47,27 +47,27 @@ public class FriendshipControllerTests {
     @Test
     @WithMockUser(username = "player10", authorities = {"PLAYER"})
     void testCreateFriendship() throws Exception {
-        FriendshipDTO dto = new FriendshipDTO(13, 14);
+        FriendshipDTO dto = new FriendshipDTO(15);
         String json = mapper.writeValueAsString(dto);
         mockMvc.perform(post(BASE_URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sender.id", is(13)))
-                .andExpect(jsonPath("$.receiver.id", is(14)))
-                .andExpect(jsonPath("$.friendState", is("PENDING")));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.sender.username", is("player10")))
+            .andExpect(jsonPath("$.receiver.id", is(15)))
+            .andExpect(jsonPath("$.friendState", is("PENDING")));
     }
 
     @Test
     @WithMockUser(username = "player1", authorities = {"PLAYER"})
     void testCreateFriendshipWithSelf() throws Exception {
-        FriendshipDTO dto = new FriendshipDTO(4, 4);
+        FriendshipDTO dto = new FriendshipDTO(4);
         String json = mapper.writeValueAsString(dto);
         mockMvc.perform(post(BASE_URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.message", containsString("yourself")));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message", containsString("yourself")));
     }
 
     @Test
@@ -76,6 +76,18 @@ public class FriendshipControllerTests {
         mockMvc.perform(put(BASE_URL + "/2/acceptFriendship"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.friendState", is("ACCEPTED")));
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = {"PLAYER"})
+    void testCreateDuplicateFriendship() throws Exception {
+        FriendshipDTO dto = new FriendshipDTO(4);
+        String json = mapper.writeValueAsString(dto);
+        mockMvc.perform(post(BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message", containsString("already exists")));
     }
 
     @Test

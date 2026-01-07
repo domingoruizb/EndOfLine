@@ -1,0 +1,25 @@
+/* Admin actions bar styles extracted from achievementList.js */
+.admin-actions-bar {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.admin-actions-bar .create-button {
+  margin-right: 1rem;
+}
+.admin-actions-bar .view-toggle-btn {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #fe5b02;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+.admin-actions-bar .view-toggle-btn.active {
+  background: #fe5b02;
+  color: black;
+}
+.admin-actions-bar .view-toggle-btn:not(.active) {
+  background: transparent;
+  color: #fe5b02;
+}

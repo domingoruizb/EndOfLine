@@ -16,12 +16,13 @@ import SwaggerDocs from "./public/swagger";
 import DeveloperList from "./developers";
 import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
+import AchievementCreate from './achievements/achievementCreate';
 import UserStats from './stats/UserStats';
 import MyProfile from './myprofile/myProfile';
 import Friends from './friendships/friendsList';
 import FriendshipCreation from './friendships/createFriendship'
 import GamePage from './game';
-import CreateGame from './lobby/index';
+import CreateGame from './lobby/createGame';
 import LobbyGame from './lobby/lobbyGame';
 import JoinGame from './lobby/joinGame';
 import PlayerGamesList from "./games/playerGames";
@@ -115,6 +116,7 @@ function App() {
           <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />
           <Route path="/achievements" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
           <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit /></PrivateRoute>} />
+          <Route path="/achievements/new" exact={true} element={<PrivateRoute><AchievementCreate /></PrivateRoute>} />
           <Route path="/social" exact={true} element={<PrivateRoute><Social /></PrivateRoute>} />
         </>)
     }

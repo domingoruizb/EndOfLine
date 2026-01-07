@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup } from "reactstrap";
 import tokenService from "../../services/token.service";
-import "../../static/css/admin/adminPage.css";
+import "../../static/css/admin/userListAdmin.css";
 import "../../static/css/admin/userListAdmin.css";
 import deleteFromList from "../../util/deleteFromList";
 import getErrorModal from "../../util/getErrorModal";

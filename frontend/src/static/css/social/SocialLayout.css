@@ -1,0 +1,44 @@
+/* Social page layout and container styles */
+.social-page {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../../images/home_background.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 0;
+}
+
+.social-container {
+  width: 95%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(254, 91, 2, 0.1);
+  border: 1px solid rgba(254, 91, 2, 0.2);
+  color: #fff;
+}
+
+.social-container h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fe5b02;
+  text-align: center;
+}
+
+.social-container .text-muted {
+  color: #ddd !important;
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+  .social-container {
+    padding: 1.5rem 1rem;
+  }
+  .social-container h2 { font-size: 2.2rem; }
+}

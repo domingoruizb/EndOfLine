@@ -1,0 +1,112 @@
+/* RulesPage Styles */
+
+.rules-outer {
+  color: white;
+  min-height: 100vh;
+  padding: 2rem 0;
+  font-family: Inter, Arial, sans-serif;
+}
+.rules-outer-embed {
+  background: transparent;
+  color: white;
+  min-height: auto;
+  padding: 1.5rem 0;
+  font-family: Inter, Arial, sans-serif;
+}
+.rules-container {
+  padding: 0 1rem;
+  max-width: 900px;
+  background: none;
+  border-radius: 1rem;
+  box-shadow: none;
+}
+.rules-container-embed {
+  border-radius: 0.5rem;
+}
+.rules-title {
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  color: #FE5B02;
+  text-shadow: 0 2px 8px #000;
+}
+.rules-section {
+  margin-bottom: 2rem;
+}
+.rules-highlight {
+  background: linear-gradient(90deg,#FE5B02,#B1D12D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.rules-section-title {
+  color: #B1D12D;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.rules-section-title-orange {
+  color: #FE5B02;
+}
+.rules-objective {
+  color: #FE5B02;
+  font-weight: 700;
+  font-size: 1.15rem;
+  background: rgba(254,91,2,0.08);
+  padding: 0.2em 0.5em;
+  border-radius: 0.3em;
+}
+.rules-list {
+  list-style: none;
+  padding-left: 0;
+  font-size: 1.08rem;
+}
+.rules-card-type {
+  color: #B1D12D;
+  font-weight: 700;
+}
+.rules-card-type-desc {
+  color: #ccc;
+}
+.rules-card-type-list {
+  margin-left: 1.5em;
+}
+.rules-note {
+  color: #888;
+}
+.rules-playarea {
+  text-align: center;
+  margin: 1rem 0;
+}
+.rules-playarea-img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 16px #222;
+}
+.rules-table {
+  width: 100%;
+  background: #222;
+  border-radius: 0.5em;
+  border-collapse: collapse;
+  margin-top: 1em;
+  color: #fff;
+  font-size: 1.05rem;
+}
+.rules-table th {
+  padding: 0.5em;
+}
+.rules-table th.rules-table-title {
+  color: #B1D12D;
+  font-weight: 700;
+}
+.rules-table th.rules-table-title-orange {
+  color: #FE5B02;
+  font-weight: 700;
+}
+.rules-table-row {
+  background: #333;
+}
+.rules-table td {
+  padding: 0.5em;
+}

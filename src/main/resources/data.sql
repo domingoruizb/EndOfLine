@@ -44,7 +44,6 @@ INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, a
 VALUES (13,'player10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
         2,'1999-09-27','Isabella','Morales','isabella.morales@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
--- Usuarios adicionales
 INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (14,'RRP9465','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
         2,'1998-04-04','Makar','Lavrov','makar.lavrov@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');

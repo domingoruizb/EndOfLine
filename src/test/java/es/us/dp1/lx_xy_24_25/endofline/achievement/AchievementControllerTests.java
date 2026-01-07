@@ -137,25 +137,6 @@ public class AchievementControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1));
     }
-/*
-    @Test
-    @WithMockUser(authorities = "PLAYER")
-    void playerCannotCreateTest() throws Exception {
-        Achievement achievement3 = new Achievement();
-        achievement3.setId(3);
-        achievement3.setName("achievementName3");
-        achievement3.setDescription("achievementDescription3");
-        achievement3.setBadgeImage("img");
-        achievement3.setThreshold(30.0);
-        achievement3.setCategory(Category.VICTORIES);
-
-        mockMvc.perform(post(BASE_URL)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(achievement3)))
-                .andExpect(status().isForbidden());
-    }
-*/
 
     @Test
     @WithMockUser(authorities = "ADMIN")
@@ -172,7 +153,7 @@ public class AchievementControllerTests {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalid)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -204,20 +185,7 @@ public class AchievementControllerTests {
                         .content(objectMapper.writeValueAsString(a1)))
                 .andExpect(status().isNotFound());
     }
-/*
-    @Test
-    @WithMockUser(authorities = "PLAYER")
-    void playerCannotUpdateAchievementTest() throws Exception {
 
-        a1.setName("UPDATED");
-
-        mockMvc.perform(put(BASE_URL + "/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(a1)))
-                .andExpect(status().isForbidden());
-    }
-*/
     @Test
     @WithMockUser(authorities = "ADMIN")
     void adminDeleteAchievementTest() throws Exception {
@@ -241,14 +209,4 @@ public class AchievementControllerTests {
                         .with(csrf()))
                 .andExpect(status().isNotFound());
     }
-/*
-    @Test
-    @WithMockUser(authorities = "PLAYER")
-    void playerCannotDeleteAchievementTest() throws Exception {
-
-        mockMvc.perform(delete(BASE_URL + "/1")
-                .with(csrf()))
-                .andExpect(status().isForbidden());
-    }
-*/
 }
