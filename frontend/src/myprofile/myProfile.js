@@ -69,24 +69,25 @@ export default function MyProfile() {
         {modal}
         <div className="auth-form-container">
           <AvatarPreview avatar={form.avatar} error={form.avatarError} />
-          <FormGenerator
-            inputs={profileFormInputs(form)}
-            onSubmit={({ values }) => handleSaveChanges({ ...form, ...values, jwt })}
-            numberOfColumns={1}
-            buttonText="Save changes"
-            buttonClassName="auth-button"
-            childrenPosition={-1}
-          />
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '32px' }}>
-            <button
-              color="danger"
-              type="button"
-              onClick={() => setDeleteProfile(true)}
-              className="auth-button danger"
-              style={{ minWidth: '180px', marginBottom: '16px' }}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginTop: '40px' }}>
+            <FormGenerator
+              inputs={profileFormInputs(form)}
+              onSubmit={({ values }) => handleSaveChanges({ ...form, ...values, jwt })}
+              numberOfColumns={1}
+              buttonText="Save changes"
+              buttonClassName="auth-button"
+              childrenPosition={-1}
             >
-              Delete profile
-            </button>
+              <button
+                color="danger"
+                type="button"
+                onClick={() => setDeleteProfile(true)}
+                className="auth-button danger"
+                style={{ minWidth: '180px', marginBottom: '85px', marginLeft: '32px' }}
+              >
+                Delete profile
+              </button>
+            </FormGenerator>
           </div>
         </div>
         {deleteProfile && (

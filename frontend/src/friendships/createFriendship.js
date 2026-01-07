@@ -56,12 +56,13 @@ export default function FriendshipCreation() {
                         numberOfColumns={1}
                         buttonText="Send"
                         buttonClassName="create-friendship-send-button"
+                        childrenPosition={-1}
                     >
                         <button
                             type="button"
                             onClick={() => navigate("/friends")}
                             className="create-friendship-cancel-button"
-                            style={{ marginLeft: '1rem' }}
+                            style={{ marginLeft: '1rem', marginBottom: '85px' }}
                         >
                             Cancel
                         </button>
