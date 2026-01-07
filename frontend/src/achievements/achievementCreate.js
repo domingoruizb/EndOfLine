@@ -63,11 +63,12 @@ export default function AchievementCreate() {
             numberOfColumns={1}
             buttonText="Save"
             buttonClassName="user-add-button"
+            childrenPosition={-1}
           >
             <Link
-              to={`/achievements`}
+              to="/achievements"
               className="user-add-button"
-              style={{ textDecoration: "none", background: "#555", marginLeft: "1rem" }}
+              style={{ textDecoration: "none", background: "#555", marginBottom: '85px' }}
             >
               Cancel
             </Link>

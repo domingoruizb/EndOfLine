@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import FriendTableRow from "./friendshipUtils/FriendTableRow";
-import FriendPagination from "./friendshipUtils/FriendPagination";
+import FriendTableRow from "./friendshipComponents/FriendTableRow";
+import FriendPagination from "./friendshipComponents/FriendPagination";
 import { filterAndSortFriendships, paginate } from "./friendshipUtils/friendshipListUtils";
 import { showSuccessToast, showErrorToast } from "./friendshipUtils/toastUtils";
 import useFriendshipNotifications from "./friendshipUtils/useFriendshipNotifications";
@@ -15,13 +15,13 @@ import useFetchState from "../util/useFetchState";
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipList() {
-    const jwt = tokenService.getLocalAccessToken();
-    const user = tokenService.getUser();
-    const [friendshipType, setFriendshipType] = useState("ACCEPTED");
-    const [friendships, setFriendships] = useFetchState(null, `/api/v1/friendships/myFriendships`, jwt);
-    const [activeGames] = useFetchState([], `/api/v1/games`, jwt);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [friendshipsPerPage] = useState(5);
+        const jwt = tokenService.getLocalAccessToken();
+        const user = tokenService.getUser();
+        const [friendshipType, setFriendshipType] = useState("ACCEPTED");
+        const [friendships, setFriendships] = useFetchState(null, `/api/v1/friendships/myFriendships`,jwt);
+        const [activeGames] = useFetchState([], `/api/v1/games`, jwt);
+        const [currentPage, setCurrentPage] = useState(1);
+        const [friendshipsPerPage] = useState(5);
 
     const [message, setMessage] = useState("");
     const [visible, setVisible] = useState(false);
@@ -45,7 +45,7 @@ export default function FriendshipList() {
             }
         };
         fetchData();
-    }, [jwt, user.id, friendshipType, setFriendships]);
+    }, [jwt, user?.id, friendshipType, setFriendships]);
 
     useFriendshipNotifications(friendships, user, setFriendships, jwt);
 

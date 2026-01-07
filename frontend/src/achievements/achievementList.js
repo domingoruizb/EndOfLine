@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
 import AchievementPlayersModal from './achievementComponents/AchievementPlayersModal';
+import AchievementDeleteModal from './achievementComponents/AchievementDeleteModal';
 import AchievementCard from './achievementComponents/AchievementCard';
 import AchievementTableRow from './achievementComponents/AchievementTableRow';
 import '../static/css/achievements/achievementList.css';
@@ -15,6 +16,8 @@ const AchievementList = () => {
   const [modal, setModal] = useState(false);
   const [selectedAchievementId, setSelectedAchievementId] = useState(null);
   const [playersWithAchievement, setPlayersWithAchievement] = useState([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteAchievementId, setDeleteAchievementId] = useState(null);
 
   const [achievements, setAchievements] = useFetchState([], `/api/v1/achievements`, jwt);
   const [playerAchievements] = useFetchState(
@@ -43,14 +46,20 @@ const AchievementList = () => {
   };
 
   const handleDeleteAchievement = (achievementId) => {
-    if (window.confirm('Are you sure you want to delete this achievement?')) {
-      fetch(`/api/v1/achievements/${achievementId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${jwt}` },
-      }).then(() => {
-        setAchievements(achievements.filter((p) => p.id !== achievementId));
-      });
-    }
+    setDeleteAchievementId(achievementId);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDeleteAchievement = () => {
+    if (!deleteAchievementId) return;
+    fetch(`/api/v1/achievements/${deleteAchievementId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${jwt}` },
+    }).then(() => {
+      setAchievements(achievements.filter((p) => p.id !== deleteAchievementId));
+      setDeleteModalOpen(false);
+      setDeleteAchievementId(null);
+    });
   };
 
   const handleViewPlayers = (achievementId) => {
@@ -77,9 +86,7 @@ const AchievementList = () => {
 
         {isAdmin && (
           <div className="admin-actions-bar">
-            <Link to="/achievements/new" className="create-button">
-              <button className="create-button">Create Achievement</button>
-            </Link>
+            <Link to="/achievements/new" className="create-button">Create Achievement</Link>
             <button
               onClick={() => setViewMode('grid')}
               className={`view-toggle-btn${viewMode === 'grid' ? ' active' : ''}`}
@@ -148,6 +155,12 @@ const AchievementList = () => {
         toggle={toggleModal}
         players={playersWithAchievement}
         achievementName={achievements.find((a) => a.id === selectedAchievementId)?.name || 'Achievement'}
+      />
+      <AchievementDeleteModal
+        isOpen={deleteModalOpen}
+        toggle={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDeleteAchievement}
+        achievementName={achievements.find((a) => a.id === deleteAchievementId)?.name || 'Achievement'}
       />
     </div>
   );

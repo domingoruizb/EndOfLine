@@ -3,20 +3,31 @@ import React, { useRef } from "react";
 import FormGenerator from "../../../components/formGenerator/formGenerator";
 import userFormInputs from "./userFormInputs";
 
+
 export default function UserForm({ user, onChange, onSubmit, auths, isEdit }) {
   const formRef = useRef();
 
   const handleSubmit = ({ values }) => {
+    let newValues = { ...values };
+    if (newValues.authority && auths && Array.isArray(auths)) {
+      const foundAuth = auths.find((a) => String(a.id) === String(newValues.authority));
+      if (foundAuth) {
+        newValues.authority = foundAuth;
+      }
+    }
+    if (!newValues.birthdate) newValues.birthdate = "";
+    if (!newValues.name) newValues.name = "";
+
     if (onChange) {
-      Object.entries(values).forEach(([name, value]) => {
+      Object.entries(newValues).forEach(([name, value]) => {
         onChange({ target: { name, value } });
       });
     }
     if (onSubmit) {
       onSubmit({
         preventDefault: () => {},
-        target: { elements: values },
-        values,
+        target: { elements: newValues },
+        values: newValues,
       });
     }
   };
@@ -30,8 +41,9 @@ export default function UserForm({ user, onChange, onSubmit, auths, isEdit }) {
         numberOfColumns={1}
         buttonText="Save"
         buttonClassName="user-add-button"
+        childrenPosition={-1}
       >
-        <a href="/users" className="cancel-link" style={{ marginLeft: '1rem' }}>Cancel</a>
+        <a href="/users" className="cancel-link" style={{ marginLeft: '1rem', marginBottom: '100px' }}>Cancel</a>
       </FormGenerator>
     </div>
   );

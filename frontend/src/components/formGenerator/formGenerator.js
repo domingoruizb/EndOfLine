@@ -1,4 +1,5 @@
 import "./css/formGenerator.css";
+import "../../static/css/dark-select.css";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
@@ -159,12 +160,20 @@ const FormGenerator = forwardRef((props, ref) => {
               </>
             );
           })}
-        {props.childrenPosition === -1 && props.children}
       </form>
 
-      <button onClick={handleSubmit} className={`${props.buttonClassName}`}>
-        {props.buttonText}
-      </button>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem', marginTop: '1.5rem' }}>
+        <button 
+          onClick={handleSubmit} 
+          className={`${props.buttonClassName}`}
+          style={{ minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '85px' }}
+        >
+          {props.buttonText}
+        </button>
+        <span style={{ minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {props.children}
+        </span>
+      </div>
     </div>
   );
 });

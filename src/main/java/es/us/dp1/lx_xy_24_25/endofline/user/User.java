@@ -42,7 +42,7 @@ public class User extends NamedEntity {
 
     String avatar;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<GamePlayer> gamePlayer = new ArrayList<>();
 

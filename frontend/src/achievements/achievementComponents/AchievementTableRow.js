@@ -30,7 +30,7 @@ export default function AchievementTableRow({ achievement, isUnlocked, isAdmin, 
       {isAdmin && (
         <td>
           <div className="admin-buttons" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <Link to={`/achievement-edit/${achievement.id}`}>
+            <Link to={`/achievements/${achievement.id}`}>
               <button className="edit-button">Edit</button>
             </Link>
             <button

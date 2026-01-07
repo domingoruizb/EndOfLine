@@ -12,8 +12,8 @@ import LobbyGameCodeBox from './lobbyComponents/LobbyGameCodeBox';
 import LobbyGamePlayersRow from './lobbyComponents/LobbyGamePlayersRow';
 import LobbyGameColorSelectors from './lobbyComponents/LobbyGameColorSelectors';
 import LobbyGameButtonGroup from './lobbyComponents/LobbyGameButtonGroup';
-import useLobbyGameData from '../hooks/useLobbyGameData';
-import { useLobbyGameActions } from '../hooks/useLobbyGameActions';
+import useLobbyGameData from './lobbyHooks/useLobbyGameData';
+import { useLobbyGameActions } from './lobbyHooks/useLobbyGameActions';
 
 
 export default function LobbyGame() {

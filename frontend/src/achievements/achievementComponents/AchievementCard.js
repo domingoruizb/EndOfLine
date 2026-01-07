@@ -32,7 +32,7 @@ export default function AchievementCard({ achievement, isUnlocked, isAdmin, onVi
       </div>
       {isAdmin && (
         <div className="achievement-admin-actions">
-          <Link to={`/achievement-edit/${achievement.id}`}>
+          <Link to={`/achievements/${achievement.id}`}>
             <button className="edit-button">Edit</button>
           </Link>
           <button

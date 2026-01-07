@@ -105,7 +105,7 @@ public class UserService {
 			User currentUser = userRepository.findByUsername(auth.getName())
 					.orElseThrow(() -> new UserNotFoundException(auth.getName()));
 			User toUpdate = findUser(currentUser.getId());
-			BeanUtils.copyProperties(user, toUpdate, "id");
+			BeanUtils.copyProperties(user, toUpdate, "id", "gamePlayer");
 			userRepository.save(toUpdate);
 
 			return toUpdate;
@@ -113,24 +113,30 @@ public class UserService {
 
 	}
 
+	@Autowired
+	private es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerRepository gamePlayerRepository;
+
 	@Transactional
 	public void deleteUser(Integer id) {
 		User toDelete = findUser(id);
-
-		User deletedUser = userRepository.findByUsername("Deleted user").get();
-		 List<Game> hostedGames = gameService.getGamesByHost(deletedUser);
-    	for (Game g : hostedGames) {
-        	g.setHost(deletedUser);
-    	}
-
-		List<Game> wonGames = gameService.getGamesByWinner(deletedUser);
-    	for (Game g : wonGames) {
-        	g.setWinner(deletedUser);
-    	}
-
-		gameService.saveGames(hostedGames);
-    	gameService.saveGames(wonGames);
-
+		User deletedUser = userRepository.findByUsername("Deleted user").orElse(null);
+		if (deletedUser != null) {
+			List<Game> hostedGames = gameService.getGamesByHost(toDelete);
+			for (Game g : hostedGames) {
+				g.setHost(deletedUser);
+			}
+			gameService.saveGames(hostedGames);
+			List<Game> wonGames = gameService.getGamesByWinner(toDelete);
+			for (Game g : wonGames) {
+				g.setWinner(deletedUser);
+			}
+			gameService.saveGames(wonGames);
+			List<es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer> gamePlayers = toDelete.getGamePlayer();
+			for (es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer gp : gamePlayers) {
+				gp.setUser(deletedUser);
+				gamePlayerRepository.save(gp);
+			}
+		}
 		this.userRepository.delete(toDelete);
 	}
 

@@ -48,15 +48,22 @@ export default function UserEditAdmin() {
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    fetch("/api/v1/users" + (user.id ? "/" + user.id : ""), {
-      method: user.id ? "PUT" : "POST",
+    const values = event.values || (event.target && event.target.elements) || {};
+    let userToSend = values.values ? values.values : values;
+    if (!userToSend.id && user && user.id) {
+      userToSend.id = user.id;
+    }
+    if ((!userToSend.password || userToSend.password === "") && userToSend.id) {
+      userToSend.password = userToSend.password || user.password;
+    }
+    fetch("/api/v1/users" + (userToSend.id ? "/" + userToSend.id : ""), {
+      method: userToSend.id ? "PUT" : "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(userToSend),
     })
       .then((response) => response.json())
       .then((json) => {
