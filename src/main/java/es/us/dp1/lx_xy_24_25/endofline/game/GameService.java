@@ -2,18 +2,14 @@ package es.us.dp1.lx_xy_24_25.endofline.game;
 
 import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
 import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
-import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameBadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotValidException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.gameplayer.GamePlayerNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.skill.SkillNotValidRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.skill.SkillBadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.SkillUsage;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
@@ -21,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -84,6 +79,11 @@ public class GameService {
 
     @Transactional
     public void deleteGame(Game game) {
+        User user = userService.findCurrentUser();
+        if (!game.getHost().getId().equals(user.getId())) {
+            throw new GameBadRequestException("Only the host can delete the game");
+        }
+
         gameRepository.deleteById(game.getId());
     }
 
@@ -101,18 +101,16 @@ public class GameService {
     }
 
     @Transactional
-    public Game createGame(Integer hostId) {
-        User host = userService.findUser(hostId);
+    public Game createGame(User host) {
         String newCode = generateRandomCode();
         Game game = Game.build(newCode, host);
         return gameRepository.save(game);
     }
 
     @Transactional
-    public Game joinGameByCode(Integer userId, String code) {
+    public Game joinGameByCode(User user, String code) {
         Game game = getGameByCode(code);
-        User player = userService.findUser(userId);
-        GamePlayer gamePlayer = GamePlayer.build(game, player);
+        GamePlayer gamePlayer = GamePlayer.build(game, user);
         game.getGamePlayers().add(gamePlayer);
         return gameRepository.save(game);
     }
@@ -162,13 +160,18 @@ public class GameService {
     }
 
     @Transactional
-    public Game startGame(Integer id) {
-        Game game = getGameById(id);
+    public Game startGame(Game game) {
+        User user = userService.findCurrentUser();
+
+        if (!game.getHost().getId().equals(user.getId())) {
+            throw new GameBadRequestException("Only the host can start the game");
+        }
+
         if (game.getGamePlayers().size() != 2) {
-            throw new GameNotValidException("Game needs to have 2 players");
+            throw new GameBadRequestException("Game needs to have 2 players");
         }
         if (game.getRound() != 0) {
-            throw new GameNotValidException("Round needs to be 0");
+            throw new GameBadRequestException("Round needs to be 0");
         }
 
         game.getGamePlayers().forEach(cardService::initializeDeck);
@@ -222,7 +225,7 @@ public class GameService {
         Game game = gamePlayer.getGame();
 
         if (gamePlayer.getEnergy() <= 0 || game.getRound() == 1) {
-            throw new SkillNotValidRequestException();
+            throw new SkillBadRequestException();
         }
 
         gamePlayer.setEnergy(gamePlayer.getEnergy() - 1);

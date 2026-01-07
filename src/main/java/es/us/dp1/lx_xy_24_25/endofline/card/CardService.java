@@ -1,8 +1,8 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckBadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotValidRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerUtils;
@@ -114,7 +114,7 @@ public class CardService {
     public void changeDeck (GamePlayer gamePlayer) {
         Integer round = gamePlayer.getGame().getRound();
         if (!gamePlayer.getCanRequestDeck() || round > 1) {
-            throw new DeckNotValidRequestException(gamePlayer);
+            throw new DeckBadRequestException(gamePlayer);
         }
 
         Integer amount = GamePlayerUtils.isExtraGasEnabled(gamePlayer) ? 6 : 5;

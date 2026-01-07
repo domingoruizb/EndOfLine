@@ -4,12 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class SkillNotValidRequestException extends RuntimeException {
-    public SkillNotValidRequestException() {
+public class SkillBadRequestException extends RuntimeException {
+    public SkillBadRequestException() {
         super("Not possible to request a skill");
-    }
-
-    public SkillNotValidRequestException(String message) {
-        super(message);
     }
 }

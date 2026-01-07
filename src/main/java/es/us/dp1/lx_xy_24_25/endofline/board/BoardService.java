@@ -4,10 +4,9 @@ import es.us.dp1.lx_xy_24_25.endofline.board.dto.BoardStateDTO;
 import es.us.dp1.lx_xy_24_25.endofline.card.Card;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardForbiddenException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.TurnForbiddenException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.gameplayer.GamePlayerNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotValidPlacementException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotValidRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.TurnNotValidException;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
@@ -15,13 +14,10 @@ import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerUtils;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
 import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -133,7 +129,7 @@ public class BoardService {
         Integer index
     ) {
         if (!GamePlayerUtils.isValidTurn(gamePlayer)) {
-            throw new TurnNotValidException();
+            throw new TurnForbiddenException();
         }
 
         Game game = gamePlayer.getGame();
@@ -143,7 +139,7 @@ public class BoardService {
         GamePlayerCard referenceCard = isReversing ? getReverseCard(gamePlayer) : gamePlayerCardService.getLastPlacedCard(gamePlayer);
 
         if (!getIsPlacementValid(index, gamePlayer, referenceCard)) {
-            throw new CardNotValidPlacementException();
+            throw new CardForbiddenException();
         }
 
         Integer rotation = BoardUtils.getRotation(index, referenceCard);

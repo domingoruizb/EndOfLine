@@ -25,7 +25,7 @@ export default function Modals ({
 
         const data = await getData(
             `/api/v1/games/${game.gameId}/giveup`,
-            'PUT'
+            'POST'
         )
 
         if (data != null) {

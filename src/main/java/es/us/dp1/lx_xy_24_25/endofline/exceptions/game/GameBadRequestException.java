@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class GameNotValidException extends RuntimeException {
-    public GameNotValidException(String message) {
+public class GameBadRequestException extends RuntimeException {
+    public GameBadRequestException(String message) {
         super(message);
     }
 }

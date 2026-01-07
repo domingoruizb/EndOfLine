@@ -2,13 +2,12 @@ package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
 import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipBadRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipForbiddenException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipNotValidException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ public class FriendshipService {
 
     private Boolean checkFriendship(User sender, User receiver) {
         if (sender.getId().equals(receiver.getId())) {
-            throw new FriendshipNotValidException("You cannot be friends with yourself");
+            throw new FriendshipBadRequestException("You cannot be friends with yourself");
         }
 
         Optional<Friendship> optionalFriendship = friendshipRepository.findFriendshipBySenderAndReceiver(sender.getId(), receiver.getId());
@@ -59,9 +58,9 @@ public class FriendshipService {
         FriendStatus friendStatus = optionalFriendship.get().getFriendState();
         switch (friendStatus) {
             case PENDING:
-                throw new FriendshipNotValidException("There is already a pending friendship request with this user");
+                throw new FriendshipBadRequestException("There is already a pending friendship request with this user");
             default:
-                throw new FriendshipNotValidException("You are already friends with this user");
+                throw new FriendshipBadRequestException("You are already friends with this user");
         }
     }
 
@@ -83,11 +82,11 @@ public class FriendshipService {
     public Friendship acceptFriendShip(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
         if (friendship.getFriendState() != FriendStatus.PENDING) {
-            throw new FriendshipNotValidException("The friendship has already been accepted");
+            throw new FriendshipBadRequestException("The friendship has already been accepted");
         }
 
         if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
-            throw new es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipForbiddenException("Only the receiver can accept the friendship");
+            throw new FriendshipForbiddenException("Only the receiver can accept the friendship");
         }
 
         friendship.setFriendState(FriendStatus.ACCEPTED);
@@ -98,7 +97,7 @@ public class FriendshipService {
     public void rejectFriendShip(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
         if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
-            throw new es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipForbiddenException("Only the receiver can reject the friendship");
+            throw new FriendshipForbiddenException("Only the receiver can reject the friendship");
         }
         friendshipRepository.delete(friendship);
     }

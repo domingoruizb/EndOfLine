@@ -11,9 +11,6 @@ import org.springframework.data.annotation.Id;
 @Getter
 @Setter
 public class FriendshipDTO {
-    public FriendshipDTO() {
-    }
-
     @Id
     Integer id;
 

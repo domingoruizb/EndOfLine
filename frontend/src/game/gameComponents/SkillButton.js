@@ -20,8 +20,8 @@ export default function SkillButton ({
         }
 
         await getData(
-            `/api/v1/games/${game.gameId}/setUpSkill`,
-            'PUT',
+            `/api/v1/games/${game.gameId}/skill`,
+            'POST',
             body
         )
     }

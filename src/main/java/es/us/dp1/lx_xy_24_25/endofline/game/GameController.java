@@ -47,29 +47,25 @@ public class GameController {
     @PostMapping("/create")
     public ResponseEntity<Game> createGame() {
         User user = userService.findCurrentUser();
-        Game game = gameService.createGame(user.getId());
+        Game game = gameService.createGame(user);
         return ResponseEntity.ok(game);
     }
 
     @PostMapping("/join/{code}")
     public ResponseEntity<Game> joinGame(@PathVariable String code) {
         User user = userService.findCurrentUser();
-        Game game = gameService.joinGameByCode(user.getId(), code);
+        Game game = gameService.joinGameByCode(user, code);
         return ResponseEntity.ok(game);
     }
 
     @PostMapping("/{id}/start")
     public ResponseEntity<Game> startGame(@PathVariable Integer id) {
-        User user = userService.findCurrentUser();
         Game game = gameService.getGameById(id);
-        if (!game.getHost().getId().equals(user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        Game startedGame = gameService.startGame(id);
+        Game startedGame = gameService.startGame(game);
         return ResponseEntity.ok(startedGame);
     }
 
-    @PutMapping("/{gameId}/giveup")
+    @PostMapping("/{gameId}/giveup")
     public ResponseEntity<Game> giveUp(@PathVariable Integer gameId) {
         User user = userService.findCurrentUser();
         GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
@@ -77,7 +73,7 @@ public class GameController {
         return ResponseEntity.ok(updatedGame);
     }
 
-    @PutMapping("/{gameId}/setUpSkill")
+    @PostMapping("/{gameId}/skill")
     public ResponseEntity<Game> setUpSkill(@PathVariable Integer gameId, @RequestBody SkillRequestDTO dto) {
         User user = userService.findCurrentUser();
         GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
@@ -87,12 +83,8 @@ public class GameController {
 
     @DeleteMapping("/{gameId}")
     public ResponseEntity<Void> deleteGame(@PathVariable Integer gameId) {
-        User user = userService.findCurrentUser();
         Game game = gameService.getGameById(gameId);
-        if (!game.getHost().getId().equals(user.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
         gameService.deleteGame(game);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

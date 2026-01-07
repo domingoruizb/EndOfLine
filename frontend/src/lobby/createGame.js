@@ -32,7 +32,7 @@ export default function CreateGame(){
 
         try {
             const response = await fetch(
-                `/api/v1/games/create/${user.id}`, 
+                `/api/v1/games/create`, 
                 {
                     method: "POST",
                     headers: {

@@ -23,18 +23,11 @@ public class GamePlayerService {
         this.gamePlayerRepository = gamePlayerRepository;
     }
 
-    @Transactional(readOnly = true)
-    public GamePlayer findById(Integer id) {
-        return gamePlayerRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "Id", id));
-    }
-
     @Transactional
-    public GamePlayer updatePlayerColor(Integer gameId, Integer userId, String newColor) {
-        GamePlayer gamePlayer = gamePlayerRepository.findByGameIdAndUserId(gameId, userId)
-            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "GameId/UserId", gameId + "/" + userId));
-
-        gamePlayer.setColor(Color.valueOf(newColor));
+    public GamePlayer updatePlayerColor(Integer gameId, Integer userId, String unformattedColor) {
+        String cleanedColor = unformattedColor.replace("\"", "").trim();
+        GamePlayer gamePlayer = getGamePlayer(gameId, userId);
+        gamePlayer.setColor(Color.valueOf(cleanedColor));
 
         return gamePlayerRepository.save(gamePlayer);
     }
@@ -42,7 +35,7 @@ public class GamePlayerService {
     @Transactional(readOnly = true)
     public GamePlayer getById(Integer id) {
         return gamePlayerRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("GamePlayer", "Id", id));
+            .orElseThrow(GamePlayerNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

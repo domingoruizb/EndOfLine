@@ -15,8 +15,8 @@
  */
 package es.us.dp1.lx_xy_24_25.endofline.user;
 
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotAuthenticatedException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserUnauthorizedException;
 import es.us.dp1.lx_xy_24_25.endofline.game.Game;
 import es.us.dp1.lx_xy_24_25.endofline.game.GameService;
 import jakarta.validation.Valid;
@@ -66,7 +66,7 @@ public class UserService {
 	public User findCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth == null) {
-            throw new UserNotAuthenticatedException();
+            throw new UserUnauthorizedException();
         } else {
             return userRepository
                 .findByUsername(auth.getName())
@@ -100,7 +100,7 @@ public class UserService {
 	public User updateCurrentUser(@Valid User user) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth == null) {
-			throw new UserNotAuthenticatedException();
+			throw new UserUnauthorizedException();
 		} else {
 			User currentUser = userRepository.findByUsername(auth.getName())
 					.orElseThrow(() -> new UserNotFoundException(auth.getName()));

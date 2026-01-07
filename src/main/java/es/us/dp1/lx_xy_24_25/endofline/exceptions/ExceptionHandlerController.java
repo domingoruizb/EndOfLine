@@ -1,16 +1,19 @@
 package es.us.dp1.lx_xy_24_25.endofline.exceptions;
 
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckBadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotValidRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardForbiddenException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardNotValidPlacementException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipBadRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipForbiddenException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.friendship.FriendshipNotValidException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.*;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameBadRequestException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.GameNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.game.TurnForbiddenException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.gameplayer.GamePlayerNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.skill.SkillNotValidRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotAuthenticatedException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.skill.SkillBadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.user.UserUnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -95,18 +98,18 @@ public class ExceptionHandlerController {
 		return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
 	}
 
-    @ExceptionHandler(value = TurnNotValidException.class)
+    @ExceptionHandler(value = TurnForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<ErrorMessage> handleTurnNotValidException(TurnNotValidException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleTurnBadRequestException(TurnForbiddenException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.FORBIDDEN.value(), new Date(), ex.getMessage(),
                 request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(value = CardNotValidPlacementException.class)
+    @ExceptionHandler(value = CardForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<ErrorMessage> handleCardNotValidPlacementException(CardNotValidPlacementException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleCardForbiddenException(CardForbiddenException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.FORBIDDEN.value(), new Date(), ex.getMessage(),
             request.getDescription(false));
 
@@ -122,9 +125,9 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = DeckNotValidRequestException.class)
+    @ExceptionHandler(value = DeckBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> handleDeckNotValidRequestException(DeckNotValidRequestException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleDeckBadRequestException(DeckBadRequestException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
             request.getDescription(false));
 
@@ -158,18 +161,18 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = FriendshipNotValidException.class)
+    @ExceptionHandler(value = FriendshipBadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> friendshipNotValidException(FriendshipNotValidException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> friendshipBadRequestException(FriendshipBadRequestException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
                 request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = UserNotAuthenticatedException.class)
+    @ExceptionHandler(value = UserUnauthorizedException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorMessage> userNotAuthenticatedException(UserNotAuthenticatedException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> userUnauthorizedException(UserUnauthorizedException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(), ex.getMessage(),
             request.getDescription(false));
 
@@ -185,18 +188,18 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = GameNotValidException.class)
+    @ExceptionHandler(value = GameBadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> gameNotValidException(GameNotValidException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> gameBadRequestException(GameBadRequestException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
             request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = SkillNotValidRequestException.class)
+    @ExceptionHandler(value = SkillBadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> skillNotValidRequestException(SkillNotValidRequestException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> skillBadRequestException(SkillBadRequestException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
             request.getDescription(false));
 
@@ -210,6 +213,15 @@ public class ExceptionHandlerController {
             request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = FriendshipForbiddenException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorMessage> friendshipForbiddenException(FriendshipForbiddenException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.FORBIDDEN.value(), new Date(), ex.getMessage(),
+            request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
     }
 
 }

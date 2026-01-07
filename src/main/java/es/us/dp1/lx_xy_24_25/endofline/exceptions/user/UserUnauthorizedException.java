@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-public class UserNotAuthenticatedException extends RuntimeException {
-    public UserNotAuthenticatedException() {
+public class UserUnauthorizedException extends RuntimeException {
+    public UserUnauthorizedException() {
         super("User not authenticated");
     }
 }
