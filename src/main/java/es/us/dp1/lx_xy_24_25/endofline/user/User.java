@@ -46,35 +46,5 @@ public class User extends NamedEntity {
     @JsonIgnore
     private List<GamePlayer> gamePlayer = new ArrayList<>();
 
-    public Boolean hasAuthority(String auth) {
-        return authority.getAuthority().equals(auth);
-    }
-
-    public Boolean hasAnyAuthority(String... authorities) {
-        Boolean cond = false;
-        for (String auth : authorities) {
-            if (auth.equals(authority.getAuthority()))
-                cond = true;
-        }
-        return cond;
-    }
-
-	public void setGamePlayer(List<GamePlayer> gamePlayers) {
-        if (this.gamePlayer == null) {
-            this.gamePlayer = new ArrayList<>();
-        } else {
-            this.gamePlayer.clear();
-        }
-
-        if (gamePlayers != null) {
-            for (GamePlayer gp : gamePlayers) {
-                if (gp != null) {
-                    gp.setUser(this);
-                }
-            }
-            this.gamePlayer.addAll(gamePlayers);
-        }
-    }
-
 }
 
