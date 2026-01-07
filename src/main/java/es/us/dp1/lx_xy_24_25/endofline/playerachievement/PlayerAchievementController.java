@@ -79,4 +79,12 @@ public class PlayerAchievementController {
         return new ResponseEntity<>(playerAchievements, HttpStatus.OK);
     }
 
+    @GetMapping("/ids")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Object> getUnlockedAchievementIds() {
+        User currentUser = userService.findCurrentUser();
+        List<Integer> ids = playerAchievementService.findAchievementIdsByUserId(currentUser.getId());
+        return ResponseEntity.ok().body(java.util.Map.of("ids", ids));
+    }
+
 }

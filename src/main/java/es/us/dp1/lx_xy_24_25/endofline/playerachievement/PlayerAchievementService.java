@@ -87,6 +87,14 @@ public class PlayerAchievementService {
     }
 
     @Transactional(readOnly = true)
+    public List<Integer> findAchievementIdsByUserId(Integer userId) {
+        List<PlayerAchievement> achievements = repository.findAllByUserId(userId);
+        return achievements.stream()
+                .map(pa -> pa.getAchievement().getId())
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<PlayerAchievement> findAllByAchievementId(Integer achievementId) {
         return repository.findAllByAchievementId(achievementId);
     }
