@@ -106,7 +106,7 @@ public class BoardService {
     ) {
         GamePlayerCard reverseCard = getReverseCard(gamePlayer);
 
-        if (reverseCard == null) {
+        if (reverseCard == null || gamePlayer.getCardsPlayedThisRound() > 0) {
             return List.of();
         }
 
@@ -147,6 +147,7 @@ public class BoardService {
 
         cardService.removeFromDeck(gamePlayer, card);
         gamePlayerCardService.save(selectedCard);
+        gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
 
         // Clear REVERSE skill after using it (it's a one-time use per activation)
         if (isReversing) {
@@ -165,8 +166,6 @@ public class BoardService {
         // Check if opponent has valid moves (they might be blocked)
         GamePlayer opponent = gamePlayerService.getOpponent(gamePlayer);
         checkOpponent(opponent, board);
-
-        gamePlayerService.incrementCardsPlayedThisRound(gamePlayer);
 
         Boolean isTurnFinished = BoardUtils.getIsTurnFinished(gamePlayer);
         if (isTurnFinished) {
