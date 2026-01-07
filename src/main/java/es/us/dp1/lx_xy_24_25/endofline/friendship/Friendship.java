@@ -37,4 +37,17 @@ public class Friendship extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "friend_state")
     FriendStatus friendState;
+
+    public static Friendship build (
+        User sender,
+        User receiver,
+        FriendStatus friendState
+    ) {
+        Friendship friendship = new Friendship();
+        friendship.setSender(sender);
+        friendship.setReceiver(receiver);
+        friendship.setFriendState(friendState);
+        return friendship;
+    }
+
 }

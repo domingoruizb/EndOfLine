@@ -32,8 +32,4 @@ public class Achievement extends NamedEntity {
     @OneToMany(mappedBy = "achievement")
     Set<PlayerAchievement> playerAchievements;
 
-    public String getActualDescription() {
-        return description.replace("<THRESHOLD>", String.valueOf(threshold));
-    }
-
 }

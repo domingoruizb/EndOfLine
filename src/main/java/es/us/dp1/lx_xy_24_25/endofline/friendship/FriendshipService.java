@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,27 +31,27 @@ public class FriendshipService {
     }
 
     @Transactional(readOnly = true)
-    public Friendship findById(Integer id) {
+    public Friendship getFriendship(Integer id) {
         return friendshipRepository.findById(id)
                 .orElseThrow(() -> new FriendshipNotFoundException(id));
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findFriendshipsOf(Integer id) {
-        return friendshipRepository.findFriendshipsByUserId(id);
+    public List<Friendship> getFriendships(User user) {
+        return friendshipRepository.findFriendships(user.getId());
     }
 
     @Transactional(readOnly = true)
-    public Iterable<Friendship> findPendingReceivedFriendships(@Param("userId") Integer userId) {
-        return friendshipRepository.findPendingReceivedFriendships(userId);
+    public List<Friendship> getPendingFriendships(User user) {
+        return friendshipRepository.findPending(user.getId());
     }
 
-    private Boolean checkFriendship(User sender, User receiver) {
+    private Boolean check(User sender, User receiver) {
         if (sender.getId().equals(receiver.getId())) {
             throw new FriendshipBadRequestException("You cannot be friends with yourself");
         }
 
-        Optional<Friendship> optionalFriendship = friendshipRepository.findFriendshipBySenderAndReceiver(sender.getId(), receiver.getId());
+        Optional<Friendship> optionalFriendship = friendshipRepository.findFriendship(sender.getId(), receiver.getId());
         if (!optionalFriendship.isPresent()) {
             return true;
         }
@@ -67,19 +68,13 @@ public class FriendshipService {
     @Transactional
     public Friendship create(User receiver) {
         User sender = userService.findCurrentUser();
-
-        checkFriendship(sender, receiver);
-
-        Friendship newFriendship = new Friendship();
-        newFriendship.setSender(sender);
-        newFriendship.setReceiver(receiver);
-        newFriendship.setFriendState(FriendStatus.PENDING);
-
+        check(sender, receiver);
+        Friendship newFriendship = Friendship.build(sender, receiver, FriendStatus.PENDING);
         return friendshipRepository.save(newFriendship);
     }
 
     @Transactional
-    public Friendship acceptFriendShip(Friendship friendship) {
+    public Friendship accept(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
         if (friendship.getFriendState() != FriendStatus.PENDING) {
             throw new FriendshipBadRequestException("The friendship has already been accepted");
@@ -94,7 +89,7 @@ public class FriendshipService {
     }
 
     @Transactional
-    public void rejectFriendShip(Friendship friendship) {
+    public void reject(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
         if (!currentUser.getId().equals(friendship.getReceiver().getId())) {
             throw new FriendshipForbiddenException("Only the receiver can reject the friendship");
@@ -105,7 +100,7 @@ public class FriendshipService {
 
     @Transactional
     public Friendship update(Integer id, FriendshipDTO friendshipDTO) {
-        Friendship friendshipToUpdate = findById(id);
+        Friendship friendshipToUpdate = getFriendship(id);
         friendshipToUpdate.setFriendState(friendshipDTO.getFriendship_state());
         return friendshipRepository.save(friendshipToUpdate);
     }
@@ -113,10 +108,10 @@ public class FriendshipService {
     @Transactional
     public void delete(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
-        if (currentUser.equals(friendship.getSender()) || currentUser.equals(friendship.getReceiver())) {
-            friendshipRepository.deleteById(friendship.getId());
-        } else {
-            throw new AccessDeniedException("You are not authorized to delete this friendship.");
+        if (!currentUser.equals(friendship.getSender()) && !currentUser.equals(friendship.getReceiver())) {
+            throw new FriendshipForbiddenException("You are not authorized to delete this friendship.");
         }
+
+        friendshipRepository.deleteById(friendship.getId());
     }
 }

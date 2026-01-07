@@ -1,3 +1,4 @@
+// TODO: Redundancy in useFetchState and getMyFriendships call?
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

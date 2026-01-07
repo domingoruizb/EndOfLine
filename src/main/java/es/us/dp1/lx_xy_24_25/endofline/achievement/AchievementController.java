@@ -38,7 +38,7 @@ public class AchievementController {
 
     @GetMapping
     public ResponseEntity<List<Achievement>> findAll() {
-        return new ResponseEntity<>((List<Achievement>) achievementService.getAchievements(), HttpStatus.OK);
+        return new ResponseEntity<>(achievementService.getAchievements(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
