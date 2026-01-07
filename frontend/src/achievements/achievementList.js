@@ -20,11 +20,7 @@ const AchievementList = () => {
   const [deleteAchievementId, setDeleteAchievementId] = useState(null);
 
   const [achievements, setAchievements] = useFetchState([], `/api/v1/achievements`, jwt);
-  const [playerAchievements] = useFetchState(
-    [],
-    `/api/v1/playerachievements`,
-    jwt
-  );
+  const [playerAchievementIds, setPlayerAchievementIds] = useState([]);
 
   useEffect(() => {
     if (jwt) {
@@ -37,12 +33,32 @@ const AchievementList = () => {
           .join('')
       );
       const decoded = JSON.parse(jsonPayload);
-      setIsAdmin(decoded.authorities && decoded.authorities.includes('ADMIN'));
+      const admin = decoded.authorities && decoded.authorities.includes('ADMIN');
+      setIsAdmin(admin);
+      if (!admin) {
+        fetch('/api/v1/playerachievements/ids', {
+          headers: { Authorization: `Bearer ${jwt}` },
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (Array.isArray(data)) {
+              setPlayerAchievementIds(data);
+            } else if (data && Array.isArray(data.ids)) {
+              setPlayerAchievementIds(data.ids);
+            } else {
+              setPlayerAchievementIds([]);
+            }
+          })
+          .catch(() => setPlayerAchievementIds([]));
+      }
     }
   }, [jwt]);
 
   const isAchievementUnlocked = (achievementId) => {
-    return playerAchievements.some((pa) => pa.achievementId === achievementId);
+    if (isAdmin) {
+      return false;
+    }
+    return Array.isArray(playerAchievementIds) && playerAchievementIds.includes(achievementId);
   };
 
   const handleDeleteAchievement = (achievementId) => {
@@ -62,14 +78,18 @@ const AchievementList = () => {
     });
   };
 
-  const handleViewPlayers = (achievementId) => {
+  const [playersPage, setPlayersPage] = useState(1);
+  const [playersTotalPages, setPlayersTotalPages] = useState(1);
+  const handleViewPlayers = (achievementId, page = 1) => {
     setSelectedAchievementId(achievementId);
-    fetch(`/api/v1/playerachievements/achievement/${achievementId}`, {
+    fetch(`/api/v1/playerachievements/achievement/${achievementId}?page=${page}`, {
       headers: { Authorization: `Bearer ${jwt}` },
     })
       .then((res) => res.json())
       .then((data) => {
-        setPlayersWithAchievement(data);
+        setPlayersWithAchievement(data.content || data);
+        setPlayersPage(data.page || 1);
+        setPlayersTotalPages(data.totalPages || 1);
         setModal(true);
       })
       .catch((err) => console.error('Error fetching players:', err));
@@ -155,6 +175,9 @@ const AchievementList = () => {
         toggle={toggleModal}
         players={playersWithAchievement}
         achievementName={achievements.find((a) => a.id === selectedAchievementId)?.name || 'Achievement'}
+        page={playersPage}
+        totalPages={playersTotalPages}
+        onPageChange={(page) => handleViewPlayers(selectedAchievementId, page)}
       />
       <AchievementDeleteModal
         isOpen={deleteModalOpen}
@@ -166,4 +189,4 @@ const AchievementList = () => {
   );
 };
 
-export default AchievementList; 
+export default AchievementList;
