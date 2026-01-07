@@ -61,7 +61,7 @@ public class BoardController {
     }
 
     @PostMapping("/{gameId}/change")
-    public ResponseEntity<List<Card>> changeDeckCards (
+    public ResponseEntity<Void> changeDeckCards (
         @PathVariable Integer gameId
     ) {
         User user = userService.findCurrentUser();
