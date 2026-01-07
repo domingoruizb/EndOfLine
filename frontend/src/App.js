@@ -18,6 +18,7 @@ import AchievementList from "./achievements/achievementList";
 import AchievementEdit from './achievements/achievementEdit';
 import AchievementCreate from './achievements/achievementCreate';
 import UserStats from './stats/UserStats';
+import { toast } from "react-toastify";
 import MyProfile from './myprofile/myProfile';
 import Friends from './friendships/friendsList';
 import FriendshipCreation from './friendships/createFriendship'
@@ -28,7 +29,8 @@ import JoinGame from './lobby/joinGame';
 import PlayerGamesList from "./games/playerGames";
 import AdminGamesList from "./games/adminGames";
 import Social from "./social/Social";
-import { toast } from "react-toastify";
+
+import ErrorPage from "./error-page";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -48,18 +50,20 @@ function App() {
     roles = getRolesFromJWT(jwt);
   }
 
-  //notifications for pending friendship requests
-
   const notifiedPendingRef = useRef(new Set());
 
   useEffect(() => {
     if (!jwt || !user?.id) return;
+      const isAdmin = (
+        user?.roles[0] === "ADMIN"
+      );
 
     const controller = new AbortController();
 
     const fetchPending = async () => {
       try {
-        const response = await fetch(`/api/v1/friendships/myFriendships`, {
+        if (!isAdmin) {
+          const response = await fetch(`/api/v1/friendships/myFriendships`, {
           headers: { Authorization: `Bearer ${jwt}` },
           signal: controller.signal,
         });
@@ -67,7 +71,7 @@ function App() {
         const data = await response.json();
         const newPending = data.filter(
           (f) => f.friendState === "PENDING" && f.receiver?.id === user.id
-        );
+          );
         newPending.forEach((req) => {
           if (!notifiedPendingRef.current.has(req.id)) {
             toast.info(`👤 ${req.sender.username} sent you a friendship request!`, {
@@ -81,6 +85,7 @@ function App() {
             notifiedPendingRef.current.add(req.id);
           }
         });
+      }
       } catch (err) {
         if (err.name !== 'AbortError') {
         }
@@ -93,7 +98,7 @@ function App() {
       controller.abort();
       clearInterval(interval);
     };
-  }, [jwt, user?.id]);
+  }, [jwt, user?.id, user?.authority?.authority, user?.authorities]);
 
   function getRolesFromJWT(jwt) {
     return jwt_decode(jwt).authorities;
@@ -168,6 +173,8 @@ function App() {
           {adminRoutes}
           {ownerRoutes}
           {vetRoutes}
+        {/* Catch-all 404 route */}
+        <Route path="*" element={<ErrorPage />} />
         </Routes>
       </ErrorBoundary>
     </div>

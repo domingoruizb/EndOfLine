@@ -1,8 +1,7 @@
-import tokenService from '../services/token.service.js';
+import tokenService from '../../services/token.service.js';
 import { useNavigate } from 'react-router-dom';
 
 export function useLobbyGameActions({ gameId, user, jwt, setMessage, setVisible, setSelectedColor1, setSelectedColor2, navigate }) {
-  // Select color for host
   const handleSelectColor1 = async (color, selectedColor2) => {
     if (color === selectedColor2) {
       setMessage('Please choose a different color for each player');

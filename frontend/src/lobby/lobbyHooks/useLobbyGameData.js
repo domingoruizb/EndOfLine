@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import tokenService from '../services/token.service.js';
+import tokenService from '../../services/token.service.js';
 import { useNavigate } from 'react-router-dom';
 
 export default function useLobbyGameData(gameId, user, setMessage, setVisible) {

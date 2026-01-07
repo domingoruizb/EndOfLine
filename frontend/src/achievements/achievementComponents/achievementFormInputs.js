@@ -1,28 +1,28 @@
 // Configuración de inputs reutilizable para formularios de logros (crear y editar)
 const achievementFormInputs = (achievement = {}) => [
   {
-    label: "Name",
+    tag: "Name",
     name: "name",
     type: "text",
     defaultValue: achievement.name || "",
     isRequired: true,
   },
   {
-    label: "Description",
+    tag: "Description",
     name: "description",
     type: "text",
     defaultValue: achievement.description || "",
     isRequired: true,
   },
   {
-    label: "Badge Image Url:",
+    tag: "Badge Image Url",
     name: "badgeImage",
     type: "text",
     defaultValue: achievement.badgeImage || "",
-    isRequired: true,
+    isRequired: false,
   },
   {
-    label: "Category",
+    tag: "Category",
     name: "category",
     type: "select",
     defaultValue: achievement.category || "GAMES_PLAYED",
@@ -34,7 +34,7 @@ const achievementFormInputs = (achievement = {}) => [
     ],
   },
   {
-    label: "Threshold value:",
+    tag: "Threshold value:",
     name: "threshold",
     type: "number",
     defaultValue: achievement.threshold || 1,

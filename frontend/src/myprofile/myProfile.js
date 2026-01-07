@@ -10,10 +10,11 @@ import '../static/css/home/home.css';
 import getErrorModal from "../util/getErrorModal";
 import deleteMyself from "../util/deleteMyself";
 import useFetchState from "../util/useFetchState";
-import ProfileInput from "./myProfileComponents/ProfileInput";
+import FormGenerator from "../components/formGenerator/formGenerator";
+import profileFormInputs from "./myProfileComponents/profileFormInputs";
 import AvatarPreview from "./myProfileComponents/AvatarPreview";
-import useProfileForm from "../hooks/useProfileForm";
-import { useProfileApi } from "../hooks/useProfileApi";
+import useProfileForm from "./myProfileHooks/useProfileForm";
+import { useProfileApi } from "./myProfileHooks/useProfileApi";
 
 
 const jwt = tokenService.getLocalAccessToken();
@@ -67,63 +68,25 @@ export default function MyProfile() {
         <h1 className="text-center myProfile-title">My Profile</h1>
         {modal}
         <div className="auth-form-container">
-          <div>
-            <ProfileInput
-              id="username"
-              label="Username"
-              value={form.username}
-              onChange={form.handleUsernameChange}
-              error={form.usernameError}
-            />
-            <ProfileInput
-              id="name"
-              label="Name"
-              value={form.name}
-              onChange={form.handleNameChange}
-              error={form.nameError}
-            />
-            <ProfileInput
-              id="surname"
-              label="Surname"
-              value={form.surname}
-              onChange={form.handleSurnameChange}
-              error={form.surnameError}
-            />
-            <ProfileInput
-              id="email"
-              label="Email"
-              value={form.email}
-              onChange={form.handleEmailChange}
-              error={form.emailError}
-            />
-            <ProfileInput
-              id="birthdate"
-              label="Birthdate"
-              value={form.birthdate}
-              onChange={form.handleBirthdateChange}
-              error={form.birthdateError}
-              type="date"
-            />
-            <ProfileInput
-              id="avatar"
-              label="Avatar"
-              value={form.avatar}
-              onChange={form.handleAvatarChange}
-              error={form.avatarError}
-              style={{ marginBottom: "20px" }}
-            />
-            <AvatarPreview avatar={form.avatar} error={form.avatarError} />
-            <div className="custom-button-row">
-              <button color="danger" type="button" onClick={() => setDeleteProfile(true)} className="auth-button danger">
-                Delete profile
-              </button>
-              <button className="auth-button" type="button" onClick={() => handleSaveChanges({
-                ...form,
-                jwt,
-              })}>
-                Save changes
-              </button>
-            </div>
+          <AvatarPreview avatar={form.avatar} error={form.avatarError} />
+          <FormGenerator
+            inputs={profileFormInputs(form)}
+            onSubmit={({ values }) => handleSaveChanges({ ...form, ...values, jwt })}
+            numberOfColumns={1}
+            buttonText="Save changes"
+            buttonClassName="auth-button"
+            childrenPosition={-1}
+          />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '32px' }}>
+            <button
+              color="danger"
+              type="button"
+              onClick={() => setDeleteProfile(true)}
+              className="auth-button danger"
+              style={{ minWidth: '180px', marginBottom: '16px' }}
+            >
+              Delete profile
+            </button>
           </div>
         </div>
         {deleteProfile && (

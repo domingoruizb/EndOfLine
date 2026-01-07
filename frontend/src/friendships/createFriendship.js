@@ -6,7 +6,7 @@ import { getUserByUsername, getMyFriendships, sendFriendshipRequest } from "./fr
 import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
 import FormGenerator from "../components/formGenerator/formGenerator";
-import createFriendshipInputs from "./friendshipUtils/createFriendshipInputs";
+import createFriendshipInputs from "./friendshipComponents/createFriendshipInputs";
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipCreation() {
