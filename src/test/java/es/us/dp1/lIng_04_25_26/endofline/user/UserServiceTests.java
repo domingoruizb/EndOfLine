@@ -1,0 +1,170 @@
+package es.us.dp1.lIng_04_25_26.endofline.user;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
+
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
+
+@Epic("Users & Admin Module")
+@Feature("Users Management")
+@Owner("DP1-tutors")
+@SpringBootTest
+@AutoConfigureTestDatabase
+class UserServiceTests {
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AuthoritiesService authService;
+
+
+	@Test
+	@WithMockUser(username = "player1", password = "0wn3r")
+	void shouldFindCurrentUser() {
+		User user = this.userService.findCurrentUser();
+		assertEquals("player1", user.getUsername());
+	}
+
+	@Test
+	@WithMockUser(username = "prueba")
+	void shouldNotFindCorrectCurrentUser() {
+		assertThrows(ResourceNotFoundException.class, () -> this.userService.findCurrentUser());
+	}
+
+	@Test
+	void shouldNotFindAuthenticated() {
+		assertThrows(ResourceNotFoundException.class, () -> this.userService.findCurrentUser());
+	}
+
+	@Test
+	void shouldFindAllUsers() {
+		List<User> users = (List<User>) this.userService.findAll();
+		assertEquals(17, users.size());
+	}
+
+	@Test
+	void shouldFindUsersByUsername() {
+		User user = this.userService.findUser("player1");
+		assertEquals("player1", user.getUsername());
+	}
+
+	@Test
+	void shouldFindUsersByAuthority() {
+		List<User> owners = (List<User>) this.userService.findAllByAuthority("PLAYER");
+		assertEquals(16, owners.size());
+
+		List<User> admins = (List<User>) this.userService.findAllByAuthority("ADMIN");
+		assertEquals(1, admins.size());
+
+		List<User> vets = (List<User>) this.userService.findAllByAuthority("VET");
+		assertEquals(0, vets.size());
+	}
+
+	@Test
+	void shouldNotFindUserByIncorrectUsername() {
+		assertThrows(ResourceNotFoundException.class, () -> this.userService.findUser("usernotexists"));
+	}
+
+	@Test
+	void shouldFindSingleUser() {
+		User user = this.userService.findUser(4);
+		assertEquals("player1", user.getUsername());
+	}
+
+	@Test
+	void shouldNotFindSingleUserWithBadID() {
+		assertThrows(ResourceNotFoundException.class, () -> this.userService.findUser(100));
+	}
+
+	@Test
+	void shouldExistUser() {
+		assertEquals(true, this.userService.existsUser("player1"));
+	}
+
+	@Test
+	void shouldNotExistUser() {
+		assertEquals(false, this.userService.existsUser("player10000"));
+	}
+
+	@Test
+	@Transactional
+	void shouldUpdateUser() {
+		int idToUpdate = 1;
+		String newName="Change";
+		User user = this.userService.findUser(idToUpdate);
+		user.setUsername(newName);
+		userService.updateUser(user, idToUpdate);
+		user = this.userService.findUser(idToUpdate);
+		assertEquals(newName, user.getUsername());
+	}
+
+	@Test
+	@Transactional
+	void shouldInsertUser() {
+		int count = ((Collection<User>) this.userService.findAll()).size();
+
+		User user = new User();
+		user.setUsername("Sam");
+		user.setPassword("password");
+		user.setName("Sammy");
+		user.setSurname("Smith");
+		user.setEmail("sammy@gmail.com");
+		user.setBirthdate(LocalDate.parse("1990-01-01"));
+		user.setAvatar("avatar");
+
+		user.setAuthority(authService.findByAuthority("ADMIN"));
+
+		this.userService.saveUser(user);
+		assertNotEquals(0, user.getId().longValue());
+		assertNotNull(user.getId());
+
+		int finalCount = ((Collection<User>) this.userService.findAll()).size();
+		assertEquals(count + 1, finalCount);
+	}
+
+	@Test
+	@Transactional
+	void shouldDeleteUser() {
+		Integer firstCount = ((Collection<User>) userService.findAll()).size();
+		User user = new User();
+		user.setUsername("Sam");
+		user.setPassword("password");
+		user.setName("Sammy");
+		user.setSurname("Smith");
+		user.setEmail("sammy@gmail.com");
+		user.setBirthdate(LocalDate.parse("1990-01-01"));
+		user.setAvatar("avatar");
+
+		user.setAuthority(authService.findByAuthority("ADMIN"));
+
+		this.userService.saveUser(user);
+
+		Integer secondCount = ((Collection<User>) userService.findAll()).size();
+		assertEquals(firstCount + 1, secondCount);
+		userService.deleteUser(user.getId());
+		Integer lastCount = ((Collection<User>) userService.findAll()).size();
+		assertEquals(firstCount, lastCount);
+	}
+
+}
