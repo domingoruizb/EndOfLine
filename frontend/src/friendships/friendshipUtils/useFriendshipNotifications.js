@@ -6,7 +6,7 @@ export default function useFriendshipNotifications(friendships, user, setFriends
 
   useEffect(() => {
     if (!friendships) return;
-    if (user?.authority?.authority === "ADMIN") return;
+    if (user?.authority?.type === "ADMIN") return;
     try {
       const newPendingRequests = friendships.filter(
         (f) => f.friendState === "PENDING" && f.receiver.id === user.id
@@ -20,5 +20,5 @@ export default function useFriendshipNotifications(friendships, user, setFriends
     } catch (error) {
       showErrorToast("Error processing friendship notifications");
     }
-  }, [friendships, user?.id, user?.authority?.authority]);
+  }, [friendships, user?.id, user?.authority?.type]);
 }

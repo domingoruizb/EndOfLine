@@ -61,7 +61,7 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     type: "select",
     defaultValue: user.authority?.id || "",
     isRequired: true,
-    values: auths.map(auth => ({ value: auth.id, label: auth.authority })),
+    values: auths.map(auth => ({ value: auth.id, label: auth.type })),
   },
   ];
   return inputs;

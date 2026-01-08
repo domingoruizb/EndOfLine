@@ -36,13 +36,14 @@ export default function UserEditAdmin() {
   );
   const auths = useFetchData(`/api/v1/users/authorities`, jwt);
 
+  // TODO: Figure out purpose
   function handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
     if (name === "authority") {
-      const auth = auths.find((a) => a.id === Number(value));
-      setUser({ ...user, authority: auth });
+      const auth = auths.find((a) => a.id === value.id);
+      setUser({ ...user, authority: auth.id });
     } else setUser({ ...user, [name]: value });
   }
 
@@ -76,11 +77,6 @@ export default function UserEditAdmin() {
   }
 
   const modal = getErrorModal(setVisible, visible, message);
-  const authOptions = auths.map((auth) => (
-    <option key={auth.id} value={auth.id}>
-      {auth.authority}
-    </option>
-  ));
 
   return (
     <div className="user-list-page">

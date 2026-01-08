@@ -98,7 +98,7 @@ function App() {
       controller.abort();
       clearInterval(interval);
     };
-  }, [jwt, user?.id, user?.authority?.authority, user?.authorities]);
+  }, [jwt, user?.id]);
 
   function getRolesFromJWT(jwt) {
     return jwt_decode(jwt).authorities;

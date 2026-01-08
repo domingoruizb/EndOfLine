@@ -7,7 +7,7 @@ export default function PrivateRoute ({
     children
 }) {
     const jwt = tokenService.getLocalAccessToken()
-    const { data, loading, getData } = useFetchResource()
+    const { success, loading, getData } = useFetchResource()
 
     useEffect(() => {
         const validateToken = async () => {
@@ -28,7 +28,7 @@ export default function PrivateRoute ({
             Loading...
         </div>
     ) : (
-        data ? (
+        success ? (
             children
         ) : (
             <Login />

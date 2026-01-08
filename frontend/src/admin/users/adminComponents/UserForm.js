@@ -9,15 +9,10 @@ export default function UserForm({ user, onChange, onSubmit, auths, isEdit }) {
 
   const handleSubmit = ({ values }) => {
     let newValues = { ...values };
-    if (newValues.authority && auths && Array.isArray(auths)) {
-      const foundAuth = auths.find((a) => String(a.id) === String(newValues.authority));
-      if (foundAuth) {
-        newValues.authority = foundAuth;
-      }
-    }
     if (!newValues.birthdate) newValues.birthdate = "";
     if (!newValues.name) newValues.name = "";
 
+    // TODO: Figure out the purpose
     if (onChange) {
       Object.entries(newValues).forEach(([name, value]) => {
         onChange({ target: { name, value } });

@@ -54,7 +54,7 @@ export default function UserListAdmin() {
     return (
       <tr key={user.id}>
         <td className="text-center">{user.username}</td>
-        <td className="text-center">{user.authority.authority}</td>
+        <td className="text-center">{user.authority.type}</td>
         <td className="text-center">
           <ButtonGroup>
             <Button
