@@ -276,7 +276,7 @@ public class GameService {
         List<Game> wonGames = getGamesByWinner(user);
         wonGames.forEach(g -> g.setWinner(deletedUser));
 
-        List<GamePlayer> gamePlayers = user.getGamePlayer();
+        List<GamePlayer> gamePlayers = user.getGamePlayers();
         gamePlayers.forEach(gp -> gp.setUser(deletedUser));
 
         userService.deleteUser(user);

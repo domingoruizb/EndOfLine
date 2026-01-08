@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
 import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lIng_04_25_26.endofline.model.NamedEntity;
 import jakarta.persistence.*;
@@ -45,7 +46,24 @@ public class User extends NamedEntity {
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private List<GamePlayer> gamePlayer = new ArrayList<>();
+    private List<GamePlayer> gamePlayers = new ArrayList<>();
+
+    public static User build (
+        SignupRequest request,
+        String password,
+        Authorities authority
+    ) {
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(password);
+        user.setAuthority(authority);
+        user.setAvatar(request.getAvatar());
+        user.setEmail(request.getEmail());
+        user.setBirthdate(LocalDate.parse(request.getBirthdate()));
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        return user;
+    }
 
 }
 

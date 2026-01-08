@@ -17,7 +17,6 @@ package es.us.dp1.lIng_04_25_26.endofline.user;
 
 import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
 import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
-import es.us.dp1.lIng_04_25_26.endofline.util.RestPreconditions;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,56 +53,60 @@ class UserController {
 			res = (List<User>) userService.findAllByAuthority(auth);
 		} else
 			res = (List<User>) userService.findAll();
-		return new ResponseEntity<>(res, HttpStatus.OK);
+		return ResponseEntity.ok(res);
 	}
 
 	@GetMapping("authorities")
 	public ResponseEntity<List<Authorities>> findAllAuths() {
-		List<Authorities> res = (List<Authorities>) authService.findAll();
-		return new ResponseEntity<>(res, HttpStatus.OK);
+		List<Authorities> res = authService.findAll();
+		return ResponseEntity.ok(res);
 	}
 
 	@GetMapping(value = "{id}")
-	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
-		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
+	public ResponseEntity<User> findById(@PathVariable Integer id) {
+		return ResponseEntity.ok(userService.findUser(id));
 	}
 
 	@GetMapping(value = "username/{username}")
-	public ResponseEntity<User> findByUsername(@PathVariable("username") String username) {
-		return new ResponseEntity<>(userService.findUser(username), HttpStatus.OK);
+	public ResponseEntity<User> findByUsername(@PathVariable String username) {
+		return ResponseEntity.ok(userService.findUser(username));
 	}
 
 	@GetMapping(value = "myself")
 	public ResponseEntity<User> findMySelf() {
-		return new ResponseEntity<>(userService.findCurrentUser(), HttpStatus.OK);
+		return ResponseEntity.ok(userService.findCurrentUser());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<User> create(@RequestBody @Valid User user) {
 		User savedUser = userService.saveUser(user);
-		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
 
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody @Valid User user) {
-		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
+	public ResponseEntity<User> update(
+        @PathVariable Integer userId,
+        @RequestBody @Valid User newData
+    ) {
+        User userToUpdate = userService.findUser(userId);
+        return ResponseEntity.ok(userService.updateUser(userToUpdate, newData));
 	}
 
 	@PutMapping(value = "myself")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> updateMyself(@RequestBody @Valid User user) {
-		return new ResponseEntity<>(this.userService.updateCurrentUser(user), HttpStatus.OK);
-	}
+	public ResponseEntity<User> updateMyself(@RequestBody @Valid User newData) {
+        User user = userService.findCurrentUser();
+	    return ResponseEntity.ok(userService.updateUser(user, newData));
+    }
 
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
-        User user = userService.findUser(id);
+	public ResponseEntity<MessageResponse> delete(@PathVariable int userId) {
+        User user = userService.findUser(userId);
 		gameService.deleteUser(user);
-		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping(value = "myself")
@@ -111,7 +114,7 @@ class UserController {
 	public ResponseEntity<MessageResponse> deleteMyself() {
 		User user = userService.findCurrentUser();
 		gameService.deleteUser(user);
-		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
+		return ResponseEntity.ok().build();
 	}
 
 }

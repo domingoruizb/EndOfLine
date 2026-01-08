@@ -46,11 +46,6 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	@Transactional
-	public User saveUser(User user) throws DataAccessException {
-		return userRepository.save(user);
-	}
-
 	@Transactional(readOnly = true)
 	public User findUser(String username) {
 		return userRepository.findByUsername(username)
@@ -75,10 +70,6 @@ public class UserService {
         }
 	}
 
-	public Boolean existsUser(String username) {
-		return userRepository.existsByUsername(username);
-	}
-
 	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
@@ -88,29 +79,15 @@ public class UserService {
 		return userRepository.findAllByAuthority(auth);
 	}
 
-	@Transactional
-	public User updateUser(@Valid User user, Integer idToUpdate) {
-		User toUpdate = findUser(idToUpdate);
-		BeanUtils.copyProperties(user, toUpdate, "id");
-		userRepository.save(toUpdate);
-
-		return toUpdate;
-	}
+    @Transactional
+    public User saveUser(User user) throws DataAccessException {
+        return userRepository.save(user);
+    }
 
 	@Transactional
-	public User updateCurrentUser(@Valid User user) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null) {
-			throw new UserUnauthorizedException();
-		} else {
-			User currentUser = userRepository.findByUsername(auth.getName())
-					.orElseThrow(() -> new UserNotFoundException(auth.getName()));
-			User toUpdate = findUser(currentUser.getId());
-			BeanUtils.copyProperties(user, toUpdate, "id", "gamePlayer");
-			userRepository.save(toUpdate);
-
-			return toUpdate;
-		}
+	public User updateUser(User userToUpdate, User newData) {
+		BeanUtils.copyProperties(newData, userToUpdate, "id", "gamePlayer");
+		return userRepository.save(userToUpdate);
 	}
 
     @Transactional

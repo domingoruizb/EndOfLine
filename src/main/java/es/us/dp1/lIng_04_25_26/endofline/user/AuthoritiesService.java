@@ -15,38 +15,36 @@
  */
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthoritiesNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import java.util.List;
 
 @Service
 public class AuthoritiesService {
 
 	private AuthoritiesRepository authoritiesRepository;
-//	private UserService userService;
 
 	@Autowired
 	public AuthoritiesService(AuthoritiesRepository authoritiesRepository) {
 		this.authoritiesRepository = authoritiesRepository;
-//		this.userService = userService;
 	}
 
 	@Transactional(readOnly = true)
-	public Iterable<Authorities> findAll() {
-		return this.authoritiesRepository.findAll();
+	public List<Authorities> findAll() {
+		return (List<Authorities>) authoritiesRepository.findAll();
 	}
 
 	@Transactional(readOnly = true)
-	public Authorities findByAuthority(String authority) {
-		return this.authoritiesRepository.findByName(authority)
-				.orElseThrow(() -> new ResourceNotFoundException("Authority", "Name", authority));
+	public Authorities findAuthorityByName(String authority) {
+		return authoritiesRepository.findByName(authority)
+				.orElseThrow(() -> new AuthoritiesNotFoundException(authority));
 	}
 
 	@Transactional
-	public void saveAuthorities(Authorities authorities) throws DataAccessException {
+	public void saveAuthorities(Authorities authorities) {
 		authoritiesRepository.save(authorities);
 	}
 

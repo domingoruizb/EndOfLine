@@ -1,5 +1,6 @@
 package es.us.dp1.lIng_04_25_26.endofline.exceptions;
 
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthoritiesNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -229,6 +230,15 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = AchievementNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> achievementNotFoundException(AchievementNotFoundException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(),
+            request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = AuthoritiesNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorMessage> authoritiesNotFoundException(AuthoritiesNotFoundException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(),
             request.getDescription(false));
 
