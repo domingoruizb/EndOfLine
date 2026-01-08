@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.exceptions;
 
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.achievement.AchievementNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckBadRequestException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.board.DeckNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.card.CardForbiddenException;
@@ -100,7 +101,7 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(value = TurnForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<ErrorMessage> handleTurnBadRequestException(TurnForbiddenException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleTurnForbiddenException(TurnForbiddenException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.FORBIDDEN.value(), new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -222,6 +223,15 @@ public class ExceptionHandlerController {
             request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = AchievementNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorMessage> achievementNotFoundException(AchievementNotFoundException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(),
+            request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
 }

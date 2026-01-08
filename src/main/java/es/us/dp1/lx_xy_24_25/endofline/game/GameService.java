@@ -1,6 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.game;
 
-import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementUnlockService;
+import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementService;
 import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
 import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
 import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
@@ -26,9 +26,9 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserService userService;
     private final GamePlayerService gamePlayerService;
-    private final AchievementUnlockService achievementUnlockService;
     private final GamePlayerCardService gamePlayerCardService;
     private final CardService cardService;
+    private final AchievementService achievementService;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 6;
@@ -39,16 +39,16 @@ public class GameService {
         GameRepository gameRepository,
         UserService userService,
         GamePlayerService gamePlayerService,
-        AchievementUnlockService achievementUnlockService,
         GamePlayerCardService gamePlayerCardService,
-        CardService cardService
+        CardService cardService,
+        AchievementService achievementService
     ) {
         this.gameRepository = gameRepository;
         this.userService = userService;
         this.gamePlayerService = gamePlayerService;
-        this.achievementUnlockService = achievementUnlockService;
         this.gamePlayerCardService = gamePlayerCardService;
         this.cardService = cardService;
+        this.achievementService = achievementService;
     }
 
     @Transactional(readOnly = true)
@@ -121,22 +121,24 @@ public class GameService {
         User user = winner.getUser();
 
         game.markAsEnded(user);
-
-        for (GamePlayer gamePlayer : game.getGamePlayers()) {
-            User player = gamePlayer.getUser();
-            long totalGamesPlayed = gameRepository.countGamesPlayedByUser(player.getId());
-            long totalWins = gameRepository.countGameWinsByUser(player.getId());
-            long totalDurationMinutes = calculateTotalDurationMinutes(player.getId());
-
-            achievementUnlockService.checkAndUnlockAchievements(
-                    player,
-                    totalGamesPlayed,
-                    totalWins,
-                    totalDurationMinutes
-            );
-        }
+        game.getGamePlayers().forEach(this::processAchievements);
 
         return game;
+    }
+
+    @Transactional
+    public void processAchievements (GamePlayer gamePlayer) {
+        User player = gamePlayer.getUser();
+        long totalGamesPlayed = gameRepository.countGamesPlayedByUser(player.getId());
+        long totalWins = gameRepository.countGameWinsByUser(player.getId());
+        long totalDurationMinutes = calculateTotalDurationMinutes(player.getId());
+
+        achievementService.unlockAchievements(
+            player,
+            totalGamesPlayed,
+            totalWins,
+            totalDurationMinutes
+        );
     }
 
     private long calculateTotalDurationMinutes(Integer userId) {

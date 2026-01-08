@@ -61,7 +61,7 @@ public class BoardController {
     }
 
     @PostMapping("/{gameId}/change")
-    public ResponseEntity<Void> changeDeckCards (
+    public ResponseEntity<Void> changeDeck (
         @PathVariable Integer gameId
     ) {
         User user = userService.findCurrentUser();
@@ -80,7 +80,7 @@ public class BoardController {
         User user = userService.findCurrentUser();
         GamePlayer gamePlayer = gamePlayerService.getGamePlayer(gameId, user.getId());
 
-        Card card = cardService.getById(boardPlaceDTO.getCardId());
+        Card card = cardService.getCardById(boardPlaceDTO.getCardId());
 
         boardService.placeCard(gamePlayer, card, boardPlaceDTO.getIndex());
 

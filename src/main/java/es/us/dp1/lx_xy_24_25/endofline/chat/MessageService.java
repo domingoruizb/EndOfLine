@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,25 +23,19 @@ public class MessageService {
 
     @Transactional
     public MessageResponseDTO saveMessage (MessageRequestDTO request, User user, Game game) {
-        Message msg = new Message();
-
-        msg.setBody(request.trimmedText());
-        msg.setSentAt(Instant.now().toEpochMilli());
-        msg.setGame(game);
-        msg.setUser(user);
-
+        Message msg = Message.build(request.trimmedText(), Instant.now().toEpochMilli(), user, game);
         Message saved = messageRepository.save(msg);
-
         return MessageResponseDTO.build(saved);
     }
 
     @Transactional(readOnly = true)
-    public List<MessageResponseDTO> getMessages (Integer gameId, Long since) {
+    public List<MessageResponseDTO> getMessagesBySince (Integer gameId, Long since) {
         List<Message> messages = messageRepository.findMessages(gameId, since);
 
         return messages
             .stream()
-            .map(MessageResponseDTO::build).toList();
+            .map(MessageResponseDTO::build)
+            .toList();
     }
 
 }

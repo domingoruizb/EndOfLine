@@ -1,37 +1,25 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
 import es.us.dp1.lx_xy_24_25.endofline.achievement.Achievement;
-import es.us.dp1.lx_xy_24_25.endofline.achievement.AchievementService;
 import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlayerAchievementService {
 
-    PlayerAchievementRepository repository;
-
-    UserService userService;
-
-    AchievementService achievementService;
+    private final PlayerAchievementRepository repository;
 
     @Autowired
     public PlayerAchievementService(
-        PlayerAchievementRepository repository,
-        UserService userService,
-        AchievementService achievementService
+        PlayerAchievementRepository repository
     ) {
         this.repository = repository;
-        this.userService = userService;
-        this.achievementService = achievementService;
     }
 
     @Transactional(readOnly = true)
@@ -51,19 +39,11 @@ public class PlayerAchievementService {
 
     @Transactional
     public PlayerAchievement create (
-        Integer user_id,
-        Integer achievement_id,
+        User user,
+        Achievement achievement,
         LocalDateTime achievedAt
     ) throws ResourceNotFoundException {
-        User user = userService.findUser(user_id);
-        Achievement achievement = achievementService.getById(achievement_id);
-
-        PlayerAchievement playerAchievement = new PlayerAchievement();
-
-        playerAchievement.setUser(user);
-        playerAchievement.setAchievement(achievement);
-        playerAchievement.setAchievedAt(achievedAt);
-
+        PlayerAchievement playerAchievement = PlayerAchievement.build(user, achievement, achievedAt);
         return repository.save(playerAchievement);
     }
 

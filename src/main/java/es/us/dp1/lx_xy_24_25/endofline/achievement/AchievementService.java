@@ -1,57 +1,71 @@
 package es.us.dp1.lx_xy_24_25.endofline.achievement;
 
-import java.util.List;
-import java.util.Optional;
-
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.exceptions.achievement.AchievementNotFoundException;
+import es.us.dp1.lx_xy_24_25.endofline.playerachievement.PlayerAchievementService;
+import es.us.dp1.lx_xy_24_25.endofline.user.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AchievementService {
 
-    AchievementRepository repo;
+    private final AchievementRepository achievementRepository;
+    private final PlayerAchievementService playerAchievementService;
 
     @Autowired
-    public AchievementService(AchievementRepository repo) {
-        this.repo = repo;
+    public AchievementService(
+        AchievementRepository achievementRepository,
+        PlayerAchievementService playerAchievementService
+    ) {
+        this.achievementRepository = achievementRepository;
+        this.playerAchievementService = playerAchievementService;
     }
 
     @Transactional(readOnly = true)
-    List<Achievement> getAchievements() {
-        return repo.findAll();
+    public List<Achievement> getAllAchievements() {
+        return (List<Achievement>) achievementRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Achievement getById(int id) {
-        Optional<Achievement> result = repo.findById(id);
-        return result.orElseThrow(() -> new ResourceNotFoundException("Achievement with id " + id + " not found"));
+    public Achievement getAchievementById(Integer id) {
+        return achievementRepository.findById(id)
+                .orElseThrow(() -> new AchievementNotFoundException(id));
     }
 
     @Transactional
     public Achievement saveAchievement(@Valid Achievement newAchievement) {
-        return repo.save(newAchievement);
+        return achievementRepository.save(newAchievement);
     }
 
     @Transactional
     public Achievement updateAchievement(Integer id, Achievement achievement) {
-        Achievement achievementToUpdate = getById(id);
+        Achievement achievementToUpdate = getAchievementById(id);
         BeanUtils.copyProperties(achievement, achievementToUpdate, "id");
-        return repo.save(achievementToUpdate);
+        return achievementRepository.save(achievementToUpdate);
     }
 
     @Transactional
-    public void deleteAchievementById(int id) {
-        repo.deleteById(id);
+    public void deleteAchievement(Integer id) {
+        achievementRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
-    public Achievement getAchievementByName(String name) {
-        return repo.findByName(name);
+    @Transactional
+    public void unlockAchievements(User user, long totalGamesPlayed, long totalWins, long totalDurationMinutes) {
+        getAllAchievements()
+            .stream()
+            .filter(achievement -> !playerAchievementService.hasAchievement(user.getId(), achievement.getId()))
+            .filter(achievement -> AchievementUtils.isUnlockable(achievement, totalGamesPlayed, totalWins, totalDurationMinutes))
+            .forEach(achievement -> playerAchievementService.create(
+                user,
+                achievement,
+                LocalDateTime.now()
+            ));
     }
 
 }

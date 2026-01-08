@@ -36,4 +36,16 @@ public class PlayerAchievement extends BaseEntity {
     @Column(name = "achieved_at")
     private LocalDateTime achievedAt;
 
+    public static PlayerAchievement build (
+        User user,
+        Achievement achievement,
+        LocalDateTime achievedAt
+    ) {
+        PlayerAchievement playerAchievement = new PlayerAchievement();
+        playerAchievement.setUser(user);
+        playerAchievement.setAchievement(achievement);
+        playerAchievement.setAchievedAt(achievedAt);
+        return playerAchievement;
+    }
+
 }

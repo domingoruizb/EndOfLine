@@ -56,7 +56,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean getIsPlacementValid (
+    public Boolean isPlacementValid (
         Integer selectedIndex,
         GamePlayer gamePlayer,
         GamePlayerCard referenceCard
@@ -138,7 +138,7 @@ public class BoardService {
         Boolean isReversing = game.getSkill() == Skill.REVERSE;
         GamePlayerCard referenceCard = isReversing ? getReverseCard(gamePlayer) : gamePlayerCardService.getLastPlacedCard(gamePlayer);
 
-        if (!getIsPlacementValid(index, gamePlayer, referenceCard)) {
+        if (!isPlacementValid(index, gamePlayer, referenceCard)) {
             throw new CardForbiddenException();
         }
 

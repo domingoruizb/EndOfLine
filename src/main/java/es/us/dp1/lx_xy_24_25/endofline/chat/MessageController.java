@@ -37,7 +37,7 @@ public class MessageController {
     }
 
     @PostMapping("/{gameId}")
-    public ResponseEntity<MessageResponseDTO> postMessage(
+    public ResponseEntity<MessageResponseDTO> saveMessage(
         @PathVariable Integer gameId,
         @RequestBody @Valid MessageRequestDTO request
     ) {
@@ -50,12 +50,12 @@ public class MessageController {
     }
 
     @GetMapping("/{gameId}")
-    public ResponseEntity<List<MessageResponseDTO>> getMessages(
+    public ResponseEntity<List<MessageResponseDTO>> getMessagesBySince(
         @PathVariable Integer gameId,
         @RequestParam(required = false) String since
     ) {
         Long sinceValue = (since == null) ? null : Long.valueOf(since);
-        List<MessageResponseDTO> response = messageService.getMessages(gameId, sinceValue);
+        List<MessageResponseDTO> response = messageService.getMessagesBySince(gameId, sinceValue);
 
         return ResponseEntity.ok(response);
     }

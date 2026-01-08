@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.endofline.achievement;
 
+import es.us.dp1.lx_xy_24_25.endofline.enums.Category;
 import es.us.dp1.lx_xy_24_25.endofline.model.NamedEntity;
 import es.us.dp1.lx_xy_24_25.endofline.playerachievement.PlayerAchievement;
 import jakarta.persistence.*;
@@ -27,9 +28,9 @@ public class Achievement extends NamedEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    Category category;
+    private Category category;
 
     @OneToMany(mappedBy = "achievement")
-    Set<PlayerAchievement> playerAchievements;
+    private Set<PlayerAchievement> playerAchievements;
 
 }

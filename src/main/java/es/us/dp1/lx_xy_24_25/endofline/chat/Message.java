@@ -29,12 +29,17 @@ public class Message extends BaseEntity {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    public Message() {}
-
-    public Message(String body, Long sentAt, User user, Game game) {
-        this.body = body;
-        this.sentAt = sentAt;
-        this.user = user;
-        this.game = game;
+    public static Message build(
+        String body,
+        Long sentAt,
+        User user,
+        Game game
+    ) {
+        Message message = new Message();
+        message.setBody(body);
+        message.setSentAt(sentAt);
+        message.setUser(user);
+        message.setGame(game);
+        return message;
     }
 }

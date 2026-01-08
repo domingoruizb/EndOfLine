@@ -27,7 +27,7 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public Card getById(Integer id) {
+    public Card getCardById(Integer id) {
         return cardRepository
             .findById(id)
             .orElseThrow(() -> new CardNotFoundException(id));
@@ -52,11 +52,9 @@ public class CardService {
         Map<Integer, Card> cardMap = cards.stream()
             .collect(Collectors.toMap(Card::getId, card -> card));
 
-        List<Card> orderedCards = deckIds.stream()
+        return deckIds.stream()
             .map(cardMap::get)
             .toList();
-
-        return orderedCards;
     }
 
     @Transactional

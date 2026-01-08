@@ -1,27 +1,14 @@
 package es.us.dp1.lx_xy_24_25.endofline.achievement;
 
-import java.util.List;
-
 import es.us.dp1.lx_xy_24_25.endofline.auth.payload.response.MessageResponse;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/achievements")
@@ -37,48 +24,41 @@ public class AchievementController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Achievement>> findAll() {
-        return new ResponseEntity<>(achievementService.getAchievements(), HttpStatus.OK);
+    public ResponseEntity<List<Achievement>> getAllAchievements() {
+        List<Achievement> achievements = achievementService.getAllAchievements();
+        return ResponseEntity.ok(achievements);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Achievement> findAchievement(@PathVariable("id") int id) {
-        Achievement achievementToGet = achievementService.getById(id);
-        if (achievementToGet == null)
-            throw new ResourceNotFoundException("Achievement with id " + id + " not found!");
-        return new ResponseEntity<Achievement>(achievementToGet, HttpStatus.OK);
+    public ResponseEntity<Achievement> getAchievementById(
+        @PathVariable Integer id
+    ) {
+        Achievement achievement = achievementService.getAchievementById(id);
+        return ResponseEntity.ok(achievement);
     }
 
     @PostMapping
-    public ResponseEntity<Achievement> createAchievement(@RequestBody @Valid Achievement newAchievement,
-            BindingResult br) {
-        Achievement result = null;
-        if (!br.hasErrors())
-            result = achievementService.saveAchievement(newAchievement);
-        else
-            throw new BadRequestException(br.getAllErrors());
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    public ResponseEntity<Achievement> createAchievement(
+        @RequestBody @Valid Achievement newAchievement
+    ) {
+        Achievement achievement = achievementService.saveAchievement(newAchievement);
+        return ResponseEntity.ok(achievement);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Achievement> modifyAchievement(@RequestBody @Valid Achievement newAchievement, BindingResult br,
-            @PathVariable("id") int id) {
-        Achievement achievementToUpdate = this.findAchievement(id).getBody();
-        if (br.hasErrors())
-            throw new BadRequestException(br.getAllErrors());
-        else if (newAchievement.getId() == null || !newAchievement.getId().equals(id))
-            throw new BadRequestException("Achievement id is not consistent with resource URL:" + id);
-        else {
-            BeanUtils.copyProperties(newAchievement, achievementToUpdate, "id");
-            achievementService.saveAchievement(achievementToUpdate);
-        }
-        return new ResponseEntity<>(achievementToUpdate, HttpStatus.OK);
+    public ResponseEntity<Achievement> updateAchievement(
+        @RequestBody @Valid Achievement newAchievement,
+        @PathVariable Integer id
+    ) {
+        Achievement updatedAchievement = achievementService.updateAchievement(id, newAchievement);
+        return ResponseEntity.ok(updatedAchievement);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteAchievement(@PathVariable("id") int id) {
-        findAchievement(id);
-        achievementService.deleteAchievementById(id);
-        return new ResponseEntity<>(new MessageResponse("Achievement deleted!"), HttpStatus.OK);
+    public ResponseEntity<Void> deleteAchievement(
+        @PathVariable Integer id
+    ) {
+        achievementService.deleteAchievement(id);
+        return ResponseEntity.ok().build();
     }
 }

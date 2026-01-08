@@ -4,14 +4,13 @@ import es.us.dp1.lx_xy_24_25.endofline.user.User;
 import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/playerachievements")
@@ -35,36 +34,7 @@ public class PlayerAchievementController {
             .stream()
             .map(PlayerAchievementDTO::new)
             .toList();
-        return new ResponseEntity<>(playerAchievements, HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PlayerAchievementDTO> findById(@PathVariable Integer id) {
-        PlayerAchievement playerAchievement = playerAchievementService.findById(id);
-        return new ResponseEntity<>(new PlayerAchievementDTO(playerAchievement), HttpStatus.OK);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PlayerAchievementDTO> create (
-        @RequestBody @Valid PlayerAchievementDTO playerAchievementDTO
-    ) {
-        PlayerAchievement playerAchievement = playerAchievementService.create(
-            playerAchievementDTO.getUser_id(),
-            playerAchievementDTO.getAchievement_id(),
-            playerAchievementDTO.getAchieved_at() != null ? playerAchievementDTO.getAchieved_at() : LocalDateTime.now()
-        );
-        return new ResponseEntity<>(new PlayerAchievementDTO(playerAchievement), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PlayerAchievement> delete (
-        @PathVariable Integer id
-    ) {
-        playerAchievementService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(playerAchievements);
     }
 
     @GetMapping("/achievement/{achievementId}")
@@ -76,7 +46,7 @@ public class PlayerAchievementController {
             .stream()
             .map(PlayerAchievementDTO::new)
             .toList();
-        return new ResponseEntity<>(playerAchievements, HttpStatus.OK);
+        return ResponseEntity.ok(playerAchievements);
     }
 
     @GetMapping("/ids")
@@ -84,7 +54,7 @@ public class PlayerAchievementController {
     public ResponseEntity<Object> getUnlockedAchievementIds() {
         User currentUser = userService.findCurrentUser();
         List<Integer> ids = playerAchievementService.findAchievementIdsByUserId(currentUser.getId());
-        return ResponseEntity.ok().body(java.util.Map.of("ids", ids));
+        return ResponseEntity.ok(Map.of("ids", ids));
     }
 
 }
