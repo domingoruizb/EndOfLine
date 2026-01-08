@@ -1,11 +1,15 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.playerachievement.PlayerAchievement;
+import es.us.dp1.lIng_04_25_26.endofline.playerachievement.PlayerAchievementRepository;
+import es.us.dp1.lIng_04_25_26.endofline.playerachievement.PlayerAchievementService;
 
 import java.time.LocalDateTime;
 import java.util.List;

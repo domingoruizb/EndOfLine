@@ -4,14 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import es.us.dp1.lx_xy_24_25.endofline.enums.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import es.us.dp1.lIng_04_25_26.endofline.achievement.Achievement;
+import es.us.dp1.lIng_04_25_26.endofline.achievement.AchievementService;
+import es.us.dp1.lIng_04_25_26.endofline.enums.Category;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 
 @SpringBootTest
 @AutoConfigureTestDatabase

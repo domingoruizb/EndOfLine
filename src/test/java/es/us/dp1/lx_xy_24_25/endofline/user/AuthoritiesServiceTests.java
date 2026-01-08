@@ -14,9 +14,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
-import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

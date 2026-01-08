@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import es.us.dp1.lx_xy_24_25.endofline.configuration.services.UserDetailsImpl;
+import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
 
 @Epic("Users & Admin Module")
 @Feature("Authentication")

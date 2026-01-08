@@ -1,6 +1,9 @@
 package es.us.dp1.lx_xy_24_25.endofline.playerachievement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import es.us.dp1.lIng_04_25_26.endofline.playerachievement.PlayerAchievementDTO;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

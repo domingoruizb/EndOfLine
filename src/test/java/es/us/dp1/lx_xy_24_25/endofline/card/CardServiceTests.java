@@ -1,13 +1,16 @@
 package es.us.dp1.lx_xy_24_25.endofline.card;
 
-import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import es.us.dp1.lIng_04_25_26.endofline.card.Card;
+import es.us.dp1.lIng_04_25_26.endofline.card.CardRepository;
+import es.us.dp1.lIng_04_25_26.endofline.card.CardService;
+import es.us.dp1.lIng_04_25_26.endofline.enums.Color;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer_cards.GamePlayerCard;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer_cards.GamePlayerCardRepository;
 
 import java.util.Arrays;
 import java.util.List;

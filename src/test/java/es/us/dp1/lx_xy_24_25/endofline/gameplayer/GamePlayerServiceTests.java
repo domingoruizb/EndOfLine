@@ -15,8 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.endofline.enums.Color;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.enums.Color;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerRepository;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

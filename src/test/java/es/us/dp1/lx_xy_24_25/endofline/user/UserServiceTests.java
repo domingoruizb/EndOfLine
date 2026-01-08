@@ -17,10 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

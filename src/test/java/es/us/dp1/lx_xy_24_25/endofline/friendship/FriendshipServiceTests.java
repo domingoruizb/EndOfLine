@@ -1,15 +1,19 @@
 package es.us.dp1.lx_xy_24_25.endofline.friendship;
 
-import es.us.dp1.lx_xy_24_25.endofline.enums.FriendStatus;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.BadRequestException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
+
+import es.us.dp1.lIng_04_25_26.endofline.enums.FriendStatus;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.AccessDeniedException;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.BadRequestException;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.friendship.Friendship;
+import es.us.dp1.lIng_04_25_26.endofline.friendship.FriendshipDTO;
+import es.us.dp1.lIng_04_25_26.endofline.friendship.FriendshipService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

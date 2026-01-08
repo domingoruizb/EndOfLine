@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.endofline.auth.AuthService;
-import es.us.dp1.lx_xy_24_25.endofline.auth.payload.request.SignupRequest;
-import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
+import es.us.dp1.lIng_04_25_26.endofline.auth.AuthService;
+import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

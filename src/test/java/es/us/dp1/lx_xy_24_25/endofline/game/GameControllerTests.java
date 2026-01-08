@@ -23,18 +23,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import es.us.dp1.lx_xy_24_25.endofline.board.BoardService;
-import es.us.dp1.lx_xy_24_25.endofline.board.BoardUtils;
-import es.us.dp1.lx_xy_24_25.endofline.card.Card;
-import es.us.dp1.lx_xy_24_25.endofline.card.CardService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
-import es.us.dp1.lx_xy_24_25.endofline.user.Authorities;
-import es.us.dp1.lx_xy_24_25.endofline.user.AuthoritiesService;
-import es.us.dp1.lx_xy_24_25.endofline.user.User;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import es.us.dp1.lIng_04_25_26.endofline.board.BoardService;
+import es.us.dp1.lIng_04_25_26.endofline.board.BoardUtils;
+import es.us.dp1.lIng_04_25_26.endofline.card.Card;
+import es.us.dp1.lIng_04_25_26.endofline.card.CardService;
+import es.us.dp1.lIng_04_25_26.endofline.game.Game;
+import es.us.dp1.lIng_04_25_26.endofline.game.GameController;
+import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 
 @SpringBootTest
 @AutoConfigureTestDatabase

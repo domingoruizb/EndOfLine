@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import es.us.dp1.lx_xy_24_25.endofline.model.Person;
+import es.us.dp1.lIng_04_25_26.endofline.model.Person;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

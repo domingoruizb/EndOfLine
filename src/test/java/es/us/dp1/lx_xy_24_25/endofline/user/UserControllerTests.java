@@ -34,10 +34,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.us.dp1.lx_xy_24_25.endofline.configuration.SecurityConfiguration;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.AccessDeniedException;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-
+import es.us.dp1.lIng_04_25_26.endofline.configuration.SecurityConfiguration;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.AccessDeniedException;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserController;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

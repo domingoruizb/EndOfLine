@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import es.us.dp1.lIng_04_25_26.endofline.enums.Skill;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.game.Game;
+import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
 import jakarta.transaction.Transactional;
-import es.us.dp1.lx_xy_24_25.endofline.enums.Skill;
-import es.us.dp1.lx_xy_24_25.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
 
 @SpringBootTest
 @AutoConfigureTestDatabase

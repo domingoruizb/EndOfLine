@@ -30,13 +30,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.us.dp1.lx_xy_24_25.endofline.auth.AuthController;
-import es.us.dp1.lx_xy_24_25.endofline.auth.AuthService;
-import es.us.dp1.lx_xy_24_25.endofline.auth.payload.request.LoginRequest;
-import es.us.dp1.lx_xy_24_25.endofline.auth.payload.request.SignupRequest;
-import es.us.dp1.lx_xy_24_25.endofline.configuration.jwt.JwtUtils;
-import es.us.dp1.lx_xy_24_25.endofline.configuration.services.UserDetailsImpl;
-import es.us.dp1.lx_xy_24_25.endofline.user.UserService;
+import es.us.dp1.lIng_04_25_26.endofline.auth.AuthController;
+import es.us.dp1.lIng_04_25_26.endofline.auth.AuthService;
+import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.LoginRequest;
+import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.configuration.jwt.JwtUtils;
+import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;

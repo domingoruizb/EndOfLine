@@ -12,14 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import es.us.dp1.lIng_04_25_26.endofline.card.Card;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerService;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer_cards.GamePlayerCard;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer_cards.GamePlayerCardRepository;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer_cards.GamePlayerCardService;
 
-import es.us.dp1.lx_xy_24_25.endofline.card.Card;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayer;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer.GamePlayerService;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCard;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardRepository;
-import es.us.dp1.lx_xy_24_25.endofline.gameplayer_cards.GamePlayerCardService;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
