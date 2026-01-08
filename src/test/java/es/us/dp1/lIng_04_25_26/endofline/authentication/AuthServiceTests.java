@@ -1,4 +1,4 @@
-package es.us.dp1.lIng_04_25_26.endofline.auth;
+package es.us.dp1.lIng_04_25_26.endofline.authentication;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lIng_04_25_26.endofline.auth.AuthService;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
 import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;

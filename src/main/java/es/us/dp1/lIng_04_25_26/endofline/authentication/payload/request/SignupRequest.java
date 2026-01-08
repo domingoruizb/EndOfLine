@@ -1,4 +1,4 @@
-package es.us.dp1.lIng_04_25_26.endofline.auth.payload.request;
+package es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupRequest {
-	
+
 	// User
 	@NotBlank
 	private String username;
@@ -18,14 +18,14 @@ public class SignupRequest {
 
 	@NotBlank
 	private String name;
-	
+
 	@NotBlank
 	private String surname;
 
-	@NotBlank 
+	@NotBlank
 	private String email;
 
-	@NotBlank 
+	@NotBlank
 	private String birthdate;
 
 	@NotBlank

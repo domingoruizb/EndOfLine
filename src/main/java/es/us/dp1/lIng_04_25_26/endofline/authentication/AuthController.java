@@ -1,4 +1,4 @@
-package es.us.dp1.lIng_04_25_26.endofline.auth;
+package es.us.dp1.lIng_04_25_26.endofline.authentication;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.LoginRequest;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.JwtResponse;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.LoginRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.JwtResponse;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.MessageResponse;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.jwt.JwtUtils;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
