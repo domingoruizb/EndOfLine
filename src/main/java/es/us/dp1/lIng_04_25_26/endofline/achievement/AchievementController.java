@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.core.Authentication;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.achievement.AchievementDTO;
 
 @RestController
 @RequestMapping("/api/v1/achievements")
@@ -19,15 +23,16 @@ public class AchievementController {
 
     private final AchievementService achievementService;
 
+
     @Autowired
     public AchievementController(AchievementService achievementService) {
         this.achievementService = achievementService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Achievement>> getAllAchievements() {
-        List<Achievement> achievements = achievementService.getAllAchievements();
-        return ResponseEntity.ok(achievements);
+    public ResponseEntity<List<AchievementDTO>> getAllAchievements() {
+        List<AchievementDTO> achievementDTOs = achievementService.getAllAchievements();
+        return ResponseEntity.ok(achievementDTOs);
     }
 
     @GetMapping("/{id}")
