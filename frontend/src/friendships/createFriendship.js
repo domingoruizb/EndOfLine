@@ -31,7 +31,7 @@ export default function FriendshipCreation() {
             const friendshipsJson = await getMyFriendships(jwt);
             if (friendshipsJson.some(friendship => friendship.sender.id === player.id || friendship.receiver.id === player.id))
                 throw new Error('You are already friends or you have a pending friendship request from this player.');
-            await sendFriendshipRequest(user.id, player.id, jwt);
+            await sendFriendshipRequest(player.id, jwt);
             showSuccessToast(`Friendship request sent to ${usernameValue}!`);
             setTimeout(() => {
                 navigate("/friends");
