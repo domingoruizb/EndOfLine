@@ -32,6 +32,10 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @SecurityRequirement(name = "bearerAuth")
 class UserController {
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<MessageResponse> handleRuntimeException(RuntimeException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
+	}
 
 	private final UserService userService;
 	private final AuthorityService authorityService;

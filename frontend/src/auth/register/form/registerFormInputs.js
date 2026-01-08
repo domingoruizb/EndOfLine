@@ -7,7 +7,12 @@ export const registerFormPlayer  = [
     type: "text",
     defaultValue: "",
     isRequired: true,
-    validators: [formValidators.notEmptyValidator],
+    validators: [
+      {
+        validate: (value) => value && value.length >= 3 && value.length <= 20,
+        message: "El tamaño debe estar entre 3 y 20"
+      }
+    ]
   },
   {
     tag: "First Name",
@@ -15,15 +20,25 @@ export const registerFormPlayer  = [
     type: "text",
     defaultValue: "",
     isRequired: true,
-    validators: [formValidators.notEmptyValidator],
+     validators: [
+      {
+        validate: (value) => value && value.length >= 3 && value.length <= 50,
+        message: "El tamaño debe estar entre 3 y 50"
+      }
+    ]
   },
     {
-    tag: "Last Name",
+    tag: "Surname",
     name: "surname",
     type: "text",
     defaultValue: "",
     isRequired: true,
-    validators: [formValidators.notEmptyValidator],
+    validators: [
+      {
+        validate: (value) => value && value.length >= 3 && value.length <= 50,
+        message: "El tamaño debe estar entre 3 y 50"
+      }
+    ]
   },
   {
     tag: "Email",
@@ -31,7 +46,12 @@ export const registerFormPlayer  = [
     type: "text",
     defaultValue: "",
     isRequired: true,
-    validators: [formValidators.validEmailValidator],
+    validators: [
+      {
+        validate: (value) => /\S+@\S+\.\S+/.test(value),
+        message: "El email no es válido"
+      }
+    ]
   },
   {
     tag: "Password",
@@ -39,7 +59,12 @@ export const registerFormPlayer  = [
     type: "password",
     defaultValue: "",
     isRequired: true,
-    validators: [formValidators.notEmptyValidator],
+    validators: [
+      {
+        validate: (value) => value && value.length >= 5 && value.length <= 40,
+        message: "El tamaño debe estar entre 5 y 40"
+      }
+    ]
   },
   {
     tag: "Birth Date",
@@ -47,7 +72,23 @@ export const registerFormPlayer  = [
     type: "date",
     defaultValue: "",
     isRequired: true,
-    validators: [formValidators.notNullValidator, formValidators.validDateValidator]
+    validators: [
+      {
+        validate: (value) => !!value,
+        message: "La fecha de nacimiento es obligatoria"
+      },
+      {
+        validate: (value) => {
+          if (!value) return false;
+          const today = new Date();
+          const birthDate = new Date(value);
+          today.setHours(0,0,0,0);
+          birthDate.setHours(0,0,0,0);
+          return birthDate < today;
+        },
+        message: "La fecha debe ser anterior a hoy"
+      }
+    ]
   },
   {
     tag: "Avatar",

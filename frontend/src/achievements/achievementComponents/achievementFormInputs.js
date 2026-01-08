@@ -6,6 +6,16 @@ const achievementFormInputs = (achievement = {}) => [
     type: "text",
     defaultValue: achievement.name || "",
     isRequired: true,
+    validators: [
+      {
+        validate: (value) => typeof value === "string" && value.length >= 3,
+        message: "Name must be at least 3 characters."
+      },
+      {
+        validate: (value) => typeof value === "string" && value.length <= 30,
+        message: "Name must be at most 30 characters."
+      }
+    ],
   },
   {
     tag: "Description",
@@ -13,6 +23,16 @@ const achievementFormInputs = (achievement = {}) => [
     type: "text",
     defaultValue: achievement.description || "",
     isRequired: true,
+    validators: [
+      {
+        validate: (value) => typeof value === "string" && value.length >= 5,
+        message: "Description must be at least 5 characters."
+      },
+      {
+        validate: (value) => typeof value === "string" && value.length <= 100,
+        message: "Description must be at most 100 characters."
+      }
+    ],
   },
   {
     tag: "Badge Image Url",
@@ -34,11 +54,17 @@ const achievementFormInputs = (achievement = {}) => [
     ],
   },
   {
-    tag: "Threshold value:",
+    tag: "Threshold value",
     name: "threshold",
     type: "number",
-    defaultValue: achievement.threshold || 1,
+    defaultValue: achievement.threshold,
     isRequired: true,
+    validators: [
+      {
+        validate: (value) => Number(value) >= 1,
+        message: "Threshold must be at least 1."
+      }
+    ],
   },
 ];
 

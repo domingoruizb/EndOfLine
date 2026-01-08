@@ -1,4 +1,3 @@
-// TODO: Redundancy in useFetchState and getMyFriendships call?
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +18,7 @@ export default function FriendshipList() {
         const jwt = tokenService.getLocalAccessToken();
         const user = tokenService.getUser();
         const [friendshipType, setFriendshipType] = useState("ACCEPTED");
-        const [friendships, setFriendships] = useFetchState(null, `/api/v1/friendships/myFriendships`,jwt);
+        const [friendships, setFriendships] = useState([]);
         const [activeGames] = useFetchState([], `/api/v1/games`, jwt);
         const [currentPage, setCurrentPage] = useState(1);
         const [friendshipsPerPage] = useState(5);

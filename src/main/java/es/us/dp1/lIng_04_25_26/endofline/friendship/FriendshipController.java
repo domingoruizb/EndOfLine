@@ -28,10 +28,9 @@ public class FriendshipController {
         this.userService = userService;
     }
 
-    // TODO: Accepted or all friendships?
     @GetMapping("/myFriendships")
     @ResponseStatus(HttpStatus.OK)
-    public List<Friendship> findAcceptedFriendships() {
+    public List<Friendship> findUserFriendships() {
         User user = userService.findCurrentUser();
         return friendshipService.getFriendships(user);
     }

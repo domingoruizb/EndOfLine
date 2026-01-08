@@ -20,8 +20,6 @@ const AchievementList = () => {
   const [deleteAchievementId, setDeleteAchievementId] = useState(null);
 
   const [achievements, setAchievements] = useFetchState([], `/api/v1/achievements`, jwt);
-  console.log('Achievements with unlocked status:');
-  console.log(achievements.map(a => ({ id: a.id, name: a.name, unlocked: a.unlocked })));
   useEffect(() => {
     if (jwt) {
       const base64Url = jwt.split('.')[1];

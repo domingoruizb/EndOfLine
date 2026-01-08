@@ -17,7 +17,7 @@ export default function AchievementEdit() {
     name: "",
     description: "",
     badgeImage: "",
-    threshold: 1,
+    threshold: "",
     category: "GAMES_PLAYED",
     actualDescription: ""
   };
@@ -32,7 +32,6 @@ export default function AchievementEdit() {
     setVisible,
     id
   );
-  // message and visible are now declared above
   const navigate = useNavigate();
   const modal = getErrorModal(setVisible, visible, message);
 
@@ -63,6 +62,8 @@ export default function AchievementEdit() {
       .catch((message) => alert(message));
   }
 
+  const inputs = achievementFormInputs(achievement);
+
 
 
   return (
@@ -72,7 +73,7 @@ export default function AchievementEdit() {
         {modal}
         <div className="auth-form-container">
           <FormGenerator
-            inputs={achievementFormInputs(achievement)}
+            inputs={inputs}
             onSubmit={handleSubmit}
             numberOfColumns={1}
             buttonText="Save"

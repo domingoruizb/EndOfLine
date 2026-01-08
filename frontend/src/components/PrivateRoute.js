@@ -14,7 +14,6 @@ export default function PrivateRoute ({
             if (jwt == null) {
                 return
             }
-
             await getData(
                 `/api/v1/auth/validate?token=${jwt}`
             )
@@ -24,8 +23,9 @@ export default function PrivateRoute ({
     }, [])
 
     return loading ? (
-        <div>
-            Loading...
+        <div className="error-page-container">
+            <h1 className="error-title">Loading...</h1>
+            <h2 className="error-subtitle">Please wait</h2>
         </div>
     ) : (
         success ? (
