@@ -15,6 +15,7 @@
  */
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
 import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,6 +31,10 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @SecurityRequirement(name = "bearerAuth")
 class UserController {
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<MessageResponse> handleRuntimeException(RuntimeException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
+	}
 
 	private final UserService userService;
 	private final AuthoritiesService authService;

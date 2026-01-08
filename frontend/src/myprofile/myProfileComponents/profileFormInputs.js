@@ -1,3 +1,5 @@
+import { formValidators } from "../../validators/formValidators";
+
 // Configuración de inputs para el formulario de perfil de usuario
 const profileFormInputs = (form) => [
   {
@@ -8,6 +10,12 @@ const profileFormInputs = (form) => [
     isRequired: true,
     error: form.usernameError,
     onChange: form.handleUsernameChange,
+    validators: [
+      {
+        validate: (value) => value && value.length >= 3 && value.length <= 20,  
+        message: "Username must be between 3 and 20 characters."
+      }
+    ],
   },
   {
     tag: "Name",
@@ -17,6 +25,12 @@ const profileFormInputs = (form) => [
     isRequired: true,
     error: form.nameError,
     onChange: form.handleNameChange,
+    validators: [
+      {
+        validate: (value) => value && value.length >= 3 && value.length <= 50,  
+        message: "Name must be between 3 and 50 characters."
+      }
+    ],
   },
   {
     tag: "Surname",
@@ -26,6 +40,12 @@ const profileFormInputs = (form) => [
     isRequired: true,
     error: form.surnameError,
     onChange: form.handleSurnameChange,
+    validators: [
+      { 
+        validate: (value) => value && value.length >= 3 && value.length <= 50,
+        message: "Surname must be between 3 and 50 characters."
+      }
+    ],  
   },
   {
     tag: "Email",
@@ -35,6 +55,12 @@ const profileFormInputs = (form) => [
     isRequired: true,
     error: form.emailError,
     onChange: form.handleEmailChange,
+    validators: [
+      {
+        validate: (value) => /\S+@\S+\.\S+/.test(value),
+        message: "El email no es válido"
+      }
+    ]
   },
   {
     tag: "Birthdate",
@@ -44,6 +70,23 @@ const profileFormInputs = (form) => [
     isRequired: true,
     error: form.birthdateError,
     onChange: form.handleBirthdateChange,
+    validators: [
+      {
+        validate: (value) => !!value,
+        message: "La fecha de nacimiento es obligatoria"
+      },
+      {
+        validate: (value) => {
+          if (!value) return false;
+          const today = new Date();
+          const birthDate = new Date(value);
+          today.setHours(0,0,0,0);
+          birthDate.setHours(0,0,0,0);
+          return birthDate < today;
+        },
+        message: "La fecha debe ser anterior a hoy"
+      }
+    ]
   },
   {
     tag: "Avatar",

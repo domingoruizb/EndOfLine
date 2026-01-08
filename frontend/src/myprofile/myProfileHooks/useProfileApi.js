@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import tokenService from '../../services/token.service';
 
 export function useProfileApi({ setMessage, setVisible, setPlayer, user, player, navigate, alerts, setAlerts }) {
   const handleSaveChanges = useCallback(async ({
@@ -28,8 +29,17 @@ export function useProfileApi({ setMessage, setVisible, setPlayer, user, player,
           authority: player.authority,
         }),
       });
-      if (response.ok) {
-        window.location.href = '/myprofile';
+      //si cambia el username, se desloguea para que no haya conflictos
+        if (response.ok) {
+          if (username !== user.username) {
+            tokenService.removeUser();
+            window.location.href = '/login';
+          } else {
+            const updatedUser = { ...user, username };
+            if (user && user.token) updatedUser.token = user.token;
+            tokenService.setUser(updatedUser);
+            window.location.href = '/myprofile';
+          }
       } else {
         const data = await response.json();
         setMessage(data.message || 'Error updating player');

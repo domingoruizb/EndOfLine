@@ -53,6 +53,11 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
+	public User findUserRegistering(String username) {
+		return userRepository.findByUsername(username).orElse(null);
+	}
+
+	@Transactional(readOnly = true)
 	public User findUser(Integer id) {
 		return userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException(id));
@@ -81,11 +86,17 @@ public class UserService {
 
     @Transactional
     public User saveUser(User user) throws DataAccessException {
-        return userRepository.save(user);
+		if (userRepository.existsByUsername(user.getUsername())) {
+			throw new RuntimeException("Username already exists");
+		}
+		return userRepository.save(user);
     }
 
 	@Transactional
 	public User updateUser(User userToUpdate, User newData) {
+		if (!userToUpdate.getUsername().equals(newData.getUsername()) && userRepository.existsByUsername(newData.getUsername())) {
+			throw new RuntimeException("Username already exists");
+		}
 		BeanUtils.copyProperties(newData, userToUpdate, "id", "gamePlayer");
 		return userRepository.save(userToUpdate);
 	}
