@@ -1,8 +1,8 @@
 package es.us.dp1.lIng_04_25_26.endofline.auth;
 
 import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
-import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.user.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.user.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import jakarta.transaction.Transactional;
@@ -15,17 +15,17 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
 	private final PasswordEncoder encoder;
-	private final AuthoritiesService authoritiesService;
+	private final AuthorityService authorityService;
 	private final UserService userService;
 
 	@Autowired
 	public AuthService(
         PasswordEncoder encoder,
-        AuthoritiesService authoritiesService,
+        AuthorityService authorityService,
         UserService userService
     ) {
 		this.encoder = encoder;
-		this.authoritiesService = authoritiesService;
+		this.authorityService = authorityService;
 		this.userService = userService;
 	}
 
@@ -33,9 +33,9 @@ public class AuthService {
 	public void createUser(@Valid SignupRequest request) {
         String password = encoder.encode(request.getPassword());
 		String roles = request.getAuthority().toUpperCase();
-		Authorities authority = roles.equals("ADMIN")
-                ? authoritiesService.findAuthorityByName("ADMIN")
-                : authoritiesService.findAuthorityByName("PLAYER");
+		Authority authority = roles.equals("ADMIN")
+                ? authorityService.findAuthorityByType("ADMIN")
+                : authorityService.findAuthorityByType("PLAYER");
 
         User user = User.build(
             request,

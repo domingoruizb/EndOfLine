@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class AuthoritiesNotFoundException extends RuntimeException {
-    public AuthoritiesNotFoundException(String name) {
-        super("Authorities with name " + name + " not found");
+public class AuthorityNotFoundException extends RuntimeException {
+    public AuthorityNotFoundException(String type) {
+        super("Authority with type " + type + " not found");
     }
 }

@@ -32,33 +32,33 @@ import java.util.List;
 class UserController {
 
 	private final UserService userService;
-	private final AuthoritiesService authService;
+	private final AuthorityService authorityService;
     private final GameService gameService;
 
     @Autowired
 	public UserController(
         UserService userService,
-        AuthoritiesService authService,
+        AuthorityService authorityService,
         GameService gameService
     ) {
 		this.userService = userService;
-		this.authService = authService;
+        this.authorityService = authorityService;
         this.gameService = gameService;
     }
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
+	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String authorityType) {
 		List<User> res;
-		if (auth != null) {
-			res = (List<User>) userService.findAllByAuthority(auth);
+		if (authorityType != null) {
+			res = (List<User>) userService.findAllByAuthority(authorityType);
 		} else
 			res = (List<User>) userService.findAll();
 		return ResponseEntity.ok(res);
 	}
 
 	@GetMapping("authorities")
-	public ResponseEntity<List<Authorities>> findAllAuths() {
-		List<Authorities> res = authService.findAll();
+	public ResponseEntity<List<Authority>> findAllAuths() {
+		List<Authority> res = authorityService.findAll();
 		return ResponseEntity.ok(res);
 	}
 

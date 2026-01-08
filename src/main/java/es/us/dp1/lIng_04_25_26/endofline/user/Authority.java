@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "authorities")
-public class Authorities extends BaseEntity {
+public class Authority extends BaseEntity {
 
 	@Column(length = 20)
-	String authority;
+	private String type;
 
 }

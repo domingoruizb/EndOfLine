@@ -42,7 +42,7 @@ public class AchievementService {
     public List<AchievementDTO> getAllAchievements() {
         Iterable<Achievement> achievements = achievementRepository.findAll();
         User user = userService.findCurrentUser();
-        Boolean isAdmin = user != null && user.getAuthority().getAuthority().equals("ADMIN");
+        Boolean isAdmin = user != null && user.getAuthority().getType().equals("ADMIN");
         List<Integer> unlockedIds = (!isAdmin && user != null)
             ? playerAchievementService.findAchievementIdsByUserId(user.getId())
             : List.of();
