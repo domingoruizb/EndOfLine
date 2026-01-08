@@ -1,4 +1,4 @@
-package es.us.dp1.lIng_04_25_26.endofline.user;
+package es.us.dp1.lIng_04_25_26.endofline.authority;
 
 import es.us.dp1.lIng_04_25_26.endofline.model.BaseEntity;
 import jakarta.persistence.Column;

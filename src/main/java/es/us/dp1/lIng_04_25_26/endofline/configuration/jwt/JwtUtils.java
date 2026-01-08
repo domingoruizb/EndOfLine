@@ -1,7 +1,7 @@
 package es.us.dp1.lIng_04_25_26.endofline.configuration.jwt;
 
 import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

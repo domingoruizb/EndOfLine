@@ -16,6 +16,8 @@
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.MessageResponse;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

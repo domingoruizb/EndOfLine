@@ -2,6 +2,7 @@ package es.us.dp1.lIng_04_25_26.endofline.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
 import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lIng_04_25_26.endofline.model.NamedEntity;
 import jakarta.persistence.*;

@@ -1,8 +1,8 @@
 package es.us.dp1.lIng_04_25_26.endofline.authentication;
 
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authority;
-import es.us.dp1.lIng_04_25_26.endofline.user.AuthorityService;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import jakarta.transaction.Transactional;

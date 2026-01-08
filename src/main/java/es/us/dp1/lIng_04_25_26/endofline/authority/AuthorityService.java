@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.us.dp1.lIng_04_25_26.endofline.user;
+package es.us.dp1.lIng_04_25_26.endofline.authority;
 
 import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthorityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
