@@ -1,5 +1,6 @@
 package es.us.dp1.lIng_04_25_26.endofline.exceptions;
 
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.authentication.AuthenticationBadRequestException;
 import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthorityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -243,6 +244,15 @@ public class ExceptionHandlerController {
             request.getDescription(false));
 
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = AuthenticationBadRequestException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> authenticationBadRequestException(AuthenticationBadRequestException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(),
+            request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
 }

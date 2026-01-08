@@ -3,6 +3,7 @@ package es.us.dp1.lIng_04_25_26.endofline.authentication;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.authentication.AuthenticationBadRequestException;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,12 @@ public class AuthController {
 	@GetMapping("/validate")
 	public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
 		Boolean isValid = jwtUtils.validateJwtToken(token);
-		return ResponseEntity.ok(isValid);
+
+		if (!isValid) {
+			throw new AuthenticationBadRequestException();
+		}
+
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/signup")

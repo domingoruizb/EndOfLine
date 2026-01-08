@@ -5,10 +5,10 @@ import '../static/css/social/StatCard.css';
 import '../static/css/social/RankingTable.css';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
-import StatCard from '../components/statsComponents/StatCard';
-import RankingTable from '../components/statsComponents/RankingTable';
-import GamesGlobalCard from '../components/statsComponents/GamesGlobalCard';
-import DurationsGlobalCard from '../components/statsComponents/DurationsGlobalCard';
+import StatCard from '../components/StatCard';
+import RankingTable from '../stats/statsComponents/RankingTable';
+import GamesGlobalCard from '../stats/statsComponents/GamesGlobalCard';
+import DurationsGlobalCard from '../stats/statsComponents/DurationsGlobalCard';
 import { fmtHours, fmtMins } from '../util/formatters';
 
 export default function Social() {
