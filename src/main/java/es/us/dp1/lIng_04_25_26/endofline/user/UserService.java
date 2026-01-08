@@ -15,6 +15,8 @@
  */
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
+import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +37,12 @@ import java.util.List;
 @Service
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
-
-    @Lazy
-	@Autowired
-	private GameService gameService;
+	private final UserRepository userRepository;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(
+        UserRepository userRepository
+    ) {
 		this.userRepository = userRepository;
 	}
 
@@ -55,12 +54,13 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public User findUser(String username) {
 		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new UserNotFoundException(username));
+            .orElseThrow(() -> new UserNotFoundException(username));
 	}
 
 	@Transactional(readOnly = true)
 	public User findUser(Integer id) {
-		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+		return userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
 	}
 
 	@Transactional(readOnly = true)
@@ -111,35 +111,11 @@ public class UserService {
 
 			return toUpdate;
 		}
-
 	}
 
-	@Autowired
-	private es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerRepository gamePlayerRepository;
-
-	@Transactional
-	public void deleteUser(Integer id) {
-		User toDelete = findUser(id);
-		User deletedUser = userRepository.findByUsername("Deleted user").orElse(null);
-		if (deletedUser != null) {
-			List<Game> hostedGames = gameService.getGamesByHost(toDelete);
-			for (Game g : hostedGames) {
-				g.setHost(deletedUser);
-			}
-			gameService.saveGames(hostedGames);
-			List<Game> wonGames = gameService.getGamesByWinner(toDelete);
-			for (Game g : wonGames) {
-				g.setWinner(deletedUser);
-			}
-			gameService.saveGames(wonGames);
-			List<es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer> gamePlayers = toDelete.getGamePlayer();
-			for (es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer gp : gamePlayers) {
-				gp.setUser(deletedUser);
-				gamePlayerRepository.save(gp);
-			}
-		}
-		this.userRepository.delete(toDelete);
-	}
-
+    @Transactional
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
 
 }

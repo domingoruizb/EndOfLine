@@ -65,7 +65,7 @@ VALUES (18,'VMC1155','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS
         2,'1998-11-22','Alejandro','Urbina Tamayo','alejandro.urbina@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
         
 INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
-VALUES (19,'Deleted user','userDeleted',
+VALUES (19,'deleted','$2a$12$JR5FbZB6JfLtu1pG3dkqV.D9SSZ77mFeJnIPoKeaBoanZkzThIdbi',
         2,'1998-11-22','User','Deleted','userDeleted@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
 INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Rookie','Play at least 5 games',5.0,'/images/rookiegb.png','GAMES_PLAYED');

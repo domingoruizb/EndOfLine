@@ -74,11 +74,6 @@ public class GameService {
     }
 
     @Transactional
-    public List<Game> saveGames(List<Game> games) {
-        return (List<Game>) gameRepository.saveAll(games);
-    }
-
-    @Transactional
     public void deleteGame(Game game) {
         User user = userService.findCurrentUser();
         if (!game.getHost().getId().equals(user.getId())) {
@@ -270,6 +265,21 @@ public class GameService {
 
         // If all cards compared are equal or no cards exist, default to host
         return game.getHost().getId();
+    }
+
+    @Transactional
+    public void deleteUser(User user) {
+        User deletedUser = userService.findUser("deleted");
+        List<Game> hostedGames = getGamesByHost(user);
+        hostedGames.forEach(g -> g.setHost(deletedUser));
+
+        List<Game> wonGames = getGamesByWinner(user);
+        wonGames.forEach(g -> g.setWinner(deletedUser));
+
+        List<GamePlayer> gamePlayers = user.getGamePlayer();
+        gamePlayers.forEach(gp -> gp.setUser(deletedUser));
+
+        userService.deleteUser(user);
     }
 
 }

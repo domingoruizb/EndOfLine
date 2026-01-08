@@ -15,27 +15,17 @@
  */
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
-import java.util.List;
-
+import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
+import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
+import es.us.dp1.lIng_04_25_26.endofline.util.RestPreconditions;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
-import es.us.dp1.lIng_04_25_26.endofline.util.RestPreconditions;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -44,12 +34,18 @@ class UserController {
 
 	private final UserService userService;
 	private final AuthoritiesService authService;
+    private final GameService gameService;
 
-	@Autowired
-	public UserController(UserService userService, AuthoritiesService authService) {
+    @Autowired
+	public UserController(
+        UserService userService,
+        AuthoritiesService authService,
+        GameService gameService
+    ) {
 		this.userService = userService;
 		this.authService = authService;
-	}
+        this.gameService = gameService;
+    }
 
 	@GetMapping
 	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
@@ -105,17 +101,16 @@ class UserController {
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
-		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-		userService.deleteUser(id);
+        User user = userService.findUser(id);
+		gameService.deleteUser(user);
 		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "myself")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> deleteMyself() {
-		User currentUser = userService.findCurrentUser();
-		Integer id = currentUser.getId();
-		userService.deleteUser(id);
+		User user = userService.findCurrentUser();
+		gameService.deleteUser(user);
 		return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
 	}
 
