@@ -24,4 +24,6 @@ public class FriendshipDTO {
     public FriendshipDTO(Integer receiverId) {
         this.receiver = receiverId;
     }
+    public FriendshipDTO() {
+    }
 }
