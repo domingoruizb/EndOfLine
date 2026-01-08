@@ -18,8 +18,8 @@ public interface UserRepository extends CrudRepository<User, Integer>{
 
 	Iterable<User> findAll();
 
-	@Query("SELECT u FROM User u WHERE u.authority.authority = :auth")
-	Iterable<User> findAllByAuthority(String auth);
+	@Query("SELECT u FROM User u WHERE u.authority.type = :authorityType")
+	Iterable<User> findAllByAuthorityType(String authorityType);
 
 
 }

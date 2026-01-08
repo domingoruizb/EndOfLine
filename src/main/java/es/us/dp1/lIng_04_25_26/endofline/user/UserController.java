@@ -15,8 +15,9 @@
  */
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.MessageResponse;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -37,33 +38,33 @@ class UserController {
 	}
 
 	private final UserService userService;
-	private final AuthoritiesService authService;
+	private final AuthorityService authorityService;
     private final GameService gameService;
 
     @Autowired
 	public UserController(
         UserService userService,
-        AuthoritiesService authService,
+        AuthorityService authorityService,
         GameService gameService
     ) {
 		this.userService = userService;
-		this.authService = authService;
+        this.authorityService = authorityService;
         this.gameService = gameService;
     }
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
+	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String authorityType) {
 		List<User> res;
-		if (auth != null) {
-			res = (List<User>) userService.findAllByAuthority(auth);
+		if (authorityType != null) {
+			res = (List<User>) userService.findAllByAuthority(authorityType);
 		} else
 			res = (List<User>) userService.findAll();
 		return ResponseEntity.ok(res);
 	}
 
 	@GetMapping("authorities")
-	public ResponseEntity<List<Authorities>> findAllAuths() {
-		List<Authorities> res = authService.findAll();
+	public ResponseEntity<List<Authority>> findAllAuths() {
+		List<Authority> res = authorityService.findAll();
 		return ResponseEntity.ok(res);
 	}
 

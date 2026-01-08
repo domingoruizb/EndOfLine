@@ -1,14 +1,12 @@
-import React from "react";
 import { Container } from "reactstrap";
-import "../../static/css/auth/authPage.css";
-import "../../static/css/rules/rulesPage.css";
-import bgImage from "../../static/images/home_background.png";
+import "../static/css/auth/authPage.css";
+import "../static/css/rules/rulesPage.css";
 
 export default function RulesPage({ embed = false }) {
     const outerClass = embed ? "rules-outer-embed" : "rules-outer";
     const outerStyle = !embed
         ? {
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${bgImage})`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(/images/background.png)`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat"

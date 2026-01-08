@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.us.dp1.lIng_04_25_26.endofline.user;
+package es.us.dp1.lIng_04_25_26.endofline.authority;
 
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthoritiesNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthorityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,29 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class AuthoritiesService {
+public class AuthorityService {
 
-	private AuthoritiesRepository authoritiesRepository;
+	private AuthorityRepository authorityRepository;
 
 	@Autowired
-	public AuthoritiesService(AuthoritiesRepository authoritiesRepository) {
-		this.authoritiesRepository = authoritiesRepository;
+	public AuthorityService(AuthorityRepository authorityRepository) {
+		this.authorityRepository = authorityRepository;
 	}
 
 	@Transactional(readOnly = true)
-	public List<Authorities> findAll() {
-		return (List<Authorities>) authoritiesRepository.findAll();
+	public List<Authority> findAll() {
+		return (List<Authority>) authorityRepository.findAll();
 	}
 
 	@Transactional(readOnly = true)
-	public Authorities findAuthorityByName(String authority) {
-		return authoritiesRepository.findByName(authority)
-				.orElseThrow(() -> new AuthoritiesNotFoundException(authority));
-	}
-
-	@Transactional
-	public void saveAuthorities(Authorities authorities) {
-		authoritiesRepository.save(authorities);
-	}
+	public Authority findAuthorityByType(String authorityType) {
+        return authorityRepository.findByType(authorityType)
+            .orElseThrow(() -> new AuthorityNotFoundException(authorityType));
+    }
 
 }

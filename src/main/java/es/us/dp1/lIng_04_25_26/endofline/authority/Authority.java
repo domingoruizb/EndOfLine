@@ -1,4 +1,4 @@
-package es.us.dp1.lIng_04_25_26.endofline.user;
+package es.us.dp1.lIng_04_25_26.endofline.authority;
 
 import es.us.dp1.lIng_04_25_26.endofline.model.BaseEntity;
 import jakarta.persistence.Column;
@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "authorities")
-public class Authorities extends BaseEntity {
+public class Authority extends BaseEntity {
 
 	@Column(length = 20)
-	String authority;
+	private String type;
 
 }

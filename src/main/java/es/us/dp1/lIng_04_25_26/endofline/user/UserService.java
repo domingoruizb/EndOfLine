@@ -80,8 +80,8 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public Iterable<User> findAllByAuthority(String auth) {
-		return userRepository.findAllByAuthority(auth);
+	public Iterable<User> findAllByAuthority(String authorityType) {
+		return userRepository.findAllByAuthorityType(authorityType);
 	}
 
     @Transactional

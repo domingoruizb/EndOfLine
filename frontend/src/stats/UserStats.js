@@ -3,7 +3,7 @@ import { Card, CardBody, CardTitle, Row, Col, ListGroup, ListGroupItem } from 'r
 import '../static/css/stats/UserStats.css';
 import tokenService from '../services/token.service';
 import useFetchState from '../util/useFetchState';
-import StatCard from '../components/statsComponents/StatCard';
+import StatCard from '../components/StatCard';
 import { fmtHours, fmtMins, fmtSkill } from '../util/formatters';
 
 export default function UserStats() {

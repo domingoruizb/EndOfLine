@@ -1,24 +1,19 @@
 package es.us.dp1.lIng_04_25_26.endofline.configuration.jwt;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -35,16 +30,16 @@ public class JwtUtils {
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("authorities",
-				userPrincipal.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()));
+				userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
 		return Jwts.builder().setClaims(claims).setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 	}
 
-	public String generateTokenFromUsername(String username, Authorities authority) {
+	public String generateTokenFromUsername(String username, Authority authority) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("authorities", authority.getAuthority());
+		claims.put("authorities", authority.getType());
 		return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();

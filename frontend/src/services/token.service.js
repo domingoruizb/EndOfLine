@@ -1,53 +1,40 @@
 class TokenService {
     getLocalRefreshToken() {
-        const user = JSON.parse(localStorage.getItem("user"));
-        return user?.refreshToken;
+        const user = JSON.parse(localStorage.getItem('user'))
+        return user?.refreshToken
     }
-
-    // getLocalAccessToken() {
-    //     const user = JSON.parse(localStorage.getItem("user"));
-    //     return user?.token;
-    // }
 
     getLocalAccessToken() {
-    const jwtString = localStorage.getItem("jwt");
+        const jwtString = localStorage.getItem('jwt')
 
-    if (!jwtString || jwtString === "undefined") {
-        return null; 
+        if (!jwtString || jwtString === 'undefined') {
+            return null 
+        }
+        try {
+            const jwt = JSON.parse(jwtString)
+            return jwt 
+        } catch (e) {
+            console.error('Error al parsear el token JWT:', e)
+            return null
+        }
     }
-    try {
-        const jwt = JSON.parse(jwtString);
-        return jwt; 
-    } catch (e) {
-        console.error("Error al parsear el token JWT:", e);
-        return null;
-    }
-}
 
     updateLocalAccessToken(token) {
-        window.localStorage.setItem("jwt", JSON.stringify(token));
+        window.localStorage.setItem('jwt', JSON.stringify(token))
     }
 
-    // updateLocalAccessToken(token) {
-    //     let user = JSON.parse(localStorage.getItem("user"));
-    //     user.token = token;
-    //     window.localStorage.setItem("user", JSON.stringify(user));
-    // }
-
     getUser() {
-        return JSON.parse(localStorage.getItem("user"));
+        return JSON.parse(localStorage.getItem('user'))
     }
 
     setUser(user) {
-        window.localStorage.setItem("user", JSON.stringify(user));
+        window.localStorage.setItem('user', JSON.stringify(user))
     }
 
     removeUser() {
-        window.localStorage.removeItem("user");
-        window.localStorage.removeItem("jwt");
+        window.localStorage.removeItem('user')
+        window.localStorage.removeItem('jwt')
     }
-
 }
-const tokenService = new TokenService();
 
-export default tokenService;
+export default new TokenService()

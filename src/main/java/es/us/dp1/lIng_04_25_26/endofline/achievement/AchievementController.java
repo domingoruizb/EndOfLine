@@ -7,13 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.response.MessageResponse;
-
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.security.core.Authentication;
-import es.us.dp1.lIng_04_25_26.endofline.user.User;
-import es.us.dp1.lIng_04_25_26.endofline.achievement.AchievementDTO;
 
 @RestController
 @RequestMapping("/api/v1/achievements")

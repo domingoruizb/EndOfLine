@@ -1,12 +1,10 @@
 package es.us.dp1.lIng_04_25_26.endofline.configuration.jwt;
 
-import java.io.IOException;
-
+import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsServiceImpl;
+import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 

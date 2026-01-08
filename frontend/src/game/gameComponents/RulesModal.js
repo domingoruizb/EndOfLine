@@ -1,5 +1,5 @@
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
-import RulesPage from '../../public/rules';
+import RulesPage from '../../rules';
 
 function RulesModal({ isOpen, toggle }) {
   return (

@@ -1,4 +1,4 @@
-package es.us.dp1.lIng_04_25_26.endofline.auth;
+package es.us.dp1.lIng_04_25_26.endofline.authentication;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -30,10 +30,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.us.dp1.lIng_04_25_26.endofline.auth.AuthController;
-import es.us.dp1.lIng_04_25_26.endofline.auth.AuthService;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.LoginRequest;
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.LoginRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.jwt.JwtUtils;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;

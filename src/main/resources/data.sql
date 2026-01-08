@@ -1,5 +1,5 @@
-INSERT INTO authorities(id,authority) VALUES (1,'ADMIN');
-INSERT INTO authorities(id,authority) VALUES (2,'PLAYER');
+INSERT INTO authorities(id,type) VALUES (1,'ADMIN');
+INSERT INTO authorities(id,type) VALUES (2,'PLAYER');
 INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (1,'admin1','$2a$10$nMmTWAhPTqXqLDJTag3prumFrAJpsYtroxf0ojesFYq0k4PmcbWUS',
         1,'1990-01-15','El Super','Admin','admin1@endofline.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');

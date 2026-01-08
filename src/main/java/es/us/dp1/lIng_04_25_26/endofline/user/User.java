@@ -1,19 +1,18 @@
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import es.us.dp1.lIng_04_25_26.endofline.auth.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
 import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lIng_04_25_26.endofline.model.NamedEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,7 +39,7 @@ public class User extends NamedEntity {
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "authority")
-    Authorities authority;
+    Authority authority;
 
     String avatar;
 
@@ -51,7 +50,7 @@ public class User extends NamedEntity {
     public static User build (
         SignupRequest request,
         String password,
-        Authorities authority
+        Authority authority
     ) {
         User user = new User();
         user.setUsername(request.getUsername());
