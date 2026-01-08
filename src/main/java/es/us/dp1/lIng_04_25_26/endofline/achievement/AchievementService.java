@@ -9,28 +9,55 @@ import org.springframework.transaction.annotation.Transactional;
 import es.us.dp1.lIng_04_25_26.endofline.exceptions.achievement.AchievementNotFoundException;
 import es.us.dp1.lIng_04_25_26.endofline.playerachievement.PlayerAchievementService;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AchievementService {
 
     private final AchievementRepository achievementRepository;
     private final PlayerAchievementService playerAchievementService;
+    private final UserService userService;
 
     @Autowired
     public AchievementService(
         AchievementRepository achievementRepository,
-        PlayerAchievementService playerAchievementService
+        PlayerAchievementService playerAchievementService,
+        UserService userService
     ) {
         this.achievementRepository = achievementRepository;
         this.playerAchievementService = playerAchievementService;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
-    public List<Achievement> getAllAchievements() {
+    public List<Achievement> getAllAchievementsRaw() {
         return (List<Achievement>) achievementRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AchievementDTO> getAllAchievements() {
+        Iterable<Achievement> achievements = achievementRepository.findAll();
+        User user = userService.findCurrentUser();
+        Boolean isAdmin = user != null && user.getAuthority().getAuthority().equals("ADMIN");
+        List<Integer> unlockedIds = (!isAdmin && user != null)
+            ? playerAchievementService.findAchievementIdsByUserId(user.getId())
+            : List.of();
+        List<AchievementDTO> achievementDTOs =  ((List<Achievement>) achievements).stream().map(a -> {
+            AchievementDTO dto = new AchievementDTO();
+            dto.setId(a.getId());
+            dto.setName(a.getName());
+            dto.setDescription(a.getDescription());
+            dto.setCategory(a.getCategory().toString());
+            dto.setThreshold((int)a.getThreshold());
+            dto.setUnlocked(!isAdmin && unlockedIds.contains(a.getId()));
+            dto.setBadgeImage(a.getBadgeImage());
+            return dto;
+        }).collect(Collectors.toList());
+        return achievementDTOs;
     }
 
     @Transactional(readOnly = true)
@@ -58,7 +85,7 @@ public class AchievementService {
 
     @Transactional
     public void unlockAchievements(User user, long totalGamesPlayed, long totalWins, long totalDurationMinutes) {
-        getAllAchievements()
+        getAllAchievementsRaw()
             .stream()
             .filter(achievement -> !playerAchievementService.hasAchievement(user.getId(), achievement.getId()))
             .filter(achievement -> AchievementUtils.isUnlockable(achievement, totalGamesPlayed, totalWins, totalDurationMinutes))
@@ -67,6 +94,11 @@ public class AchievementService {
                 achievement,
                 LocalDateTime.now()
             ));
+    }
+
+     @Transactional(readOnly = true)
+    public List<Integer> getUnlockedAchievementIdsForUser(Integer userId) {
+        return playerAchievementService.findAchievementIdsByUserId(userId);
     }
 
 }

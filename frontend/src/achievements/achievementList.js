@@ -20,8 +20,8 @@ const AchievementList = () => {
   const [deleteAchievementId, setDeleteAchievementId] = useState(null);
 
   const [achievements, setAchievements] = useFetchState([], `/api/v1/achievements`, jwt);
-  const [playerAchievementIds, setPlayerAchievementIds] = useState([]);
-
+  console.log('Achievements with unlocked status:');
+  console.log(achievements.map(a => ({ id: a.id, name: a.name, unlocked: a.unlocked })));
   useEffect(() => {
     if (jwt) {
       const base64Url = jwt.split('.')[1];
@@ -35,31 +35,8 @@ const AchievementList = () => {
       const decoded = JSON.parse(jsonPayload);
       const admin = decoded.authorities && decoded.authorities.includes('ADMIN');
       setIsAdmin(admin);
-      if (!admin) {
-        fetch('/api/v1/playerachievements/ids', {
-          headers: { Authorization: `Bearer ${jwt}` },
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (Array.isArray(data)) {
-              setPlayerAchievementIds(data);
-            } else if (data && Array.isArray(data.ids)) {
-              setPlayerAchievementIds(data.ids);
-            } else {
-              setPlayerAchievementIds([]);
-            }
-          })
-          .catch(() => setPlayerAchievementIds([]));
-      }
     }
   }, [jwt]);
-
-  const isAchievementUnlocked = (achievementId) => {
-    if (isAdmin) {
-      return false;
-    }
-    return Array.isArray(playerAchievementIds) && playerAchievementIds.includes(achievementId);
-  };
 
   const handleDeleteAchievement = (achievementId) => {
     setDeleteAchievementId(achievementId);
@@ -130,7 +107,7 @@ const AchievementList = () => {
                   <AchievementCard
                     key={achievement.id}
                     achievement={achievement}
-                    isUnlocked={isAchievementUnlocked(achievement.id)}
+                    isUnlocked={achievement.unlocked}
                     isAdmin={isAdmin}
                     onViewPlayers={handleViewPlayers}
                     onDelete={handleDeleteAchievement}
@@ -155,7 +132,7 @@ const AchievementList = () => {
                       <AchievementTableRow
                         key={achievement.id}
                         achievement={achievement}
-                        isUnlocked={isAchievementUnlocked(achievement.id)}
+                        isUnlocked={achievement.unlocked}
                         isAdmin={isAdmin}
                         onViewPlayers={handleViewPlayers}
                         onDelete={handleDeleteAchievement}
