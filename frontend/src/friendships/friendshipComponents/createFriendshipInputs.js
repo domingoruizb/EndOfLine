@@ -1,10 +1,10 @@
 // Configuración de inputs para el formulario de crear amistad
-const createFriendshipInputs = (username = "") => [
+const createFriendshipInputs = () => [
   {
     tag: "Username",
     name: "username",
     type: "text",
-    defaultValue: username,
+    defaultValue: "",
     isRequired: true,
   },
 ];

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'react-toastify'
+import { showErrorToast } from './toasts'
 import tokenService from '../services/token.service'
 
 export function useFetchResource () {
@@ -50,7 +50,7 @@ export function useFetchResource () {
             }
         } catch (error) {
             if (error.name !== 'AbortError') {
-                toast.error(`❌ ${error.message ?? 'Something went wrong'}`)
+                showErrorToast(error.message ?? 'Something went wrong')
             }
             setSuccess(false)
             return {

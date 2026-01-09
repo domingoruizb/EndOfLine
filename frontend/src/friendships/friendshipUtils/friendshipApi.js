@@ -20,14 +20,14 @@ export async function getMyFriendships(jwt) {
   return response.json();
 }
 
-export async function sendFriendshipRequest(receiverId, jwt) {
+export async function sendFriendshipRequest(receiver, jwt) {
   const response = await fetch(`/api/v1/friendships`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ receiver: receiverId })
+    body: JSON.stringify({ receiver: receiver })
   });
   if (!response.ok) throw new Error('Failed to send friendship request.');
   return response;

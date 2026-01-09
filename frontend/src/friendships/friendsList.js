@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import FriendTableRow from "./friendshipComponents/FriendTableRow";
 import FriendPagination from "./friendshipComponents/FriendPagination";
 import { filterAndSortFriendships, paginate } from "./friendshipUtils/friendshipListUtils";
-import { showSuccessToast, showErrorToast } from "./friendshipUtils/toastUtils";
+import { showSuccessToast, showErrorToast } from "../util/toasts";
 import useFriendshipNotifications from "./friendshipUtils/useFriendshipNotifications";
 import { getMyFriendships } from "./friendshipUtils/friendshipApi";
 import { acceptFriendshipApi, rejectFriendshipApi } from "./friendshipUtils/friendshipApi";

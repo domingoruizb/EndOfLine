@@ -32,8 +32,8 @@ export default function UserEditAdmin() {
     fetchUser()
   }, [userId])
 
-  async function handleSubmit ({ values }) {
-    const authority = auths.find((a) => a.id === parseInt(values.authority));
+  const handleSubmit = async ({ values }) => {
+    const authority = auths.find((a) => a.id === parseInt(values.authority))
     const body = {
       ...user,
       ...values,

@@ -98,14 +98,6 @@ public class FriendshipService {
         friendshipRepository.delete(friendship);
     }
 
-
-    @Transactional
-    public Friendship update(Integer id, FriendshipDTO friendshipDTO) {
-        Friendship friendshipToUpdate = getFriendship(id);
-        friendshipToUpdate.setFriendState(friendshipDTO.getFriendship_state());
-        return friendshipRepository.save(friendshipToUpdate);
-    }
-
     @Transactional
     public void delete(Friendship friendship) {
         User currentUser = userService.findCurrentUser();
@@ -113,6 +105,6 @@ public class FriendshipService {
             throw new FriendshipForbiddenException("You are not authorized to delete this friendship.");
         }
 
-        friendshipRepository.deleteById(friendship.getId());
+        friendshipRepository.delete(friendship);
     }
 }

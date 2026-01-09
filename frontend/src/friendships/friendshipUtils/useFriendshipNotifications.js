@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { showSuccessToast, showErrorToast } from "./toastUtils";
+import { showErrorToast, showSuccessToast } from '../../util/toasts';
 
 export default function useFriendshipNotifications(friendships, user, setFriendships, jwt) {
   const notifiedPendingRef = useRef(new Set());
