@@ -76,8 +76,9 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Iterable<User> findAll() {
-		return userRepository.findAll();
+	public Iterable<User> findAllExceptMyself() {
+		User currentUser = findCurrentUser();
+		return userRepository.findAllExceptMySelf(currentUser.getId());
 	}
 
 	public Iterable<User> findAllByAuthority(String authorityType) {

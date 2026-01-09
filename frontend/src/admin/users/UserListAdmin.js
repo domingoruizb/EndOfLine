@@ -6,6 +6,7 @@ import "../../static/css/admin/userListAdmin.css";
 import "../../static/css/admin/userListAdmin.css";
 import deleteFromList from "../../util/deleteFromList";
 import getErrorModal from "../../util/getErrorModal";
+import ConfirmDeleteModal from "./adminComponents/ConfirmDeleteModal";
 import useFetchState from "../../util/useFetchState";
 
 const jwt = tokenService.getLocalAccessToken();
@@ -137,24 +138,11 @@ export default function UserListAdmin() {
         ) : (
           <p className="text-center text-white mt-4">No users found.</p>
         )}
-        {confirmUserId !== null && (
-          <Modal isOpen={confirmUserId !== null} toggle={cancelDelete}>
-            <ModalHeader toggle={cancelDelete} className="user-modal-header">
-              Confirm Deletion
-            </ModalHeader>
-            <ModalBody className="user-modal-body">
-              Are you sure you want to delete this user?
-            </ModalBody>
-            <ModalFooter className="user-modal-footer">
-              <Button color="secondary" onClick={cancelDelete} className="user-modal-cancel">
-                Cancel
-              </Button>
-              <Button color="danger" onClick={confirmDelete} className="user-modal-delete">
-                Delete
-              </Button>
-            </ModalFooter>
-          </Modal>
-        )}
+        <ConfirmDeleteModal
+          isOpen={confirmUserId !== null}
+          toggle={cancelDelete}
+          onConfirm={confirmDelete}
+        />
       </div>
     </div>
   );

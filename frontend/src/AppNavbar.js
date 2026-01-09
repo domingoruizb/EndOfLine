@@ -96,7 +96,7 @@ function AppNavbar() {
                                         color: "#b1d12d",
                                         fontWeight: "500",
                                     }}>
-                            Players
+                            Users
                         </DropdownItem>
                         <DropdownItem tag={Link} 
                                     to="/developers"

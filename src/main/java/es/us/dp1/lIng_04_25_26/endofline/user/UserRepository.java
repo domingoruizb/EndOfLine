@@ -16,7 +16,8 @@ public interface UserRepository extends CrudRepository<User, Integer>{
 
 	Optional<User> findById(Integer id);
 
-	Iterable<User> findAll();
+	@Query("SELECT u FROM User u WHERE u.id <> ?1")
+	Iterable<User> findAllExceptMySelf(Integer id);
 
 	@Query("SELECT u FROM User u WHERE u.authority.type = :authorityType")
 	Iterable<User> findAllByAuthorityType(String authorityType);
