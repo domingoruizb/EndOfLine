@@ -57,23 +57,23 @@ class UserController {
 		return ResponseEntity.ok(res);
 	}
 
-	@GetMapping("authorities")
+	@GetMapping("/authorities")
 	public ResponseEntity<List<Authority>> findAllAuths() {
 		List<Authority> res = authorityService.findAll();
 		return ResponseEntity.ok(res);
 	}
 
-	@GetMapping(value = "{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<User> findById(@PathVariable Integer id) {
 		return ResponseEntity.ok(userService.findUser(id));
 	}
 
-	@GetMapping(value = "username/{username}")
+	@GetMapping(value = "/username/{username}")
 	public ResponseEntity<User> findByUsername(@PathVariable String username) {
 		return ResponseEntity.ok(userService.findUser(username));
 	}
 
-	@GetMapping(value = "myself")
+	@GetMapping(value = "/myself")
 	public ResponseEntity<User> findMySelf() {
 		return ResponseEntity.ok(userService.findCurrentUser());
 	}
@@ -85,7 +85,7 @@ class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
 
-	@PutMapping(value = "{userId}")
+	@PutMapping(value = "/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(
         @PathVariable Integer userId,
@@ -95,14 +95,14 @@ class UserController {
         return ResponseEntity.ok(userService.updateUser(userToUpdate, newData));
 	}
 
-	@PutMapping(value = "myself")
+	@PutMapping(value = "/myself")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> updateMyself(@RequestBody @Valid User newData) {
         User user = userService.findCurrentUser();
 	    return ResponseEntity.ok(userService.updateUser(user, newData));
     }
 
-	@DeleteMapping(value = "{userId}")
+	@DeleteMapping(value = "/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable int userId) {
         User user = userService.findUser(userId);
@@ -110,7 +110,7 @@ class UserController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping(value = "myself")
+	@DeleteMapping(value = "/myself")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> deleteMyself() {
 		User user = userService.findCurrentUser();
