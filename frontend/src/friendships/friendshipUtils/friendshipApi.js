@@ -10,7 +10,7 @@ export async function getUserByUsername(username, jwt) {
 }
 
 export async function getMyFriendships(jwt) {
-  const response = await fetch(`/api/v1/friendships/myFriendships`, {
+  const response = await fetch(`/api/v1/friendships`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",

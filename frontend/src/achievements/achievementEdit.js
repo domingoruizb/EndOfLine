@@ -1,19 +1,18 @@
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import tokenService from "../services/token.service";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
-import getIdFromUrl from "../util/getIdFromUrl";
 import FormGenerator from "../components/formGenerator/formGenerator";
 import achievementFormInputs from "./achievementComponents/achievementFormInputs";
 import "../static/css/admin/adminPage.css";
 
 export default function AchievementEdit() {
-  const id = getIdFromUrl(2);
+  const { achievementId } = useParams()
   const jwt = tokenService.getLocalAccessToken();
   const emptyAchievement = {
-    id: id,
+    id: achievementId,
     name: "",
     description: "",
     badgeImage: "",
@@ -26,18 +25,18 @@ export default function AchievementEdit() {
   const [visible, setVisible] = useState(false);
   const [achievement, setAchievement] = useFetchState(
     emptyAchievement,
-    `/api/v1/achievements/${id}`,
+    `/api/v1/achievements/${achievementId}`,
     jwt,
     setMessage,
     setVisible,
-    id
+    achievementId
   );
   const navigate = useNavigate();
   const modal = getErrorModal(setVisible, visible, message);
 
 
   function handleSubmit({ values }) {
-    fetch(`/api/v1/achievements/${id}`,
+    fetch(`/api/v1/achievements/${achievementId}`,
       {
         method: "PUT",
         headers: {

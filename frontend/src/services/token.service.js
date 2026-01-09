@@ -24,7 +24,7 @@ class TokenService {
     }
 
     getUser() {
-        return JSON.parse(localStorage.getItem('user'))
+        return this.getLocalAccessToken() != null ? JSON.parse(localStorage.getItem('user')) : null
     }
 
     setUser(user) {

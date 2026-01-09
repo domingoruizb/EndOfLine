@@ -28,14 +28,14 @@ public class FriendshipController {
         this.userService = userService;
     }
 
-    @GetMapping("/myFriendships")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Friendship> findUserFriendships() {
         User user = userService.findCurrentUser();
         return friendshipService.getFriendships(user);
     }
 
-    @GetMapping("/myPendingReceivedFriendships")
+    @GetMapping("/pending")
     @ResponseStatus(HttpStatus.OK)
     public List<Friendship> findPendingReceivedFriendships() {
         User user = userService.findCurrentUser();
