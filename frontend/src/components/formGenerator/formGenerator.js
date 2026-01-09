@@ -120,13 +120,17 @@ const FormGenerator = forwardRef((props, ref) => {
   }, [submitForm]);
 
   useEffect(() => {
-    document.addEventListener("keyup", (e) => {
-      e.preventDefault()
-      if (e.key === "Enter" && props.listenEnterKey) {
+    const keyupHandler = (e) => {
+      if (e.key === "Enter" && props.listenEnterKey && formElement.current) {
+        e.preventDefault();
         handleSubmit(e);
       }
-    });
-  }, []);
+    };
+    document.addEventListener("keyup", keyupHandler);
+    return () => {
+      document.removeEventListener("keyup", keyupHandler);
+    };
+  }, [props.listenEnterKey, handleSubmit]);
 
   return (
     <div className="class-profile-form">

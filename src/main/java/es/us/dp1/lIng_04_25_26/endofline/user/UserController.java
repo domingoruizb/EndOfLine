@@ -89,7 +89,7 @@ class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(
         @PathVariable Integer userId,
-        @RequestBody @Valid User newData
+        @RequestBody @Valid UserDTO newData
     ) {
         User userToUpdate = userService.findUser(userId);
         return ResponseEntity.ok(userService.updateUser(userToUpdate, newData));
@@ -97,7 +97,7 @@ class UserController {
 
 	@PutMapping(value = "/myself")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> updateMyself(@RequestBody @Valid User newData) {
+	public ResponseEntity<User> updateMyself(@RequestBody @Valid UserDTO newData) {
         User user = userService.findCurrentUser();
 	    return ResponseEntity.ok(userService.updateUser(user, newData));
     }

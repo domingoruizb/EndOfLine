@@ -94,11 +94,11 @@ public class UserService {
     }
 
 	@Transactional
-	public User updateUser(User userToUpdate, User newData) {
+	public User updateUser(User userToUpdate, UserDTO newData) {
 		if (!userToUpdate.getUsername().equals(newData.getUsername()) && userRepository.existsByUsername(newData.getUsername())) {
 			throw new RuntimeException("Username already exists");
 		}
-		BeanUtils.copyProperties(newData, userToUpdate, "id", "gamePlayer");
+		BeanUtils.copyProperties(newData, userToUpdate, "id", "gamePlayer", "password");
 		return userRepository.save(userToUpdate);
 	}
 

@@ -15,9 +15,9 @@ public class GamePlayerController {
     }
 
     @PutMapping("/{gameId}/{userId}/color")
-    public ResponseEntity<GamePlayer> updatePlayerColor(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody String unformattedColor) {
+    public ResponseEntity<GamePlayerDTO> updatePlayerColor(@PathVariable Integer gameId, @PathVariable Integer userId, @RequestBody String unformattedColor) {
         GamePlayer updatedGamePlayer = gamePlayerService.updatePlayerColor(gameId, userId, unformattedColor);
-        return ResponseEntity.ok(updatedGamePlayer);
+        return ResponseEntity.ok(new GamePlayerDTO(updatedGamePlayer));
     }
 
 }

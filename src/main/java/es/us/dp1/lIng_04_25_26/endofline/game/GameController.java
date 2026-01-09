@@ -13,6 +13,7 @@ import es.us.dp1.lIng_04_25_26.endofline.user.User;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/games")
@@ -35,28 +36,29 @@ public class GameController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Game>> findAll() {
-        return ResponseEntity.ok(gameService.findAll());
+    public ResponseEntity<List<GameDTO>> findAll() {
+        List<GameDTO> dtos = gameService.findAll().stream().map(GameDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Game> getGameById(@PathVariable Integer id) {
+    public ResponseEntity<GameDTO> getGameById(@PathVariable Integer id) {
         Game game = gameService.getGameById(id);
-        return ResponseEntity.ok(game);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Game> createGame() {
+    public ResponseEntity<GameDTO> createGame() {
         User user = userService.findCurrentUser();
         Game game = gameService.createGame(user);
-        return ResponseEntity.ok(game);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/join/{code}")
-    public ResponseEntity<Game> joinGame(@PathVariable String code) {
+    public ResponseEntity<GameDTO> joinGame(@PathVariable String code) {
         User user = userService.findCurrentUser();
         Game game = gameService.joinGameByCode(user, code);
-        return ResponseEntity.ok(game);
+        return ResponseEntity.ok(new GameDTO(game));
     }
 
     @PostMapping("/{id}/start")
