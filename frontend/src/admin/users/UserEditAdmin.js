@@ -1,4 +1,6 @@
-import { useEffect, useRef } from "react";
+
+import { useEffect, useRef, useState } from "react";
+import getErrorModal from "../../util/getErrorModal";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetchResource } from '../../util/useFetchResource';
 import FormGenerator from "../../components/formGenerator/formGenerator";
@@ -7,12 +9,15 @@ import "../../static/css/admin/adminPage.css";
 import "../../static/css/admin/userEditAdmin.css";
 import "../../static/css/admin/userListAdmin.css";
 
+
 export default function UserEditAdmin() {
   const { userId } = useParams()
   const navigate = useNavigate()
   const formRef = useRef()
   const { data: auths, getData: getAuths } = useFetchResource()
   const { data: user, getData: getUser } = useFetchResource()
+  const [message, setMessage] = useState(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,24 +37,27 @@ export default function UserEditAdmin() {
     fetchUser()
   }, [userId])
 
-  const handleSubmit = async ({ values }) => {
-    const authority = auths.find((a) => a.id === parseInt(values.authority))
+  const handleSubmit = async ({ values, errors }) => {
+    if (errors && Object.values(errors).some(Boolean)) {
+      setMessage('Invalid data');
+      setVisible(true);
+      return;
+    }
+    const authority = auths.find((a) => a.id === parseInt(values.authority));
     const body = {
       ...user,
       ...values,
       authority: authority
-    }
-
+    };
     const { success } = await getUser(
       userId !== 'new' ? `/api/v1/users/${userId}` : `/api/v1/users`,
       userId !== 'new' ? 'PUT' : 'POST',
       body
-    )
-
+    );
     if (success) {
-      navigate('/users')
+      navigate('/users');
     }
-  }
+  };
 
   const inputs = userFormInputs(auths, user, userId !== 'new');
 
@@ -60,6 +68,7 @@ export default function UserEditAdmin() {
         {user?.id ? "Edit User" : "Add User"}
       </h1>
       <div className="auth-form-container">
+        {getErrorModal(setVisible, visible, message)}
         <FormGenerator
           ref={formRef}
           inputs={inputs}
