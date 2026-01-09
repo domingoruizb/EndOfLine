@@ -15,7 +15,6 @@ function AppNavbar() {
     const toggleNavbar = () => setCollapsed(!collapsed);
 
     const location = useLocation();
-    console.log(location.pathname);
     const isInGame = location.pathname.startsWith('/game/');
     const isInLobby = location.pathname.startsWith('/lobby/');
 
