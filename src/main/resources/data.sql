@@ -1,5 +1,5 @@
-INSERT INTO authorities(id,authority) VALUES (1,'ADMIN');
-INSERT INTO authorities(id,authority) VALUES (2,'PLAYER');
+INSERT INTO authorities(id,type) VALUES (1,'ADMIN');
+INSERT INTO authorities(id,type) VALUES (2,'PLAYER');
 INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (1,'admin1','$2a$10$nMmTWAhPTqXqLDJTag3prumFrAJpsYtroxf0ojesFYq0k4PmcbWUS',
         1,'1990-01-15','El Super','Admin','admin1@endofline.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
@@ -44,7 +44,6 @@ INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, a
 VALUES (13,'player10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
         2,'1999-09-27','Isabella','Morales','isabella.morales@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
--- Usuarios adicionales
 INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
 VALUES (14,'RRP9465','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',
         2,'1998-04-04','Makar','Lavrov','makar.lavrov@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
@@ -66,18 +65,18 @@ VALUES (18,'VMC1155','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS
         2,'1998-11-22','Alejandro','Urbina Tamayo','alejandro.urbina@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
         
 INSERT INTO users(id,username,password,authority,birthdate,name,surname,email, avatar)
-VALUES (19,'Deleted user','userDeleted',
+VALUES (19,'deleted','$2a$12$JR5FbZB6JfLtu1pG3dkqV.D9SSZ77mFeJnIPoKeaBoanZkzThIdbi',
         2,'1998-11-22','User','Deleted','userDeleted@email.com', 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png');
 
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Rookie','Play more than 5 games',5.0,'/images/rookiegb.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Experienced','Play more than 25 games',25.0,'/images/experiencedgb.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (3,'Old Soldier','Play more than 50 games',50.0,'/images/oldsoldiergb.png','GAMES_PLAYED');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (4,'Winner','Win more than 2 games',2.0,'/images/winnergb.png','VICTORIES');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (5,'Master','Win more than 10 games',10.0,'/images/mastergb.png','VICTORIES');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (6,'Legend','Win more than 25 games',25.0,'/images/legendgb.png','VICTORIES');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (7,'Time Rookie','Play more than 10 hours total',600.0,'/images/timerookiegb.png','TOTAL_PLAY_TIME');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (8,'Time Devotee','Play more than 30 hours total',1800.0,'/images/timedevoteegb.png','TOTAL_PLAY_TIME');
-INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (9,'Time Master','Play more than 50 hours total',3000.0,'/images/timemastergb.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (1,'Rookie','Play at least 5 games',5.0,'/images/rookiegb.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (2,'Experienced','Play at least 25 games',25.0,'/images/experiencedgb.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (3,'Old Soldier','Play at least 50 games',50.0,'/images/oldsoldiergb.png','GAMES_PLAYED');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (4,'Winner','Win at least 2 games',2.0,'/images/winnergb.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (5,'Master','Win at least 10 games',10.0,'/images/mastergb.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (6,'Legend','Win at least 25 games',25.0,'/images/legendgb.png','VICTORIES');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (7,'Time Rookie','Play at least 10 hours in total',600.0,'/images/timerookiegb.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (8,'Time Devotee','Play at least 30 hours in total',1800.0,'/images/timedevoteegb.png','TOTAL_PLAY_TIME');
+INSERT INTO achievements(id,name,description,threshold,badge_image,category) VALUES (9,'Time Master','Play at least 50 hours in total',3000.0,'/images/timemastergb.png','TOTAL_PLAY_TIME');
 
 INSERT INTO games(id, round, started_at, ended_at, winner_id, host_id) VALUES
         (8, 6, '2025-10-10 10:15:00', '2025-10-10 11:45:00', 4, 4),
@@ -119,91 +118,91 @@ INSERT INTO friendships (id, sender_id, receiver_id, friend_state) VALUES
 
 
 INSERT INTO cards (id, color, image, initiative) VALUES
-    (1, 0, '/cardImages/CB_0010_2.png', 2),
-    (2, 0, '/cardImages/CB_0100_1.png', 1),
-    (3, 0, '/cardImages/CB_0110_3.png', 3),
-    (4, 0, '/cardImages/CB_1000_2.png', 2),
-    (5, 0, '/cardImages/CB_1010_4.png', 4),
-    (6, 0, '/cardImages/CB_1100_3.png', 3),
-    (7, 0, '/cardImages/CB_1110_0.png', 0),
-    (8, 0, '/cardImages/CB_1110_5.png', 5),
-    (9, 0, '/cardImages/CB_BACK.png', null),
-    (10, 0, '/cardImages/CB_ENERGY.png', null),
-    (11, 0, '/cardImages/CB_START.png', null),
-    (12, 1, '/cardImages/CG_0010_2.png', 2),
-    (13, 1, '/cardImages/CG_0100_1.png', 1),
-    (14, 1, '/cardImages/CG_0110_3.png', 3),
-    (15, 1, '/cardImages/CG_1000_2.png', 2),
-    (16, 1, '/cardImages/CG_1010_4.png', 4),
-    (17, 1, '/cardImages/CG_1100_3.png', 3),
-    (18, 1, '/cardImages/CG_1110_0.png', 0),
-    (19, 1, '/cardImages/CG_1110_5.png', 5),
-    (20, 1, '/cardImages/CG_BACK.png', null),
-    (21, 1, '/cardImages/CG_ENERGY.png', null),
-    (22, 1, '/cardImages/CG_START.png', null),
-    (23, 2, '/cardImages/CM_0010_2.png', 2),
-    (24, 2, '/cardImages/CM_0100_1.png', 1),
-    (25, 2, '/cardImages/CM_0110_3.png', 3),
-    (26, 2, '/cardImages/CM_1000_2.png', 2),
-    (27, 2, '/cardImages/CM_1010_4.png', 4),
-    (28, 2, '/cardImages/CM_1100_3.png', 3),
-    (29, 2, '/cardImages/CM_1110_0.png', 0),
-    (30, 2, '/cardImages/CM_1110_5.png', 5),
-    (31, 2, './cardImages/CM_BACK.png', null),
-    (32, 2, '/cardImages/CM_ENERGY.png', null),
-    (33, 2, '/cardImages/CM_START.png', null),
-    (34, 4, '/cardImages/CO_0010_2.png', 2),
-    (35, 4, '/cardImages/CO_0100_1.png', 1),
-    (36, 4, '/cardImages/CO_0110_3.png', 3),
-    (37, 4, '/cardImages/CO_1000_2.png', 2),
-    (38, 4, '/cardImages/CO_1010_4.png', 4),
-    (39, 4, '/cardImages/CO_1100_3.png', 3),
-    (40, 4, '/cardImages/CO_1110_0.png', 0),
-    (41, 4, '/cardImages/CO_1110_5.png', 5),
-    (42, 4, '/cardImages/CO_BACK.png', null),
-    (43, 4, '/cardImages/CO_ENERGY.png', null),
-    (44, 4, '/cardImages/CO_START.png', null),
-    (45, 5, '/cardImages/CR_0010_2.png', 2),
-    (46, 5, '/cardImages/CR_0100_1.png', 1),
-    (47, 5, '/cardImages/CR_0110_3.png', 3),
-    (48, 5, '/cardImages/CR_1000_2.png', 2),
-    (49, 5, '/cardImages/CR_1010_4.png', 4),
-    (50, 5, '/cardImages/CR_1100_3.png', 3),
-    (51, 5, '/cardImages/CR_1110_0.png', 0),
-    (52, 5, '/cardImages/CR_1110_5.png', 5),
-    (53, 5, '/cardImages/CR_BACK.png', null),
-    (54, 5, '/cardImages/CR_ENERGY.png', null),
-    (55, 5, '/cardImages/CR_START.png', null),
-    (56, 3, '/cardImages/CV_0010_2.png', 2),
-    (57, 3, '/cardImages/CV_0100_1.png', 1),
-    (58, 3, '/cardImages/CV_0110_3.png', 3),
-    (59, 3, '/cardImages/CV_1000_2.png', 2),
-    (60, 3, '/cardImages/CV_1010_4.png', 4),
-    (61, 3, '/cardImages/CV_1100_3.png', 3),
-    (62, 3, '/cardImages/CV_1110_0.png', 0),
-    (63, 3, '/cardImages/CV_1110_5.png', 5),
-    (64, 3, '/cardImages/CV_BACK.png', null),
-    (65, 3, '/cardImages/CV_ENERGY.png', null),
-    (66, 3, '/cardImages/CV_START.png', null),
-    (67, 7, '/cardImages/CW_0010_2.png', 2),
-    (68, 7, '/cardImages/CW_0100_1.png', 1),
-    (69, 7, '/cardImages/CW_0110_3.png', 3),
-    (70, 7, '/cardImages/CW_1000_2.png', 2),
-    (71, 7, '/cardImages/CW_1010_4.png', 4),
-    (72, 7, '/cardImages/CW_1100_3.png', 3),
-    (73, 7, '/cardImages/CW_1110_0.png', 0),
-    (74, 7, '/cardImages/CW_1110_5.png', 5),
-    (75, 7, '/cardImages/CW_BACK.png', null),
-    (76, 7, '/cardImages/CW_ENERGY.png', null),
-    (77, 7, '/cardImages/CW_START.png', null),
-    (78, 6, '/cardImages/CY_0010_2.png', 2),
-    (79, 6, '/cardImages/CY_0100_1.png', 1),
-    (80, 6, '/cardImages/CY_0110_3.png', 3),
-    (81, 6, '/cardImages/CY_1000_2.png', 2),
-    (82, 6, '/cardImages/CY_1010_4.png', 4),
-    (83, 6, '/cardImages/CY_1100_3.png', 3),
-    (84, 6, '/cardImages/CY_1110_0.png', 0),
-    (85, 6, '/cardImages/CY_1110_5.png', 5),
-    (86, 6, '/cardImages/CY_BACK.png', null),
-    (87, 6, '/cardImages/CY_ENERGY.png', null),
-    (88, 6, '/cardImages/CY_START.png', null);
+    (1, 0, '/cards/CB_0010_2.png', 2),
+    (2, 0, '/cards/CB_0100_1.png', 1),
+    (3, 0, '/cards/CB_0110_3.png', 3),
+    (4, 0, '/cards/CB_1000_2.png', 2),
+    (5, 0, '/cards/CB_1010_4.png', 4),
+    (6, 0, '/cards/CB_1100_3.png', 3),
+    (7, 0, '/cards/CB_1110_0.png', 0),
+    (8, 0, '/cards/CB_1110_5.png', 5),
+    (9, 0, '/cards/CB_BACK.png', null),
+    (10, 0, '/cards/CB_ENERGY.png', null),
+    (11, 0, '/cards/CB_START.png', null),
+    (12, 1, '/cards/CG_0010_2.png', 2),
+    (13, 1, '/cards/CG_0100_1.png', 1),
+    (14, 1, '/cards/CG_0110_3.png', 3),
+    (15, 1, '/cards/CG_1000_2.png', 2),
+    (16, 1, '/cards/CG_1010_4.png', 4),
+    (17, 1, '/cards/CG_1100_3.png', 3),
+    (18, 1, '/cards/CG_1110_0.png', 0),
+    (19, 1, '/cards/CG_1110_5.png', 5),
+    (20, 1, '/cards/CG_BACK.png', null),
+    (21, 1, '/cards/CG_ENERGY.png', null),
+    (22, 1, '/cards/CG_START.png', null),
+    (23, 2, '/cards/CM_0010_2.png', 2),
+    (24, 2, '/cards/CM_0100_1.png', 1),
+    (25, 2, '/cards/CM_0110_3.png', 3),
+    (26, 2, '/cards/CM_1000_2.png', 2),
+    (27, 2, '/cards/CM_1010_4.png', 4),
+    (28, 2, '/cards/CM_1100_3.png', 3),
+    (29, 2, '/cards/CM_1110_0.png', 0),
+    (30, 2, '/cards/CM_1110_5.png', 5),
+    (31, 2, './cards/CM_BACK.png', null),
+    (32, 2, '/cards/CM_ENERGY.png', null),
+    (33, 2, '/cards/CM_START.png', null),
+    (34, 4, '/cards/CO_0010_2.png', 2),
+    (35, 4, '/cards/CO_0100_1.png', 1),
+    (36, 4, '/cards/CO_0110_3.png', 3),
+    (37, 4, '/cards/CO_1000_2.png', 2),
+    (38, 4, '/cards/CO_1010_4.png', 4),
+    (39, 4, '/cards/CO_1100_3.png', 3),
+    (40, 4, '/cards/CO_1110_0.png', 0),
+    (41, 4, '/cards/CO_1110_5.png', 5),
+    (42, 4, '/cards/CO_BACK.png', null),
+    (43, 4, '/cards/CO_ENERGY.png', null),
+    (44, 4, '/cards/CO_START.png', null),
+    (45, 5, '/cards/CR_0010_2.png', 2),
+    (46, 5, '/cards/CR_0100_1.png', 1),
+    (47, 5, '/cards/CR_0110_3.png', 3),
+    (48, 5, '/cards/CR_1000_2.png', 2),
+    (49, 5, '/cards/CR_1010_4.png', 4),
+    (50, 5, '/cards/CR_1100_3.png', 3),
+    (51, 5, '/cards/CR_1110_0.png', 0),
+    (52, 5, '/cards/CR_1110_5.png', 5),
+    (53, 5, '/cards/CR_BACK.png', null),
+    (54, 5, '/cards/CR_ENERGY.png', null),
+    (55, 5, '/cards/CR_START.png', null),
+    (56, 3, '/cards/CV_0010_2.png', 2),
+    (57, 3, '/cards/CV_0100_1.png', 1),
+    (58, 3, '/cards/CV_0110_3.png', 3),
+    (59, 3, '/cards/CV_1000_2.png', 2),
+    (60, 3, '/cards/CV_1010_4.png', 4),
+    (61, 3, '/cards/CV_1100_3.png', 3),
+    (62, 3, '/cards/CV_1110_0.png', 0),
+    (63, 3, '/cards/CV_1110_5.png', 5),
+    (64, 3, '/cards/CV_BACK.png', null),
+    (65, 3, '/cards/CV_ENERGY.png', null),
+    (66, 3, '/cards/CV_START.png', null),
+    (67, 7, '/cards/CW_0010_2.png', 2),
+    (68, 7, '/cards/CW_0100_1.png', 1),
+    (69, 7, '/cards/CW_0110_3.png', 3),
+    (70, 7, '/cards/CW_1000_2.png', 2),
+    (71, 7, '/cards/CW_1010_4.png', 4),
+    (72, 7, '/cards/CW_1100_3.png', 3),
+    (73, 7, '/cards/CW_1110_0.png', 0),
+    (74, 7, '/cards/CW_1110_5.png', 5),
+    (75, 7, '/cards/CW_BACK.png', null),
+    (76, 7, '/cards/CW_ENERGY.png', null),
+    (77, 7, '/cards/CW_START.png', null),
+    (78, 6, '/cards/CY_0010_2.png', 2),
+    (79, 6, '/cards/CY_0100_1.png', 1),
+    (80, 6, '/cards/CY_0110_3.png', 3),
+    (81, 6, '/cards/CY_1000_2.png', 2),
+    (82, 6, '/cards/CY_1010_4.png', 4),
+    (83, 6, '/cards/CY_1100_3.png', 3),
+    (84, 6, '/cards/CY_1110_0.png', 0),
+    (85, 6, '/cards/CY_1110_5.png', 5),
+    (86, 6, '/cards/CY_BACK.png', null),
+    (87, 6, '/cards/CY_ENERGY.png', null),
+    (88, 6, '/cards/CY_START.png', null);

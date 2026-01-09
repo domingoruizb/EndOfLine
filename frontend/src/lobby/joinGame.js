@@ -1,4 +1,5 @@
 import React from 'react';
+import GameCodeInput from './lobbyComponents/GameCodeInput.js';
 import '../App.css';
 import '../static/css/newGame/newGame.css'; 
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -47,7 +48,7 @@ export default function JoinGame(){
         try {
 
             const response = await fetch(
-                `/api/v1/games/join/${user.id}/${cleanCode}`,
+                `/api/v1/games/join/${cleanCode}`,
                 {
                     method: "POST",
                     headers: {
@@ -81,33 +82,7 @@ export default function JoinGame(){
                 <h1>JOIN A GAME</h1>
                 
                 <form onSubmit={handleJoinGame} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ margin: '20px 0', width: '100%' }}>
-                        <label htmlFor="gameCode" style={{ color: 'white', display: 'block', marginBottom: '10px', fontSize: '1.2em' }}>
-                            Enter Game Code:
-                        </label>
-                        <input
-                            type="text"
-                            id="gameCode"
-                            name="gameCode"
-                            value={code}
-                            onChange={(e) => setCode(e.target.value)}
-                            maxLength={6}
-                            required
-                            placeholder="A1B2C3"
-                            style={{ 
-                                padding: '10px', 
-                                fontSize: '1.5em',
-                                textAlign: 'center',
-                                textTransform: 'uppercase',
-                                width: '80%', 
-                                maxWidth: '300px',
-                                borderRadius: '5px',
-                                backgroundColor: '#2C2C2C',
-                                color: 'white',
-                                border: '2px solid #b1d12d'
-                            }}
-                        />
-                    </div>
+                    <GameCodeInput code={code} setCode={setCode} />
                     <div className="button-container" style={{ flexDirection: 'column', width: '100%'}}>
                         <button type="submit" className="fuente button-style" style={{ minWidth: '200px' }}>
                             JOIN

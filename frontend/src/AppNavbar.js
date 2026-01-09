@@ -3,7 +3,6 @@ import { Navbar, NavbarBrand, NavLink, NavItem, Nav, UncontrolledDropdown, Dropd
 import { Link, useLocation } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
-import logo from './static/images/SmallLogo.png';
 
 function AppNavbar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -16,7 +15,6 @@ function AppNavbar() {
     const toggleNavbar = () => setCollapsed(!collapsed);
 
     const location = useLocation();
-    console.log(location.pathname);
     const isInGame = location.pathname.startsWith('/game/');
     const isInLobby = location.pathname.startsWith('/lobby/');
 
@@ -97,7 +95,7 @@ function AppNavbar() {
                                         color: "#b1d12d",
                                         fontWeight: "500",
                                     }}>
-                            Players
+                            Users
                         </DropdownItem>
                         <DropdownItem tag={Link} 
                                     to="/developers"
@@ -232,7 +230,7 @@ function AppNavbar() {
                 <NavbarBrand href={isInGame || isInLobby ? null : "/"}>
                     <img
                         alt="logo"
-                        src={logo}
+                        src='/images/logo_small.png'
                         style={{
                             height: 40,
                             width: 40,

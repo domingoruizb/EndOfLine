@@ -1,0 +1,20 @@
+package es.us.dp1.lIng_04_25_26.endofline.card;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import es.us.dp1.lIng_04_25_26.endofline.enums.Color;
+
+import java.util.List;
+
+@Repository
+public interface CardRepository extends JpaRepository<Card, Integer> {
+
+    @Query("SELECT c FROM Card c WHERE c.color = :color AND c.initiative IS NOT NULL")
+    List<Card> findByColor(Color color);
+
+    @Query("SELECT c FROM Card c WHERE c.color = :color AND c.initiative IS NOT NULL AND c.id NOT IN :excludedIds")
+    List<Card> findAvailableCards(Color color, List<Integer> excludedIds);
+
+}

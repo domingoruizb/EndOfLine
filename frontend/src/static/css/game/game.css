@@ -1,0 +1,109 @@
+/* Variables */
+:root {
+    --main-orange-color: #FE5B02;
+    --main-green-color: #B1D12D;
+    --main-cyan-color: #00BCD4;
+    --game-cell-size: 12vh;
+    --board-gap: 0.5vh;
+    --navbar-height: calc(1rem + 0.625rem + 40px);
+    --side-container-width: 25vw;
+}
+
+/* Page container */
+.game-page-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(auto, 1fr);
+    height: calc(100vh - var(--navbar-height));
+    align-items: center;
+    justify-items: center;
+    gap: 2vw;
+    padding: 2vh 2vw;
+    background-color: #121212;
+}
+
+.game-board-container {
+    position: relative; /* keep overlays (turn-overlay) contained to the board area */
+    height: 100%;
+    max-height: calc(100vh - var(--navbar-height) - 4vh);
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: var(--board-gap);
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+.game-cell {
+    background-color: #333;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    user-select: none;
+    outline: none;
+    transition: background-color 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.game-cell:hover {
+    background-color: #555;
+    transform: scale(1.025);
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center;
+}
+
+/* Side deck + Skills (Left and Right Columns) */
+.side-container {
+    height: 100%;
+    max-height: calc(100vh - var(--navbar-height) - 4vh);
+    background-color: #1e1e1e;
+    padding: 2vh;
+    border-radius: 15px;
+    gap: 2vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.cards-container {
+    display: flex;
+    gap: 1vw;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-button {
+    margin-top: 5px;
+    aspect-ratio: 1/1;
+    width: 60%;
+    max-width: 8vw;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    transition: all ease-in-out 0.1s;
+    box-sizing: border-box;
+}
+
+.card-button.selected {
+    transform: scale(1.05) rotate(2.5deg);
+}
+
+.card-button:hover {
+    background-color: #555;
+}

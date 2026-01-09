@@ -1,7 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "reactstrap";
-import { toast } from "react-toastify";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import FriendTableRow from "./friendshipComponents/FriendTableRow";
+import FriendPagination from "./friendshipComponents/FriendPagination";
+import { filterAndSortFriendships, paginate } from "./friendshipUtils/friendshipListUtils";
+import { showSuccessToast, showErrorToast } from "../util/toasts";
+import useFriendshipNotifications from "./friendshipUtils/useFriendshipNotifications";
+import { getMyFriendships } from "./friendshipUtils/friendshipApi";
+import { acceptFriendshipApi, rejectFriendshipApi } from "./friendshipUtils/friendshipApi";
 import tokenService from "../services/token.service";
 import deleteFromList from "../util/deleteFromList";
 import getErrorModal from "../util/getErrorModal";
@@ -9,14 +15,13 @@ import useFetchState from "../util/useFetchState";
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipList() {
-    const jwt = tokenService.getLocalAccessToken();
-    const user = tokenService.getUser();
-    const [friendshipType, setFriendshipType] = useState("ACCEPTED");
-    const [friendships, setFriendships] = useFetchState(null, `/api/v1/friendships/myFriendships`, jwt);
-    const [activeGames, setActiveGames] = useFetchState([], `/api/v1/games`, jwt);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [friendshipsPerPage] = useState(5);
-    const notifiedPendingRef = useRef(new Set());
+        const jwt = tokenService.getLocalAccessToken();
+        const user = tokenService.getUser();
+        const [friendshipType, setFriendshipType] = useState("ACCEPTED");
+        const [friendships, setFriendships] = useState([]);
+        const [activeGames] = useFetchState([], `/api/v1/games`, jwt);
+        const [currentPage, setCurrentPage] = useState(1);
+        const [friendshipsPerPage] = useState(5);
 
     const [message, setMessage] = useState("");
     const [visible, setVisible] = useState(false);
@@ -31,83 +36,33 @@ export default function FriendshipList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`/api/v1/friendships/myFriendships`, {
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                    },
-                });
-                const data = await response.json();
+                const data = await getMyFriendships(jwt);
                 setFriendships(data);
-
-                const newPendingRequests = data.filter(
-                    (f) => f.friendState === "PENDING" && f.receiver.id === user.id
-                );
-
-                newPendingRequests.forEach((request) => {
-                    if (!notifiedPendingRef.current.has(request.id)) {
-                        toast.info(`👤 ${request.sender.username} sent you a friendship request!`, {
-                            position: "top-right",
-                            autoClose: 4000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                        });
-                        notifiedPendingRef.current.add(request.id);
-                    }
-                });
             } catch (error) {
+                showErrorToast("Error fetching friendships data");
                 setMessage("Error fetching friendships data");
                 setVisible(true);
             }
         };
         fetchData();
-    }, [jwt, user.id, friendshipType, setFriendships]);
+    }, [jwt, user?.id, friendshipType, setFriendships]);
 
-    const filteredFriendships = friendships ? friendships.filter(f => f.friendState === friendshipType) : [];
+    useFriendshipNotifications(friendships, user, setFriendships, jwt);
 
-    const sortedFriendships = [...filteredFriendships].sort((a, b) => {
-        const isAReceiver = a.receiver.id === user.id;
-        const isBReceiver = b.receiver.id === user.id;
-        if (isAReceiver && !isBReceiver && a.friendState === "PENDING")
-            return -1;
-        else if (!isAReceiver && isBReceiver && b.friendState === "PENDING")
-            return 1;
-        else
-            return 0;
-    });
 
-    const indexOfLastFriendship = currentPage * friendshipsPerPage;
-    const indexOfFirstFriendship = indexOfLastFriendship - friendshipsPerPage;
-    const currentFriendships = sortedFriendships.slice(indexOfFirstFriendship, indexOfLastFriendship);
-    const paginate = pageNumber => setCurrentPage(pageNumber);
+    const sortedFriendships = filterAndSortFriendships(friendships, friendshipType, user.id);
+    const currentFriendships = paginate(sortedFriendships, currentPage, friendshipsPerPage);
 
     const modal = getErrorModal(setVisible, visible, message);
 
     const acceptFriendship = async (friendshipId) => {
         try {
-            const response = await fetch(`/api/v1/friendships/${friendshipId}/acceptFriendship`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`,
-                }
-            })
-            if (response.ok) {
-                const acceptedFriendship = friendships.find(f => f.id === friendshipId);
-                setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
-                toast.success(`✅ Friendship with ${acceptedFriendship.sender.username} accepted!`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
-                } else {
-                    throw new Error('Failed to accept the friendship.');
-                }
+            await acceptFriendshipApi(friendshipId, jwt);
+            const acceptedFriendship = friendships.find(f => f.id === friendshipId);
+            setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
+            showSuccessToast(`Friendship with ${acceptedFriendship.sender.username} accepted!`);
         } catch (error) {
+            showErrorToast(error.message);
             setMessage(`Error: ${error}`);
             setVisible(true);
         }
@@ -115,28 +70,12 @@ export default function FriendshipList() {
 
     const rejectFriendship = async (friendshipId) => {
         try {
-            const response = await fetch(`/api/v1/friendships/${friendshipId}/rejectFriendship`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`,
-                }
-            })
-            if (response.ok) {
-                const rejectedFriendship = friendships.find(f => f.id === friendshipId);
-                setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
-                toast.info(`🚫 Friendship request from ${rejectedFriendship.sender.username} rejected.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
-                } else {
-                    throw new Error('Failed to accept the friendship.');
-                }
+            await rejectFriendshipApi(friendshipId, jwt);
+            const rejectedFriendship = friendships.find(f => f.id === friendshipId);
+            setFriendships(friendships.filter(friendship => friendship.id !== friendshipId));
+            showSuccessToast(`Friendship request from ${rejectedFriendship.sender.username} rejected.`);
         } catch (error) {
+            showErrorToast(error.message);
             setMessage(`Error: ${error}`);
             setVisible(true);
         }
@@ -156,7 +95,7 @@ export default function FriendshipList() {
 
 
 
-    const totalPages = Math.ceil(filteredFriendships.length / friendshipsPerPage);
+    const totalPages = Math.ceil(sortedFriendships.length / friendshipsPerPage);
 
     return (
         <div className="friend-list-page">
@@ -176,87 +115,31 @@ export default function FriendshipList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentFriendships.map((friendship) => {
-                                        const isSender = friendship.sender.id === user.id;
-                                        const otherUser = isSender ? friendship.receiver : friendship.sender;
-                                        return (
-                                            <tr key={friendship.id}>
-                                                <td className="text-center">{otherUser.username}</td>
-                                                <td className="text-center">
-                                                    {friendshipType === "PENDING" && !isSender ? (
-                                                        <div className="friend-action-group">
-                                                            <Button
-                                                                aria-label={"update-" + friendship.id}
-                                                                size="sm"
-                                                                className="positive-button"
-                                                                onClick={() => acceptFriendship(friendship.id)}
-                                                            >
-                                                                Accept
-                                                            </Button>
-                                                            <Button
-                                                                aria-label={"delete-" + friendship.id}
-                                                                size="sm"
-                                                                className="negative-button"
-                                                                onClick={() => rejectFriendship(friendship.id)}
-                                                            >
-                                                                Reject
-                                                            </Button>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="friend-action-group">
-                                                            {getFriendActiveGame(otherUser.id) && (
-                                                                <Button
-                                                                    aria-label={"spectate-" + friendship.id}
-                                                                    size="sm"
-                                                                    className="positive-button"
-                                                                    onClick={() => handleSpectateGame(getFriendActiveGame(otherUser.id).id)}
-                                                                >
-                                                                    Spectate
-                                                                </Button>
-                                                            )}
-                                                            <Button
-                                                                aria-label={"delete-" + friendship.id}
-                                                                size="sm"
-                                                                className="negative-button"
-                                                                onClick={() => deleteFromList(
-                                                                    `/api/v1/friendships/${friendship.id}`,
-                                                                    friendship.id,
-                                                                    [friendships, setFriendships],
-                                                                    [alerts, setAlerts],
-                                                                    setMessage,
-                                                                    setVisible
-                                                                )}
-                                                            >
-                                                                Delete
-                                                            </Button>
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                {currentFriendships.map((friendship) => (
+                                    <FriendTableRow
+                                        key={friendship.id}
+                                        friendship={friendship}
+                                        user={user}
+                                        friendshipType={friendshipType}
+                                        onAccept={acceptFriendship}
+                                        onReject={rejectFriendship}
+                                        onSpectate={handleSpectateGame}
+                                        onDelete={(id) => deleteFromList(
+                                            `/api/v1/friendships/${id}`,
+                                            id,
+                                            [friendships, setFriendships],
+                                            [alerts, setAlerts],
+                                            setMessage,
+                                            setVisible
+                                        )}
+                                        canSpectate={!!getFriendActiveGame((friendship.sender.id === user.id ? friendship.receiver : friendship.sender).id)}
+                                        getFriendActiveGame={getFriendActiveGame}
+                                    />
+                                ))}
                             </tbody>
                         </table>
                         {totalPages > 1 && (
-                            <div className="friend-pagination text-center mt-4">
-                                <button
-                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    disabled={currentPage === 1}
-                                    className="friend-pagination-button"
-                                >
-                                    Previous
-                                </button>
-                                <span className="friend-pagination-info">
-                                    Page {currentPage} of {totalPages}
-                                </span>
-                                <button
-                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                    disabled={currentPage === totalPages}
-                                    className="friend-pagination-button"
-                                >
-                                    Next
-                                </button>
-                            </div>
+                            <FriendPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
                         )}
                     </>
                 ) : (

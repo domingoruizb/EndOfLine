@@ -1,0 +1,19 @@
+package es.us.dp1.lIng_04_25_26.endofline.authority;
+
+import es.us.dp1.lIng_04_25_26.endofline.model.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "authorities")
+public class Authority extends BaseEntity {
+
+	@Column(length = 20)
+	private String type;
+
+}

@@ -9,14 +9,10 @@
 }
 
 @font-face {
-    font-family: 'josefinsans';
-    src: url('./static/fonts/JosefinSans.ttf');
+    src: url('./static/fonts/suse_mono.ttf');
+    font-family: 'susemono';
 }
 
 * {
-    font-family: 'josefinsans';
+    font-family: 'susemono';
 }
-
-/* div {
-    border: 1px dotted red;
-} */

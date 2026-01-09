@@ -1,0 +1,26 @@
+.game-info-container {
+    position: absolute;
+    top: 1.25vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    color: white;
+    z-index: 10;
+    font-size: 2vh;
+}
+
+.game-info-container div {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+}
+
+.game-info-container span {
+    border: 2px solid var(--main-orange-color);
+    padding: 0.5vh 1vw;
+    border-radius: 10px;
+    background-color: #333;
+    font-weight: bold;
+}

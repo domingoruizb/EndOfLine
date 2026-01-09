@@ -1,0 +1,17 @@
+.custom-button-row {
+  align-items: center;
+}
+.user-add-button {
+  margin: 0;
+}
+.cancel-link {
+  text-decoration: none;
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 15px;
+}

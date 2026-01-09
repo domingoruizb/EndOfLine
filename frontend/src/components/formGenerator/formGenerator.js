@@ -1,4 +1,5 @@
 import "./css/formGenerator.css";
+import "../../static/css/dark-select.css";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
@@ -28,8 +29,6 @@ const FormGenerator = forwardRef((props, ref) => {
           let input = props.inputs[i];
           for (let validator of input.validators) {
             if (!validator.validate(formValues[input.name])) {
-              console.log(input);
-              console.log(formValues[input.name])
               formInputs.current[i].setErrors([validator.message]);
               isValid = false;
             }
@@ -110,6 +109,7 @@ const FormGenerator = forwardRef((props, ref) => {
 
   useEffect(() => {
     document.addEventListener("keyup", (e) => {
+      e.preventDefault()
       if (e.key === "Enter" && props.listenEnterKey) {
         handleSubmit(e);
       }
@@ -159,12 +159,20 @@ const FormGenerator = forwardRef((props, ref) => {
               </>
             );
           })}
-        {props.childrenPosition === -1 && props.children}
       </form>
 
-      <button onClick={handleSubmit} className={`${props.buttonClassName}`}>
-        {props.buttonText}
-      </button>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem', marginTop: '1.5rem' }}>
+        <button 
+          onClick={handleSubmit} 
+          className={`${props.buttonClassName}`}
+          style={{ minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '85px' }}
+        >
+          {props.buttonText}
+        </button>
+        <span style={{ minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {props.children}
+        </span>
+      </div>
     </div>
   );
 });

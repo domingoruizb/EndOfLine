@@ -24,25 +24,24 @@ function handleVisible(setVisible, visible) {
  */
 export default function getErrorModal(setVisible, visible = false, message = null) {
     if (message) {
-        const closeBtn = (
-            <button className="close" onClick={() => handleVisible(setVisible, visible)} type="button">
-                &times;
-            </button>
-        );
         return (
-            <div>
-                <Modal isOpen={visible} toggle={() => handleVisible(setVisible, visible)}
-                    keyboard={false}>
-                    <ModalHeader toggle={() => handleVisible(setVisible, visible)} close={closeBtn}>Alert!</ModalHeader>
-                    <ModalBody>
-                        {message}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={() => handleVisible(setVisible, visible)}>Close</Button>
-                    </ModalFooter>
-                </Modal>
-            </div>
-        )
-    } else
+            <Modal isOpen={visible} toggle={() => handleVisible(setVisible, visible)} size="md" className="achievement-modal">
+                <ModalHeader toggle={() => handleVisible(setVisible, visible)} className="achievement-modal-header">
+                    Alert!
+                </ModalHeader>
+                <ModalBody className="achievement-modal-body">
+                    <div className="delete-confirm-message">
+                        <p>{message}</p>
+                    </div>
+                </ModalBody>
+                <ModalFooter className="achievement-modal-footer">
+                    <Button color="primary" onClick={() => handleVisible(setVisible, visible)} className="close-button">
+                        Close
+                    </Button>
+                </ModalFooter>
+            </Modal>
+        );
+    } else {
         return <></>;
+    }
 }

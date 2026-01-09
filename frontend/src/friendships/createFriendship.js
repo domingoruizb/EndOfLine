@@ -1,131 +1,49 @@
-import React, { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, Label } from "reactstrap";
-import { toast } from "react-toastify";
-import tokenService from "../services/token.service";
-import getErrorModal from "../util/getErrorModal";
+import FormGenerator from "../components/formGenerator/formGenerator";
+import createFriendshipInputs from "./friendshipComponents/createFriendshipInputs";
+import { useFetchResource } from '../util/useFetchResource';
+import { showSuccessToast } from '../util/toasts';
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipCreation() {
-    const jwt = tokenService.getLocalAccessToken();
-    const user = tokenService.getUser();
-    const [message, setMessage] = useState(null);
-    const [visible, setVisible] = useState(false);
-    const [username, setUsername] = useState("");
-    const [error, setError] = useState("");
-
-    const modal = getErrorModal(setVisible, visible, message);
-
-    const handleChange = (event) => {
-        setUsername(event.target.value);
-    };
-
     let navigate = useNavigate();
+    const { getData } = useFetchResource()
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const idResponse = await fetch(`/api/v1/users/username/${username}`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    "Content-Type": "application/json",
-                },
-            });
+    const handleSubmit = async ({ values }) => {
+        const { success } = await getData(`/api/v1/friendships`, 'POST', { receiver: values.username })
 
-            if (!idResponse.ok)
-                throw new Error(`Player with username ${username} does not exist.`);
-
-            const player = await idResponse.json();
-            const friendshipsResponse = await fetch(`/api/v1/friendships/myFriendships`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const friendshipsJson = await friendshipsResponse.json();
-            if (friendshipsJson.some(friendship => friendship.sender.id === player.id || friendship.receiver.id === player.id))
-                throw new Error('You are already friends or you have a pending friendship request from this player.');
-
-            const response = await fetch(`/api/v1/friendships`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    sender: user.id,
-                    receiver: player.id
-                })
-            });
-
-            if (!response.ok)
-                throw new Error('Failed to send friendship request.');
-
-            toast.success(`🎉 Friendship request sent to ${username}!`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-            
-            setTimeout(() => {
-                navigate("/friends");
-            }, 500);
-        } catch (error) {
-            toast.error(`❌ ${error.message}`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+        if (success) {
+            showSuccessToast(`Friendship request sent to ${values.username}!`)
+            navigate('/friends')
         }
-    };
-
+    }
 
     return (
         <div className="friend-list-page">
             <div className="friend-content-wrapper">
                 <div className="create-friendship-container">
                     <h1 className="create-friendship-title">
-                        Send Friendship
+                        Send Friendship Request
                     </h1>
-                {modal}
-                <Form onSubmit={handleSubmit} className="create-friendship-form">
-                    <div className="custom-form-input">
-                        <Label for="username" className="create-friendship-label">
-                            Friend's Username
-                        </Label>
-                        <Input
-                            type="text"
-                            required
-                            name="username"
-                            id="username"
-                            value={username}
-                            onChange={handleChange}
-                            className="create-friendship-input"
-                        />
-                    </div>
-                    <div className="create-friendship-buttons">
+                    <FormGenerator
+                        inputs={createFriendshipInputs()}
+                        onSubmit={handleSubmit}
+                        numberOfColumns={1}
+                        buttonText="Send"
+                        buttonClassName="create-friendship-send-button"
+                        childrenPosition={-1}
+                        listenEnterKey={false}
+                    >
                         <button
                             type="button"
                             onClick={() => navigate("/friends")}
                             className="create-friendship-cancel-button"
+                            style={{ marginLeft: '1rem', marginBottom: '85px' }}
                         >
                             Cancel
                         </button>
-                        <button
-                            type="submit"
-                            className="create-friendship-send-button"
-                        >
-                            Send
-                        </button>
-                    </div>
-                </Form>
+                    </FormGenerator>
                 </div>
             </div>
         </div>

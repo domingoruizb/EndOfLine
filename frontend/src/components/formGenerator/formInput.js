@@ -44,7 +44,7 @@ const FormInput = forwardRef(({ tag, name, type, defaultValue, values, isRequire
                 });
                 setInputErrors(errors);
                 if(onChange!==null){
-                    onChange({value: inputField.current.value});
+                    onChange({ target: { value: inputField.current.value } });
                 }
             });
         }
@@ -55,13 +55,32 @@ const FormInput = forwardRef(({ tag, name, type, defaultValue, values, isRequire
 
         case "select":
             return(
-                <div className={`class-form-group ${inputErrors.length>0 ? "class-error-form" : ""}`} id={`${name}_form`} style={numberOfColumns>1 ? {paddingTop: `2%`, width: `${100/numberOfColumns-3}%`} : {marginTop: `7.5%`}}>	
-                    <select className="class-form-input" disabled={disabled} id={`${name}`} name={`${name}`} required={isRequired} defaultValue={defaultValue} ref={inputField}>
+                <div className={`class-form-group ${inputErrors.length>0 ? "class-error-form" : ""}`} id={`${name}_form`} style={numberOfColumns>1 ? {paddingTop: `2%`, width: `${100/numberOfColumns-3}%`} : {marginTop: `7.5%`}}> 
+                    <select 
+                        className="class-form-input dark-select" 
+                        disabled={disabled} 
+                        id={`${name}`} 
+                        name={`${name}`} 
+                        required={isRequired} 
+                        defaultValue={defaultValue} 
+                        ref={inputField}
+                        style={{ background: '#222', color: '#fff', border: '1px solid #e74c3c' }}
+                    >
                         {
                             values && values.map((option, index) => {
-                                return(
-                                    <option key={index} selected={option===defaultValue}>{option}</option>
-                                )
+                                if (typeof option === 'object' && option !== null) {
+                                    return (
+                                        <option key={option.value ?? index} value={option.value} selected={option.value === defaultValue}>
+                                            {option.label}
+                                        </option>
+                                    );
+                                } else {
+                                    return (
+                                        <option key={option} value={option} selected={option === defaultValue}>
+                                            {option}
+                                        </option>
+                                    );
+                                }
                             })
                         }
                     </select>

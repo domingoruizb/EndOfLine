@@ -1,3 +1,8 @@
+select.class-form-input#authority {
+  background-color: #111;
+  color: #fff;
+  border: 1px solid #333;
+}
 :root{
   --color-input: #ffffff;
   --color-label: #878787;

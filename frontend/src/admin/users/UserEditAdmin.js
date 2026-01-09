@@ -1,197 +1,79 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Form, Input, Label } from "reactstrap";
-import tokenService from "../../services/token.service";
+import { useEffect, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useFetchResource } from '../../util/useFetchResource';
+import FormGenerator from "../../components/formGenerator/formGenerator";
+import userFormInputs from './adminComponents/userFormInputs';
 import "../../static/css/admin/adminPage.css";
-import getErrorModal from "../../util/getErrorModal";
-import getIdFromUrl from "../../util/getIdFromUrl";
-import useFetchData from "../../util/useFetchData";
-import useFetchState from "../../util/useFetchState";
-
-const jwt = tokenService.getLocalAccessToken();
+import "../../static/css/admin/userEditAdmin.css";
+import "../../static/css/admin/userListAdmin.css";
 
 export default function UserEditAdmin() {
-  const emptyItem = {
-    id: null,
-    username: "",
-    name: "",
-    surname: "",
-    password: "",
-    birthdate: "", 
-    email: "",
-    authority: null,
-  };
-  const id = getIdFromUrl(2);
-  const [message, setMessage] = useState(null);
-  const [visible, setVisible] = useState(false);
-  const [user, setUser] = useFetchState(
-    emptyItem,
-    `/api/v1/users/${id}`,
-    jwt,
-    setMessage,
-    setVisible,
-    id
-  );
-  const auths = useFetchData(`/api/v1/users/authorities`, jwt);
+  const { userId } = useParams()
+  const navigate = useNavigate()
+  const formRef = useRef()
+  const { data: auths, getData: getAuths } = useFetchResource()
+  const { data: user, getData: getUser } = useFetchResource()
 
-  function handleChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    if (name === "authority") {
-      const auth = auths.find((a) => a.id === Number(value));
-      setUser({ ...user, authority: auth });
-    } else setUser({ ...user, [name]: value });
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (auths == null) {
+        await getAuths(
+          `/api/v1/users/authorities`
+        )
+      }
+
+      if (userId !== 'new') {
+        await getUser(
+          `/api/v1/users/${userId}`
+        )
+      }
+    }
+
+    fetchUser()
+  }, [userId])
+
+  const handleSubmit = async ({ values }) => {
+    const authority = auths.find((a) => a.id === parseInt(values.authority))
+    const body = {
+      ...user,
+      ...values,
+      authority: authority
+    }
+
+    const { success } = await getUser(
+      userId !== 'new' ? `/api/v1/users/${userId}` : `/api/v1/users`,
+      userId !== 'new' ? 'PUT' : 'POST',
+      body
+    )
+
+    if (success) {
+      navigate('/users')
+    }
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  const inputs = userFormInputs(auths, user, userId !== 'new');
 
-    fetch("/api/v1/users" + (user.id ? "/" + user.id : ""), {
-      method: user.id ? "PUT" : "POST",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message) {
-          setMessage(json.message);
-          setVisible(true);
-        } else window.location.href = "/users";
-      })
-      .catch((message) => alert(message));
-  }
-
-  const modal = getErrorModal(setVisible, visible, message);
-  const authOptions = auths.map((auth) => (
-    <option key={auth.id} value={auth.id}>
-      {auth.authority}
-    </option>
-  ));
-
-  return (
+  return auths != null && (
     <div className="user-list-page">
       <div className="admin-page-container user-list-container">
-      {<h1 className="text-center user-list-title">{user.id ? "Edit User" : "Add User"}</h1>}
-      {modal}
+      <h1 className="text-center user-list-title">
+        {user?.id ? "Edit User" : "Add User"}
+      </h1>
       <div className="auth-form-container">
-        <Form onSubmit={handleSubmit}>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Username
-            </Label>
-            <Input
-              type="text"
-              required
-              name="username"
-              id="username"
-              value={user.username || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Name
-            </Label>
-            <Input
-              type="text"
-              required
-              name="name"
-              id="name"
-              value={user.name || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Surname
-            </Label>
-            <Input
-              type="text"
-              required
-              name="surname"
-              id="surname"
-              value={user.surname || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Email
-            </Label>
-            <Input
-              type="text"
-              required
-              name="email"
-              id="email"
-              value={user.email || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              BirthDate
-            </Label>
-            <Input
-              type="date"
-              required
-              name="birthdate"
-              id="birthdate"
-              value={user.birthdate || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-          <Label for="authority" className="custom-form-input-label">
-            Authority
-          </Label>
-          <div className="custom-form-input">
-              <Input
-                type="select"
-                required
-                name="authority"
-                id="authority"
-                value={user.authority?.id || ""}
-                onChange={handleChange}
-                className="custom-input black-select"
-              >
-                {authOptions}
-              </Input>
-          </div>
-          </div>
-          <div className="custom-button-row" style={{ alignItems: "center" }}>
-            <button className="user-add-button" type="submit" style={{ margin: "0" }}>Save</button>
-            <Link
-              to={`/users`}
-              style={{ 
-                textDecoration: "none", 
-                background: "#555", 
-                color: "#fff", 
-                border: "none",
-                borderRadius: "5px",
-                padding: "10px 20px",
-                fontWeight: "bold",
-                display: "inline-block",
-                marginTop: "15px",
-              }}
-            >
-              Cancel
-            </Link>
-          </div>
-        </Form>
+        <FormGenerator
+          ref={formRef}
+          inputs={inputs}
+          onSubmit={handleSubmit}
+          numberOfColumns={1}
+          buttonText="Save"
+          buttonClassName="user-add-button"
+          childrenPosition={-1}
+          listenEnterKey={false}
+        >
+          <a href="/users" className="cancel-link" style={{ marginLeft: '1rem', marginBottom: '100px' }}>Cancel</a>
+        </FormGenerator>
       </div>
     </div>
     </div>
-    
   );
 }
