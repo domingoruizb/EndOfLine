@@ -1,8 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import tokenService from '../services/token.service'
-
-const jwt = tokenService.getLocalAccessToken()
 
 export function useFetchResource () {
     const [data, setData] = useState(null)
@@ -17,16 +15,18 @@ export function useFetchResource () {
 
         const abortController = new AbortController()
         controllerRef.current = abortController
+
         setLoading(true)
         setSuccess(null)
 
         try {
+            const jwt = tokenService.getLocalAccessToken()
             const response = await fetch(url, {
                 method,
                 headers: {
+                    ...options.headers,
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwt}`,
-                    ...options.headers
+                    'Authorization': `Bearer ${jwt}`
                 },
                 body: body == null ? null : JSON.stringify(body),
                 signal: abortController.signal,
@@ -44,18 +44,31 @@ export function useFetchResource () {
 
             setData(json)
             setSuccess(true)
-            return json
+            return {
+                success: true,
+                data: json
+            }
         } catch (error) {
             if (error.name !== 'AbortError') {
                 toast.error(`❌ ${error.message ?? 'Something went wrong'}`)
             }
             setSuccess(false)
-        } finally {
-            if (!abortController.signal.aborted) {
-                setLoading(false)
+            return {
+                success: false,
+                error: error.message
             }
+        } finally {
+            setLoading(false)
         }
     }
+
+    useEffect(() => {
+        return () => {
+            if (controllerRef.current != null) {
+                controllerRef.current.abort()
+            }
+        }
+    }, [])
 
     return {
         data,

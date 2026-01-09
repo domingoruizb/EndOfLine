@@ -6,7 +6,7 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     tag: "Username",
     name: "username",
     type: "text",
-    defaultValue: user.username || "",
+    defaultValue: user?.username || "",
     isRequired: true,
     disabled: isEdit,
     validators: [
@@ -33,7 +33,7 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     tag: "Name",
     name: "name",
     type: "text",
-    defaultValue: user.name || "",
+    defaultValue: user?.name || "",
     isRequired: true,
     validators: [
       {
@@ -46,7 +46,7 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     tag: "Surname",
     name: "surname",
     type: "text",
-    defaultValue: user.surname || "",
+    defaultValue: user?.surname || "",
     isRequired: true,
     validators: [
       {
@@ -59,7 +59,7 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     tag: "Email",
     name: "email",
     type: "text",
-    defaultValue: user.email || "",
+    defaultValue: user?.email || "",
     isRequired: true,
     validators: [
       {
@@ -72,7 +72,7 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     tag: "BirthDate",
     name: "birthdate",
     type: "date",
-    defaultValue: user.birthdate || "",
+    defaultValue: user?.birthdate || "",
     isRequired: true,
     validators: [
       {
@@ -96,9 +96,9 @@ const userFormInputs = (auths, user = {}, isEdit = false) => {
     tag: "Authority",
     name: "authority",
     type: "select",
-    defaultValue: user.authority?.id || "",
+    defaultValue: user?.authority?.id || "",
     isRequired: true,
-    values: auths.map(auth => ({ value: auth.id, label: auth.type })),
+    values: auths?.map(auth => ({ value: auth.id, label: auth.type })),
   },
   ];
   return inputs;

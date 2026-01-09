@@ -115,7 +115,7 @@ function App() {
       adminRoutes = (
         <>
           <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
-          <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
+          <Route path="/users/:userId" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
           <Route path="/developers" element={<DeveloperList />} />
           <Route path="/games" element={<PrivateRoute><AdminGamesList /></PrivateRoute>} />
           <Route path="/game/:gameId" exact={true} element={<PrivateRoute><GamePage /></PrivateRoute>} />

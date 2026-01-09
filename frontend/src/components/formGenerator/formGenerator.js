@@ -111,6 +111,7 @@ const FormGenerator = forwardRef((props, ref) => {
 
   useEffect(() => {
     document.addEventListener("keyup", (e) => {
+      e.preventDefault()
       if (e.key === "Enter" && props.listenEnterKey) {
         handleSubmit(e);
       }
