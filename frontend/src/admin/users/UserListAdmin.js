@@ -1,45 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
-import tokenService from "../../services/token.service";
-import "../../static/css/admin/userListAdmin.css";
-import "../../static/css/admin/userListAdmin.css";
-import deleteFromList from "../../util/deleteFromList";
-import getErrorModal from "../../util/getErrorModal";
 import ConfirmDeleteModal from "./adminComponents/ConfirmDeleteModal";
-import useFetchState from "../../util/useFetchState";
 import UserList from './adminComponents/UserList';
-
-const jwt = tokenService.getLocalAccessToken();
+import { useFetchResource } from '../../util/useFetchResource';
+import "../../static/css/admin/userListAdmin.css";
+import "../../static/css/admin/userListAdmin.css";
 
 export default function UserListAdmin() {
-  const [message, setMessage] = useState(null);
-  const [visible, setVisible] = useState(false);
-  const [users, setUsers] = useFetchState(
-    [],
-    `/api/v1/users`,
-    jwt,
-    setMessage,
-    setVisible
-  );
-  const [alerts, setAlerts] = useState([]);
   const [confirmUserId, setConfirmUserId] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const { data, getData } = useFetchResource()
   const itemsPerPage = 10;
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      await getData(
+        `/api/v1/users?page=${page}&size=${itemsPerPage}`
+      )
+    }
+
+    fetchUsers()
+  }, [confirmUserId, page])
+
   const handleDeleteClick = (userId) => {
-    setConfirmUserId(userId); 
+    setConfirmUserId(userId);
   };
 
-  const confirmDelete = () => {
-    deleteFromList(
+  const confirmDelete = async () => {
+    await getData(
       `/api/v1/users/${confirmUserId}`,
-      confirmUserId,
-      [users, setUsers],
-      [alerts, setAlerts],
-      setMessage,
-      setVisible
-    );
+      'DELETE'
+    )
+
     setConfirmUserId(null);
   };
 
@@ -47,19 +40,10 @@ export default function UserListAdmin() {
     setConfirmUserId(null);
   };
 
-  const totalPages = Math.ceil((users?.length || 0) / itemsPerPage) || 1;
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const visibleUsers = users.slice(start, end);
-
-  const modal = getErrorModal(setVisible, visible, message);
-
   return (
     <div className="user-list-page">
       <div className="user-list-container admin-page-container">
         <h1 className="text-center user-list-title">Users</h1>
-        {alerts.map((a) => a.alert)}
-        {modal}
         <div className="text-center user-list-actions mb-4">
           <Button
             color="success"
@@ -70,7 +54,7 @@ export default function UserListAdmin() {
             Add User
           </Button>
         </div>
-        {users.length > 0 ? (
+        {data?.content.length > 0 ? (
           <>
             <table aria-label="users" className="mt-4 text-white user-table">
               <thead>
@@ -82,26 +66,26 @@ export default function UserListAdmin() {
               </thead>
               <tbody>
                 <UserList
-                  users={visibleUsers}
+                  users={data?.content}
                   handleDeleteClick={handleDeleteClick}
                 />
               </tbody>
             </table>
-            {totalPages > 1 && (
+            {data?.pages > 1 && (
               <div className="text-center mt-4 pagination-container">
                 <button
-                  onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-                  disabled={page === 1}
+                  onClick={() => setPage(prev => Math.max(prev - 1, 0))}
+                  disabled={!data?.hasPrevious}
                   className="pagination-button"
                 >
                   Previous
                 </button>
                 <span className="pagination-info">
-                  Page {page} of {totalPages}
+                  Page {page + 1} of {data?.pages}
                 </span>
                 <button
-                  onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={page === totalPages}
+                  onClick={() => setPage(prev => Math.min(prev + 1, data?.pages - 1))}
+                  disabled={!data?.hasNext}
                   className="pagination-button"
                 >
                   Next

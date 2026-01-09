@@ -15,24 +15,17 @@
  */
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
-import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
-import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerRepository;
-import jakarta.validation.Valid;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.UserNotFoundException;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.UserUnauthorizedException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.UserNotFoundException;
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.UserUnauthorizedException;
-import es.us.dp1.lIng_04_25_26.endofline.game.Game;
-import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -76,13 +69,9 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Iterable<User> findAllExceptMyself() {
+	public Page<User> findAllExceptMyself(Pageable pageable) {
 		User currentUser = findCurrentUser();
-		return userRepository.findAllExceptMySelf(currentUser.getId());
-	}
-
-	public Iterable<User> findAllByAuthority(String authorityType) {
-		return userRepository.findAllByAuthorityType(authorityType);
+		return userRepository.findAllExceptMySelf(currentUser.getId(), pageable);
 	}
 
     @Transactional

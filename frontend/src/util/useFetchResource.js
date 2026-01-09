@@ -37,7 +37,7 @@ export function useFetchResource () {
             const json = text === '' ? null : JSON.parse(text)
 
             if (!response.ok) {
-                const message = json?.message || json?.error || `Request failed: ${response.status}`
+                const message = json?.message || json?.error || `Request failed: ${response.status} ${response.statusText}`
                 setSuccess(false)
                 throw new Error(message)
             }

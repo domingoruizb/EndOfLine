@@ -18,10 +18,14 @@ package es.us.dp1.lIng_04_25_26.endofline.user;
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.MessageResponse;
 import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
 import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
+import es.us.dp1.lIng_04_25_26.endofline.dto.PageDTO;
 import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,13 +52,11 @@ class UserController {
     }
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String authorityType) {
-		List<User> res;
-		if (authorityType != null) {
-			res = (List<User>) userService.findAllByAuthority(authorityType);
-		} else
-			res = (List<User>) userService.findAllExceptMyself();
-		return ResponseEntity.ok(res);
+	public ResponseEntity<PageDTO<User>> findAll(
+        @PageableDefault Pageable pageable
+    ) {
+        PageDTO<User> response = new PageDTO<>(userService.findAllExceptMyself(pageable));
+        return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/authorities")
