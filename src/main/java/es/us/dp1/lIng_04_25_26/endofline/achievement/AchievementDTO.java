@@ -1,5 +1,12 @@
 package es.us.dp1.lIng_04_25_26.endofline.achievement;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class AchievementDTO {
     private Integer id;
     private String name;
@@ -9,24 +16,19 @@ public class AchievementDTO {
     private boolean unlocked;
     private String badgeImage;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public static AchievementDTO build (
+        Achievement dto,
+        Boolean unlocked
+    ) {
+        AchievementDTO achievementDTO = new AchievementDTO();
+        achievementDTO.setId(dto.getId());
+        achievementDTO.setName(dto.getName());
+        achievementDTO.setDescription(dto.getDescription());
+        achievementDTO.setCategory(dto.getCategory().toString());
+        achievementDTO.setThreshold((int) dto.getThreshold());
+        achievementDTO.setUnlocked(unlocked);
+        achievementDTO.setBadgeImage(dto.getBadgeImage());
+        return achievementDTO;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-
-    public Integer getThreshold() { return threshold; }
-    public void setThreshold(Integer threshold) { this.threshold = threshold; }
-
-    public boolean isUnlocked() { return unlocked; }
-    public void setUnlocked(boolean unlocked) { this.unlocked = unlocked; }
-
-    public String getBadgeImage() { return badgeImage; }
-    public void setBadgeImage(String badgeImage) { this.badgeImage = badgeImage; }
 }

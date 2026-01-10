@@ -33,42 +33,21 @@ public class AchievementController {
     @GetMapping("/{id}")
     public ResponseEntity<AchievementDTO> getAchievementById(@PathVariable Integer id) {
         Achievement achievement = achievementService.getAchievementById(id);
-        AchievementDTO dto = new AchievementDTO();
-        dto.setId(achievement.getId());
-        dto.setName(achievement.getName());
-        dto.setDescription(achievement.getDescription());
-        dto.setCategory(achievement.getCategory().toString());
-        dto.setThreshold((int)achievement.getThreshold());
-        dto.setUnlocked(false); // You may want to set this based on the current user
-        dto.setBadgeImage(achievement.getBadgeImage());
+        AchievementDTO dto = AchievementDTO.build(achievement, false);
         return ResponseEntity.ok(dto);
     }
 
     @PostMapping
     public ResponseEntity<AchievementDTO> createAchievement(@RequestBody @Valid Achievement newAchievement) {
         Achievement achievement = achievementService.saveAchievement(newAchievement);
-        AchievementDTO dto = new AchievementDTO();
-        dto.setId(achievement.getId());
-        dto.setName(achievement.getName());
-        dto.setDescription(achievement.getDescription());
-        dto.setCategory(achievement.getCategory().toString());
-        dto.setThreshold((int)achievement.getThreshold());
-        dto.setUnlocked(false); // New achievements are not unlocked by default
-        dto.setBadgeImage(achievement.getBadgeImage());
+        AchievementDTO dto = AchievementDTO.build(achievement, false);
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AchievementDTO> updateAchievement(@RequestBody @Valid Achievement newAchievement, @PathVariable Integer id) {
         Achievement updatedAchievement = achievementService.updateAchievement(id, newAchievement);
-        AchievementDTO dto = new AchievementDTO();
-        dto.setId(updatedAchievement.getId());
-        dto.setName(updatedAchievement.getName());
-        dto.setDescription(updatedAchievement.getDescription());
-        dto.setCategory(updatedAchievement.getCategory().toString());
-        dto.setThreshold((int)updatedAchievement.getThreshold());
-        dto.setUnlocked(false); // You may want to set this based on the current user
-        dto.setBadgeImage(updatedAchievement.getBadgeImage());
+        AchievementDTO dto = AchievementDTO.build(updatedAchievement, false);
         return ResponseEntity.ok(dto);
     }
 
