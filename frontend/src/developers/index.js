@@ -34,9 +34,9 @@ alt={d?.name || 'Developer'} width="50px" onError={(e) => { e.currentTarget.src 
     });
 
     return (
-        <div className="developers-page">
-            <div className="developers-content-wrapper">
-                <h1 className="developers-title">Developers</h1>
+        <div className="page-container">
+            <div className="info-container">
+                <h1 className="info-title">Developers</h1>
                 <div>
                     <table aria-label="developers" className="developers-table">
                         <thead>

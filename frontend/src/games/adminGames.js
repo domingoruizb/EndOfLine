@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetchState from "../util/useFetchState";
 import tokenService from '../services/token.service';
+import LinkClickButton from '../components/LinkClickButton';
 import "../static/css/games/adminGames.css";
 
 function formatDateTime(dateString) {
@@ -42,12 +43,11 @@ export default function AdminGamesList() {
         <td className="text-center">{game.host?.username || 'Unknown'}</td>
         <td className="text-center">{game.gamePlayers?.map(gp => gp.user.username).join(' VS ')}</td>
         <td className="text-center">
-          <button 
-            className="admin-games-spectate-button"
-            onClick={() => navigate(`/game/${game.id}`)}
-          >
-            Spectate
-          </button>
+          <LinkClickButton 
+            link={`/game/${game.id}`}
+            text="Spectate"
+            className='sm'
+          />
         </td>
       </tr>
     ));
@@ -73,10 +73,10 @@ export default function AdminGamesList() {
     ));
 
   return (
-    <div className="admin-games-page">
-      <div className="admin-games-content-wrapper">
+    <div className="page-container">
+      <div className="info-container">
         <div className="admin-games-section">
-          <h1 className="admin-games-title">Ongoing Games</h1>
+          <h1 className="info-title">Ongoing Games</h1>
         {ongoingGamesData.length > 0 ? (
           <>
             <table aria-label="ongoing games" className="admin-games-table mt-4 text-white">
@@ -92,7 +92,7 @@ export default function AdminGamesList() {
               <tbody>{ongoingGames}</tbody>
             </table>
             {totalOngoingPages > 1 && (
-              <div className="admin-games-pagination text-center mt-4\">
+              <div className="admin-games-pagination text-center mt-4">
                 <button
                   onClick={() => setOngoingPage(prev => Math.max(prev - 1, 1))}
                   disabled={ongoingPage === 1}
@@ -118,7 +118,7 @@ export default function AdminGamesList() {
         )}
         </div>
         <div className="admin-games-section">
-          <h1 className="admin-games-title">Past Games</h1>
+          <h1 className="info-title">Past Games</h1>
         {pastGamesData.length > 0 ? (
           <>
             <table aria-label="past games" className="admin-games-table mt-4 text-white">
@@ -134,7 +134,7 @@ export default function AdminGamesList() {
               <tbody>{visiblePastGames}</tbody>
             </table>
             {totalPastPages > 1 && (
-              <div className="admin-games-pagination text-center mt-4\">
+              <div className="admin-games-pagination text-center mt-4">
                 <button
                   onClick={() => setPastPage(prev => Math.max(prev - 1, 1))}
                   disabled={pastPage === 1}

@@ -4,6 +4,7 @@ import FormGenerator from "../components/formGenerator/formGenerator";
 import createFriendshipInputs from "./friendshipComponents/createFriendshipInputs";
 import { useFetchResource } from '../util/useFetchResource';
 import { showSuccessToast } from '../util/toasts';
+import LinkClickButton from "../components/LinkClickButton";
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipCreation() {
@@ -20,31 +21,26 @@ export default function FriendshipCreation() {
     }
 
     return (
-        <div className="friend-list-page">
-            <div className="friend-content-wrapper">
-                <div className="create-friendship-container">
-                    <h1 className="create-friendship-title">
-                        Send Friendship Request
-                    </h1>
-                    <FormGenerator
-                        inputs={createFriendshipInputs()}
-                        onSubmit={handleSubmit}
-                        numberOfColumns={1}
-                        buttonText="Send"
-                        buttonClassName="create-friendship-send-button"
-                        childrenPosition={-1}
-                        listenEnterKey={false}
-                    >
-                        <button
-                            type="button"
-                            onClick={() => navigate("/friends")}
-                            className="create-friendship-cancel-button"
-                            style={{ marginLeft: '1rem', marginBottom: '85px' }}
-                        >
-                            Cancel
-                        </button>
-                    </FormGenerator>
-                </div>
+        <div className="page-container">
+            <div className="info-container">
+                <h1 className="info-title">
+                    Send Friendship Request
+                </h1>
+                <FormGenerator
+                    inputs={createFriendshipInputs()}
+                    onSubmit={handleSubmit}
+                    numberOfColumns={1}
+                    buttonText="SEND"
+                    buttonClassName="button"
+                    childrenPosition={-1}
+                    listenEnterKey={false}
+                >
+                    <LinkClickButton
+                        to="/friends"
+                        text="CANCEL"
+                        className="danger"
+                    />
+                </FormGenerator>
             </div>
         </div>
     );

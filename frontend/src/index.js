@@ -10,6 +10,8 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import './static/css/page.css'
+import './static/css/container.css'
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

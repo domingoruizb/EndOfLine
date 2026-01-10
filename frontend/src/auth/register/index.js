@@ -1,10 +1,6 @@
 
 import { useState } from "react";
-import { Container } from "reactstrap";
 import getErrorModal from "../../util/getErrorModal";
-import "../../static/css/auth/login.css";
-import "../../static/css/auth/authPage.css";
-import "../../static/css/myProfile/myProfile.css";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import { registerFormPlayer } from "./form/registerFormInputs";
 
@@ -51,42 +47,30 @@ export default function Register() {
   };
 
   return (
-    <div className={"login-page-container"}>
-      <Container className="auth-page-container"
-        style={{
-          padding: "0 1rem",
-          maxWidth: 900,
-          background: "none",
-          borderRadius: "1rem",
-          boxShadow: "none",
-        }}>
-        <h1 className="text-center" style={{
-          fontWeight: 800,
-          letterSpacing: "2px",
-          color: "#FE5B02",
-          textShadow: "0 2px 8px #000"
-        }}>
+    <div className="page-container">
+      <div className="info-container no-bg">
+        <h1 className="info-title">
           Register
         </h1>
         {modal}
-        <div className="auth-form-container">
+        <div className="form-container">
           <div style={{ textAlign: "center", marginTop: "10px", marginBottom: "30px" }}>
             <img
               src={avatar}
               alt="avatar"
-              style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+              style={{ width: "150px", height: "150px", borderRadius: "50%" }}
             />
           </div>
           <FormGenerator
             inputs={registerInputs}
             onSubmit={handleRegister}
             numberOfColumns={1}
-            buttonText="Register"
-            buttonClassName="auth-button orange-button"
+            buttonText="REGISTER"
+            buttonClassName="button"
             childrenPosition={-1}
           />
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

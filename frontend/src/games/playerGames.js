@@ -59,10 +59,9 @@ export default function PlayerGamesList() {
     ));
 
   return (
-    <div className="player-games-page">
-      <div className="player-games-content-wrapper">
-        <div className="admin-page-container mt-4">
-        <h1 className="player-games-title">My Past Games</h1>
+    <div className="page-container">
+      <div className="info-container">
+        <h1 className="info-title">My Past Games</h1>
         {pastGamesData.length > 0 ? (
           <>
             <table aria-label="past games" className="player-games-table mt-4 text-white">
@@ -101,7 +100,6 @@ export default function PlayerGamesList() {
         ) : (
           <p className="text-center text-white mt-4">No past games found.</p>
         )}
-        </div>
       </div>
     </div>
   );

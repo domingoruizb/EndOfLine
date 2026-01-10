@@ -1,8 +1,8 @@
-import GameCodeInput from './lobbyComponents/GameCodeInput.js';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useFetchResource } from '../util/useFetchResource.js';
 import { showErrorToast } from '../util/toasts.js';
+import LinkClickButton from '../components/LinkClickButton.js';
 import '../static/css/newGame/newGame.css';
 import '../static/css/page.css'
 
@@ -32,17 +32,33 @@ export default function JoinGame() {
 
     return(
         <div className="page-container">
-            <div className="hero-div-newGame" style={{ width: '40%' }}>
-                <h1>JOIN A GAME</h1>
-                
-                <form onSubmit={handleJoinGame} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <GameCodeInput code={code} setCode={setCode} />
-                    <div className="button-container" style={{ flexDirection: 'column', width: '100%'}}>
-                        <button type="submit" className="fuente button-style" style={{ minWidth: '200px' }}>
-                            JOIN
-                        </button>
-                    </div>
-                </form>
+            <div className="info-container">
+                <h1 className='info-title'>JOIN A GAME</h1>
+                <div
+                    className='form-container'
+                >
+                    <form onSubmit={handleJoinGame} className='join-form'>
+                        <label htmlFor="gameCode" className='join-label'>
+                            Enter Game Code:
+                        </label>
+                        <input
+                            type="text"
+                            id="gameCode"
+                            name="gameCode"
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
+                            maxLength={6}
+                            required
+                            placeholder="A1B2C3"
+                            className='join-input'
+                        />
+                        <LinkClickButton
+                            text="JOIN"
+                            onClick={handleJoinGame}
+                            className='orange'
+                        />
+                    </form>
+                </div>
             </div>
         </div>
     );

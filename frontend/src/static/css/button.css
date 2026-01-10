@@ -11,29 +11,55 @@
     transition: all 0.1s ease-in-out;
 }
 
-.button:nth-child(2n), .button-orange {
-    border: 2px dashed var(--main-orange-color);
-    color: var(--main-orange-color);
-}
-
 .button:hover {
     background: var(--main-green-color);
     color: black;
     cursor: pointer;
 }
 
-.button:nth-child(2n):hover, .button-orange:hover {
+.button.orange {
+    border: 2px dashed var(--main-orange-color);
+    color: var(--main-orange-color);
+}
+
+.button.orange:hover {
     background: var(--main-orange-color);
     color: black;
 }
 
-.button-danger {
+.button.danger {
     border: 2px dashed var(--main-red-color);
     color: var(--main-red-color);
 }
 
-.button-danger:hover {
+.button.danger:hover {
     background: var(--main-red-color);
     color: black;
     cursor: pointer;
+}
+
+.button.secondary {
+    border: 2px dashed var(--main-cyan-color);
+    color: var(--main-cyan-color);
+}
+
+.button.secondary:hover {
+    background: var(--main-cyan-color);
+    color: black;
+    cursor: pointer;
+}
+
+.button.sm {
+    padding: 0.5vh 1.5vw;
+    font-size: 1.5vh;
+}
+
+.buttons-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2vh;
+}
+
+.buttons-container:has(.button:nth-child(2)) {
+    grid-template-columns: 1fr 1fr;
 }

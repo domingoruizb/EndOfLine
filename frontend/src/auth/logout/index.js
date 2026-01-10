@@ -1,9 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "../../static/css/auth/authButton.css";
-import "../../static/css/auth/authPage.css";
-import "../../static/css/auth/logout.css"; 
 import tokenService from "../../services/token.service";
+import LinkClickButton from "../../components/LinkClickButton";
 
 const Logout = () => {
   function sendLogoutRequest() {
@@ -17,22 +13,25 @@ const Logout = () => {
   }
 
   return (
-    <div className="logout-page">
-      <div className="logout-content-wrapper">
-        <h1 className="logout-title">
+    <div className="page-container">
+      <div className="info-container">
+        <h1 className="info-title">
           Logout
         </h1>
-        <div className="logout-form-container">
-          <h2 className="logout-message">
+        <div className="form-container no-bg">
+          <p className="text-white text-center">
             Are you sure you want to log out?
-          </h2>
-          <div className="logout-buttons">
-            <Link className="logout-button" to="/">
-              No
-            </Link>
-            <button className="logout-button logout-button-confirm" onClick={() => sendLogoutRequest()}>
-              Yes
-            </button>
+          </p>
+          <div className="buttons-container">
+            <LinkClickButton
+              link="/"
+              text="NO"
+              className='danger'
+            />
+            <LinkClickButton
+              onClick={() => sendLogoutRequest()}
+              text="YES"
+            />
           </div>
         </div>
       </div>

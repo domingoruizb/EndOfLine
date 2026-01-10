@@ -31,15 +31,16 @@ export default function CreateGame(){
                     alt='Logo'
                 />
                 <div
-                    className='home-buttons'
+                    className='buttons-container'
                 >
-                    <LinkClickButton
-                        link='/joingame'
-                        text='JOIN GAME'
-                    />
                     <LinkClickButton
                         onClick={handleCreateGame}
                         text='CREATE GAME'
+                    />
+                    <LinkClickButton
+                        link='/joingame'
+                        text='JOIN GAME'
+                        className='orange'
                     />
                 </div>
             </div>

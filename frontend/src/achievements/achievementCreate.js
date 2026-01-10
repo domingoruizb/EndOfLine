@@ -6,6 +6,7 @@ import getErrorModal from "../util/getErrorModal";
 import FormGenerator from "../components/formGenerator/formGenerator";
 import achievementFormInputs from "./achievementComponents/achievementFormInputs";
 import "../static/css/admin/adminPage.css";
+import LinkClickButton from "../components/LinkClickButton";
 
 export default function AchievementCreate() {
   const jwt = tokenService.getLocalAccessToken();
@@ -57,26 +58,24 @@ export default function AchievementCreate() {
 
 
   return (
-    <div className="user-list-page">
-      <div className="admin-page-container user-list-container">
-        <h1 className="user-list-title">Add Achievement</h1>
+    <div className="page-container">
+      <div className="info-container">
+        <h1 className="info-title">Add Achievement</h1>
         {modal}
-        <div className="auth-form-container">
+        <div className="form-container">
           <FormGenerator
             inputs={achievementFormInputs(achievement)}
             onSubmit={handleSubmit}
             numberOfColumns={1}
-            buttonText="Save"
-            buttonClassName="user-add-button"
+            buttonText="SAVE"
+            buttonClassName="button"
             childrenPosition={-1}
           >
-            <Link
-              to="/achievements"
-              className="user-add-button"
-              style={{ textDecoration: "none", background: "#555", marginBottom: '85px' }}
-            >
-              Cancel
-            </Link>
+            <LinkClickButton
+              text='CANCEL'
+              link='/achievements'
+              className='danger'
+            />
           </FormGenerator>
         </div>
       </div>

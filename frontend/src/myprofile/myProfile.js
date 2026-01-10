@@ -1,21 +1,15 @@
-
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Container } from "reactstrap";
-import DeleteProfileModal from "./myProfileComponents/DeleteProfileModal";
-import tokenService from "../services/token.service";
-import "../static/css/admin/adminPage.css";
-import '../static/css/myProfile/myProfile.css';
-import '../static/css/auth/login.css';
-import '../static/css/page.css'
-import getErrorModal from "../util/getErrorModal";
-import deleteMyself from "../util/deleteMyself";
-import useFetchState from "../util/useFetchState";
-import FormGenerator from "../components/formGenerator/formGenerator";
-import profileFormInputs from "./myProfileComponents/profileFormInputs";
-import AvatarPreview from "./myProfileComponents/AvatarPreview";
-import useProfileForm from "./myProfileHooks/useProfileForm";
-import { useProfileApi } from "./myProfileHooks/useProfileApi";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DeleteProfileModal from './myProfileComponents/DeleteProfileModal';
+import tokenService from '../services/token.service';
+import getErrorModal from '../util/getErrorModal';
+import deleteMyself from '../util/deleteMyself';
+import useFetchState from '../util/useFetchState';
+import FormGenerator from '../components/formGenerator/formGenerator';
+import profileFormInputs from './myProfileComponents/profileFormInputs';
+import AvatarPreview from './myProfileComponents/AvatarPreview';
+import useProfileForm from './myProfileHooks/useProfileForm';
+import { useProfileApi } from './myProfileHooks/useProfileApi';
 import LinkClickButton from '../components/LinkClickButton'
 
 
@@ -25,7 +19,7 @@ const user = tokenService.getUser();
 
 export default function MyProfile() {
   const [player, setPlayer] = useFetchState(null, `/api/v1/users/myself`, jwt);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [visible, setVisible] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [deleteProfile, setDeleteProfile] = useState(false);
@@ -53,49 +47,47 @@ export default function MyProfile() {
 
   useEffect(() => {
     if (player) {
-      form.setName(player.name || "");
-      form.setSurname(player.surname || "");
-      form.setUsername(player.username || "");
-      form.setAvatar(player.avatar || "");
-      form.setEmail(player.email || "");
-      form.setBirthdate(player.birthdate || "");
+      form.setName(player.name || '');
+      form.setSurname(player.surname || '');
+      form.setUsername(player.username || '');
+      form.setAvatar(player.avatar || '');
+      form.setEmail(player.email || '');
+      form.setBirthdate(player.birthdate || '');
     }
   }, [player, form]);
 
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
-    <div className="page-container">
-      <Container className="auth-page-container">
-        <h1 className="text-center myProfile-title">My Profile</h1>
+    <div className='page-container'>
+      <div className='info-container'>
         {modal}
-        <div className="auth-form-container">
-          <AvatarPreview avatar={form.avatar} error={form.avatarError} />
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginTop: '40px' }}>
-            <FormGenerator
-              inputs={profileFormInputs(form)}
-              onSubmit={({ values }) => handleSaveChanges({ ...form, ...values, jwt })}
-              numberOfColumns={1}
-              buttonText="SAVE"
-              buttonClassName="button"
-              childrenPosition={-1}
-            >
-              <LinkClickButton
-                text='DELETE PROFILE'
-                onClick={() => setDeleteProfile(true)}
-                className='button-danger'
-              />
-            </FormGenerator>
-          </div>
+        <h1 className='info-title'>
+          My Profile
+        </h1>
+        <AvatarPreview avatar={form.avatar} error={form.avatarError} />
+        <div className='form-container'>
+          <FormGenerator
+            inputs={profileFormInputs(form)}
+            onSubmit={({ values }) => handleSaveChanges({ ...form, ...values, jwt })}
+            numberOfColumns={1}
+            buttonText='SAVE'
+            buttonClassName='button'
+            childrenPosition={-1}
+          >
+            <LinkClickButton
+              text='DELETE'
+              onClick={() => setDeleteProfile(true)}
+              className='danger'
+            />
+          </FormGenerator>
         </div>
-        {deleteProfile && (
-          <DeleteProfileModal
-            isOpen={deleteProfile}
-            toggle={() => setDeleteProfile(false)}
-            onConfirm={() => confirmDelete(deleteMyself, jwt)}
-          />
-        )}
-      </Container>
+        <DeleteProfileModal
+          isOpen={deleteProfile}
+          toggle={() => setDeleteProfile(false)}
+          onConfirm={() => confirmDelete(deleteMyself, jwt)}
+        />
+      </div>
     </div>
   );
 }

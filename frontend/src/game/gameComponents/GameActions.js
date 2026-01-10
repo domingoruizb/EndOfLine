@@ -66,7 +66,7 @@ export default function GameActions ({
                         <div
                             className='action-button spectator-badge'
                         >
-                            👁️ SPECTATOR MODE
+                            SPECTATING
                         </div>
                     </>
                 )

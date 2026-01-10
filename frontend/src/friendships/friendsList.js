@@ -12,6 +12,7 @@ import tokenService from "../services/token.service";
 import deleteFromList from "../util/deleteFromList";
 import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
+import LinkClickButton from "../components/LinkClickButton";
 import "../static/css/friendships/friendsList.css";
 
 export default function FriendshipList() {
@@ -98,10 +99,9 @@ export default function FriendshipList() {
     const totalPages = Math.ceil(sortedFriendships.length / friendshipsPerPage);
 
     return (
-        <div className="friend-list-page">
-            <div className="friend-content-wrapper">
-            <div className="admin-page-container-friend">
-                <h1 className="friend-list-title">
+        <div className="page-container">
+            <div className="info-container">
+                <h1 className="info-title">
                     {friendshipType === "ACCEPTED" ? "Friendships" : "Pending Invites"}
                 </h1>
                 {modal}
@@ -151,23 +151,19 @@ export default function FriendshipList() {
                     </p>
                 )}
                 <div className="friend-cta-row text-center mt-4">
-                    <button
+                    <LinkClickButton
+                        text={friendshipType === "PENDING" ? "SHOW FRIENDSHIPS" : "SHOW PENDING"}
                         onClick={() => {
                             setFriendshipType(friendshipType === "PENDING" ? "ACCEPTED" : "PENDING");
                             setCurrentPage(1);
                         }}
-                        className="friend-cta-button"
-                    >
-                        {friendshipType === "PENDING" ? "Show Friendships" : "Show Pending"}
-                    </button>
-                    <button
+                        className="orange"
+                    />
+                    <LinkClickButton
+                        text="ADD FRIEND"
                         onClick={handleClick}
-                        className="friend-cta-button friend-add-button"
-                    >
-                        Add Friend
-                    </button>
+                    />
                 </div>
-            </div>
             </div>
         </div>
     );

@@ -75,7 +75,7 @@ const AchievementList = () => {
   };
 
   return (
-    <div className="achievements-page">
+    <div className="page-container">
       <div className="achievements-container">
         <h1>ACHIEVEMENTS</h1>
 

@@ -1,4 +1,5 @@
 import { Button } from "reactstrap";
+import LinkClickButton from "../../components/LinkClickButton";
 
 export function FriendActionGroup({
   isPending, isSender, onAccept, onReject, onSpectate, onDelete, canSpectate
@@ -7,43 +8,35 @@ export function FriendActionGroup({
     <div className="friend-action-group">
       {isPending && !isSender ? (
         <>
-          <Button
+          <LinkClickButton
+            text="Accept"
             aria-label="accept-friendship"
-            size="sm"
-            className="positive-button"
+            className="sm"
             onClick={onAccept}
-          >
-            Accept
-          </Button>
-          <Button
+          />
+          <LinkClickButton
+            text="Reject"
             aria-label="reject-friendship"
-            size="sm"
-            className="negative-button"
+            className="sm danger"
             onClick={onReject}
-          >
-            Reject
-          </Button>
+          />
         </>
       ) : (
         <>
           {canSpectate && (
-            <Button
+            <LinkClickButton
+              text="Spectate"
               aria-label="spectate-friendship"
-              size="sm"
-              className="positive-button"
+              className="sm"
               onClick={onSpectate}
-            >
-              Spectate
-            </Button>
+            />
           )}
-          <Button
+          <LinkClickButton
+            text="Delete"
             aria-label="delete-friendship"
-            size="sm"
-            className="negative-button"
+            className="sm danger"
             onClick={onDelete}
-          >
-            Delete
-          </Button>
+          />
         </>
       )}
     </div>

@@ -11,13 +11,3 @@
     width: 50%;
     height: auto;
 }
-
-.home-buttons {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2vh;
-}
-
-.home-buttons:has(.button:nth-child(2)) {
-    grid-template-columns: 1fr 1fr;
-}

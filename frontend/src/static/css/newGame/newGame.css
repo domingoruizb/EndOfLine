@@ -167,3 +167,34 @@
   justify-content: center;
   margin-top: 6%;
 }
+
+.join-label {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.join-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.join-input {
+  padding: 10px;
+  font-size: 1.5em;
+  text-align: center;
+  text-transform: uppercase;
+  width: 80%;
+  max-width: 300px;
+  border-radius: 5px;
+  background-color: #2C2C2C;
+  color: white;
+  border: 2px dashed #b1d12d;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.join-input:focus {
+  border: 2px solid #b1d12d;
+}

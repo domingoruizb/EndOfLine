@@ -1,5 +1,4 @@
 import { Container } from "reactstrap";
-import "../static/css/auth/authPage.css";
 import "../static/css/rules/rulesPage.css";
 
 export default function RulesPage({ embed = false }) {
@@ -16,7 +15,7 @@ export default function RulesPage({ embed = false }) {
     return (
         <div className={outerClass} style={outerStyle}>
             <Container
-                className={`auth-page-container rules-container${embed ? ' rules-container-embed' : ''}`}
+                className={`info-container rules-container ${embed ? 'rules-container-embed' : ''}`}
             >
                 <h1 className="text-center rules-title">
                     Rules and Guidelines

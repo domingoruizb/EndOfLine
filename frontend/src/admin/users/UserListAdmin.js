@@ -6,6 +6,7 @@ import UserList from './adminComponents/UserList';
 import { useFetchResource } from '../../util/useFetchResource';
 import "../../static/css/admin/userListAdmin.css";
 import "../../static/css/admin/userListAdmin.css";
+import LinkClickButton from "../../components/LinkClickButton";
 
 export default function UserListAdmin() {
   const [confirmUserId, setConfirmUserId] = useState(null);
@@ -41,18 +42,14 @@ export default function UserListAdmin() {
   };
 
   return (
-    <div className="user-list-page">
-      <div className="user-list-container admin-page-container">
-        <h1 className="text-center user-list-title">Users</h1>
-        <div className="text-center user-list-actions mb-4">
-          <Button
-            color="success"
-            tag={Link}
-            to="/users/new"
-            className="user-add-button"
-          >
-            Add User
-          </Button>
+    <div className="page-container">
+      <div className="info-container">
+        <h1 className="info-title">Users</h1>
+        <div className="text-center user-list-actions">
+          <LinkClickButton
+            text='Add User'
+            link='/users/new'
+          />
         </div>
         {data?.content.length > 0 ? (
           <>

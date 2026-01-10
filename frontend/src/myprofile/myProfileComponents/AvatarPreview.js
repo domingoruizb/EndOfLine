@@ -3,11 +3,11 @@ import React from 'react';
 export default function AvatarPreview({ avatar, error }) {
   if (!avatar || error) return null;
   return (
-    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+    <div style={{ textAlign: 'center' }}>
       <img
         src={avatar}
         alt="avatar"
-        style={{ width: '100px', height: '100px', borderRadius: '50%' }}
+        style={{ width: '150px', height: '150px', borderRadius: '50%' }}
       />
     </div>
   );

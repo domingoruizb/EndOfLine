@@ -5,10 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFetchResource } from '../../util/useFetchResource';
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import userFormInputs from './adminComponents/userFormInputs';
-import "../../static/css/admin/adminPage.css";
-import "../../static/css/admin/userEditAdmin.css";
-import "../../static/css/admin/userListAdmin.css";
-
+import LinkClickButton from '../../components/LinkClickButton'
 
 export default function UserEditAdmin() {
   const { userId } = useParams()
@@ -62,24 +59,28 @@ export default function UserEditAdmin() {
   const inputs = userFormInputs(auths, user, userId !== 'new');
 
   return auths != null && (
-    <div className="user-list-page">
-      <div className="admin-page-container user-list-container">
-      <h1 className="text-center user-list-title">
+    <div className="page-container">
+      <div className="info-container">
+      <h1 className="info-title">
         {user?.id ? "Edit User" : "Add User"}
       </h1>
-      <div className="auth-form-container">
+      <div className="form-container">
         {getErrorModal(setVisible, visible, message)}
         <FormGenerator
           ref={formRef}
           inputs={inputs}
           onSubmit={handleSubmit}
           numberOfColumns={1}
-          buttonText="Save"
-          buttonClassName="user-add-button"
+          buttonText="SAVE"
+          buttonClassName="button"
           childrenPosition={-1}
           listenEnterKey={false}
         >
-          <a href="/users" className="cancel-link" style={{ marginLeft: '1rem', marginBottom: '100px' }}>Cancel</a>
+          <LinkClickButton
+            text='CANCEL'
+            link='/users'
+            className='danger'
+          />
         </FormGenerator>
       </div>
     </div>

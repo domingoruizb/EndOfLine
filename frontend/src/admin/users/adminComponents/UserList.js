@@ -1,5 +1,6 @@
 import { Button, ButtonGroup } from "reactstrap";
 import { Link } from 'react-router-dom';
+import LinkClickButton from "../../../components/LinkClickButton";
 
 export default function UserList ({
     users,
@@ -11,25 +12,18 @@ export default function UserList ({
             <td className="text-center">{user.authority.type}</td>
             <td className="text-center">
                 <ButtonGroup>
-                    <Button
-                        size="sm"
-                        color="primary"
+                    <LinkClickButton
+                        text='EDIT'
+                        link={'/users/' + user.id}
+                        className='sm'
                         aria-label={"edit-" + user.id}
-                        tag={Link}
-                        to={"/users/" + user.id}
-                        className="user-edit-button"
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        size="sm"
-                        color="danger"
-                        aria-label={"delete-" + user.id}
+                    />
+                    <LinkClickButton
+                        text='DELETE'
                         onClick={() => handleDeleteClick(user.id)}
-                        className="user-delete-button"
-                    >
-                        Delete
-                    </Button>
+                        className='sm danger'
+                        aria-label={"delete-" + user.id}
+                    />
                 </ButtonGroup>
             </td>
         </tr>

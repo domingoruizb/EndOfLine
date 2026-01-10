@@ -2,20 +2,12 @@
     position: absolute;
     top: var(--navbar-height);
     left: 0;
-    height: calc(100vh - var(--navbar-height));
-    width: 100vw;
+    min-height: calc(100vh - var(--navbar-height));
+    width: 100%;
     z-index: -1;
     background: var(--main-bg-color) url('../images/home_background.png');
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem 0;
 }
-
-/* .centered-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-} */

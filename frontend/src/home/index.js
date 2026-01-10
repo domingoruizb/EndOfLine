@@ -19,7 +19,7 @@ export default function Home () {
                     alt='Logo'
                 />
                 <div
-                    className='home-buttons'
+                    className='buttons-container'
                 >
                     {
                         user == null ? (
@@ -31,6 +31,7 @@ export default function Home () {
                                 <LinkClickButton
                                     text='LOGIN'
                                     link='/login'
+                                    className='orange'
                                 />
                             </>
                         ) : (
@@ -43,10 +44,12 @@ export default function Home () {
                                     <LinkClickButton
                                         link='/users'
                                         text='USERS'
+                                        className='orange'
                                     />
                                     <LinkClickButton
                                         link='/social'
                                         text='SOCIAL'
+                                        className='orange'
                                     />
                                     <LinkClickButton
                                         link='/achievements'

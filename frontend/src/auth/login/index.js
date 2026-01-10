@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Alert, Container } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
-import "../../static/css/auth/authButton.css";
-import "../../static/css/auth/login.css";
 import { loginFormInputs } from "./form/loginFormInputs";
 
 export default function Login() {
@@ -36,17 +34,8 @@ export default function Login() {
 
   
   return (
-    <div className={"login-page-container"}>
-      <Container
-        className="auth-page-container"
-        style={{
-          padding: "0 1rem",
-          maxWidth: 900,
-          background: "none",
-          borderRadius: "1rem",
-          boxShadow: "none",
-        }}
-      >
+    <div className="page-container">
+      <div className="info-container no-bg">
         {
           message != null && (
             <Alert color="primary">
@@ -54,26 +43,21 @@ export default function Login() {
             </Alert>
           )
         }
-        <h1 className="text-center" style={{
-          fontWeight: 800,
-          letterSpacing: "2px",
-          color: "#FE5B02",
-          textShadow: "0 2px 8px #000"
-        }}>
+        <h1 className="info-title">
           Login
         </h1>
-        <div className="auth-form-container">
+        <div className="form-container">
           <FormGenerator
             ref={loginFormRef}
             inputs={loginFormInputs}
             onSubmit={handleSubmit}
             numberOfColumns={1}
             listenEnterKey
-            buttonText="Login"
-            buttonClassName="auth-button orange-button"
+            buttonText="LOGIN"
+            buttonClassName="button"
           />
         </div>
-      </Container>
+      </div>
     </div>
   );  
 }
