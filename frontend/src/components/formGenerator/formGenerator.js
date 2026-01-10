@@ -59,21 +59,33 @@ const FormGenerator = forwardRef((props, ref) => {
   function handleSubmit(e) {
     e.preventDefault();
     let formValuesCopy = {};
+    let errors = {};
 
     for (let i = 0; i < props.inputs.length; i++) {
       let input = props.inputs[i];
+      let value;
       if (input.type === "files") {
-        formValuesCopy[input.name] = formInputs.current[i].files.map((file) =>
-          file.getFileEncodeBase64String()
-        );
+        value = formInputs.current[i].files.map((file) => file.getFileEncodeBase64String());
+        formValuesCopy[input.name] = value;
       } else if (input.type === "interval") {
         formValuesCopy[`min_${input.name}`] = formInputs.current[i].min;
         formValuesCopy[`max_${input.name}`] = formInputs.current[i].max;
+        value = undefined; 
       } else {
-        formValuesCopy[input.name] = formInputs.current[i].value;
+        value = formInputs.current[i].value;
+        formValuesCopy[input.name] = value;
+      }
+      if (input.validators && input.validators.length > 0) {
+        for (let validator of input.validators) {
+          if (!validator.validate(value)) {
+            errors[input.name] = true;
+            break;
+          }
+        }
       }
     }
     setFormValues(formValuesCopy);
+    props.onSubmit({ values: formValuesCopy, errors });
     setSubmitForm(true);
   }
 
@@ -102,19 +114,23 @@ const FormGenerator = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (submitForm) {
-      props.onSubmit({ values: formValues });
+      // props.onSubmit({ values: formValues }); // Ya se llama en handleSubmit
       setSubmitForm(false);
     }
   }, [submitForm]);
 
   useEffect(() => {
-    document.addEventListener("keyup", (e) => {
-      e.preventDefault()
-      if (e.key === "Enter" && props.listenEnterKey) {
+    const keyupHandler = (e) => {
+      if (e.key === "Enter" && props.listenEnterKey && formElement.current) {
+        e.preventDefault();
         handleSubmit(e);
       }
-    });
-  }, []);
+    };
+    document.addEventListener("keyup", keyupHandler);
+    return () => {
+      document.removeEventListener("keyup", keyupHandler);
+    };
+  }, [props.listenEnterKey, handleSubmit]);
 
   return (
     <div className="class-profile-form">

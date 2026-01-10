@@ -46,17 +46,9 @@ public class AchievementService {
         List<Integer> unlockedIds = (!isAdmin && user != null)
             ? playerAchievementService.findAchievementIdsByUserId(user.getId())
             : List.of();
-        List<AchievementDTO> achievementDTOs =  ((List<Achievement>) achievements).stream().map(a -> {
-            AchievementDTO dto = new AchievementDTO();
-            dto.setId(a.getId());
-            dto.setName(a.getName());
-            dto.setDescription(a.getDescription());
-            dto.setCategory(a.getCategory().toString());
-            dto.setThreshold((int)a.getThreshold());
-            dto.setUnlocked(!isAdmin && unlockedIds.contains(a.getId()));
-            dto.setBadgeImage(a.getBadgeImage());
-            return dto;
-        }).collect(Collectors.toList());
+        List<AchievementDTO> achievementDTOs =  ((List<Achievement>) achievements).stream().map(a ->
+            AchievementDTO.build(a, !isAdmin && unlockedIds.contains(a.getId()))
+        ).collect(Collectors.toList());
         return achievementDTOs;
     }
 

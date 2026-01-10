@@ -35,7 +35,12 @@ export default function AchievementEdit() {
   const modal = getErrorModal(setVisible, visible, message);
 
 
-  function handleSubmit({ values }) {
+  function handleSubmit({ values, errors }) {
+    if (errors && Object.values(errors).some(Boolean)) {
+      setMessage('Invalid data');
+      setVisible(true);
+      return;
+    }
     fetch(`/api/v1/achievements/${achievementId}`,
       {
         method: "PUT",

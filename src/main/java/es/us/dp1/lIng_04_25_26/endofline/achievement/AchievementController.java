@@ -23,6 +23,7 @@ public class AchievementController {
         this.achievementService = achievementService;
     }
 
+
     @GetMapping
     public ResponseEntity<List<AchievementDTO>> getAllAchievements() {
         List<AchievementDTO> achievementDTOs = achievementService.getAllAchievements();
@@ -30,28 +31,24 @@ public class AchievementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Achievement> getAchievementById(
-        @PathVariable Integer id
-    ) {
+    public ResponseEntity<AchievementDTO> getAchievementById(@PathVariable Integer id) {
         Achievement achievement = achievementService.getAchievementById(id);
-        return ResponseEntity.ok(achievement);
+        AchievementDTO dto = AchievementDTO.build(achievement, false);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping
-    public ResponseEntity<Achievement> createAchievement(
-        @RequestBody @Valid Achievement newAchievement
-    ) {
+    public ResponseEntity<AchievementDTO> createAchievement(@RequestBody @Valid Achievement newAchievement) {
         Achievement achievement = achievementService.saveAchievement(newAchievement);
-        return ResponseEntity.ok(achievement);
+        AchievementDTO dto = AchievementDTO.build(achievement, false);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Achievement> updateAchievement(
-        @RequestBody @Valid Achievement newAchievement,
-        @PathVariable Integer id
-    ) {
+    public ResponseEntity<AchievementDTO> updateAchievement(@RequestBody @Valid Achievement newAchievement, @PathVariable Integer id) {
         Achievement updatedAchievement = achievementService.updateAchievement(id, newAchievement);
-        return ResponseEntity.ok(updatedAchievement);
+        AchievementDTO dto = AchievementDTO.build(updatedAchievement, false);
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")
