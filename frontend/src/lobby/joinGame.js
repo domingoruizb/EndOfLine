@@ -1,83 +1,37 @@
-import React from 'react';
 import GameCodeInput from './lobbyComponents/GameCodeInput.js';
-import '../App.css';
-import '../static/css/newGame/newGame.css'; 
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import tokenService from "../services/token.service.js";
-import getErrorModal from "../util/getErrorModal.js";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useFetchResource } from '../util/useFetchResource.js';
+import { showErrorToast } from '../util/toasts.js';
+import '../static/css/newGame/newGame.css';
+import '../static/css/page.css'
 
-
-
-export default function JoinGame(){
-    const location = useLocation();
+export default function JoinGame() {
     const navigate = useNavigate();
 
     const [code, setCode] = useState('');
-    const [message, setMessage] = useState("");
-    const [visible, setVisible] = useState(false);
+    const { getData } = useFetchResource()
 
-    const user = tokenService.getUser();
-    const jwt = tokenService.getLocalAccessToken();
-
-    const modal = getErrorModal(setVisible, visible, message);
-
-    useEffect(() => {
-    if (location.state?.message) {
-      setMessage(location.state.message);
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
-
-  const handleJoinGame = async (e) => {
+    const handleJoinGame = async (e) => {
         e.preventDefault();
-        
-        if (!user || !jwt) {
-            setMessage("You must be logged in to join a game.");
-            setVisible(true);
-            return;
-        }
-        
         const cleanCode = code.toUpperCase().trim();
         if (cleanCode.length !== 6) {
-            setMessage('Please enter a valid 6-character game code.');
-            setVisible(true);
-            return;
+            showErrorToast('Please enter a valid 6-character game code')
+            return
         }
 
-        try {
+        const { status, data } = await getData(
+            `/api/v1/games/join/${cleanCode}`,
+            'POST'
+        )
 
-            const response = await fetch(
-                `/api/v1/games/join/${cleanCode}`,
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                        "Content-Type": "application/json",
-                    }
-                }
-            );
-
-            if (!response.ok) {
-                const errorData = await response.json(); 
-                throw new Error(errorData.message || "Failed to join game. Check the code.");
-            }
-
-            const gameData = await response.json();
-            
-            navigate(`/lobby/${gameData.id}`); 
-
-        } catch (error) {
-            console.error('Error joining game:', error);
-            setMessage(`Error: ${error.message || "Could not join game."}`);
-            setVisible(true);
+        if (status === 'success') {
+            navigate(`/lobby/${data.id}`)
         }
     };
 
     return(
-        <>
-        {modal}
-        <div className="home-page-container">
+        <div className="page-container">
             <div className="hero-div-newGame" style={{ width: '40%' }}>
                 <h1>JOIN A GAME</h1>
                 
@@ -91,6 +45,5 @@ export default function JoinGame(){
                 </form>
             </div>
         </div>
-        </>
     );
 }

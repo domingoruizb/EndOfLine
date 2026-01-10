@@ -4,8 +4,7 @@ import tokenService from '../services/token.service'
 
 export function useFetchResource () {
     const [data, setData] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const [success, setSuccess] = useState(null)
+    const [status, setStatus] = useState('idle') // 'idle' | 'loading' | 'success' | 'error'
     const controllerRef = useRef(null)
 
     const getData = async (url, method = 'GET', body = null, options = {}) => {
@@ -16,9 +15,7 @@ export function useFetchResource () {
         const abortController = new AbortController()
         controllerRef.current = abortController
 
-        setLoading(true)
-        setSuccess(null)
-
+        setStatus('loading')
         try {
             const jwt = tokenService.getLocalAccessToken()
             const response = await fetch(url, {
@@ -38,27 +35,30 @@ export function useFetchResource () {
 
             if (!response.ok) {
                 const message = json?.message || json?.error || `Request failed: ${response.status} ${response.statusText}`
-                setSuccess(false)
+                setStatus('error')
                 throw new Error(message)
             }
 
             setData(json)
-            setSuccess(true)
+            setStatus('success')
             return {
-                success: true,
+                status: 'success',
                 data: json
             }
         } catch (error) {
-            if (error.name !== 'AbortError') {
-                showErrorToast(error.message ?? 'Something went wrong')
+            if (error.name === 'AbortError') {
+                return {
+                    status: 'error',
+                    error: error.message
+                }
             }
-            setSuccess(false)
+
+            showErrorToast(error.message ?? 'Something went wrong')
+            setStatus('error')
             return {
-                success: false,
+                status: 'error',
                 error: error.message
             }
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -72,8 +72,7 @@ export function useFetchResource () {
 
     return {
         data,
-        loading,
-        success,
+        status,
         getData
     }
 }

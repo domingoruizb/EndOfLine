@@ -29,7 +29,7 @@ import AdminGamesList from "./games/adminGames";
 import Social from "./social/Social";
 import ErrorPage from "./error-page";
 import { useFetchResource } from './util/useFetchResource';
-import { showInfoToast } from './util/toasts';
+import { showSuccessToast } from './util/toasts';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -52,12 +52,12 @@ export default function App() {
     const fetchFriendships = async () => {
       if (isAdmin || user == null) return
 
-      const { data, success } = await getData('/api/v1/friendships/pending')
-      if (!success) return
+      const { data, status } = await getData('/api/v1/friendships/pending')
+      if (status !== 'success') return
 
       const pending = data.filter(f => !notified.current.has(f.id))
       pending.forEach(req => {
-        showInfoToast(`👤 ${req.sender.username} sent you a friendship request!`)
+        showSuccessToast(`👤 ${req.sender.username} sent you a friendship request!`)
         notified.current.add(req.id)
       })
     }

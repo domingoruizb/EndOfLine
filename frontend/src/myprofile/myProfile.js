@@ -6,7 +6,8 @@ import DeleteProfileModal from "./myProfileComponents/DeleteProfileModal";
 import tokenService from "../services/token.service";
 import "../static/css/admin/adminPage.css";
 import '../static/css/myProfile/myProfile.css';
-import '../static/css/home/home.css';
+import '../static/css/auth/login.css';
+import '../static/css/page.css'
 import getErrorModal from "../util/getErrorModal";
 import deleteMyself from "../util/deleteMyself";
 import useFetchState from "../util/useFetchState";
@@ -15,6 +16,7 @@ import profileFormInputs from "./myProfileComponents/profileFormInputs";
 import AvatarPreview from "./myProfileComponents/AvatarPreview";
 import useProfileForm from "./myProfileHooks/useProfileForm";
 import { useProfileApi } from "./myProfileHooks/useProfileApi";
+import LinkClickButton from '../components/LinkClickButton'
 
 
 const jwt = tokenService.getLocalAccessToken();
@@ -63,8 +65,8 @@ export default function MyProfile() {
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
-    <div className="login-page-container">
-      <Container className="auth-page-container myProfile-container">
+    <div className="page-container">
+      <Container className="auth-page-container">
         <h1 className="text-center myProfile-title">My Profile</h1>
         {modal}
         <div className="auth-form-container">
@@ -74,19 +76,15 @@ export default function MyProfile() {
               inputs={profileFormInputs(form)}
               onSubmit={({ values }) => handleSaveChanges({ ...form, ...values, jwt })}
               numberOfColumns={1}
-              buttonText="Save changes"
-              buttonClassName="auth-button"
+              buttonText="SAVE"
+              buttonClassName="button"
               childrenPosition={-1}
             >
-              <button
-                color="danger"
-                type="button"
+              <LinkClickButton
+                text='DELETE PROFILE'
                 onClick={() => setDeleteProfile(true)}
-                className="auth-button danger"
-                style={{ minWidth: '180px', marginBottom: '85px', marginLeft: '32px' }}
-              >
-                Delete profile
-              </button>
+                className='button-danger'
+              />
             </FormGenerator>
           </div>
         </div>

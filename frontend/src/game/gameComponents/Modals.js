@@ -23,12 +23,12 @@ export default function Modals ({
     const handleGiveUp = async () => {
         toggleGiveUpModal()
 
-        const data = await getData(
+        const { status } = await getData(
             `/api/v1/games/${game.gameId}/giveup`,
             'POST'
         )
 
-        if (data != null) {
+        if (status === 'success') {
             navigate('/creategame')
         }
     }

@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../static/css/auth/authButton.css";
 import "../../static/css/auth/authPage.css";
-import '../../static/css/home/home.css';
 import "../../static/css/auth/logout.css"; 
 import tokenService from "../../services/token.service";
 

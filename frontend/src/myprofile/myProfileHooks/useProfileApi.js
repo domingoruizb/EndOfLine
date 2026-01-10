@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import tokenService from '../../services/token.service';
+import { showSuccessToast } from '../../util/toasts';
 
 export function useProfileApi({ setMessage, setVisible, setPlayer, user, player, navigate, alerts, setAlerts }) {
   const handleSaveChanges = useCallback(async ({
@@ -59,7 +60,8 @@ export function useProfileApi({ setMessage, setVisible, setPlayer, user, player,
       setVisible
     );
     if (success) {
-      navigate('/', { state: { message: 'Your account has been successfully deleted' } });
+      showSuccessToast('Account deleted successfully');
+      navigate('/');
     }
   }, [alerts, setAlerts, setMessage, setVisible, user, navigate]);
 

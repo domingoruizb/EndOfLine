@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import es.us.dp1.lIng_04_25_26.endofline.game.Game;
 import es.us.dp1.lIng_04_25_26.endofline.model.BaseEntity;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "messages")
@@ -24,10 +26,12 @@ public class Message extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Game game;
 
     public static Message build(

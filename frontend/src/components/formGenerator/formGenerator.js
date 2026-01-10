@@ -181,7 +181,7 @@ const FormGenerator = forwardRef((props, ref) => {
         <button 
           onClick={handleSubmit} 
           className={`${props.buttonClassName}`}
-          style={{ minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '85px' }}
+          // style={{ minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '85px' }}
         >
           {props.buttonText}
         </button>

@@ -11,9 +11,9 @@ export default function FriendshipCreation() {
     const { getData } = useFetchResource()
 
     const handleSubmit = async ({ values }) => {
-        const { success } = await getData(`/api/v1/friendships`, 'POST', { receiver: values.username })
+        const { status } = await getData(`/api/v1/friendships`, 'POST', { receiver: values.username })
 
-        if (success) {
+        if (status === 'success') {
             showSuccessToast(`Friendship request sent to ${values.username}!`)
             navigate('/friends')
         }

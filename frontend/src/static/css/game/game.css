@@ -5,7 +5,6 @@
     --main-cyan-color: #00BCD4;
     --game-cell-size: 12vh;
     --board-gap: 0.5vh;
-    --navbar-height: calc(1rem + 0.625rem + 40px);
     --side-container-width: 25vw;
 }
 

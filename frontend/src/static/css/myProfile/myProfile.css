@@ -1,31 +1,6 @@
-.myProfile-container {
-    padding: 0 1rem;
-    max-width: 900px;
-    background: none;
-    border-radius: 1rem;
-    box-shadow: none;
-}
 .myProfile-title {
     font-weight: 800;
     letter-spacing: 2px;
     color: #FE5B02;
     text-shadow: 0 2px 8px #000;
-}
-.myProfile-page-container {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../../images/home_background.png');
-    background-size: cover;
-    color: white;
-    min-height: 100vh;
-    padding: 2rem 0;
-    font-family: 'Inter', Arial, sans-serif;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 8;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
 }

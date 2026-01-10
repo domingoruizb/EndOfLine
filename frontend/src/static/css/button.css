@@ -1,0 +1,39 @@
+.button {
+    padding: 1vh 3vw;
+    text-align: center;
+    text-decoration: none;
+    font-size: 2vh;
+    font-weight: 500;
+    border-radius: 5px;
+    border: 2px dashed var(--main-green-color);
+    background: var(--main-bg-color);
+    color: var(--main-green-color);
+    transition: all 0.1s ease-in-out;
+}
+
+.button:nth-child(2n), .button-orange {
+    border: 2px dashed var(--main-orange-color);
+    color: var(--main-orange-color);
+}
+
+.button:hover {
+    background: var(--main-green-color);
+    color: black;
+    cursor: pointer;
+}
+
+.button:nth-child(2n):hover, .button-orange:hover {
+    background: var(--main-orange-color);
+    color: black;
+}
+
+.button-danger {
+    border: 2px dashed var(--main-red-color);
+    color: var(--main-red-color);
+}
+
+.button-danger:hover {
+    background: var(--main-red-color);
+    color: black;
+    cursor: pointer;
+}

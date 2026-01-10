@@ -1,0 +1,21 @@
+.page-container {
+    position: absolute;
+    top: var(--navbar-height);
+    left: 0;
+    height: calc(100vh - var(--navbar-height));
+    width: 100vw;
+    z-index: -1;
+    background: var(--main-bg-color) url('../images/home_background.png');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .centered-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+} */

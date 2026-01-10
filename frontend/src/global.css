@@ -1,11 +1,13 @@
 :root{
-    --main-red-color: #c42323;
+    --main-red-color: #ff0000;
     --main-blue-color: #2333c4;
     --main-green-color: #b1d12d;
     --main-orange-color: #FE5B02;
     --green-shadow-color: rgba(166, 217, 26, 0.4);
     --blue-shadow-color: rgba(46, 92, 229, 0.4);
     --red-shadow-color: rgba(229, 46, 46, 0.4);
+    --main-bg-color: rgba(0, 0, 0, 0.2);
+    --navbar-height: calc(1rem + 0.625rem + 40px);
 }
 
 @font-face {

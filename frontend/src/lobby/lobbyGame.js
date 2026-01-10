@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
-import '../App.css';
+import { useState } from 'react';
 import '../static/css/newGame/newGame.css';
 import '../static/css/lobby/lobbyGame.css';
+import '../static/css/page.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import tokenService from '../services/token.service.js';
 import ErrorModal from './lobbyComponents/ErrorModal.js';
@@ -70,7 +70,7 @@ export default function LobbyGame() {
   const friendNameDisplayLogic = isFriendJoined ? friendName : 'Your friend';
 
   return (
-    <div className="home-page-container">
+    <div className="page-container">
       <div className="hero-div-newGame lobby-game-container">
         <h1>NEW GAME</h1>
         <div className="lobby-game-content">
