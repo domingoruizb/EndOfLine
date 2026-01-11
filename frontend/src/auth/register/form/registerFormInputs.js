@@ -96,6 +96,6 @@ export const registerFormPlayer  = [
     type: "text",
     defaultValue: "https://cdn.iconscout.com/icon/free/png-256/free-avatar-icon-svg-download-png-456324.png",
     isRequired: false,
-    validators: [formValidators.notBlankValidator],
+    validators: [formValidators.notEmptyValidator],
   },
 ];
