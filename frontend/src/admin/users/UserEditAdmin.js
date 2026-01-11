@@ -46,12 +46,12 @@ export default function UserEditAdmin() {
       ...values,
       authority: authority
     };
-    const success = await getUser(
+    const { status } = await getUser(
       userId !== 'new' ? `/api/v1/users/${userId}` : `/api/v1/users`,
       userId !== 'new' ? 'PUT' : 'POST',
       body
     );
-    if (success) {
+    if (status === 'success') {
       navigate('/users');
     }
   };

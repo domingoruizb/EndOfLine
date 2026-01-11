@@ -29,13 +29,11 @@ export default function LobbyGame() {
 
   const {
     gameData,
-    setGameData,
     selectedColor1,
     setSelectedColor1,
     selectedColor2,
     setSelectedColor2,
     loading,
-    setLoading,
   } = useLobbyGameData(gameId, user, setMessage, setVisible);
 
   const actions = useLobbyGameActions({

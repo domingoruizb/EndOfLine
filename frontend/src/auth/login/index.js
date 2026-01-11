@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Container } from "reactstrap";
+import { Alert } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import { loginFormInputs } from "./form/loginFormInputs";

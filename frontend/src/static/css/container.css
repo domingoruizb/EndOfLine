@@ -38,6 +38,18 @@
     text-align: center;
 }
 
+.info-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    border-bottom: 2px solid var(--main-orange-color);
+}
+
+.info-section:last-child {
+    border-bottom: none;
+}
+
 .form-container {
     width: 60%;
     background-color: rgba(30, 30, 30, 0.9);

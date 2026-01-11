@@ -1,5 +1,3 @@
-import { formValidators } from "../../validators/formValidators";
-
 // Configuración de inputs para el formulario de perfil de usuario
 const profileFormInputs = (form) => [
   {

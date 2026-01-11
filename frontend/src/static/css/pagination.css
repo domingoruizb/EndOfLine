@@ -1,0 +1,12 @@
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pagination-info {
+    color: var(--main-orange-color);
+    font-weight: bold;
+    font-size: 1.2em;
+}

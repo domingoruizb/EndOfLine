@@ -1,76 +1,61 @@
-import { useState } from "react";
-import useFetchState from "../util/useFetchState";
-import "../static/css/developers/developersList.css";
+import { useEffect, useState } from "react";
+import Pagination from '../components/Pagination';
+import Table from '../components/Table';
+import { useFetchResource } from '../util/useFetchResource';
 
 export default function DeveloperList() {
-    const [developers] = useFetchState(
-        [],
-        '/api/v1/developers'
-    );
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
+    const { data, getData } = useFetchResource()
     const itemsPerPage = 5;
-    const totalPages = Math.ceil((developers?.length || 0) / itemsPerPage) || 1;
-    const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
     const imgnotfound = "https://cdn-icons-png.flaticon.com/512/48/48639.png";
-    const visibleDevelopers = developers.slice(start, end);
 
     const resolvePicture = (d) => {
         return d?.properties?.picUrl || d?.picture || d?.picUrl || imgnotfound;
     };
 
-    const developerList = visibleDevelopers.map((d) => {
-        return (
-            <tr key={d.id}>
-                <td className="text-center">{d.name}</td>
-                <td className="text-center"> {d.email} </td>
-                <td className="text-center"> <a href={d.url}>{d.url}</a> </td>
-                <td className="text-center">
-                  <img src={resolvePicture(d)}
-alt={d?.name || 'Developer'} width="50px" onError={(e) => { e.currentTarget.src = imgnotfound; }}/>
-                </td>
-            </tr>
-        );
-    });
+    useEffect(() => {
+        const fetchDevelopers = async () => {
+            await getData(
+                `/api/v1/developers?page=${page}&size=${itemsPerPage}`
+            )
+        }
+
+        fetchDevelopers()
+    }, [page])
+
+    const rows = data?.content.map(d => [
+        d.name,
+        d.email,
+        <a href={d.url}>{d.url}</a>,
+        <img
+            src={resolvePicture(d)}
+            alt={d?.name || 'Developer'}
+            onError={(e) => { e.currentTarget.src = imgnotfound; }}
+        />
+    ])
 
     return (
         <div className="page-container">
             <div className="info-container">
                 <h1 className="info-title">Developers</h1>
-                <div>
-                    <table aria-label="developers" className="developers-table">
-                        <thead>
-                            <tr>
-                                <th className="text-center">Name</th>
-                                <th className="text-center">e-mail</th>
-                                <th className="text-center">URL</th>
-                                <th className="text-center">Picture</th>
-                            </tr>
-                        </thead>
-                        <tbody>{developerList}</tbody>
-                    </table>
-                    {totalPages > 1 && (
-                        <div className="developers-pagination">
-                            <button
-                                className="developers-pagination-button"
-                                onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-                                disabled={page === 1}
-                            >
-                                Previous
-                            </button>
-                            <span className="developers-pagination-info">
-                                Page {page} of {totalPages}
-                            </span>
-                            <button
-                                className="developers-pagination-button"
-                                onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={page === totalPages}
-                            >
-                                Next
-                            </button>
-                        </div>
-                    )}
-                </div>
+                {data?.content.length > 0 ? (
+                    <>
+                        <Table
+                            aria-label='developers'
+                            columns={['Name', 'E-Mail', 'URL', 'Picture']}
+                            rows={rows}
+                        />
+                        {data?.pages > 1 && (
+                            <Pagination
+                                page={page}
+                                setPage={setPage}
+                                {...data}
+                            />
+                        )}
+                    </>
+                ) : (
+                    <p>No developers found.</p>
+                )}
             </div>
         </div>
     );

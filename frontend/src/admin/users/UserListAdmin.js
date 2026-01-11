@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "reactstrap";
 import ConfirmDeleteModal from "./adminComponents/ConfirmDeleteModal";
-import UserList from './adminComponents/UserList';
 import { useFetchResource } from '../../util/useFetchResource';
-import "../../static/css/admin/userListAdmin.css";
-import "../../static/css/admin/userListAdmin.css";
 import LinkClickButton from "../../components/LinkClickButton";
+import Pagination from '../../components/Pagination';
+import Table from '../../components/Table';
+import "../../static/css/admin/userListAdmin.css";
 
 export default function UserListAdmin() {
   const [confirmUserId, setConfirmUserId] = useState(null);
@@ -41,53 +39,46 @@ export default function UserListAdmin() {
     setConfirmUserId(null);
   };
 
+  const rows = data?.content.map(user => [
+    user.username,
+    user.authority.type
+  ])
+
+  const actions = [
+    (rowIndex) => ({
+      text: 'EDIT',
+      link: '/users/' + data.content[rowIndex].id,
+      className: 'sm'
+    }),
+    (rowIndex) => ({
+      text: 'DELETE',
+      onClick: () => handleDeleteClick(data.content[rowIndex].id),
+      className: 'sm danger'
+    })
+  ]
+
   return (
     <div className="page-container">
       <div className="info-container">
         <h1 className="info-title">Users</h1>
-        <div className="text-center user-list-actions">
-          <LinkClickButton
-            text='Add User'
-            link='/users/new'
-          />
-        </div>
+        <LinkClickButton
+          text='Add User'
+          link='/users/new'
+        />
         {data?.content.length > 0 ? (
           <>
-            <table aria-label="users" className="mt-4 text-white user-table">
-              <thead>
-                <tr>
-                  <th className="text-center">Username</th>
-                  <th className="text-center">Authority</th>
-                  <th className="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <UserList
-                  users={data?.content}
-                  handleDeleteClick={handleDeleteClick}
-                />
-              </tbody>
-            </table>
+            <Table
+              aria-label='users'
+              columns={['Username', 'Authority']}
+              rows={rows}
+              actions={actions}
+            />
             {data?.pages > 1 && (
-              <div className="text-center mt-4 pagination-container">
-                <button
-                  onClick={() => setPage(prev => Math.max(prev - 1, 0))}
-                  disabled={!data?.hasPrevious}
-                  className="pagination-button"
-                >
-                  Previous
-                </button>
-                <span className="pagination-info">
-                  Page {page + 1} of {data?.pages}
-                </span>
-                <button
-                  onClick={() => setPage(prev => Math.min(prev + 1, data?.pages - 1))}
-                  disabled={!data?.hasNext}
-                  className="pagination-button"
-                >
-                  Next
-                </button>
-              </div>
+              <Pagination
+                page={page}
+                setPage={setPage}
+                {...data}
+              />
             )}
           </>
         ) : (

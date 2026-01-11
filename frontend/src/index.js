@@ -12,7 +12,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import './static/css/page.css'
 import './static/css/container.css'
-
+import './static/css/button.css'
+import './static/css/pagination.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

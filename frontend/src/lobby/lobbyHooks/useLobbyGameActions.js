@@ -1,6 +1,3 @@
-import tokenService from '../../services/token.service.js';
-import { useNavigate } from 'react-router-dom';
-
 export function useLobbyGameActions({ gameId, user, jwt, setMessage, setVisible, setSelectedColor1, setSelectedColor2, navigate }) {
   const handleSelectColor1 = async (color, selectedColor2) => {
     if (color === selectedColor2) {

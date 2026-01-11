@@ -1,42 +1,33 @@
 package es.us.dp1.lIng_04_25_26.endofline.developers;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-
+import es.us.dp1.lIng_04_25_26.endofline.dto.PageDTO;
 import org.apache.maven.model.Developer;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.us.dp1.lIng_04_25_26.endofline.model.Person;
-
 @RestController
 @RequestMapping("/api/v1/developers")
 public class DevelopersController {
-    List<Developer> developers;
+    private final DeveloperService developerService;
+
+    @Autowired
+    public DevelopersController(
+        DeveloperService developerService
+    ) {
+        this.developerService = developerService;
+    }
 
     @GetMapping
-    public List<Developer> getDevelopers(){
-        if(developers==null)
-            loadDevelopers();
-        return developers;
+    public ResponseEntity<PageDTO<Developer>> getDevelopers(
+        @PageableDefault Pageable pageable
+    ) {
+        PageDTO<Developer> response = new PageDTO<>(developerService.getDevelopers(pageable));
+        return ResponseEntity.ok(response);
     }
-
-    private void loadDevelopers(){
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        try {
-            Model model = reader.read(new FileReader("pom.xml"));
-            Person p=null;
-            developers=model.getDevelopers();
-        } catch (IOException | XmlPullParserException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 
 }

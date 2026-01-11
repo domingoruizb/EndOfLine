@@ -1,4 +1,3 @@
-import { Button } from "reactstrap";
 import LinkClickButton from "../../components/LinkClickButton";
 
 export function FriendActionGroup({

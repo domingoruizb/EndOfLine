@@ -1,5 +1,3 @@
-import { formValidators } from "../../../validators/formValidators";
-
 const userFormInputs = (auths, user = {}, isEdit = false) => {
   const inputs = [
   {

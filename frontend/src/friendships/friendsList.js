@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import FriendTableRow from "./friendshipComponents/FriendTableRow";
-import FriendPagination from "./friendshipComponents/FriendPagination";
 import { filterAndSortFriendships, paginate } from "./friendshipUtils/friendshipListUtils";
 import { showSuccessToast, showErrorToast } from "../util/toasts";
 import useFriendshipNotifications from "./friendshipUtils/useFriendshipNotifications";
@@ -14,6 +12,7 @@ import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
 import LinkClickButton from "../components/LinkClickButton";
 import "../static/css/friendships/friendsList.css";
+import Pagination from '../components/Pagination';
 
 export default function FriendshipList() {
         const jwt = tokenService.getLocalAccessToken();
@@ -21,7 +20,7 @@ export default function FriendshipList() {
         const [friendshipType, setFriendshipType] = useState("ACCEPTED");
         const [friendships, setFriendships] = useState([]);
         const [activeGames] = useFetchState([], `/api/v1/games`, jwt);
-        const [currentPage, setCurrentPage] = useState(1);
+        const [currentPage, setCurrentPage] = useState(0);
         const [friendshipsPerPage] = useState(5);
 
     const [message, setMessage] = useState("");
@@ -52,7 +51,7 @@ export default function FriendshipList() {
 
 
     const sortedFriendships = filterAndSortFriendships(friendships, friendshipType, user.id);
-    const currentFriendships = paginate(sortedFriendships, currentPage, friendshipsPerPage);
+    const currentFriendships = paginate(sortedFriendships, currentPage + 1, friendshipsPerPage);
 
     const modal = getErrorModal(setVisible, visible, message);
 
@@ -139,7 +138,13 @@ export default function FriendshipList() {
                             </tbody>
                         </table>
                         {totalPages > 1 && (
-                            <FriendPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
+                            <Pagination
+                                page={currentPage}
+                                setPage={setCurrentPage}
+                                pages={totalPages}
+                                hasPrevious={currentPage > 0}
+                                hasNext={currentPage < totalPages - 1}
+                            />
                         )}
                     </>
                 ) : (
@@ -155,7 +160,7 @@ export default function FriendshipList() {
                         text={friendshipType === "PENDING" ? "SHOW FRIENDSHIPS" : "SHOW PENDING"}
                         onClick={() => {
                             setFriendshipType(friendshipType === "PENDING" ? "ACCEPTED" : "PENDING");
-                            setCurrentPage(1);
+                            setCurrentPage(0);
                         }}
                         className="orange"
                     />

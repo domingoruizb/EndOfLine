@@ -1,3 +1,13 @@
+.buttons-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2vh;
+}
+
+.buttons-container:has(.button:nth-child(2)) {
+    grid-template-columns: 1fr 1fr;
+}
+
 .button {
     padding: 1vh 3vw;
     text-align: center;
@@ -15,6 +25,16 @@
     background: var(--main-green-color);
     color: black;
     cursor: pointer;
+}
+
+.button.md {
+    padding: 0.75vh 2vw;
+    font-size: 1.75vh;
+}
+
+.button.sm {
+    padding: 0.5vh 1.5vw;
+    font-size: 1.5vh;
 }
 
 .button.orange {
@@ -49,17 +69,13 @@
     cursor: pointer;
 }
 
-.button.sm {
-    padding: 0.5vh 1.5vw;
-    font-size: 1.5vh;
+.button:disabled {
+    border: 2px dashed rgba(50, 50, 50, 0.85);
+    color: rgba(50, 50, 50, 0.85);
+    cursor: default;
 }
 
-.buttons-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2vh;
-}
-
-.buttons-container:has(.button:nth-child(2)) {
-    grid-template-columns: 1fr 1fr;
+.button:disabled:hover {
+    background: var(--main-bg-color);
+    color: rgba(50, 50, 50, 0.85);
 }

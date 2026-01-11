@@ -11,7 +11,7 @@ export default function Button ({
     return onClick == null ? (
         <Link
             to={link}
-            className={`button ${className}`}
+            className={`button ${className == null ? '' : className}`}
             {...props}
         >
             {text}
@@ -19,7 +19,7 @@ export default function Button ({
     ) : (
         <button
             onClick={onClick}
-            className={`button ${className}`}
+            className={`button ${className == null ? '' : className}`}
             {...props}
         >
             {text}
