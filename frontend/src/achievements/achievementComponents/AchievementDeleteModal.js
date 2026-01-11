@@ -14,11 +14,11 @@ const AchievementDeleteModal = ({ isOpen, toggle, onConfirm, achievementName }) 
         </div>
       </ModalBody>
       <ModalFooter className="achievement-modal-footer">
-        <Button color="danger" onClick={onConfirm} className="close-button">
-          Delete
-        </Button>
         <Button color="secondary" onClick={toggle} className="close-button">
           Cancel
+        </Button>
+        <Button color="danger" onClick={onConfirm} className="close-button">
+          Delete
         </Button>
       </ModalFooter>
     </Modal>

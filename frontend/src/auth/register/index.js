@@ -20,7 +20,12 @@ export default function Register() {
       : input
   );
 
-  const handleRegister = async ({ values }) => {
+  const handleRegister = async ({ values, errors }) => {
+    if (errors && Object.keys(errors).length > 0) {
+      setMessage("Please, fix the errors in the form");
+      setVisible(true);
+      return;
+    }
     try {
       const response = await fetch(`/api/v1/auth/signup`, {
         method: "POST",
