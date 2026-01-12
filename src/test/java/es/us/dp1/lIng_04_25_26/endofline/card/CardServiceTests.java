@@ -278,7 +278,7 @@ class CardServiceTests {
         assertThrows(DeckBadRequestException.class, () -> cardService.changeDeck(gp));
     }
 
-
+    
     @Test
     void testChangeDeckFailFlag() {
         GamePlayer gp = mock(GamePlayer.class);

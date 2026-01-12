@@ -1,41 +1,42 @@
 package es.us.dp1.lIng_04_25_26.endofline.game;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.us.dp1.lIng_04_25_26.endofline.board.BoardService;
-import es.us.dp1.lIng_04_25_26.endofline.board.BoardUtils;
-import es.us.dp1.lIng_04_25_26.endofline.card.Card;
-import es.us.dp1.lIng_04_25_26.endofline.card.CardService;
-import es.us.dp1.lIng_04_25_26.endofline.game.Game;
-import es.us.dp1.lIng_04_25_26.endofline.game.GameController;
-import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
+import es.us.dp1.lIng_04_25_26.endofline.enums.Skill;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.game.GameBadRequestException;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.game.GameNotFoundException;
 import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayer;
 import es.us.dp1.lIng_04_25_26.endofline.gameplayer.GamePlayerService;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
-import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 
@@ -43,20 +44,14 @@ import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 @AutoConfigureTestDatabase
 @AutoConfigureMockMvc
 public class GameControllerTests {
+
     private static final String BASE_URL = "/api/v1/games";
 
-    private User player;
-    private User player2;
-    private GamePlayer gamePlayer1;
-    private GamePlayer gamePlayer2;
-    private List<GamePlayer> gamePlayers;
-    private Authorities authority;
-    private Game game;
-    private Game game2;
-
-    @SuppressWarnings("unused")
     @Autowired
-    private GameController gameController;
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private GameService gameService;
@@ -65,238 +60,242 @@ public class GameControllerTests {
     private UserService userService;
 
     @MockBean
-    private BoardService boardService;
-
-    @MockBean
     private GamePlayerService gamePlayerService;
 
-    @MockBean
-    private CardService cardService;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private AuthoritiesService authoritiesService;
-
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private User host;
+    private User player2;
+    private Game game;
+    private GamePlayer gamePlayerHost;
 
     @BeforeEach
     void setUp() {
-        LocalDate birthDate = LocalDate.of(2005, 3, 15);
-        String avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
-        authority = new Authorities();
-        authority.setId(2);
-        authority.setAuthority("PLAYER");
-
-        player = new User();
-        player.setId(1);
-        player.setName("playerName");
-        player.setSurname("playerSurname");
-        player.setPassword("Play3r!");
-        player.setEmail("player@gmail.com");
-        player.setBirthdate(birthDate);
-        player.setAuthority(authority);
-        player.setAvatar(avatar);
+        host = new User();
+        host.setId(1);
+        host.setUsername("hostUser");
+        host.setEmail("host@test.com");
 
         player2 = new User();
         player2.setId(2);
-        player2.setName("playerName2");
-        player2.setSurname("playerSurname2");
-        player2.setPassword("Play3r2!");
-        player2.setEmail("player2@gmail.com");
-        player2.setBirthdate(birthDate);
-        player2.setAuthority(authority);
-        player2.setAvatar(avatar);
-
-        when(userService.findUser(1)).thenReturn(player);
-        when(userService.findUser(2)).thenReturn(player2);
-
-        gamePlayer1 = new GamePlayer();
-        gamePlayer1.setId(1);
-        gamePlayer1.setEnergy(3);
-        gamePlayer1.setUser(player);
-
-        gamePlayer2 = new GamePlayer();
-        gamePlayer2.setId(2);
-        gamePlayer2.setEnergy(3);
-        gamePlayer2.setUser(player2);
-
-        gamePlayers = List.of(gamePlayer1, gamePlayer2);
+        player2.setUsername("guestUser");
+        player2.setEmail("guest@test.com");
 
         game = new Game();
-        game.setId(1);
-        game.setRound(1);
+        game.setId(100);
+        game.setCode("ABC1234");
+        game.setRound(0);
+        game.setHost(host);
         game.setWinner(null);
-        game.setStartedAt(LocalDateTime.now());
+        game.setStartedAt(null);
         game.setEndedAt(null);
-        game.setGamePlayers(gamePlayers);
-        game.setHost(player);
+        game.setGamePlayers(new ArrayList<>());
+        game.setTurn(host.getId());
 
-        game2 = new Game();
-        game2.setId(2);
-        game2.setRound(10);
-        game2.setWinner(player2);
-        game2.setStartedAt(LocalDateTime.now().minusDays(1));
-        game2.setEndedAt(LocalDateTime.now());
-        game2.setGamePlayers(gamePlayers);
-        game2.setHost(player);
+        gamePlayerHost = new GamePlayer();
+        gamePlayerHost.setId(10);
+        gamePlayerHost.setUser(host);
+        gamePlayerHost.setGame(game);
+        
+        game.getGamePlayers().add(gamePlayerHost);
     }
 
+
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
     void findAllGamesTest() throws Exception {
-        when(this.gameService.findAll()).thenReturn(List.of(game, game2));
+        when(gameService.findAll()).thenReturn(List.of(game));
+
         mockMvc.perform(get(BASE_URL))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].id").exists())
-            .andExpect(jsonPath("$[0].round").exists())
-            .andExpect(jsonPath("$[0].gamePlayers").exists())
-            .andExpect(jsonPath("$[1].id").exists())
-            .andExpect(jsonPath("$[1].winner").exists());
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].id").value(game.getId()))
+            .andExpect(jsonPath("$[0].code").value(game.getCode()))
+            .andExpect(jsonPath("$[0].host.username").value(host.getUsername()));
     }
 
+
     @Test
-    @WithMockUser("player")
-    void findByIdTest() throws Exception {
-        when(this.gameService.getGameById(1)).thenReturn(this.game);
-        mockMvc.perform(get(BASE_URL + "/{id}", 1))
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
+    void getGameByIdTest() throws Exception {
+        when(gameService.getGameById(100)).thenReturn(game);
+
+        mockMvc.perform(get(BASE_URL + "/{id}", 100))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(game.getId()))
-            .andExpect(jsonPath("$.round").value(game.getRound()))
-            .andExpect(jsonPath("$.gamePlayers", hasSize(game.getGamePlayers().size())));
+            .andExpect(jsonPath("$.round").value(0))
+            .andExpect(jsonPath("$.host.id").value(host.getId()));
     }
 
+
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
+    void getGameByIdNotFoundTest() throws Exception {
+        when(gameService.getGameById(999)).thenThrow(new GameNotFoundException(999));
+
+        mockMvc.perform(get(BASE_URL + "/{id}", 999))
+            .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
     void createGameTest() throws Exception {
-        when(this.gameService.createGame(1)).thenReturn(game);
-        mockMvc.perform(post(BASE_URL + "/create/{hostId}", 1))
+        when(userService.findCurrentUser()).thenReturn(host);
+        when(gameService.createGame(host)).thenReturn(game);
+
+        mockMvc.perform(post(BASE_URL + "/create")
+                .with(csrf()))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game.getId()));
+            .andExpect(jsonPath("$.id").value(game.getId()))
+            .andExpect(jsonPath("$.host.username").value(host.getUsername()));
     }
 
+
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "guestUser", authorities = {"PLAYER"})
     void joinGameTest() throws Exception {
-        String code = "ABC123";
-        when(this.gameService.joinGameByCode(2, code)).thenReturn(game);
-        mockMvc.perform(post(BASE_URL + "/join/{userId}/{code}", 2, code))
+        String code = "ABC1234";
+        
+        Game joinedGame = new Game();
+        joinedGame.setId(100);
+        joinedGame.setCode(code);
+        joinedGame.setHost(host);
+        joinedGame.setGamePlayers(new ArrayList<>());
+        joinedGame.getGamePlayers().add(gamePlayerHost);
+        
+        GamePlayer gamePlayerGuest = new GamePlayer();
+        gamePlayerGuest.setUser(player2);
+        joinedGame.getGamePlayers().add(gamePlayerGuest);
+
+        when(userService.findCurrentUser()).thenReturn(player2);
+        when(gameService.joinGameByCode(player2, code)).thenReturn(joinedGame);
+
+        mockMvc.perform(post(BASE_URL + "/join/{code}", code)
+                .with(csrf()))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game.getId()));
+            .andExpect(jsonPath("$.id").value(joinedGame.getId()))
+            .andExpect(jsonPath("$.gamePlayers", hasSize(2)));
     }
 
+
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "guestUser", authorities = {"PLAYER"})
+    void joinGameNotFoundTest() throws Exception {
+        String invalidCode = "INVALID";
+        when(userService.findCurrentUser()).thenReturn(player2);
+        when(gameService.joinGameByCode(player2, invalidCode)).thenThrow(new GameNotFoundException(invalidCode));
+
+        mockMvc.perform(post(BASE_URL + "/join/{code}", invalidCode)
+                .with(csrf()))
+            .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
     void startGameTest() throws Exception {
-        when(this.gameService.startGame(1)).thenReturn(game);
-        mockMvc.perform(post(BASE_URL + "/{id}/start", 1))
+        game.setStartedAt(LocalDateTime.now());
+        game.setRound(1);
+
+        when(gameService.getGameById(100)).thenReturn(game);
+        when(gameService.startGame(game)).thenReturn(game);
+
+        mockMvc.perform(post(BASE_URL + "/{id}/start", 100)
+                .with(csrf()))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game.getId()));
+            .andExpect(jsonPath("$.id").value(game.getId()))
+            .andExpect(jsonPath("$.round").value(1))
+            .andExpect(jsonPath("$.startedAt").exists());
     }
 
-    @Test
-    @WithMockUser("player")
-    void nextTurnTest() throws Exception {
-        when(this.gameService.getGameById(1)).thenReturn(game);
-        when(this.gameService.getGameById(1)).thenReturn(game);
-        mockMvc.perform(post(BASE_URL + "/{id}/next-turn", 1))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game.getId()));
-        verify(gameService, atLeastOnce()).advanceTurn(any(Game.class));
-    }
 
     @Test
-    @WithMockUser("player")
-    void endGameTest() throws Exception {
-        when(this.gameService.endGame(1, 2)).thenReturn(game2);
-        mockMvc.perform(post(BASE_URL + "/{id}/end/{winnerId}", 1, 2))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game2.getId()))
-            .andExpect(jsonPath("$.winner").exists());
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
+    void startGameBadRequestTest() throws Exception {
+        when(gameService.getGameById(100)).thenReturn(game);
+        when(gameService.startGame(game)).thenThrow(new GameBadRequestException("Game needs to have 2 players"));
+
+        mockMvc.perform(post(BASE_URL + "/{id}/start", 100)
+                .with(csrf()))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").exists());
     }
 
+
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
     void giveUpTest() throws Exception {
-        when(this.gameService.giveUpOrLose(1, 2)).thenReturn(game2);
-        mockMvc.perform(put(BASE_URL + "/{gameId}/{userId}/giveup", 1, 2))
+        game.setWinner(player2);
+        game.setEndedAt(LocalDateTime.now());
+
+        when(userService.findCurrentUser()).thenReturn(host);
+        when(gamePlayerService.getGamePlayer(100, host.getId())).thenReturn(gamePlayerHost);
+        when(gameService.giveUpOrLose(gamePlayerHost)).thenReturn(game);
+
+        mockMvc.perform(post(BASE_URL + "/{gameId}/giveup", 100)
+                .with(csrf()))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game2.getId()));
+            .andExpect(jsonPath("$.winner.username").value(player2.getUsername()));
     }
 
-    @Test
-    @WithMockUser("player")
-    void loseTest() throws Exception {
-        when(this.gameService.giveUpOrLose(1, 2)).thenReturn(game2);
-        mockMvc.perform(put(BASE_URL + "/{gameId}/{userId}/lose", 1, 2))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game2.getId()));
-    }
 
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
     void setUpSkillTest() throws Exception {
-        String json = """
-            {
-                "skill": "SPEED_UP"
-            }
-            """;
-        when(this.gameService.setUpSkill(1, 1, "SPEED_UP")).thenReturn(game);
-        mockMvc.perform(put(BASE_URL + "/{gameId}/{userId}/setUpSkill", 1, 1)
-                .contentType("application/json")
-                .content(json))
+        SkillRequestDTO skillRequest = new SkillRequestDTO();
+        skillRequest.setSkill("SPEED_UP");
+
+        game.setSkill(Skill.SPEED_UP);
+
+        when(userService.findCurrentUser()).thenReturn(host);
+        when(gamePlayerService.getGamePlayer(100, host.getId())).thenReturn(gamePlayerHost);
+        when(gameService.setUpSkill(any(GamePlayer.class), eq(Skill.SPEED_UP))).thenReturn(game);
+
+        mockMvc.perform(post(BASE_URL + "/{gameId}/skill", 100)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(skillRequest)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(game.getId()));
+            .andExpect(jsonPath("$.skill", is("SPEED_UP")));
     }
 
+
     @Test
-    @WithMockUser("player")
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
+    void setUpSkillInvalidEnumTest() throws Exception {
+        String invalidJson = "{ \"skill\": \"SUPER_POWER_NOT_EXIST\" }";
+
+        mockMvc.perform(post(BASE_URL + "/{gameId}/skill", 100)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidJson))
+            .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
     void deleteGameTest() throws Exception {
-        doNothing().when(this.gameService).deleteGame(1);
-        mockMvc.perform(delete(BASE_URL + "/{id}", 1))
-            .andExpect(status().isNoContent());
+        when(gameService.getGameById(100)).thenReturn(game);
+        doNothing().when(gameService).deleteGame(game);
+
+        mockMvc.perform(delete(BASE_URL + "/{gameId}", 100)
+                .with(csrf()))
+            .andExpect(status().isOk());
+        
+        verify(gameService).deleteGame(game);
     }
 
-    @Test
-    @WithMockUser("player")
-    void getPlaceablePositionsTest() throws Exception {
-        Integer gamePlayerId = 1;
-        GamePlayer gp = new GamePlayer();
-        gp.setId(gamePlayerId);
-        gp.setUser(player);
-        Game minimalGame = new Game();
-        minimalGame.setId(5);
-        gp.setGame(minimalGame);
-        GamePlayerCardDTO dto = new GamePlayerCardDTO();
-        dto.setImage("some.png");
-        dto.setPositionX(1);
-        dto.setPositionY(1);
-        dto.setRotation(0);
-        dto.setTurnFinished(false);
-        Card dummyCard = new Card();
-        dummyCard.setId(11);
-        dummyCard.setImage("some.png");
 
-        when(this.gamePlayerService.getById(gamePlayerId)).thenReturn(gp);
-        when(this.cardService.findByImage("some.png")).thenReturn(dummyCard);
-        when(this.boardService.getBoard(minimalGame.getId())).thenReturn(List.of());
-        try (MockedStatic<BoardUtils> mockedUtils = mockStatic(BoardUtils.class)) {
-            mockedUtils.when(() -> BoardUtils.getValidIndexes(any(), any()))
-                    .thenReturn(List.of(1, 2, 3));
-            mockMvc.perform(post(BASE_URL + "/{gamePlayerId}/placeable", gamePlayerId)
-                    .contentType("application/json")
-                    .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").value(1))
-                .andExpect(jsonPath("$[1]").value(2))
-                .andExpect(jsonPath("$[2]").value(3));
-        }
+    @Test
+    @WithMockUser(username = "guestUser", authorities = {"PLAYER"})
+    void deleteGameNotAllowedTest() throws Exception {
+        when(gameService.getGameById(100)).thenReturn(game);
+        doThrow(new GameBadRequestException("Only the host can delete the game"))
+            .when(gameService).deleteGame(game);
+
+        mockMvc.perform(delete(BASE_URL + "/{gameId}", 100)
+                .with(csrf()))
+            .andExpect(status().isBadRequest());
     }
 
 }
