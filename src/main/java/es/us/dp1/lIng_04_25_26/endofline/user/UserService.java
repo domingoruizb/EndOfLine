@@ -69,6 +69,16 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
+	public Iterable<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	@Transactional(readOnly = true)
+	public Boolean existsUser(String username) {
+		return userRepository.existsByUsername(username);
+	}
+
+	@Transactional(readOnly = true)
 	public Page<User> findAllExceptMyself(Pageable pageable) {
 		User currentUser = findCurrentUser();
 		return userRepository.findAllExceptMySelf(currentUser.getId(), pageable);

@@ -1,6 +1,6 @@
 package es.us.dp1.lIng_04_25_26.endofline.authentication;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
-import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.user.User;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import io.qameta.allure.Epic;
@@ -29,7 +29,7 @@ public class AuthServiceTests {
 	@Autowired
 	protected UserService userService;
 	@Autowired
-	protected AuthoritiesService authoritiesService;
+	protected AuthorityService authorityService;
 
 	@Test
 	@Transactional
@@ -42,47 +42,38 @@ public class AuthServiceTests {
 	}
 
 
-
 	@Test
-	@Transactional
-	public void shouldCreatePlayerUser() {
-		SignupRequest request = createRequest("PLAYER", "playertest");
-		int userFirstCount = ((Collection<User>) this.userService.findAll()).size();
-		//int playerFirstCount = ((Collection<Player>) this.playerService.findAll()).size();
-		System.out.println("first number of users: " + userFirstCount);
-		this.authService.createUser(request);
-		int userLastCount = ((Collection<User>) this.userService.findAll()).size();
-		//int playerLastCount = ((Collection<Player>) this.playerService.findAll()).size();
-		System.out.println("last number of users: " + userLastCount);
-		assertEquals(userFirstCount + 1, userLastCount);
-		//assertEquals(playFirstCount + 1, playerLastCount);
-	}
+    @Transactional
+    public void shouldCreatePlayerUser() {
+        // Arrange
+        SignupRequest request = createRequest("PLAYER", "newPlayerUser");
+        int userFirstCount = ((Collection<User>) this.userService.findAll()).size();
+        
+        // Act
+        this.authService.createUser(request);
 
-	private SignupRequest createRequest(String auth, String username) {
-		SignupRequest request = new SignupRequest();
-		request.setAuthority(auth);
-		request.setName("prueba");
-		request.setSurname("prueba");
-		request.setPassword("prueba");
-		request.setUsername(username);
-		request.setEmail("prueba");
-		request.setBirthdate("2000-01-01");
-		request.setAvatar("avatar");
+        // Assert
+        int userLastCount = ((Collection<User>) this.userService.findAll()).size();
+        assertEquals(userFirstCount + 1, userLastCount);
 
-		if(auth == "PLAYER") {
-			User playerUser = new User();
-			playerUser.setUsername("clinicOwnerTest");
-			playerUser.setPassword("clinicOwnerTest");
-			playerUser.setName("clinicOwnerTest");
-			playerUser.setSurname("clinicOwnerTest");
-			playerUser.setEmail("clinicOwnerTest");
-			playerUser.setBirthdate(LocalDate.parse("1990-01-01"));
-			playerUser.setAvatar("avatar");
-			playerUser.setAuthority(authoritiesService.findByAuthority("PLAYER"));
-			userService.saveUser(playerUser);
-		}
+        // Verificación adicional
+        User savedUser = userService.findUser("newPlayerUser");
+        assertNotNull(savedUser);
+        assertEquals("PLAYER", savedUser.getAuthority().getType());
+    }
 
-		return request;
-	}
+    // Método auxiliar corregido: Solo crea el objeto SignupRequest
+    private SignupRequest createRequest(String auth, String username) {
+        SignupRequest request = new SignupRequest();
+        request.setAuthority(auth);
+        request.setName("TestName");
+        request.setSurname("TestSurname");
+        request.setPassword("password123");
+        request.setUsername(username);
+        request.setEmail(username + "@test.com"); // Email único basado en el usuario para evitar colisiones
+        request.setBirthdate("2000-01-01");
+        request.setAvatar("https://example.com/avatar.png");
+        return request;
+    }
 
 }

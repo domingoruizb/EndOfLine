@@ -71,19 +71,14 @@ public class AuthController {
 	}
 
 	@GetMapping("/validate")
-	public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
-		Boolean isValid = jwtUtils.validateJwtToken(token);
-
-		if (!isValid) {
-			throw new AuthenticationBadRequestException();
-		}
-
-		return ResponseEntity.ok().build();
-	}
+public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
+    Boolean isValid = jwtUtils.validateJwtToken(token);
+    return ResponseEntity.ok(isValid);
+}
 
 	@PostMapping("/signup")
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userService.findUserRegistering(signUpRequest.getUsername()) != null) {
+		if (userService.existsUser(signUpRequest.getUsername())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 		}
 		authService.createUser(signUpRequest);
