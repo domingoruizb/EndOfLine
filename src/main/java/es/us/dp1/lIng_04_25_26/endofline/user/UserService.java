@@ -78,6 +78,8 @@ public class UserService {
     public User saveUser(User user) throws DataAccessException {
 		if (userRepository.existsByUsername(user.getUsername())) {
 			throw new RuntimeException("Username already exists");
+		} else if (userRepository.existsByEmail(user.getEmail())) {
+			throw new RuntimeException("Email already exists");
 		}
 		return userRepository.save(user);
     }
@@ -86,6 +88,8 @@ public class UserService {
 	public User updateUser(User userToUpdate, UserDTO newData) {
 		if (!userToUpdate.getUsername().equals(newData.getUsername()) && userRepository.existsByUsername(newData.getUsername())) {
 			throw new RuntimeException("Username already exists");
+		} else if (!userToUpdate.getEmail().equals(newData.getEmail()) && userRepository.existsByEmail(newData.getEmail())) {
+			throw new RuntimeException("Email already exists");
 		}
 		BeanUtils.copyProperties(newData, userToUpdate, "id", "gamePlayer", "password");
 		return userRepository.save(userToUpdate);

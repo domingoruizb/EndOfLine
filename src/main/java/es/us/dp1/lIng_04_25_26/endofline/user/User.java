@@ -27,6 +27,7 @@ public class User extends NamedEntity {
     LocalDate birthdate;
 
     @NotNull
+    @Column(unique = true)
     String email;
 
     @NotNull

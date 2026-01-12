@@ -15,7 +15,11 @@ public interface UserRepository extends CrudRepository<User, Integer>{
 
 	Boolean existsByUsername(String username);
 
+    Boolean existsByEmail(String email);
+
 	Optional<User> findById(Integer id);
+
+    Optional<User> findByEmail(String email);
 
 	@Query("""
         SELECT u FROM User u WHERE u.

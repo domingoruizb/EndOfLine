@@ -39,7 +39,24 @@ export default function Register() {
         }),
       });
       if (response.ok) {
-        window.location.href = "/login";
+        const loginRes = await fetch("/api/v1/auth/signin", {
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          body: JSON.stringify({
+            username: values.username,
+            password: values.password
+          }),
+        });
+        if (loginRes.status === 200) {
+          const data = await loginRes.json();
+          const tokenService = (await import("../../services/token.service")).default;
+          tokenService.setUser(data);
+          tokenService.updateLocalAccessToken(data.token);
+          window.location.href = "/";
+        } else {
+          setMessage("Signed up but automatic login failed. Please, login manually.");
+          setVisible(true);
+        }
       } else {
         const data = await response.json();
         setMessage(data.message || "Error updating player");
