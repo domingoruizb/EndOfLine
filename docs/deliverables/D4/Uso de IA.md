@@ -137,11 +137,52 @@ Sprint 3 AI Ethical Use Compliance Checklist:
 
 - [✓] AI was used without providing personal/sensitive data that could be exposed to external tools.
 
-Repita esta subsección para Sprint 4.
+//TODO needs to be modified
+### Sprint 4 — AI Usage Summary
+
+Recorded Uses: Controlled use of Artificial Intelligence (AI) tools, such as Gemini, ChatGPT and GitHub Copilot, was recorded for the implementation of the transition of game logic from frontend to backend, CSS/Frontend styling assistance, and unit/integration test development on the backend.
+
+Main Areas: AI was primarily used in technical assistance and the development of specific logic:
+
+* Transition of Game Logic (from frontend to backend).
+
+* CSS/Frontend:
+
+    * Support in conceptualizing and implementing all CSS styles for the component or feature developed during the sprint, helping us to keep similar styles across all screens.
+
+* Testing (Backend):
+
+    * Assistance in writing and structuring some tests for the backend, ensuring coverage and validation of the newly implemented logic.
+
+* Test Plan Document:
+    
+    * Support in doing the traceability matrix.
+
+Value Added: The use of AI allowed for a significant acceleration in game logic development, especially in implementing the bit-based card rotation algorithm, which was such a difficult process. AI acted as a technical consultant, helping to translate complex game functionalities into functional code and assisting in the consistent design and application of visual styles.
+
+Relevant Risks and Mitigations:
+
+* Risks: No direct risks were identified.
+
+* Mitigation: All generated logic, especially the bit manipulation and turn structure on the frontend and backend, was manually verified, tested, and adapted by the developers. This ensured the code was compatible with the project's architecture and that the game logic strictly adhered to the defined rules.
+
+Lessons Learned: AI is an exceptionally valuable tool for the generation and implementation of specific, complex algorithms when the developer has a clear understanding of the objective. It also proved to be a great support for rapid CSS styling. However, exhaustive verification and human testing remain essential to guarantee the correct interpretation of game rules and seamless integration.
+
+Sprint 4 AI Ethical Use Compliance Checklist:
+
+- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+
+- [✓] AI was not used for narrative purposes (or there is documented authorization).
+
+- [✓] Every accepted piece was understood and verified by humans (testing/review).
+
+- [✓] Citations/Attributions included where applicable.
+
+- [✓] AI was used without providing personal/sensitive data that could be exposed to external tools.
 
 ## Registro detallado de uso de AI por Sprint
 
-**Use una fila por “uso realmente significativo”** (idea sugerida por la IA, trozo de código importante modificado, depuración de error que no eras capaz de resolver por tu cuenta, generación de pruebas para el código de producción, etc.). No incluya filas para detalles nímios como el autocompletado de variables o signaturas de métodos, o la generación de código simple (recorridos y procesamiento de estructuras de datos, formateo  y/o creación de estilos CSS, etc.).
+**Use una fila por “uso realmente significativo”** (idea sugerida por la IA, trozo de código importante modificado, depuración de error que no eras capaz de resolver por tu cuenta, generación de pruebas para el código de producción, etc.). No incluya filas para detalles mínimos como el autocompletado de variables o signaturas de métodos, o la generación de código simple (recorridos y procesamiento de estructuras de datos, formateo  y/o creación de estilos CSS, etc.).
 
 ### Sprint 1 registro detallado de uso de IA por sprint
 
@@ -183,7 +224,8 @@ What could be the cause of this error? | Code | GameServiceTests.java | Self-
 
 | # | Fecha y hora | Sprint | Integrante(s) | **Herramienta & versión** | **Acceso** | **Enlace a conversación / Prompt** | **Finalidad** | **Artefactos afectados** | **Verificación humana** | **Riesgos & mitigaciones** | **Resultado** |
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
-| 4.1 | <!-- 04/09/2025 18:40 --> | 4 | <!-- Nombre --> | <!-- p.ej., ChatGPT (GPT-5, OpenAI, 2025) --> | <!-- web/plugin/integración --> | <!-- URL al chat o prompt resumido --> | <!-- idea / código / depuración / pruebas / documentación técnica* --> | <!-- ficheros, issue, PR, commit --> | <!-- pruebas, revisión por pares, reasoning propio --> | <!-- plagio, licencias, datos personales; mitigación --> | <!-- aceptado / rechazado / aceptado con cambios parciales --> |
+| 4.1 | 29/12/2025 | 4 | Domingo | Copilot | Visual Studio Code | I want to refactorize the project at all, give me some ideas about what should I change. | Ideas | General | Self-revision | Copilot did not understand well some files. | Accepted with changes |
+| 4.2 | 29/12/2025 | 4 | Domingo | Copilot | Visual Studio Code | I want to implement notifications when a friendship is accepted or rejected | Code | friendslist.js | Self-revision | None | Accepted with changes (this was simply out of curiosity, I wanted to know how to implement it and I accepted.) |
 
 ## Conclusiones finales sobre el uso de la IA en el proyecto
 Aqui debéis reflexionar sobre el papel que ha tenido la IA en la realización de vuestro proyecto y las maneras que consideráis que son más adecuadas para su uso en este contexto. Si tenéis alguna curiosida o caso que sea reseñable y pueda ser útil que los profesor conozcamos de cara a orientar a otros compañeros a este respecto podéis incluirlas aquí también.
