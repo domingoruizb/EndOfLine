@@ -44,9 +44,9 @@ import io.qameta.allure.Owner;
  *
  */
 
- @Epic("Users & Admin Module")
- @Feature("Authentication")
- @Owner("DP1-tutors")
+@Epic("Users & Admin Module")
+@Feature("Authentication")
+@Owner("DP1-tutors")
 @WebMvcTest(value = AuthController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = {
 		SecurityAutoConfiguration.class })
 class AuthControllerTests {
