@@ -101,7 +101,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void findAllGamesTest() throws Exception {
+    void testFindAllGames() throws Exception {
         when(gameService.findAll()).thenReturn(List.of(game));
 
         mockMvc.perform(get(BASE_URL))
@@ -115,7 +115,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void getGameByIdTest() throws Exception {
+    void testGetGameById() throws Exception {
         when(gameService.getGameById(100)).thenReturn(game);
 
         mockMvc.perform(get(BASE_URL + "/{id}", 100))
@@ -128,7 +128,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void getGameByIdNotFoundTest() throws Exception {
+    void testGetGameByIdNotFound() throws Exception {
         when(gameService.getGameById(999)).thenThrow(new GameNotFoundException(999));
 
         mockMvc.perform(get(BASE_URL + "/{id}", 999))
@@ -138,7 +138,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void createGameTest() throws Exception {
+    void testCreateGame() throws Exception {
         when(userService.findCurrentUser()).thenReturn(host);
         when(gameService.createGame(host)).thenReturn(game);
 
@@ -152,7 +152,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "guestUser", authorities = {"PLAYER"})
-    void joinGameTest() throws Exception {
+    void testJoinGame() throws Exception {
         String code = "ABC1234";
         
         Game joinedGame = new Game();
@@ -179,7 +179,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "guestUser", authorities = {"PLAYER"})
-    void joinGameNotFoundTest() throws Exception {
+    void testJoinGameNotFound() throws Exception {
         String invalidCode = "INVALID";
         when(userService.findCurrentUser()).thenReturn(player2);
         when(gameService.joinGameByCode(player2, invalidCode)).thenThrow(new GameNotFoundException(invalidCode));
@@ -192,7 +192,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void startGameTest() throws Exception {
+    void testStartGame() throws Exception {
         game.setStartedAt(LocalDateTime.now());
         game.setRound(1);
 
@@ -210,7 +210,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void startGameBadRequestTest() throws Exception {
+    void testStartGameBadRequest() throws Exception {
         when(gameService.getGameById(100)).thenReturn(game);
         when(gameService.startGame(game)).thenThrow(new GameBadRequestException("Game needs to have 2 players"));
 
@@ -223,7 +223,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void giveUpTest() throws Exception {
+    void testGiveUp() throws Exception {
         game.setWinner(player2);
         game.setEndedAt(LocalDateTime.now());
 
@@ -240,7 +240,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void setUpSkillTest() throws Exception {
+    void testSetUpSkill() throws Exception {
         SkillRequestDTO skillRequest = new SkillRequestDTO();
         skillRequest.setSkill("SPEED_UP");
 
@@ -261,7 +261,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void setUpSkillInvalidEnumTest() throws Exception {
+    void testSetUpSkillInvalidEnum() throws Exception {
         String invalidJson = "{ \"skill\": \"SUPER_POWER_NOT_EXIST\" }";
 
         mockMvc.perform(post(BASE_URL + "/{gameId}/skill", 100)
@@ -274,7 +274,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "hostUser", authorities = {"PLAYER"})
-    void deleteGameTest() throws Exception {
+    void testDeleteGame() throws Exception {
         when(gameService.getGameById(100)).thenReturn(game);
         doNothing().when(gameService).deleteGame(game);
 
@@ -288,7 +288,7 @@ public class GameControllerTests {
 
     @Test
     @WithMockUser(username = "guestUser", authorities = {"PLAYER"})
-    void deleteGameNotAllowedTest() throws Exception {
+    void testDeleteGameNotAllowed() throws Exception {
         when(gameService.getGameById(100)).thenReturn(game);
         doThrow(new GameBadRequestException("Only the host can delete the game"))
             .when(gameService).deleteGame(game);

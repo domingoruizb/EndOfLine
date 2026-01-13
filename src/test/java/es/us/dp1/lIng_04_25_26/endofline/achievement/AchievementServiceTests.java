@@ -17,100 +17,100 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureTestDatabase
 public class AchievementServiceTests {
 
-        @Autowired
-        private AchievementService achievementService;
-    
-        @Autowired
-        private jakarta.validation.Validator validator;
+    @Autowired
+    private AchievementService achievementService;
 
-        private Achievement createTestAchievement() {
-            Achievement achievement = new Achievement();
-            achievement.setName("Test achievement");
-            achievement.setDescription("This is a test achievement");
-            achievement.setBadgeImage("https://example.com/badgeImage.jpg");
-            achievement.setThreshold(100.0);
-            achievement.setCategory(Category.GAMES_PLAYED);
-            return achievement;
-        }
-    
-    
-        @Test
-        void findAllAchievementsTest() {
-            List<Achievement> achievements = this.achievementService.getAllAchievementsRaw();
-            assertNotNull(achievements);
-            assertFalse(achievements.isEmpty());
-        }
+    @Autowired
+    private jakarta.validation.Validator validator;
+
+    private Achievement createTestAchievement() {
+        Achievement achievement = new Achievement();
+        achievement.setName("Test achievement");
+        achievement.setDescription("This is a test achievement");
+        achievement.setBadgeImage("https://example.com/badgeImage.jpg");
+        achievement.setThreshold(100.0);
+        achievement.setCategory(Category.GAMES_PLAYED);
+        return achievement;
+    }
 
 
-        @Test
-        void findAchievementByIdTest() {
-            Achievement achievement = this.achievementService.getAchievementById(1);
-            assertNotNull(achievement);
-            assertEquals(1, achievement.getId());
-        }
+    @Test
+    void testFindAllAchievements() {
+        List<Achievement> achievements = this.achievementService.getAllAchievementsRaw();
+        assertNotNull(achievements);
+        assertFalse(achievements.isEmpty());
+    }
 
 
-        @Test
-        void notFindAchievementByIdTest() {
-            assertThrows(AchievementNotFoundException.class, () -> this.achievementService.getAchievementById(404));
-        }
+    @Test
+    void testFindAchievementById() {
+        Achievement achievement = this.achievementService.getAchievementById(1);
+        assertNotNull(achievement);
+        assertEquals(1, achievement.getId());
+    }
 
 
-        @Test
-        @Transactional
-        public void insertAchievementTest() {
-            int count = this.achievementService.getAllAchievementsRaw().size();
-            achievementService.saveAchievement(createTestAchievement());
-            int count2 = this.achievementService.getAllAchievementsRaw().size();
-            assertEquals(count + 1, count2);
-        }
+    @Test
+    void testNotFindAchievementById() {
+        assertThrows(AchievementNotFoundException.class, () -> this.achievementService.getAchievementById(404));
+    }
 
 
-        @Test
-        @Transactional
-        public void updateAchievementTest() {
-            Achievement achievement = this.achievementService.getAchievementById(1);
-            String oldName = achievement.getName();
-            achievement.setName("Updated name");
-            
-            achievementService.updateAchievement(1, achievement);
-            
-            Achievement updated = this.achievementService.getAchievementById(1);
-            assertEquals("Updated name", updated.getName());
-            assertNotEquals(oldName, updated.getName());
-        }
+    @Test
+    @Transactional
+    public void testInsertAchievement() {
+        int count = this.achievementService.getAllAchievementsRaw().size();
+        achievementService.saveAchievement(createTestAchievement());
+        int count2 = this.achievementService.getAllAchievementsRaw().size();
+        assertEquals(count + 1, count2);
+    }
 
 
-        @Test
-        void updateAchievementWithWrongIdTest() {
-            Achievement achievement = createTestAchievement();
-            assertThrows(AchievementNotFoundException.class, () -> {
-                achievementService.updateAchievement(999, achievement);
-            });
-        }
+    @Test
+    @Transactional
+    public void testUpdateAchievement() {
+        Achievement achievement = this.achievementService.getAchievementById(1);
+        String oldName = achievement.getName();
+        achievement.setName("Updated name");
+        
+        achievementService.updateAchievement(1, achievement);
+        
+        Achievement updated = this.achievementService.getAchievementById(1);
+        assertEquals("Updated name", updated.getName());
+        assertNotEquals(oldName, updated.getName());
+    }
 
 
-        @Test
-        @Transactional
-        public void deleteAchievementTest() {
-            Achievement achievement = achievementService.saveAchievement(createTestAchievement());
-            int count = this.achievementService.getAllAchievementsRaw().size();
-            
-            achievementService.deleteAchievement(achievement.getId());
-            
-            int count2 = this.achievementService.getAllAchievementsRaw().size();
-            assertEquals(count - 1, count2);
-        }
+    @Test
+    void testUpdateAchievementWithWrongId() {
+        Achievement achievement = createTestAchievement();
+        assertThrows(AchievementNotFoundException.class, () -> {
+            achievementService.updateAchievement(999, achievement);
+        });
+    }
 
 
-        @Test
-        void createAchievementWithInvalidDataShouldFail() {
-            Achievement a = new Achievement();
-            a.setName("");
-            a.setThreshold(-10.0);
+    @Test
+    @Transactional
+    public void testDeleteAchievement() {
+        Achievement achievement = achievementService.saveAchievement(createTestAchievement());
+        int count = this.achievementService.getAllAchievementsRaw().size();
+        
+        achievementService.deleteAchievement(achievement.getId());
+        
+        int count2 = this.achievementService.getAllAchievementsRaw().size();
+        assertEquals(count - 1, count2);
+    }
 
-            var violations = validator.validate(a);
-            assertFalse(violations.isEmpty(), "There should be validation violations");
-        }
+
+    @Test
+    void testFailCreateAchievementWithInvalidData() {
+        Achievement a = new Achievement();
+        a.setName("");
+        a.setThreshold(-10.0);
+
+        var violations = validator.validate(a);
+        assertFalse(violations.isEmpty(), "There should be validation violations");
+    }
 
 }

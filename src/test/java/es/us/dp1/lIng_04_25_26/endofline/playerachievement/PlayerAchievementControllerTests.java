@@ -1,128 +1,141 @@
 package es.us.dp1.lIng_04_25_26.endofline.playerachievement;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
-import es.us.dp1.lIng_04_25_26.endofline.playerachievement.PlayerAchievementDTO;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import es.us.dp1.lIng_04_25_26.endofline.achievement.Achievement;
+import es.us.dp1.lIng_04_25_26.endofline.configuration.SecurityConfiguration;
+import es.us.dp1.lIng_04_25_26.endofline.user.User;
+import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureTestDatabase
+@WebMvcTest(controllers = PlayerAchievementController.class,
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
+    excludeAutoConfiguration = SecurityConfiguration.class)
 class PlayerAchievementControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockBean
+    private PlayerAchievementService playerAchievementService;
 
-    private static final String BASE_URL = "/api/v1/playerachievements";
+    @MockBean
+    private UserService userService;
+
+    private User user;
+    private Achievement achievement;
+    private PlayerAchievement playerAchievement;
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setId(1);
+        user.setUsername("testPlayer");
+        user.setPassword("password");
+
+        achievement = new Achievement();
+        achievement.setId(100);
+        achievement.setName("Test Achievement");
+
+        playerAchievement = PlayerAchievement.build(user, achievement, LocalDateTime.now());
+        playerAchievement.setId(1);
+    }
+
+
+    @Test
+    @WithMockUser(username = "testPlayer", authorities = {"PLAYER"})
+    void testFindAllPlayerAchievementsForCurrentUser() throws Exception {
+        given(userService.findCurrentUser()).willReturn(user);
+        given(playerAchievementService.findAllByUserId(user.getId())).willReturn(List.of(playerAchievement));
+
+        mockMvc.perform(get("/api/v1/playerachievements")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].userId", is(1)))
+                .andExpect(jsonPath("$[0].achievementId", is(100)))
+                .andExpect(jsonPath("$[0].userName", is("testPlayer")));
+    }
+
+
+    @Test
+    @WithMockUser(username = "testPlayer", authorities = {"PLAYER"})
+    void testEmptyListWhenNoAchievements() throws Exception {
+        given(userService.findCurrentUser()).willReturn(user);
+        given(playerAchievementService.findAllByUserId(user.getId())).willReturn(List.of());
+
+        mockMvc.perform(get("/api/v1/playerachievements")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testFindPlayerAchievementsById() throws Exception {
+        given(playerAchievementService.findAllByAchievementId(100)).willReturn(List.of(playerAchievement));
+
+        mockMvc.perform(get("/api/v1/playerachievements/achievement/{achievementId}", 100)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].achievementId", is(100)));
+    }
+
 
     @Test
     @WithMockUser(username = "player1", authorities = {"PLAYER"})
-    void testFindAll() throws Exception {
-        mockMvc.perform(get(BASE_URL))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", not(empty())))
-            .andExpect(jsonPath("$[0].id", notNullValue()))
-            .andExpect(jsonPath("$[0].userId", notNullValue()))
-            .andExpect(jsonPath("$[0].achievementId", notNullValue()));
+    void testReturnEmptyListIfAchievementHasNotBeenObtainedByAnyone() throws Exception {
+        given(playerAchievementService.findAllByAchievementId(999)).willReturn(List.of());
+
+        mockMvc.perform(get("/api/v1/playerachievements/achievement/{achievementId}", 999)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
+
 
     @Test
-    @WithMockUser(username = "player1", authorities = {"PLAYER"})
-    void testFindById() throws Exception {
-        mockMvc.perform(get(BASE_URL + "/1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.userId").value(4))
-            .andExpect(jsonPath("$.achievementId").value(1));
+    @WithMockUser(username = "testPlayer", authorities = {"PLAYER"})
+    void testReturnUnlockedAchievementIds() throws Exception {
+        given(userService.findCurrentUser()).willReturn(user);
+        given(playerAchievementService.findAchievementIdsByUserId(user.getId())).willReturn(List.of(100, 101));
+
+        mockMvc.perform(get("/api/v1/playerachievements/ids")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ids", hasSize(2)))
+                .andExpect(jsonPath("$.ids[0]", is(100)))
+                .andExpect(jsonPath("$.ids[1]", is(101)));
     }
+
 
     @Test
-    @WithMockUser(username = "admin1", roles = {"ADMIN"})
-    void testFindByIdNotFound() throws Exception {
-        mockMvc.perform(get(BASE_URL + "/99999"))
-            .andExpect(status().is4xxClientError());
+    void testReturn401WhenNotAuthenticated() throws Exception {
+        mockMvc.perform(get("/api/v1/playerachievements"))
+                .andExpect(status().isUnauthorized());
     }
 
-    @Test
-    @WithMockUser(username = "player1", authorities = {"PLAYER"})
-    void testCreate() throws Exception {
-        String jsonBody = """
-        {
-          "userId": 4,
-          "achievementId": 2,
-          "achievedAt": "2024-12-01T10:00:00"
-        }
-        """;
-
-        mockMvc.perform(
-                post(BASE_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonBody)
-            )
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id", notNullValue()))
-            .andExpect(jsonPath("$.userId").value(4))
-            .andExpect(jsonPath("$.achievementId").value(2));
-    }
-
-    @Test
-    @WithMockUser(username = "admin1", roles = {"ADMIN"})
-    void testCreateUserNotFound() throws Exception {
-
-        PlayerAchievementDTO dto = new PlayerAchievementDTO();
-        dto.setUser_id(99999);
-        dto.setAchievement_id(1);
-        dto.setAchieved_at(LocalDateTime.now());
-
-        mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-            .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    @WithMockUser(username = "admin1", roles = {"ADMIN"})
-    void testCreateAchievementNotFound() throws Exception {
-
-        PlayerAchievementDTO dto = new PlayerAchievementDTO();
-        dto.setUser_id(4);
-        dto.setAchievement_id(99999);
-        dto.setAchieved_at(LocalDateTime.now());
-
-        mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-            .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    @WithMockUser(username = "player1", authorities = {"PLAYER"})
-    void testDelete() throws Exception {
-        mockMvc.perform(delete(BASE_URL + "/1"))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(username = "player1", authorities = {"PLAYER"})
-    void testDeleteNonExisting() throws Exception {
-        mockMvc.perform(delete(BASE_URL + "/9999"))
-            .andExpect(status().isOk());
-    }
 }

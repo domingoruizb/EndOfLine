@@ -8,15 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
-import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthorityNotFoundException;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
@@ -32,39 +34,37 @@ class AuthoritiesServiceTests {
 //	private UserService userService;
 
 	@Autowired
-	private AuthoritiesService authService;
+	private AuthorityService authorityService;
+
 
 	@Test
-	void shouldFindAllAuthorities() {
-		List<Authorities> auths = (List<Authorities>) this.authService.findAll();
+	void testFindAllAuthorities() {
+		List<Authority> auths = (List<Authority>) this.authorityService.findAll();
 		assertEquals(2, auths.size());
 	}
 
-	@Test
-	void shouldFindAuthoritiesByAuthority() {
-		Authorities auth = this.authService.findByAuthority("ADMIN");
-		assertEquals("ADMIN", auth.getAuthority());
-	}
 
 	@Test
-	void shouldNotFindAuthoritiesByIncorrectAuthority() {
-		assertThrows(ResourceNotFoundException.class, () -> this.authService.findByAuthority("authnotexists"));
-	}
+    void testFindAuthorityByType() {
+        Authority auth = this.authorityService.findAuthorityByType("ADMIN");
+        assertNotNull(auth);
+        assertEquals("ADMIN", auth.getType());
+    }
+
 
 	@Test
-	@Transactional
-	void shouldInsertAuthorities() {
-		int count = ((Collection<Authorities>) this.authService.findAll()).size();
+    void testFindAuthorityByTypePrefix() {
+        Authority auth = this.authorityService.findAuthorityByType("ADM");
+        assertNotNull(auth);
+        assertEquals("ADMIN", auth.getType());
+    }
 
-		Authorities auth = new Authorities();
-		auth.setAuthority("CLIENT");
 
-		this.authService.saveAuthorities(auth);
-		assertNotEquals(0, auth.getId().longValue());
-		assertNotNull(auth.getId());
-
-		int finalCount = ((Collection<Authorities>) this.authService.findAll()).size();
-		assertEquals(count + 1, finalCount);
-	}
+	@Test
+    void testNotFindAuthorityByIncorrectType() {
+        assertThrows(AuthorityNotFoundException.class, () -> {
+            this.authorityService.findAuthorityByType("NON_EXISTENT_AUTH");
+        });
+    }
 
 }

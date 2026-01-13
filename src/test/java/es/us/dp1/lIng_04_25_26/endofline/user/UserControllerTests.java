@@ -1,8 +1,5 @@
-// ------------- ARCHIVO COMPLETO CON TESTS AÑADIDOS -------------
-
 package es.us.dp1.lIng_04_25_26.endofline.user;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -22,312 +19,245 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
+import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.SecurityConfiguration;
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.AccessDeniedException;
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
-import es.us.dp1.lIng_04_25_26.endofline.user.Authorities;
-import es.us.dp1.lIng_04_25_26.endofline.user.AuthoritiesService;
-import es.us.dp1.lIng_04_25_26.endofline.user.User;
-import es.us.dp1.lIng_04_25_26.endofline.user.UserController;
-import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import es.us.dp1.lIng_04_25_26.endofline.game.GameService;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.UserNotFoundException;
 
-@Epic("Users & Admin Module")
-@Feature("Users Management")
-@Owner("DP1-tutors")
-@WebMvcTest(controllers = UserController.class,
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
-    excludeAutoConfiguration = SecurityConfiguration.class)
+@WebMvcTest(UserController.class)
 class UserControllerTests {
 
     private static final int TEST_USER_ID = 1;
-    private static final int TEST_AUTH_ID = 1;
     private static final String BASE_URL = "/api/v1/users";
 
     @Autowired
-    private UserController userController;
+    private MockMvc mockMvc;
 
     @MockBean
     private UserService userService;
 
     @MockBean
-    private AuthoritiesService authService;
+    private AuthorityService authorityService;
+
+    @MockBean
+    private GameService gameService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    private Authorities auth;
-    private User user, logged;
+    private Authority adminAuth;
+    private User testUser;
+    private UserDTO testUserDTO;
 
     @BeforeEach
     void setup() {
-        auth = new Authorities();
-        auth.setId(TEST_AUTH_ID);
-        auth.setAuthority("VET");
+        adminAuth = new Authority();
+        adminAuth.setId(1);
+        adminAuth.setType("ADMIN");
 
-        user = new User();
-        user.setId(1);
-        user.setUsername("user");
-        user.setPassword("password");
-        user.setBirthdate(LocalDate.parse("1990-01-01"));
-        user.setEmail("email");
-        user.setName("name");
-        user.setSurname("surname");
-        user.setAvatar("avatar");
-        user.setAuthority(auth);
+        testUser = new User();
+        testUser.setId(TEST_USER_ID);
+        testUser.setUsername("testuser");
+        testUser.setName("Juan");
+        testUser.setSurname("Alcalá");
+        testUser.setEmail("test@example.com");
+        testUser.setBirthdate(LocalDate.of(1990, 1, 1));
+        testUser.setPassword("password123");
+        testUser.setAuthority(adminAuth);
 
-        when(this.userService.findCurrentUser()).thenReturn(
-            getUserFromDetails((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+        testUserDTO = new UserDTO(testUser);
+        when(userService.findCurrentUser()).thenReturn(testUser);
     }
 
-    private User getUserFromDetails(UserDetails details) {
-        logged = new User();
-        logged.setUsername(details.getUsername());
-        logged.setPassword(details.getPassword());
-
-        Authorities aux = new Authorities();
-        for (GrantedAuthority auth : details.getAuthorities()) {
-            aux.setAuthority(auth.getAuthority());
-        }
-        logged.setAuthority(aux);
-        return logged;
-    }
-
-    // ---------------- TESTS EXISTENTES (NO MODIFICADOS) ----------------
-    // (Los mantengo tal y como estaban.)
 
     @Test
-    @WithMockUser("admin")
-    void shouldFindAll() throws Exception {
-        User sara = new User();
-        sara.setId(2);
-        sara.setUsername("Sara");
-
-        User juan = new User();
-        juan.setId(3);
-        juan.setUsername("Juan");
-
-        when(this.userService.findAll()).thenReturn(List.of(user, sara, juan));
+    @WithMockUser(authorities = "ADMIN")
+    void testFindAllPaginated() throws Exception {
+        Page<User> page = new PageImpl<>(List.of(testUser));
+        when(userService.findAllExceptMyself(any(Pageable.class))).thenReturn(page);
 
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(3))
-                .andExpect(jsonPath("$[?(@.id == 1)].username").value("user"))
-                .andExpect(jsonPath("$[?(@.id == 2)].username").value("Sara"))
-                .andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
+                .andExpect(jsonPath("$.content.size()").value(1));
     }
 
-    @Test
-    @WithMockUser("admin")
-    void shouldFindAllWithAuthority() throws Exception {
-        Authorities aux = new Authorities();
-        aux.setId(2);
-        aux.setAuthority("AUX");
-
-        User sara = new User();
-        sara.setId(2);
-        sara.setUsername("Sara");
-        sara.setAuthority(aux);
-
-        User juan = new User();
-        juan.setId(3);
-        juan.setUsername("Juan");
-        juan.setAuthority(auth);
-
-        when(this.userService.findAllByAuthority(auth.getAuthority())).thenReturn(List.of(user, juan));
-
-        mockMvc.perform(get(BASE_URL).param("auth", "VET"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[?(@.id == 1)].username").value("user"))
-                .andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
-    }
 
     @Test
-    @WithMockUser("admin")
-    void shouldFindAllAuths() throws Exception {
-        Authorities aux = new Authorities();
-        aux.setId(2);
-        aux.setAuthority("AUX");
-
-        when(this.authService.findAll()).thenReturn(List.of(auth, aux));
-
-        mockMvc.perform(get(BASE_URL + "/authorities"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[?(@.id == 1)].authority").value("VET"))
-                .andExpect(jsonPath("$[?(@.id == 2)].authority").value("AUX"));
-    }
-
-    @Test
-    @WithMockUser("admin")
-    void shouldReturnUser() throws Exception {
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
+    @WithMockUser(authorities = "ADMIN")
+    void testFindById() throws Exception {
+        when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
 
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_ID))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(TEST_USER_ID))
-                .andExpect(jsonPath("$.username").value(user.getUsername()))
-                .andExpect(jsonPath("$.authority.authority").value(user.getAuthority().getAuthority()));
+                .andExpect(jsonPath("$.username").value("testuser"));
     }
 
-    @Test
-    @WithMockUser("admin")
-    void shouldReturnNotFoundUser() throws Exception {
-        when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
 
-        mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_ID))
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testReturn404WhenUserNotFound() throws Exception {
+        when(userService.findUser(99)).thenThrow(new UserNotFoundException(99));
+
+        mockMvc.perform(get(BASE_URL + "/99"))
                 .andExpect(status().isNotFound());
     }
 
+
     @Test
-    @WithMockUser("admin")
-    void shouldCreateUser() throws Exception {
-        User aux = new User();
-        aux.setUsername("Prueba");
-        aux.setPassword("Prueba");
-        aux.setName("name");
-        aux.setSurname("surname");
-        aux.setEmail("email");
-        aux.setBirthdate(LocalDate.parse("1990-01-01"));
-        aux.setAvatar("avatar");
-        aux.setAuthority(auth);
+    @WithMockUser(authorities = "ADMIN")
+    void testFindByUsername() throws Exception {
+        when(userService.findUser("testuser")).thenReturn(testUser);
+
+        mockMvc.perform(get(BASE_URL + "/username/testuser"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("testuser"));
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testFindMySelf() throws Exception {
+        when(userService.findCurrentUser()).thenReturn(testUser);
+
+        mockMvc.perform(get(BASE_URL + "/myself"))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testCreateUser() throws Exception {
+        when(userService.saveUser(any(User.class))).thenReturn(testUser);
 
         mockMvc.perform(post(BASE_URL).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(aux)))
+                .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    @WithMockUser("admin")
-    void shouldUpdateUser() throws Exception {
-        user.setUsername("UPDATED");
-        user.setPassword("CHANGED");
 
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testUpdateUser() throws Exception {
+        when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
+        when(userService.updateUser(any(User.class), any(UserDTO.class))).thenReturn(testUser);
 
         mockMvc.perform(put(BASE_URL + "/{id}", TEST_USER_ID).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("UPDATED"))
-                .andExpect(jsonPath("$.password").value("CHANGED"));
+                .content(objectMapper.writeValueAsString(testUserDTO)))
+                .andExpect(status().isOk());
     }
 
+
     @Test
-    @WithMockUser("admin")
-    void shouldReturnNotFoundUpdateUser() throws Exception {
-        user.setUsername("UPDATED");
-        user.setPassword("UPDATED");
+    @WithMockUser(authorities = "ADMIN")
+    void testReturnNotFoundUpdateUser() throws Exception {
+        when(userService.findUser(99)).thenThrow(new UserNotFoundException(99));
 
-        when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
-
-        mockMvc.perform(put(BASE_URL + "/{id}", TEST_USER_ID).with(csrf())
+        mockMvc.perform(put(BASE_URL + "/99").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(testUserDTO)))
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @WithMockUser("admin")
-    void shouldDeleteOtherUser() throws Exception {
-        logged.setId(2);
 
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        doNothing().when(this.userService).deleteUser(TEST_USER_ID);
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testDeleteUser() throws Exception {
+        when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
+        doNothing().when(gameService).deleteUser(any(User.class));
 
         mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_ID).with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("User deleted!"));
+                .andExpect(status().isOk());
     }
 
+
     @Test
-    @WithMockUser("admin")
-    void shouldAllowDeleteLoggedUser() throws Exception {
-        logged.setId(TEST_USER_ID);
+    @WithMockUser(authorities = "ADMIN")
+    void testReturnNotFoundDeleteUser() throws Exception {
+        when(userService.findUser(99)).thenThrow(new UserNotFoundException(99));
 
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        doNothing().when(this.userService).deleteUser(TEST_USER_ID);
-
-        mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_ID).with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("User deleted!"));
+        mockMvc.perform(delete(BASE_URL + "/99").with(csrf()))
+                .andExpect(status().isNotFound());
     }
 
-    // --------------------------------------------------------------
-    // ---------------------- NUEVOS TESTS AÑADIDOS ------------------
-    // --------------------------------------------------------------
 
-    // ❗ POST: body inválido
     @Test
-    @WithMockUser("admin")
-    void shouldFailCreateUserWithInvalidBody() throws Exception {
-        User invalid = new User(); // sin username, password...
-
+    @WithMockUser(authorities = "ADMIN")
+    void testFailCreateUserWhenDataIsInvalid() throws Exception {
+        User invalidUser = new User();
+        
         mockMvc.perform(post(BASE_URL).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalid)))
+                .content(objectMapper.writeValueAsString(invalidUser)))
                 .andExpect(status().isBadRequest());
     }
 
-    // ❗ POST: username repetido
-    @Test
-    @WithMockUser("admin")
-    void shouldFailCreateUserDuplicatedUsername() throws Exception {
-        User aux = new User();
-        aux.setUsername("user"); // repetido
-        aux.setPassword("pwd");
 
-        when(this.userService.saveUser(any(User.class)))
-                .thenThrow(new IllegalArgumentException("Username already exists"));
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testFailCreateUserWithDuplicatedEmail() throws Exception {
+        when(userService.saveUser(any(User.class)))
+                .thenThrow(new RuntimeException("Email already exists"));
 
         mockMvc.perform(post(BASE_URL).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(aux)))
+                .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isBadRequest());
     }
 
-    // ❗ PUT: AccessDeniedException
+
     @Test
-    @WithMockUser("player1")
-    void shouldFailUpdateUserForbidden() throws Exception {
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        when(this.userService.updateUser(any(User.class), any(Integer.class)))
-                .thenThrow(new AccessDeniedException("Forbidden"));
+    @WithMockUser(authorities = "ADMIN")
+    void testReturn404WhenUsernameNotFound() throws Exception {
+        when(userService.findUser("nonexistent")).thenThrow(new UserNotFoundException("nonexistent"));
+
+        mockMvc.perform(get(BASE_URL + "/username/nonexistent"))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testFailUpdateUserWhenUsernameAlreadyExists() throws Exception {
+        when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
+        when(userService.updateUser(any(User.class), any(UserDTO.class)))
+                .thenThrow(new RuntimeException("Username already exists"));
 
         mockMvc.perform(put(BASE_URL + "/{id}", TEST_USER_ID).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isForbidden());
+                .content(objectMapper.writeValueAsString(testUserDTO)))
+                .andExpect(status().isBadRequest());
     }
 
-    // ❗ DELETE: not found
+
     @Test
-    @WithMockUser("admin")
-    void shouldReturnNotFoundDeleteUser() throws Exception {
-        when(this.userService.findUser(TEST_USER_ID))
-                .thenThrow(ResourceNotFoundException.class);
-
-        mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_ID).with(csrf()))
-                .andExpect(status().isNotFound());
+    void testReturn401WhenAnonymousAccess() throws Exception {
+        mockMvc.perform(get(BASE_URL))
+                .andExpect(status().isUnauthorized());
     }
+
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testFindAllAuthoritiesCorrectly() throws Exception {
+        when(authorityService.findAll()).thenReturn(List.of(adminAuth));
+
+        mockMvc.perform(get(BASE_URL + "/authorities"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].type").value("ADMIN"));
+    }
+
 }

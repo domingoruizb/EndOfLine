@@ -79,7 +79,7 @@ class MessageControllerTests {
 
     @Test
     @WithMockUser(username = "player1")
-    void shouldSaveMessageSuccessfully() throws Exception {
+    void testSaveMessageSuccessfully() throws Exception {
         when(userService.findCurrentUser()).thenReturn(testUser);
         when(gameService.getGameById(100)).thenReturn(testGame);
         when(messageService.saveMessage(any(MessageRequestDTO.class), eq(testUser), eq(testGame)))
@@ -98,7 +98,7 @@ class MessageControllerTests {
 
     @Test
     @WithMockUser(username = "player1")
-    void shouldNotSaveMessage_ValidationErrors() throws Exception {
+    void testNotSaveMessage_ValidationErrors() throws Exception {
         MessageRequestDTO invalidRequest = new MessageRequestDTO("");
 
         mockMvc.perform(post(BASE_URL + "/100")
@@ -111,7 +111,7 @@ class MessageControllerTests {
 
     @Test
     @WithMockUser(username = "player1")
-    void shouldNotSaveMessage_GameNotFound() throws Exception {
+    void testNotSaveMessage_GameNotFound() throws Exception {
 
         when(userService.findCurrentUser()).thenReturn(testUser);
         when(gameService.getGameById(999)).thenThrow(new ResourceNotFoundException("Game not found"));
@@ -126,7 +126,7 @@ class MessageControllerTests {
 
     @Test
     @WithMockUser(username = "player1")
-    void shouldGetMessages_WithoutSince() throws Exception {
+    void testGetMessages_WithoutSince() throws Exception {
         List<MessageResponseDTO> messages = List.of(responseDTO);
         when(messageService.getMessagesBySince(100, null)).thenReturn(messages);
 
@@ -140,7 +140,7 @@ class MessageControllerTests {
 
     @Test
     @WithMockUser(username = "player1")
-    void shouldGetMessages_WithSince() throws Exception {
+    void testGetMessages_WithSince() throws Exception {
         Long sinceTimestamp = 1700000000L;
         List<MessageResponseDTO> messages = List.of(responseDTO);
         
@@ -156,7 +156,7 @@ class MessageControllerTests {
 
     @Test
     @WithMockUser(username = "player1")
-    void shouldHandleInvalidSinceParam() throws Exception {
+    void testHandleInvalidSinceParam() throws Exception {
         mockMvc.perform(get(BASE_URL + "/100")
                 .param("since", "invalid-timestamp")
                 .contentType(MediaType.APPLICATION_JSON))

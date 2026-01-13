@@ -115,7 +115,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void isPlacementValidFirstTurnHostSuccess() {
+    void testIsPlacementValidFirstTurnHostSuccess() {
         Integer validIndex = 23;
         
         gamePlayerUtilsMock.when(() -> GamePlayerUtils.isHost(gamePlayer)).thenReturn(true);
@@ -128,7 +128,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void isPlacementValidOccupiedPositionFail() {
+    void testIsPlacementValidOccupiedPositionFail() {
         Integer targetIndex = 23;
         List<GamePlayerCard> board = new ArrayList<>();
         
@@ -159,7 +159,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void placeCardSuccessFirstMove() throws Exception {
+    void testPlaceCardSuccessFirstMove() throws Exception {
         Integer validIndex = 23;
         
         gamePlayerUtilsMock.when(() -> GamePlayerUtils.isValidTurn(gamePlayer)).thenReturn(true);
@@ -181,7 +181,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void placeCardTurnForbiddenException() {
+    void testPlaceCardTurnForbiddenException() {
         gamePlayerUtilsMock.when(() -> GamePlayerUtils.isValidTurn(gamePlayer)).thenReturn(false);
 
         assertThrows(TurnForbiddenException.class, () -> {
@@ -191,7 +191,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void placeCardCardForbiddenExceptionInvalidPosition() {
+    void testPlaceCardCardForbiddenExceptionInvalidPosition() {
         Integer invalidIndex = 99;
 
         gamePlayerUtilsMock.when(() -> GamePlayerUtils.isValidTurn(gamePlayer)).thenReturn(true);
@@ -206,7 +206,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void placeCardWithReverseSkillSuccess() throws Exception {
+    void testPlaceCardWithReverseSkillSuccess() throws Exception {
         game.setSkill(Skill.REVERSE);
         Integer validIndex = 23;
 
@@ -224,7 +224,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void checkOpponentOpponentHasNoMovesShouldLose() {
+    void testCheckOpponentOpponentHasNoMovesShouldLose() {
         GamePlayerCard opponentLastCard = new GamePlayerCard();
         opponentLastCard.setGamePlayer(opponent);
         opponentLastCard.setCard(card);
@@ -258,7 +258,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void getStateSuccess() {
+    void testGetStateSuccess() {
         gamePlayerUtilsMock.when(() -> GamePlayerUtils.isValidTurn(gamePlayer)).thenReturn(true);
         gamePlayerUtilsMock.when(() -> GamePlayerUtils.isHost(gamePlayer)).thenReturn(true);
         
@@ -276,7 +276,7 @@ public class BoardServiceTests {
 
 
     @Test
-    void getStateSpectator() {
+    void testGetStateSpectator() {
         when(gamePlayerCardService.getLastPlacedCard(gamePlayer)).thenReturn(null);
         when(gamePlayerCardService.getByGame(game)).thenReturn(new ArrayList<>());
         when(cardService.getDeckCards(gamePlayer)).thenReturn(new ArrayList<>());
@@ -286,4 +286,5 @@ public class BoardServiceTests {
         assertTrue(result.getSpectating());
         assertTrue(result.getPlaceable().isEmpty());
     }
+
 }

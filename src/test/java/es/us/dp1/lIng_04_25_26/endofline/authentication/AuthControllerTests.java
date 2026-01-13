@@ -104,7 +104,7 @@ class AuthControllerTests {
 
 
 	@Test
-	void shouldAuthenticateUser() throws Exception {
+	void testAuthenticateUser() throws Exception {
 		Authentication auth = Mockito.mock(Authentication.class);
 
 		when(this.jwtUtils.generateJwtToken(any(Authentication.class))).thenReturn(token);
@@ -118,7 +118,7 @@ class AuthControllerTests {
 	}
 
 	@Test
-	void shouldValidateToken() throws Exception {
+	void testValidateToken() throws Exception {
 		when(this.jwtUtils.validateJwtToken(token)).thenReturn(true);
 
 		mockMvc.perform(get(BASE_URL + "/validate").with(csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +127,7 @@ class AuthControllerTests {
 	}
 
 	@Test
-	void shouldNotValidateToken() throws Exception {
+	void testNotValidateToken() throws Exception {
 		when(this.jwtUtils.validateJwtToken(token)).thenReturn(false);
 
 		mockMvc.perform(get(BASE_URL + "/validate").with(csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +136,7 @@ class AuthControllerTests {
 	}
 
 	@Test
-	void shouldRegisterUser() throws Exception {
+	void testRegisterUser() throws Exception {
 		when(this.userService.existsUser(signupRequest.getUsername())).thenReturn(false);
 		doNothing().when(this.authService).createUser(signupRequest);
 
@@ -146,7 +146,7 @@ class AuthControllerTests {
 	}
 
 	@Test
-	void shouldNotRegisterUserWithExistingUsername() throws Exception {
+	void testNotRegisterUserWithExistingUsername() throws Exception {
 		when(this.userService.existsUser(signupRequest.getUsername())).thenReturn(true);
 
 		mockMvc.perform(post(BASE_URL + "/signup").with(csrf()).contentType(MediaType.APPLICATION_JSON)

@@ -84,7 +84,7 @@ public class GameServiceTests {
 
 
     @Test
-    void findAllGamesTest() {
+    void testFindAllGames() {
         when(gameRepository.findAll()).thenReturn(List.of(game));
         List<Game> games = gameService.findAll();
         assertFalse(games.isEmpty());
@@ -93,7 +93,7 @@ public class GameServiceTests {
 
 
     @Test
-    void findGameByIdTest() {
+    void testFindGameById() {
         when(gameRepository.findById(100)).thenReturn(Optional.of(game));
         Game found = gameService.getGameById(100);
         assertEquals(100, found.getId());
@@ -101,14 +101,14 @@ public class GameServiceTests {
 
 
     @Test
-    void findGameByIdNotFoundTest() {
+    void testFindGameByIdNotFound() {
         when(gameRepository.findById(999)).thenReturn(Optional.empty());
         assertThrows(GameNotFoundException.class, () -> gameService.getGameById(999));
     }
 
 
     @Test
-    void getGameByCodeTest() {
+    void testGetGameByCode() {
         when(gameRepository.getGameByCode("CODE12")).thenReturn(Optional.of(game));
         Game found = gameService.getGameByCode("CODE12");
         assertEquals(game, found);
@@ -116,14 +116,14 @@ public class GameServiceTests {
 
 
     @Test
-    void getGameByCodeNotFoundTest() {
+    void testGetGameByCodeNotFound() {
         when(gameRepository.getGameByCode("INVALID")).thenReturn(Optional.empty());
         assertThrows(GameNotFoundException.class, () -> gameService.getGameByCode("INVALID"));
     }
 
 
     @Test
-    void createGameTest() {
+    void testCreateGame() {
         when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Game created = gameService.createGame(host);
@@ -138,7 +138,7 @@ public class GameServiceTests {
 
 
     @Test
-    void joinGameByCodeTest() {
+    void testJoinGameByCode() {
         game.getGamePlayers().add(gpHost);
         
         when(gameRepository.getGameByCode("CODE12")).thenReturn(Optional.of(game));
@@ -152,7 +152,7 @@ public class GameServiceTests {
 
 
     @Test
-    void startGameSuccessTest() {
+    void testStartGameSuccess() {
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
         
@@ -169,7 +169,7 @@ public class GameServiceTests {
 
 
     @Test
-    void startGameNotHostTest() {
+    void testStartGameNotHost() {
         when(userService.findCurrentUser()).thenReturn(player2);
 
         assertThrows(GameBadRequestException.class, () -> gameService.startGame(game), 
@@ -178,7 +178,7 @@ public class GameServiceTests {
 
 
     @Test
-    void startGameNotEnoughPlayersTest() {
+    void testStartGameNotEnoughPlayers() {
         game.getGamePlayers().add(gpHost);
         when(userService.findCurrentUser()).thenReturn(host);
 
@@ -188,7 +188,7 @@ public class GameServiceTests {
 
 
     @Test
-    void startGameAlreadyStartedTest() {
+    void testStartGameAlreadyStarted() {
         game.setRound(1);
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
@@ -200,7 +200,7 @@ public class GameServiceTests {
 
 
     @Test
-    void setUpSkillSuccessTest() {
+    void testSetUpSkillSuccess() {
         game.setRound(2);
         gpHost.setEnergy(1);
         gpHost.setSkillsUsed(new ArrayList<>());
@@ -216,7 +216,7 @@ public class GameServiceTests {
 
 
     @Test
-    void setUpSkillLowEnergyTest() {
+    void testSetUpSkillLowEnergy() {
         game.setRound(2);
         gpHost.setEnergy(0);
 
@@ -225,7 +225,7 @@ public class GameServiceTests {
 
 
     @Test
-    void setUpSkillFirstRoundTest() {
+    void testSetUpSkillFirstRound() {
         game.setRound(1);
         gpHost.setEnergy(3);
 
@@ -234,7 +234,7 @@ public class GameServiceTests {
 
 
     @Test
-    void advanceTurnNotFinishedTest() {
+    void testAdvanceTurnNotFinished() {
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
         
@@ -248,7 +248,7 @@ public class GameServiceTests {
 
 
     @Test
-    void startNextRoundInitiativeTest() {
+    void testStartNextRoundInitiative() {
         game.setRound(1);
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
@@ -265,7 +265,7 @@ public class GameServiceTests {
 
 
     @Test
-    void startNextRoundInitiativeTieTest() {
+    void testStartNextRoundInitiativeTie() {
         game.setRound(1);
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
@@ -280,7 +280,7 @@ public class GameServiceTests {
 
 
     @Test
-    void finalizeGameTest() {
+    void testFinalizeGame() {
         game.setStartedAt(LocalDateTime.now().minusMinutes(10));
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
@@ -298,7 +298,7 @@ public class GameServiceTests {
 
 
     @Test
-    void giveUpOrLoseTest() {
+    void testGiveUpOrLose() {
         game.getGamePlayers().add(gpHost);
         game.getGamePlayers().add(gpPlayer2);
 
@@ -315,7 +315,7 @@ public class GameServiceTests {
 
 
     @Test
-    void deleteGameAsHostTest() {
+    void testDeleteGameAsHost() {
         when(userService.findCurrentUser()).thenReturn(host);
 
         gameService.deleteGame(game);
@@ -325,7 +325,7 @@ public class GameServiceTests {
 
 
     @Test
-    void deleteGameAsNonHostTest() {
+    void testDeleteGameAsNonHost() {
         when(userService.findCurrentUser()).thenReturn(player2);
 
         assertThrows(GameBadRequestException.class, () -> gameService.deleteGame(game));
@@ -334,7 +334,7 @@ public class GameServiceTests {
 
 
     @Test
-    void deleteUserTest() {
+    void testDeleteUser() {
         User deletedUser = new User();
         deletedUser.setUsername("deleted");
 
