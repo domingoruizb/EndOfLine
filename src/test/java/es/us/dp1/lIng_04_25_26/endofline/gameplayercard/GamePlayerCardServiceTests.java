@@ -63,7 +63,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldSaveGamePlayerCard() {
+    void testSaveGamePlayerCard() {
         when(gpcRepository.save(any(GamePlayerCard.class))).thenReturn(gpc);
         
         GamePlayerCard saved = gpcService.save(gpc);
@@ -77,7 +77,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldFailWhenSavingNullGamePlayerCard() {
+    void testFailWhenSavingNullGamePlayerCard() {
         when(gpcRepository.save(null)).thenThrow(new IllegalArgumentException("Entity cannot be null"));
 
         assertThrows(IllegalArgumentException.class, () -> gpcService.save(null));
@@ -85,7 +85,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldGetLastPlacedCards() {
+    void testGetLastPlacedCards() {
         when(gpcRepository.findLastPlacedCards(gamePlayer.getId())).thenReturn(List.of(gpc));
 
         List<GamePlayerCard> results = gpcService.getLastPlacedCards(gamePlayer);
@@ -99,7 +99,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldGetLastPlacedCard_WhenCardsExist() {
+    void testGetLastPlacedCard_WhenCardsExist() {
         when(gpcRepository.findLastPlacedCards(gamePlayer.getId())).thenReturn(List.of(gpc));
 
         GamePlayerCard result = gpcService.getLastPlacedCard(gamePlayer);
@@ -111,7 +111,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldGetLastPlacedCard_WhenNoCardsExist() {
+    void testGetLastPlacedCard_WhenNoCardsExist() {
         when(gpcRepository.findLastPlacedCards(gamePlayer.getId())).thenReturn(Collections.emptyList());
 
         GamePlayerCard result = gpcService.getLastPlacedCard(gamePlayer);
@@ -122,7 +122,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldGetByGame() {
+    void testGetByGame() {
         when(gpcRepository.findByGameId(game.getId())).thenReturn(List.of(gpc));
 
         List<GamePlayerCard> results = gpcService.getByGame(game);
@@ -135,7 +135,7 @@ class GamePlayerCardServiceTests {
 
 
     @Test
-    void shouldGetInitiatives() {
+    void testGetInitiatives() {
         when(gpcRepository.findInitiatives(gamePlayer.getId())).thenReturn(List.of(1, 4, 2));
 
         List<Integer> initiatives = gpcService.getInitiatives(gamePlayer);

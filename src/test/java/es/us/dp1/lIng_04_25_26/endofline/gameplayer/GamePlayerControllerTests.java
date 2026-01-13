@@ -69,7 +69,7 @@ public class GamePlayerControllerTests {
 
     @Test
     @WithMockUser(username = "playerUser", authorities = { "PLAYER" })
-    void shouldUpdatePlayerColorSuccessfully() throws Exception {
+    void testUpdatePlayerColorSuccessfully() throws Exception {
         when(gamePlayerService.updatePlayerColor(eq(5), eq(7), any(String.class))).thenAnswer(inv -> {
             gp.setColor(Color.BLUE);
             return gp;
@@ -90,7 +90,7 @@ public class GamePlayerControllerTests {
 
     @Test
     @WithMockUser(username = "playerUser", authorities = { "PLAYER" })
-    void shouldReturnNotFoundWhenUpdatingColorForNonExistingGamePlayer() throws Exception {
+    void testReturnNotFoundWhenUpdatingColorForNonExistingGamePlayer() throws Exception {
         when(gamePlayerService.updatePlayerColor(anyInt(), anyInt(), any(String.class)))
             .thenThrow(new GamePlayerNotFoundException(20, 10));
 
@@ -104,7 +104,7 @@ public class GamePlayerControllerTests {
 
     @Test
     @WithMockUser(username = "playerUser", authorities = { "PLAYER" })
-    void shouldReturnBadRequestWhenUpdatingColorWithInvalidValue() throws Exception {
+    void testReturnBadRequestWhenUpdatingColorWithInvalidValue() throws Exception {
         when(gamePlayerService.updatePlayerColor(anyInt(), anyInt(), any(String.class)))
             .thenThrow(new IllegalArgumentException("No enum constant..."));
 

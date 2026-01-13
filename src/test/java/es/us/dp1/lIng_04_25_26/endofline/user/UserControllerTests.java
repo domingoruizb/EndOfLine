@@ -83,7 +83,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFindAllPaginated() throws Exception {
+    void testFindAllPaginated() throws Exception {
         Page<User> page = new PageImpl<>(List.of(testUser));
         when(userService.findAllExceptMyself(any(Pageable.class))).thenReturn(page);
 
@@ -95,7 +95,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFindById() throws Exception {
+    void testFindById() throws Exception {
         when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
 
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_ID))
@@ -106,7 +106,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldReturn404WhenUserNotFound() throws Exception {
+    void testReturn404WhenUserNotFound() throws Exception {
         when(userService.findUser(99)).thenThrow(new UserNotFoundException(99));
 
         mockMvc.perform(get(BASE_URL + "/99"))
@@ -116,7 +116,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFindByUsername() throws Exception {
+    void testFindByUsername() throws Exception {
         when(userService.findUser("testuser")).thenReturn(testUser);
 
         mockMvc.perform(get(BASE_URL + "/username/testuser"))
@@ -127,7 +127,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFindMySelf() throws Exception {
+    void testFindMySelf() throws Exception {
         when(userService.findCurrentUser()).thenReturn(testUser);
 
         mockMvc.perform(get(BASE_URL + "/myself"))
@@ -137,7 +137,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldCreateUser() throws Exception {
+    void testCreateUser() throws Exception {
         when(userService.saveUser(any(User.class))).thenReturn(testUser);
 
         mockMvc.perform(post(BASE_URL).with(csrf())
@@ -149,7 +149,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldUpdateUser() throws Exception {
+    void testUpdateUser() throws Exception {
         when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
         when(userService.updateUser(any(User.class), any(UserDTO.class))).thenReturn(testUser);
 
@@ -162,7 +162,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldReturnNotFoundUpdateUser() throws Exception {
+    void testReturnNotFoundUpdateUser() throws Exception {
         when(userService.findUser(99)).thenThrow(new UserNotFoundException(99));
 
         mockMvc.perform(put(BASE_URL + "/99").with(csrf())
@@ -174,7 +174,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldDeleteUser() throws Exception {
+    void testDeleteUser() throws Exception {
         when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
         doNothing().when(gameService).deleteUser(any(User.class));
 
@@ -185,7 +185,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldReturnNotFoundDeleteUser() throws Exception {
+    void testReturnNotFoundDeleteUser() throws Exception {
         when(userService.findUser(99)).thenThrow(new UserNotFoundException(99));
 
         mockMvc.perform(delete(BASE_URL + "/99").with(csrf()))
@@ -195,7 +195,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFailCreateUserWhenDataIsInvalid() throws Exception {
+    void testFailCreateUserWhenDataIsInvalid() throws Exception {
         User invalidUser = new User();
         
         mockMvc.perform(post(BASE_URL).with(csrf())
@@ -207,7 +207,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFailCreateUserWithDuplicatedEmail() throws Exception {
+    void testFailCreateUserWithDuplicatedEmail() throws Exception {
         when(userService.saveUser(any(User.class)))
                 .thenThrow(new RuntimeException("Email already exists"));
 
@@ -220,7 +220,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldReturn404WhenUsernameNotFound() throws Exception {
+    void testReturn404WhenUsernameNotFound() throws Exception {
         when(userService.findUser("nonexistent")).thenThrow(new UserNotFoundException("nonexistent"));
 
         mockMvc.perform(get(BASE_URL + "/username/nonexistent"))
@@ -230,7 +230,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFailUpdateUserWhenUsernameAlreadyExists() throws Exception {
+    void testFailUpdateUserWhenUsernameAlreadyExists() throws Exception {
         when(userService.findUser(TEST_USER_ID)).thenReturn(testUser);
         when(userService.updateUser(any(User.class), any(UserDTO.class)))
                 .thenThrow(new RuntimeException("Username already exists"));
@@ -243,7 +243,7 @@ class UserControllerTests {
 
 
     @Test
-    void shouldReturn401WhenAnonymousAccess() throws Exception {
+    void testReturn401WhenAnonymousAccess() throws Exception {
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isUnauthorized());
     }
@@ -251,7 +251,7 @@ class UserControllerTests {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    void shouldFindAllAuthoritiesCorrectly() throws Exception {
+    void testFindAllAuthoritiesCorrectly() throws Exception {
         when(authorityService.findAll()).thenReturn(List.of(adminAuth));
 
         mockMvc.perform(get(BASE_URL + "/authorities"))

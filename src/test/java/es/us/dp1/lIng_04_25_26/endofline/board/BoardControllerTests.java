@@ -107,7 +107,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void getStateSuccessTest() throws Exception {
+    void testGetStateSuccess() throws Exception {
         when(userService.findCurrentUser()).thenReturn(user);
         when(gameService.getGameById(GAME_ID)).thenReturn(game);
         when(gamePlayerService.isSpectating(game, user)).thenReturn(false);
@@ -124,7 +124,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "spectator", authorities = "PLAYER")
-    void getStateAsSpectatorTest() throws Exception {
+    void testGetStateAsSpectator() throws Exception {
         boardStateDTO.setSpectating(true);
 
         when(userService.findCurrentUser()).thenReturn(user);
@@ -140,7 +140,7 @@ public class BoardControllerTests {
 
 
     @Test
-    void getStateUnauthenticatedTest() throws Exception {
+    void testGetStateUnauthenticated() throws Exception {
         mockMvc.perform(get(BASE_URL + "/{gameId}/state", GAME_ID))
                 .andExpect(status().isUnauthorized());
     }
@@ -148,7 +148,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void getStateGameNotFoundTest() throws Exception {
+    void testGetStateGameNotFound() throws Exception {
         when(gameService.getGameById(99)).thenThrow(new RuntimeException("Game not found"));
 
         mockMvc.perform(get(BASE_URL + "/{gameId}/state", 99))
@@ -157,7 +157,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void changeDeckSuccessTest() throws Exception {
+    void testChangeDeckSuccess() throws Exception {
         when(userService.findCurrentUser()).thenReturn(user);
         when(gamePlayerService.getGamePlayer(GAME_ID, USER_ID)).thenReturn(gamePlayer);
         doNothing().when(cardService).changeDeck(gamePlayer);
@@ -170,7 +170,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void changeDeckTurnForbiddenTest() throws Exception {
+    void testChangeDeckTurnForbidden() throws Exception {
         when(userService.findCurrentUser()).thenReturn(user);
         when(gamePlayerService.getGamePlayer(GAME_ID, USER_ID)).thenReturn(gamePlayer);
         
@@ -184,7 +184,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void placeCardSuccessTest() throws Exception {
+    void testPlaceCardSuccess() throws Exception {
         BoardPlaceDTO placeDTO = new BoardPlaceDTO(CARD_ID, 25);
 
         when(userService.findCurrentUser()).thenReturn(user);
@@ -202,7 +202,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void placeCardValidationFailureTest() throws Exception {
+    void testPlaceCardValidationFailure() throws Exception {
         BoardPlaceDTO invalidDTO = new BoardPlaceDTO(null, null);
 
         mockMvc.perform(post(BASE_URL + "/{gameId}/place", GAME_ID)
@@ -215,7 +215,7 @@ public class BoardControllerTests {
 
     @Test
     @WithMockUser(username = "testuser", authorities = "PLAYER")
-    void placeCardForbiddenPositionTest() throws Exception {
+    void testPlaceCardForbiddenPosition() throws Exception {
         BoardPlaceDTO placeDTO = new BoardPlaceDTO(CARD_ID, 99);
 
         when(userService.findCurrentUser()).thenReturn(user);

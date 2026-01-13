@@ -38,14 +38,14 @@ class AuthoritiesServiceTests {
 
 
 	@Test
-	void shouldFindAllAuthorities() {
+	void testFindAllAuthorities() {
 		List<Authority> auths = (List<Authority>) this.authorityService.findAll();
 		assertEquals(2, auths.size());
 	}
 
 
 	@Test
-    void shouldFindAuthorityByType() {
+    void testFindAuthorityByType() {
         Authority auth = this.authorityService.findAuthorityByType("ADMIN");
         assertNotNull(auth);
         assertEquals("ADMIN", auth.getType());
@@ -53,7 +53,7 @@ class AuthoritiesServiceTests {
 
 
 	@Test
-    void shouldFindAuthorityByTypePrefix() {
+    void testFindAuthorityByTypePrefix() {
         Authority auth = this.authorityService.findAuthorityByType("ADM");
         assertNotNull(auth);
         assertEquals("ADMIN", auth.getType());
@@ -61,7 +61,7 @@ class AuthoritiesServiceTests {
 
 
 	@Test
-    void shouldNotFindAuthorityByIncorrectType() {
+    void testNotFindAuthorityByIncorrectType() {
         assertThrows(AuthorityNotFoundException.class, () -> {
             this.authorityService.findAuthorityByType("NON_EXISTENT_AUTH");
         });

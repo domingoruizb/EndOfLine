@@ -52,7 +52,7 @@ class MessageServiceTests {
     }
 
     @Test
-    void shouldSaveMessage() {
+    void testSaveMessage() {
         MessageRequestDTO request = new MessageRequestDTO("  Que pasa quillo  ");
         
         when(messageRepository.save(any(Message.class))).thenReturn(testMessage);
@@ -68,7 +68,7 @@ class MessageServiceTests {
     }
 
     @Test
-    void shouldGetMessagesBySince() {
+    void testGetMessagesBySince() {
         Integer gameId = 100;
         Long since = 1600000000L;
         
@@ -84,7 +84,7 @@ class MessageServiceTests {
     }
 
     @Test
-    void shouldGetMessagesBySince_WithNullSince() {
+    void testGetMessagesBySince_WithNullSince() {
         Integer gameId = 100;
         Long since = null;
         
@@ -97,7 +97,7 @@ class MessageServiceTests {
     }
     
     @Test
-    void shouldGetMessagesBySince_ReturnEmptyList() {
+    void testGetMessagesBySince_ReturnEmptyList() {
         Integer gameId = 100;
         Long since = 9999999999L;
         

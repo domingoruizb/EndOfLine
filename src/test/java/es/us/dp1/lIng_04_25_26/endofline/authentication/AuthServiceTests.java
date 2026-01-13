@@ -33,7 +33,7 @@ public class AuthServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldCreateAdminUser() {
+	public void testCreateAdminUser() {
 		SignupRequest request = createRequest("ADMIN", "admin2");
 		int userFirstCount = ((Collection<User>) this.userService.findAll()).size();
 		this.authService.createUser(request);
@@ -44,25 +44,20 @@ public class AuthServiceTests {
 
 	@Test
     @Transactional
-    public void shouldCreatePlayerUser() {
-        // Arrange
+    public void testCreatePlayerUser() {
         SignupRequest request = createRequest("PLAYER", "newPlayerUser");
         int userFirstCount = ((Collection<User>) this.userService.findAll()).size();
         
-        // Act
         this.authService.createUser(request);
 
-        // Assert
         int userLastCount = ((Collection<User>) this.userService.findAll()).size();
         assertEquals(userFirstCount + 1, userLastCount);
 
-        // Verificación adicional
         User savedUser = userService.findUser("newPlayerUser");
         assertNotNull(savedUser);
         assertEquals("PLAYER", savedUser.getAuthority().getType());
     }
 
-    // Método auxiliar corregido: Solo crea el objeto SignupRequest
     private SignupRequest createRequest(String auth, String username) {
         SignupRequest request = new SignupRequest();
         request.setAuthority(auth);
@@ -70,7 +65,7 @@ public class AuthServiceTests {
         request.setSurname("TestSurname");
         request.setPassword("password123");
         request.setUsername(username);
-        request.setEmail(username + "@test.com"); // Email único basado en el usuario para evitar colisiones
+        request.setEmail(username + "@test.com");
         request.setBirthdate("2000-01-01");
         request.setAvatar("https://example.com/avatar.png");
         return request;

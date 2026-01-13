@@ -64,7 +64,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFindGamePlayerById() {
+    void testFindGamePlayerById() {
         when(gamePlayerRepository.findById(1)).thenReturn(Optional.of(gp));
         GamePlayer found = gamePlayerService.getById(1);
         assertEquals(gp.getId(), found.getId());
@@ -73,14 +73,14 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailGetById_NotFound() {
+    void testFailGetById_NotFound() {
         when(gamePlayerRepository.findById(99)).thenReturn(Optional.empty());
         assertThrows(GamePlayerNotFoundException.class, () -> gamePlayerService.getById(99));
     }
 
 
     @Test
-    void shouldFindGamePlayerByGameAndUser() {
+    void testFindGamePlayerByGameAndUser() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.of(gp));
         GamePlayer found = gamePlayerService.getGamePlayer(10, 20);
         assertEquals(1, found.getId());
@@ -88,14 +88,14 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailFindGamePlayerByGameAndUser_NotFound() {
+    void testFailFindGamePlayerByGameAndUser_NotFound() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.empty());
         assertThrows(GamePlayerNotFoundException.class, () -> gamePlayerService.getGamePlayer(10, 20));
     }
 
 
     @Test
-    void shouldUpdatePlayerColor() {
+    void testUpdatePlayerColor() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.of(gp));
         when(gamePlayerRepository.save(any(GamePlayer.class))).thenAnswer(i -> i.getArguments()[0]);
 
@@ -107,7 +107,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailUpdateColor_InvalidColor() {
+    void testFailUpdateColor_InvalidColor() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.of(gp));
         assertThrows(IllegalArgumentException.class, 
             () -> gamePlayerService.updatePlayerColor(10, 20, "INVALID_COLOR"));
@@ -115,7 +115,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailUpdateColor_GamePlayerNotFound() {
+    void testFailUpdateColor_GamePlayerNotFound() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.empty());
         assertThrows(GamePlayerNotFoundException.class, 
             () -> gamePlayerService.updatePlayerColor(10, 20, "GREEN"));
@@ -123,21 +123,21 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldIdentifyAsSpectator() {
+    void testIdentifyAsSpectator() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.empty());
         assertTrue(gamePlayerService.isSpectating(game, user));
     }
 
 
     @Test
-    void shouldIdentifyAsPlayer() {
+    void testIdentifyAsPlayer() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.of(gp));
         assertFalse(gamePlayerService.isSpectating(game, user));
     }
 
 
     @Test
-    void shouldGetOpponent() {
+    void testGetOpponent() {
         GamePlayer opponent = new GamePlayer();
         opponent.setId(2);
         when(gamePlayerRepository.findOpponent(10, 1)).thenReturn(Optional.of(opponent));
@@ -148,14 +148,14 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailGetOpponent_NotFound() {
+    void testFailGetOpponent_NotFound() {
         when(gamePlayerRepository.findOpponent(10, 1)).thenReturn(Optional.empty());
         assertThrows(GamePlayerNotFoundException.class, () -> gamePlayerService.getOpponent(gp));
     }
 
 
     @Test
-    void shouldGetNextPlayer() {
+    void testGetNextPlayer() {
         GamePlayer nextPlayer = new GamePlayer();
         nextPlayer.setId(3);
         when(gamePlayerRepository.findNextPlayer(10, 20)).thenReturn(Optional.of(nextPlayer));
@@ -166,7 +166,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldIncrementCardsPlayed() {
+    void testIncrementCardsPlayed() {
         gp.setCardsPlayedThisRound(2);
         gamePlayerService.incrementCardsPlayedThisRound(gp);
         assertEquals(3, gp.getCardsPlayedThisRound());
@@ -174,7 +174,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldResetCardsPlayed() {
+    void testResetCardsPlayed() {
         gp.setCardsPlayedThisRound(5);
         gamePlayerService.resetCardsPlayedThisRound(gp);
         assertEquals(0, gp.getCardsPlayedThisRound());
@@ -182,7 +182,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldUpdateGamePlayer() {
+    void testUpdateGamePlayer() {
         when(gamePlayerRepository.save(gp)).thenReturn(gp);
         gamePlayerService.updateGamePlayer(gp);
         verify(gamePlayerRepository).save(gp);
@@ -190,7 +190,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldGetGamePlayer_WhenUserIsPlayer() {
+    void testGetGamePlayer_WhenUserIsPlayer() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.of(gp));
         
         GamePlayer result = gamePlayerService.getGamePlayerOrFriend(game, user);
@@ -201,7 +201,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldGetFriend_WhenUserIsSpectatorButHasFriend() {
+    void testGetFriend_WhenUserIsSpectatorButHasFriend() {
         GamePlayer friendGp = new GamePlayer();
         friendGp.setId(5);
         
@@ -215,7 +215,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailGetGamePlayerOrFriend_WhenNeitherExists() {
+    void testFailGetGamePlayerOrFriend_WhenNeitherExists() {
         when(gamePlayerRepository.findByGameIdAndUserId(10, 20)).thenReturn(Optional.empty());
         when(gamePlayerRepository.findFriendsInGame(20, 10)).thenReturn(Collections.emptyList());
         
@@ -225,7 +225,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldGetFriendInGame() {
+    void testGetFriendInGame() {
         GamePlayer friendGp = new GamePlayer();
         friendGp.setId(99);
         when(gamePlayerRepository.findFriendsInGame(20, 10)).thenReturn(List.of(friendGp));
@@ -236,7 +236,7 @@ class GamePlayerServiceTests {
 
 
     @Test
-    void shouldFailGetFriendInGame_NotFound() {
+    void testFailGetFriendInGame_NotFound() {
         when(gamePlayerRepository.findFriendsInGame(20, 10)).thenReturn(Collections.emptyList());
         assertThrows(GamePlayerNotFoundException.class, () -> gamePlayerService.getFriendInGame(user, game));
     }
