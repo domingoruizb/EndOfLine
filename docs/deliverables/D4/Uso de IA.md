@@ -205,19 +205,7 @@ AI was not used in this sprint.
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
 | 3.1 | 12/11/2025 | 3 | Angelo | Gemini | Web | I am developing a game called End Of Line in React and I want to know how to manage the rotation of the cards when placing it in the board. Each card has 1 input and from 1 to 3 outputs. The key is to connect the input of the card to be placed to one of the outputs of the last placed card. | Ideas | None | Self-revision | None | Accepted with changes |
 | 3.2 | 16/11/2025 | 3 | Domingo | Gemini | Web | Attached is the file of the game implementation in backend. I want to develop the turn functionality --I explained what is the turn functionality of the game--. Give me some guides for helping me developing this. | Ideas | Index.js file of the game folder in Frontend | Self-revision | Ambiguity between variable/function names and some code | Accepted with changes |
-| 3.3 | 28/11/2025 | 3 | Fernando | ChatGPT | Web | The following tests in this "GameServiceTests" file give these errors.
-- gamePlayersConsistencyTest: "@Test
-    @Transactional
-    void gamePlayersConsistencyTest() {
-        Game g = gameService.getGameById(1);
-        assertNotNull(g.getGamePlayers());
-        assertTrue(g.getGamePlayers().size() > 0);
-        for (GamePlayer gp : g.getGamePlayers()) {
-            assertEquals(g.getId(), gp.getGame().getId());
-        }
-    }" (org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: es.us.dp1.lx_xy_24_25.endofline.game.Game.gamePlayers: could not initialize proxy - no Session).
-
-What could be the cause of this error? | Code | GameServiceTests.java | Self-revision | None | Accepted |
+| 3.3 | 28/11/2025 | 3 | Fernando | ChatGPT | Web | The following tests in this "GameServiceTests" file give these errors. gamePlayersConsistencyTest: "@Test @Transactional void gamePlayersConsistencyTest() { Game g = gameService.getGameById(1); assertNotNull(g.getGamePlayers()); assertTrue(g.getGamePlayers().size() > 0); for (GamePlayer gp : g.getGamePlayers()) { assertEquals(g.getId(), gp.getGame().getId()); } }" (org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: es.us.dp1.lx_xy_24_25.endofline game.Game.gamePlayers: could not initialize proxy - no Session). What could be the cause of this error? | Code | GameServiceTests.java | Self-revision | None | Gemini provideed a valid and complete solution, accepted for the problem solution and used in case similar errors appear |
 
 
 ### Sprint 4
@@ -226,6 +214,9 @@ What could be the cause of this error? | Code | GameServiceTests.java | Self-
 |---:|--------------|:-----:|---------------|----------------------------|------------|------------------------------------|---------------|---------------------------|--------------------------|-----------------------------|---------------|
 | 4.1 | 29/12/2025 | 4 | Domingo | Copilot | Visual Studio Code | I want to refactorize the project at all, give me some ideas about what should I change. | Ideas | General | Self-revision | Copilot did not understand well some files. | Accepted with changes |
 | 4.2 | 29/12/2025 | 4 | Domingo | Copilot | Visual Studio Code | I want to implement notifications when a friendship is accepted or rejected | Code | friendslist.js | Self-revision | None | Accepted with changes (this was simply out of curiosity, I wanted to know how to implement it and I accepted.) |
+| 4.3 | 10/1/2025 | 4 | Fernando | Gemini | Visual Studio Code | Can you help me to correct this test "@Test @Transactional void testFailCreateAchievementWithInvalidData() { Achievement a = new Achievement(); a.setName(""); a.setThreshold(-10.0); assertThrows(Exception.class, () -> { achievementService.saveAchievement(a); }); }" that gives the following error: "org.opentest4j.AssertionFailedError: Expected java.lang.Exception to be thrown, but nothing was thrown.
+ at es.us.dp1.lIng_04_25_26.endofline. achievement.AchievementServiceTests. testFailCreateAchievementWithInvalidData (AchievementServiceTests.java:108)  at java.base/java.util.ArrayList. forEach(ArrayList.java:1596) at java.base/java.util.ArrayList. forEach(ArrayList.java:1596)" | Code | AchievementServiceTest.java | Self-revision | None | The test was corrected following what Gemini suggested and the test structure suggested was used for correcting all the tests that after the project refactoring became erroneous |
+| 4.4 | 13/1/2025 | 4 | Fernando | Copilot | Visual Studio Code | Check the coverage of this test file against its corresponding service / controller | Code | All test files / General | Self-revision | None | Copilot gives us a complete and detailed argument of why the test is complete or not and checks the coverage |
 
 ## Conclusiones finales sobre el uso de la IA en el proyecto
 Aqui debéis reflexionar sobre el papel que ha tenido la IA en la realización de vuestro proyecto y las maneras que consideráis que son más adecuadas para su uso en este contexto. Si tenéis alguna curiosida o caso que sea reseñable y pueda ser útil que los profesor conozcamos de cara a orientar a otros compañeros a este respecto podéis incluirlas aquí también.
@@ -234,6 +225,7 @@ Aqui debéis reflexionar sobre el papel que ha tenido la IA en la realización d
 |Herramienta|Versión/Modelo|Proveedor|Acceso (web/plugin/API)| Licencia/Plan | Observaciones|
 |-----------|--------------|---------|-----------------------|---------------|--------------|
 |ChatGPT|GPT-5 Mini|OpenAI|Web|Free||
+|Gemini|Razonamiento|Google|Web|US account / Pro||
 |<!-- p.ej., ChatGPT (GPT-5) -->|<!-- 5 (2025)-->|<!-- OpenAI -->|<!-- web -->|<!-- pro -->|<!-- ... -->|
 
 ## Anexo B) Glosario de Finalidades
