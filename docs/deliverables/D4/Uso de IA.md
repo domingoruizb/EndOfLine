@@ -237,6 +237,7 @@ Aqui debéis reflexionar sobre el papel que ha tenido la IA en la realización d
 |Herramienta|Versión/Modelo|Proveedor|Acceso (web/plugin/API)| Licencia/Plan | Observaciones|
 |-----------|--------------|---------|-----------------------|---------------|--------------|
 |ChatGPT|GPT-5 Mini|OpenAI|Web|Free||
+|Copilot|Claude Opus 4.5|Anthropic|Plugin|Student||
 |<!-- p.ej., ChatGPT (GPT-5) -->|<!-- 5 (2025)-->|<!-- OpenAI -->|<!-- web -->|<!-- pro -->|<!-- ... -->|
 
 ## Anexo B) Glosario de Finalidades
