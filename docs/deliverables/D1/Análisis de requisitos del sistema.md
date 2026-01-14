@@ -4,317 +4,504 @@
 **Grupo/Equipo:** LI-04  
 **Nombre del proyecto:** End of Line  
 **Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4
-**Integrantes (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
-
-_Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
-
-## Introducción
-
-The project focuses on the implementation of the board game End of Line which is a strategic card-based board game where the main objective is simple: cut your opponent’s line before they cut yours. Players build paths by placing Line Cards on a shared grid, managing both placement and limited Energy Points to alter the flow of the game.
-
-The game supports 2 players. The playing area is a 7x7 grid.
-
-A typical match unfolds in rounds, each consisting of drawing cards and placing them to extend your line, always respecting directional connections. From the third round onward, players may spend energy to gain advantages such as speeding up, slowing down, or redirecting their line.
-
-Games usually last between 15 and 40 minutes, depending on their choices. The match ends immediately when a player cannot continue their line on their turn — that player loses, and the opponent is declared the winner.
-
-[Link to the video explaining the rules and playing a game](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/blob/main/docs/Video.mp4)
-
-## Tipos de Usuarios / Roles
-
-- Player: a user registered on the platform who can join matches, manage their profile, view statistics and his/her list of games, and actively participate in games.
-- Administrator: A user with platform management privileges who can view a list of ongoing games (including the creator and participating users), a list of completed games and their participants and maintain platform operation as needed.
-- Guest: A person who only has the ability to either create a new account or log in to an existing one.
-
-## Historias de Usuario
-
-Next, they are defined all user story to be implemented.
+Next, they are defined all user story to be implemented. Every story includes acceptance criteria and related business rules for testability and traceability.
 
 ### US#1-(ISSUE#33): Login ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/33))
+**Story**: As a guest, I want to sign in to my account so that I can view my information and start playing.
 
-| "As a guest, I want to sign in to my account so that I can view my information and start playing"|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Login.png>)|
-|1. The user selects the “Log In” option on the initial screen.  |
-|2. The Login page is displayed, where the user provides their credentials (username and password).  |
-|3. After clicking the “Log In” button, if the credentials are valid, the user is taken to the Dashboard page.  |
+![Login](<Mockups/Mockup Login.png>)
+
+**Flow**
+1. The user selects “Log In” on the initial screen.
+2. The Login page is displayed to provide username and password.
+3. After clicking “Log In”, if credentials are valid, the user is taken to the dashboard.
+
+**Acceptance Criteria**
+- Given valid credentials, when submitting, then the user is authenticated and redirected to dashboard.
+- Given invalid credentials, when submitting, then an error message is shown without clearing inputs.
+- Given empty fields, when submitting, then field-level validation messages appear.
+- Response time for authentication < 2 seconds.
+
+**Business Rules**: R7.
 
 ### US#2-(ISSUE#36): Register ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/36))
+**Story**: As a guest, I want to create a new account so that I can start playing.
 
-| "As a guest, I want to create a new account so that I can start playing."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Register.png>)|
-|1. The user clicks the “Register” button on the initial screen, which opens the Registration page.  |
-|2. To complete the registration, the user provides their name, surname, username, password, email, and date of birth.  |
+![Register](<Mockups/Mockup Register.png>)
+
+**Flow**
+1. The user clicks “Register” on the initial screen to open the Registration page.
+2. The user fills name, surname, username, password, email, and date of birth.
+
+**Acceptance Criteria**
+- Username is 3-20 alphanumeric characters and unique; email is unique and valid; password min 8 chars with 1 uppercase and 1 number; age ≥ 13 years.
+- All fields are required; inline errors show which field fails.
+- On success, account is created and user is redirected to login or auto-logged in.
+- Duplicate username/email shows a specific error message.
+
+**Business Rules**: R7.
 
 ### US#3-(ISSUE#37): Logout ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/37))
+**Story**: As a player/administrator, I want to log out so that no one else can access my account from this device.
 
-| "As a player/administrator, I want to log out of my account so that no one else can access it from the same device."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Logout.png>)|
-|1. On the home screen, the player/administrator clicks the "Logout" button located at the top-right corner.  |
-|2. A confirmation modal is shown just to ask if the player/administrator is sure about logging out.  |
-|3. After clicking on "Yes", the user is signed out of the system.  |
+![Logout](<Mockups/Mockup Logout.png>)
+
+**Flow**
+1. On the home screen, the user clicks the “Logout” button (top-right).
+2. A confirmation modal asks for confirmation.
+3. After confirming, the user is signed out and session tokens are cleared.
+
+**Acceptance Criteria**
+- Session is invalidated server-side and tokens removed client-side.
+- Returning to a protected page prompts login.
+- If cancel is pressed, session remains active.
+
+**Business Rules**: R7.
 
 ### US#4-(ISSUE#38): Delete my profile ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/38))
+**Story**: As a player/administrator, I want to remove my account so that all my data is erased from the system.
 
-| "As a player/administrator, I want to remove my account so that all my data is erased from the system."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup My Profile.png>)|
-|1. On the home screen, the player/administrator clicks their profile button (top-right corner).  |
-|2. A menu will appear showing several options, including the "Edit Profile" feature.  |
-|3. The player selects "Edit Profile", which takes them to the "My Profile" screen.  |
-|4. From there, if the player clicks the "Delete Profile" button and confirms by selecting "Delete" on the confirmation modal, their profile will be removed from the system.  |
+![My Profile](<Mockups/Mockup My Profile.png>)
+
+**Flow**
+1. From home, the user opens the profile menu and selects “Edit Profile”.
+2. On “My Profile”, the user clicks “Delete Profile”.
+3. A confirmation modal appears; upon confirmation the profile is deleted.
+
+**Acceptance Criteria**
+- Deletion is blocked if user is in an active game.
+- All personal data, friendships, and stats are removed; audit log records the deletion.
+- User cannot log in after deletion; attempting shows “Account removed”.
+
+**Business Rules**: R7, R2 (for active game constraint).
 
 ### US#5-(ISSUE#39): Edit my profile ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/39))
+**Story**: As a player/administrator, I want to edit my profile so that I can update my personal information.
 
-| "As a player/administrator, I want to edit my profile so that I can update my personal information."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup My Profile.png>)|
-|1. On the home screen, the player/administrator clicks their profile button (top-right corner).  |
-|2. A menu will appear showing several options, including the "Profile" feature.  |
-|3. The player select "Profile," which takes them to the "My Profile" screen.  |
-|5. Once typed all the changes, the player/administrator will save them by clicking the "Save changes" button. |
+![My Profile](<Mockups/Mockup My Profile.png>)
+
+**Flow**
+1. From home, the user opens the profile menu and selects “Profile”.
+2. On “My Profile”, the user edits the fields and clicks “Save changes”.
+
+**Acceptance Criteria**
+- Username/email uniqueness validated; invalid formats show inline errors.
+- Changes persist and are visible on next login.
+- Unauthorized edits (other users) are rejected.
+
+**Business Rules**: R7.
 
 ### US#6-(ISSUE#40): Add a friend ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/40))
+**Story**: As a player, I want to add a friend so that I can play with them.
 
-| "As a player, I want to add a friend so that I can play with him/her."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Request Friendship.png>)|
-|![alt text](<Mockups/Mockup Send Friendship.png>)|
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friends" feature. |
-|3. The player selects "Friends", which takes them to the "Friendships" screen. |
-|4. From there, there is a "Create" button and pressing it, the player is taken to "Create Friendship" screen.  |
-|5. From there, the player can type the username of their new friend and send the request.  |
+![Request Friendship](<Mockups/Mockup Request Friendship.png>)
+![Send Friendship](<Mockups/Mockup Send Friendship.png>)
+
+**Flow**
+1. From home, the user opens “Friends”.
+2. In “Friendships”, clicks “Create” to open “Create Friendship”.
+3. Enters the friend’s username and sends the request.
+
+**Acceptance Criteria**
+- Request fails with clear message if username not found or already a friend.
+- Duplicate pending requests are prevented.
+- Sender sees request in “Pending”; receiver sees invite in “Pending Invites”.
+
+**Business Rules**: R7.
 
 ### US#7-(ISSUE#41): Delete a friend ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/41))
+**Story**: As a player, I want to delete a friend so that I can stop playing with them.
 
-| "As a player, I want to delete a friend so that I don't want to play more with him/her."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Delete Friend.png>)|
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friends" feature. |
-|3. The player selects "Friends", which takes them to the "Friendships" screen. |
-|4. From there, the player can see the list of his friends and can press the "Delete" button of the friendship the player wants to remove.  |
+![Delete Friend](<Mockups/Mockup Delete Friend.png>)
+
+**Flow**
+1. From “Friendships”, the player views the friends list.
+2. Clicks “Delete” on a friendship and confirms.
+
+**Acceptance Criteria**
+- Friendship is removed for both users.
+- Cannot delete while both are in the same active game lobby.
+- UI refreshes list without requiring reload.
+
+**Business Rules**: R7, R2 (active game restriction).
 
 ### US#8-(ISSUE#42): Accept a friendship ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/42))
+**Story**: As a player, I want to accept a friendship so that I can play with the requester.
 
-| "As a player, I want to accept a friendship so that I can play with the friend requester."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Accept Friendship.png>)|
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friends" feature. |
-|3. The player selects "Friends", which takes them to the "Friendships" screen. |
-|4. From there, the player press the "Pending" button and takes them to the "Pending Invites" screen. |
-|5. From there, the player can view any pending invitations and accept them using the "Accept" button.  |
+![Accept Friendship](<Mockups/Mockup Accept Friendship.png>)
+
+**Flow**
+1. From “Friendships”, open “Pending Invites”.
+2. Click “Accept” on a pending invite.
+
+**Acceptance Criteria**
+- Accept only if invite is still pending; otherwise show “Invite expired”.
+- After acceptance, both users appear in each other’s friends list.
+- Notification is sent to the requester.
+
+**Business Rules**: R7.
 
 ### US#9-(ISSUE#43): Reject a friendship ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/43))
+**Story**: As a player, I want to reject a friendship so that I can decline the request.
 
-| "As a player, I want to reject a friendship so that I don't want to play with the friend requester."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup Reject Friendship.png>)|
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Friends" feature. |
-|3. The player selects "Friends", which takes them to the "Friendships" screen. |
-|4. From there, the player press the "Pending" button and takes them to the "Pending Invites" screen. |
-|5. From there, the player can view any pending invitations and reject them using the "Reject" button.  |
+![Reject Friendship](<Mockups/Mockup Reject Friendship.png>)
+
+**Flow**
+1. From “Pending Invites”, click “Reject”.
+
+**Acceptance Criteria**
+- Pending invite is removed and requester is notified.
+- Rejection is idempotent; repeated rejects show “Already rejected/expired”.
+
+**Business Rules**: R7.
 
 ### US#10-(ISSUE#44): Create a game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/44))
+**Story**: As a player, I want to create a new game so that other players can join it.
 
-| "As a player, I want to create a new game so that other players can join it."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 3 Create Game.png>)|
-|![alt text](<Mockups/Mockup Lobby.png>)|
-|1. On the home screen, the player has to click the "Play now!" button and then the button 'Create Game' to open Lobby screen.
-|2. In the lobby, the host waits for a friend to join (he/she needs to share the code with the friend he/she wants to play with) and selects the color of the cards of each player. |
-|3. When pressing the "Continue" button, the game starts.  |
+![Create Game](<Mockups/Mockup 3 Create Game.png>)
+![Lobby](<Mockups/Mockup Lobby.png>)
+
+**Flow**
+1. On home, click “Play now!” → “Create Game” to open the lobby.
+2. Host waits for a friend to join via shared code and selects colors.
+3. Press “Continue” to start the game.
+
+**Acceptance Criteria**
+- Lobby allows max 2 players; start disabled until both ready (R1).
+- Game code is unique and expires after 24 hours or on use.
+- Both players must select different colors; validation blocks duplicates.
+- Lobby auto-expires after 15 minutes of inactivity.
+
+**Business Rules**: R1, R3, R7, R8, R9.
 
 ### US#11-(ISSUE#45): Join a game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/45))
+**Story**: As a player, I want to enter a game so that I can play with the host who shared a code.
 
-| "As a player, I want to enter a game so that I can play alongside the another player who has shared a code with me."|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 4 Join Game.png>)|
-|![alt text](<Mockups/Mockup Friend Lobby.png>)|
-|1. On the home screen, the player clicks the "Play now!" button and then the button 'Join Game'. |
-|2. On the Join Game screen, the players type the code that host has shared with him and clicks on 'Join'. |
-|3. The player is taken to the 'friend' lobby screen to wait for the host to start the game.  |
+![Join Game](<Mockups/Mockup 4 Join Game.png>)
+![Friend Lobby](<Mockups/Mockup Friend Lobby.png>)
 
-### US#12-(ISSUE#46): Change deck ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/46))
+**Flow**
+1. On home, click “Play now!” → “Join Game”.
+2. Enter the code and click “Join”.
+3. Arrive at the friend lobby and wait for host to start.
 
-| "As a player, I want to change my initial deck so that I can play with different cards. "|
-| ------------------------------------------------------------------------- |
-|1. The player clicks on the "Change deck" button, which is on the left-down corner, and the deck will be automatically changed.  |
+**Acceptance Criteria**
+- Invalid/expired code shows clear error; joining full lobby is blocked.
+- Joined player sees selected colors and ready state.
+- If host leaves, guest is notified and lobby closes.
+
+**Business Rules**: R1, R7, R8.
+
+### US#12-(ISSUE#46): Change deck in-game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/46))
+**Story**: As a player, I want to change my initial deck so that I can play with different cards.
+
+**Flow**
+1. During setup, click “Change deck” (left-down corner) to reroll the deck.
+
+**Acceptance Criteria**
+- Deck follows composition limits (R8, R9); invalid decks are rejected with reasons.
+- Deck change allowed only before game start; once started, button is disabled.
+- New deck is confirmed to both players and stored server-side.
+
+**Business Rules**: R8, R9.
 
 ### US#13-(ISSUE#47): Place a card ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/47))
+**Story**: As a player, I want to place a card so that I can act during my turn.
 
-| "As a player, I want to place a card so that I can take an action during my turn. "|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 5 Gameplay.png>)|
-|1. During their turn, the player clicks on any of the 5 cards in the left panel of the screen.  |
-|2. The player then clicks on any of the available cells on the board (highlighted in their color), and the card is placed.  |
+![Gameplay](<Mockups/Mockup 5 Gameplay.png>)
+
+**Flow**
+1. During their turn, the player clicks a card in hand.
+2. Clicks an available cell on the board; the card is placed.
+
+**Acceptance Criteria**
+- Placement validates grid bounds and alignment rules (R3, R5).
+- Two cards per turn by default; first round only one (R4, R5).
+- Placement result appears in < 500 ms; illegal moves show reason and are blocked.
+
+**Business Rules**: R3, R4, R5, R10.
 
 ### US#14-(ISSUE#48): Use "Speed Up" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/48))
+**Story**: As a player, I want to spend one energy point using “Speed Up” so that I can place three cards instead of two.
 
-| "As a player, I want to spend one energy point using a "speed up" so that I can place three cards instead of two "|
-| ------------------------------------------------------------------------- |
-|1. During their turn, the player clicks on the "Speed Up" button (located in the right panel of the screen).  |
-|2. The player can now place three cards instead of the usual two. The energy card is rotated clockwise.  |
+**Flow**
+1. During turn (round ≥ 3), click “Speed Up” in the right panel.
+2. Place three cards this turn; energy card rotates clockwise.
+
+**Acceptance Criteria**
+- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Energy reduced by 1 and cannot drop below 0.
+- Effect applies only for the current turn.
+
+**Business Rules**: R5, R6.
 
 ### US#15-(ISSUE#49): Use "Reverse" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/49))
+**Story**: As a player, I want to spend one energy point using “Reverse” so that I can branch from my second-to-last card.
 
-| "As a player, I want to spend one energy point using a "reverse" so that I can continue my path through any available exit on my second-to-last card "|
-| ------------------------------------------------------------------------- |
-|1. During their turn, the player clicks on the "Reverse" button (located in the right panel of the screen).  |
-|2. The player can now place their next card on any available exit of their second-to-last-card. The energy card is rotated clockwise.  |
+**Flow**
+1. During turn (round ≥ 3), click “Reverse”.
+2. Place the next card on any available exit of the second-to-last card; energy rotates.
+
+**Acceptance Criteria**
+- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Placement still must satisfy adjacency/connection rules (R5).
+- Energy reduced by 1; effect limited to next placement only.
+
+**Business Rules**: R5, R6.
 
 ### US#16-(ISSUE#50): Use "Brake" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/50))
+**Story**: As a player, I want to spend one energy point using “Brake” so that I can place one card instead of two.
 
-| "As a player, I want to spend one energy point using a "brake" so that I can place one card instead of the usual two "|
-| ------------------------------------------------------------------------- |
-|1. During their turn, the player clicks on the "Brake" button (located in the right panel of the screen).  |
-|2. The player can now place just one card in their turn. The energy card is rotated clockwise.  |
+**Flow**
+1. During turn (round ≥ 3), click “Brake”.
+2. Place only one card this turn; energy rotates.
+
+**Acceptance Criteria**
+- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Turn ends after one valid placement.
+- Energy reduced by 1; effect limited to current turn.
+
+**Business Rules**: R5, R6.
 
 ### US#17-(ISSUE#51): Use "Extra Gas" ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/51))
+**Story**: As a player, I want to spend one energy point using “Extra Gas” so that I can draw one more card.
 
-| "As a player, I want to spend one energy point using an "Extra Gas" so that I can draw one more card "|
-| ------------------------------------------------------------------------- |
-|1. During their turn, the player clicks on the "Extra Gas" button (located in the right panel of the screen).  |
-|2. The player has now one more card in their hand. The energy card is rotated clockwise.  |
+**Flow**
+1. During turn (round ≥ 3), click “Extra Gas”.
+2. Draw an additional card; energy rotates.
 
-### US#18-(ISSUE52): Surrender ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/52))
+**Acceptance Criteria**
+- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Hand increases by one and respects max hand size (if any).
+- Energy reduced by 1; draw is immediate.
 
-| "As a player, I want to be able to end the game early so that I can surrender if I choose."|
-| ------------------------------------------------------------------------- |
-|1. The player can click the "Surrender" button (located in the top-right corner) and a confirmation modal appears.  |
-|2. After the player clicks that he/she is sure, the game ends.  |
+**Business Rules**: R6, R8.
+
+### US#18-(ISSUE#52): Surrender ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/52))
+**Story**: As a player, I want to end the game early so that I can surrender if I choose.
+
+**Flow**
+1. Click “Surrender” (top-right); a confirmation modal appears.
+2. Confirm to end the game.
+
+**Acceptance Criteria**
+- Confirmation required; cancel keeps game running.
+- Opponent is declared winner; stats update accordingly (R11).
+- Cannot surrender after game already ended.
+
+**Business Rules**: R2, R7, R11.
 
 ### US#19-(ISSUE#53): View rules during game ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/53))
+**Story**: As a player, I want to view the rules during a game so that I can follow them correctly.
 
-| "As a player, I want to view the rules so that I can follow the game correctly "|
-| ------------------------------------------------------------------------- |
-|1. The player can click the "Rules" button (located in the top-right corner) and the rules screen is shown.  |
+**Flow**
+1. Click “Rules” (top-right) during a game to open the rules screen.
 
-### US#19-(ISSUE#54): Return to the game after viewing rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/54))
+**Acceptance Criteria**
+- Rules open without leaving the match state.
+- Timer pauses/continues per design (specify: pauses during view).
+- Returning to game restores the same board state.
 
-| "As a player, I want to return to the game after viewing the rules so that I can continue playing. "|
-| ------------------------------------------------------------------------- |
-|1. On the "Rules" screen, the player clicks the "Game" button (located in the top-right corner) and the "Game" screen is shown.  |
+**Business Rules**: R4, R5, R10.
 
-### US#20-(ISSUE#55): Chat with the opponent ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/55))
+### US#20-(ISSUE#54): Return to the game after viewing rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/54))
+**Story**: As a player, I want to return to the game after viewing the rules so that I can continue playing.
 
-| "As a player, I want to chat with my opponent so that I can communicate during the game. "|
-| ------------------------------------------------------------------------- |
-|1. The player clicks on the input field in the Chat component (right panel of the screen).  |
-|2. The player types their message and clicks "Send".  |
-|3. The sent message appears in the conversation window above the input field.  |
+**Flow**
+1. On the “Rules” screen, click “Game” to return to the match.
 
-### US#21-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
+**Acceptance Criteria**
+- Player returns to the same turn, board, and timer state.
+- No extra actions are consumed while in the rules screen.
 
-| "As a player, I want to be notified when the game ends so that I know whether I won or lost "|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 6 Game Ending.png>)|
-|1. When the game ends, a popup will be shown notifying the player who has won.  |
+**Business Rules**: R10.
 
-### US#22-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
+### US#21-(ISSUE#55): Chat with the opponent ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/55))
+**Story**: As a player, I want to chat with my opponent so that I can communicate during the game.
 
-| "As a player, I want to view a list of my games so that I can see who I have played against."|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "My Games" feature. |
-|3. The player selects "My Games", which takes them to the "My Games" screen. |
-|4. From there, the player can view the list of games showing information about the game number, winner and players of each game.  |
+**Flow**
+1. Click the chat input, type a message, and press “Send”.
 
-### US#23-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
+**Acceptance Criteria**
+- Sent messages appear in under 1 second; failed sends show an error.
+- Offensive content filtering or rate limiting is applied if specified.
+- Chat history persists during the match; clears after match ends.
 
-| "As a player, I want to view my achievements so that I can track my progress in the game. "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Achievements" feature. |
-|3. The player selects "Achievements", which takes them to the "Achievements" screen. |
-|4. From there, the player can view the achievements earned and when, which not, and the description of each one. |
+**Business Rules**: R7.
 
-### US#24-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
+### US#22-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
+**Story**: As a player, I want to be notified when the game ends so that I know whether I won or lost.
 
-| "As a player, I want to see my statistics so that I can track my performance in the game. "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the player has to click their profile button. |
-|2. A menu will appear showing several options, including the "Stats" feature. |
-|3. The player selects "Stats", which takes them to the "My Stats" screen. |
-|4. From there, the player can view their statistics, including games played, durations, wins... |
+![Game Ending](<Mockups/Mockup 6 Game Ending.png>)
 
-### US#25-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
+**Flow**
+1. When the game ends, a popup shows the winner/loser.
 
-| "As an administrator, I want to see a list of all ongoing games so that I can manage them and assure their good functioning. "|
-| ------------------------------------------------------------------------- |
-|![alt text](<Mockups/Mockup 7 Admin.png>)|
-|1. On the home screen, the administrator has to click on their profile button. |
-|2. A menu will appear showing several options, including the "Games" feature. |
-|3. The administrator selects "Games", which takes them to the "Games history" screen. |
-|4. A list with all ongoing games is shown, showing for each game the players that are playing it and its creator. |
+**Acceptance Criteria**
+- Popup shows winner, final state, and option to go to lobby or stats.
+- Stats and achievements are updated before popup is shown (R11).
+- Popup appears to both players simultaneously.
 
-### US#26-(ISSUE#60): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
+**Business Rules**: R2, R11.
 
-| "As an administrator, I want to see a list of all past games so that I can manage them. "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the administrator has to click on their profile button. |
-|2. A menu will appear showing several options, including the "Games" feature. |
-|3. The administrator selects "Games", which takes them to the "Games history" screen. |
-|4. A list with all past games is shown, showing for each game the players that played it and its creator. |
+### US#23-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
+**Story**: As a player, I want to view a list of my games so that I can see who I have played against.
 
-### US#27-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
+**Flow**
+1. From profile menu, select “Games”.
+2. View list with start date, end date, winner, and players.
 
-| "As an administrator, I want to see a list of all registered users so that I can manage them. "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the administrator has to click on their profile button. |
-|2. A menu will appear showing several options, including the "Users" feature. |
-|3. The administrator selects "Users", which takes them to the "Users" screen. |
-|4. A list with all users is shown, where the administrator can see for each user the username and the authority. |
+**Acceptance Criteria**
+- Pagination or scroll for long history; default sorted by most recent.
+- Each entry links to basic stats (duration, date, opponent).
+- Access restricted to authenticated user viewing own history.
 
-### US#28-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
+**Business Rules**: R7, R11.
 
-| "As an administrator, I want to create a user so that I can add a new profile to the system "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the administrator has to click on their profile button. |
-|2. A menu will appear showing several options, including the "Users" feature. |
-|3. The administrator selects "Users", which takes them to the "Users" screen. |
-|4. From there, the administrator clicks the "Add User" button, which takes him/her to the "Create user" screen. |
-|5. From there, the administrator fills the necessary information to create the user.  |
-|6. Once the administrator clicks on "Save", the user is created.  |
+### US#24-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
+**Story**: As a player, I want to view my achievements so that I can track my progress.
 
-### US#29-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
+**Flow**
+1. From profile menu, select “Achievements”.
+2. View earned and locked achievements with descriptions.
 
-| "As an administrator, I want to delete a user so that I can delete a profile from the system "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the administrator has to click on their profile button. |
-|2. A menu will appear showing several options, including the "Users" feature. |
-|3. The administrator selects "Users", which takes them to the "Users" screen. |
-|4. From there, the administrator can delete any user clicking on their "Delete" button. |
-|5. After clicking "Yes" on the confirmation modal, the user will be deleted. If the administrator click "No", the user won't be deleted.  |
+**Acceptance Criteria**
+- Earned achievements show earned date; locked show requirement.
+- Achievements are awarded once and stored with timestamp (R11).
+- Updates immediately after a match that triggers an achievement.
 
-### US#30-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
+**Business Rules**: R11.
 
-| "As an administrator, I want to edit a user so that I can update their information on the system "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the administrator has to click on their profile button. |
-|2. A menu will appear showing several options, including the "Users" feature. |
-|3. The administrator selects "Users", which takes them to the "Users" screen. |
-|4. From there, the administrator can edit any user clicking on their "Edit" button, taking them to the "Edit User" screen. |
-|5. From there, the administrator updates the necessary information to edit the user.  |
-|6. Once the administrator clicks on "Save", the user is updated.  |
+### US#25-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
+**Story**: As a player, I want to view my personal game statistics so that I can understand my performance and progress over time.
 
-### US#31-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
+**Flow**
+1. Player logs in and navigates to “My Statistics”.
+2. The system retrieves aggregated statistics from completed games.
+3. The system displays games played, wins, losses, and average duration.
 
-| "As a player/administrator, I want to view the rules of the games so that I can understand how to play "|
-| ------------------------------------------------------------------------- |
-|1. On the home screen, the player/administrator has to click on the "Rules" button, taking them to the "Rules" screen. |
+**Acceptance Criteria**
+- Only finished games are considered.
+- Wins and losses are consistent with game results.
+- Statistics update automatically after a game ends.
+- If no data exists, default placeholders are shown.
 
+**Business Rules**: R2, R11.
+
+### US#26-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
+**Story**: As an administrator, I want to see ongoing games so that I can manage them.
+
+![Admin](<Mockups/Mockup 7 Admin.png>)
+
+**Flow**
+1. From profile menu, select “Games”.
+2. On “Games history”, view ongoing games with players and creator.
+
+**Acceptance Criteria**
+- List refreshes periodically; shows status and start time.
+- Admin-only access; non-admins receive authorization error.
+- Allows navigation to a game detail for diagnostics.
+
+**Business Rules**: R7, R1, R2.
+
+### US#27-(ISSUE#61): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
+**Story**: As an administrator, I want to see past games so that I can manage them.
+
+**Flow**
+1. From “Games history”, switch to past games list.
+
+**Acceptance Criteria**
+- Shows players, creator, winner, and end time.
+- Supports filtering by date, player, or outcome.
+- Admin-only access.
+
+**Business Rules**: R7, R2, R11.
+
+### US#28-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
+**Story**: As an administrator, I want to see all registered users so that I can manage them.
+
+**Flow**
+1. From profile menu, select “Users”.
+2. View list with username and authority.
+
+**Acceptance Criteria**
+- Search/filter by username/role; pagination for large lists.
+- Admin-only; edits/deletes require separate permissions.
+
+**Business Rules**: R7.
+
+### US#29-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
+**Story**: As an administrator, I want to create a user so that I can add a new profile.
+
+**Flow**
+1. From “Users”, click “Add User” to open creation form.
+2. Fill required data and save.
+
+**Acceptance Criteria**
+- Same validation rules as registration (US#2); enforces unique username/email.
+- On success, new user appears in list; on failure, specific errors shown.
+
+**Business Rules**: R7.
+
+### US#30-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
+**Story**: As an administrator, I want to delete a user so that I can remove a profile from the system.
+
+**Flow**
+1. From “Users”, click “Delete” on a user and confirm.
+
+**Acceptance Criteria**
+- Cannot delete users currently in active games; shows blocking message.
+- Confirmation modal displays username to avoid mistakes.
+- Cascade removal of friendships and pending invites; audit log entry created.
+
+**Business Rules**: R7, R2.
+
+### US#31-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
+**Story**: As an administrator, I want to edit a user so that I can update their information.
+
+**Flow**
+1. From “Users”, click “Edit” to open the edit form.
+2. Update necessary information and save.
+
+**Acceptance Criteria**
+- Validation matches registration rules; uniqueness enforced.
+- Changes persist and appear in list after save.
+- Prevent demoting the last administrator to avoid lockout.
+
+**Business Rules**: R7.
+
+### US#32-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
+**Story**: As a player/administrator, I want to view the rules from home so that I can understand how to play.
+
+**Flow**
+1. On home, click “Rules” to open the rules screen.
+
+**Acceptance Criteria**
+- Rules accessible without entering a game.
+- Navigation back to home works without losing session.
+
+**Business Rules**: R3, R4, R5.
+
+### US#33-(ISSUE#116): Global statistics aggregation ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/116))
+**Story**: As a player/administrator, I want to see global game statistics so that I can understand overall community activity.
+
+**Flow**
+1. Player opens “Social & Global Stats”.
+2. System aggregates data from all completed games.
+3. Global metrics are displayed.
+
+**Acceptance Criteria**
+- Finished games count is accurate.
+- Average games per player is computed correctly.
+- Total duration reflects all completed games.
+
+**Business Rules**: R11.
 
 
 ## Conceptual diagram of the system
 In this section, a UML class diagram that describes the data model to be implemented in the application is provided.
 
-![System diagram](../../diagrams/dp1_project_v6.png)
+![System diagram](../../diagrams/dp1_project_v7.png)
 
 ## Reglas de Negocio
 
