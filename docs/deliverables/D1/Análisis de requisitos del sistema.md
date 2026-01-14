@@ -169,7 +169,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 **Acceptance Criteria**
 - Lobby allows max 2 players; start disabled until both ready (R1).
 - Game code is unique and expires after 24 hours or on use.
-- Both players must select different colors; validation blocks duplicates.
+- Both players must select different colors (host selects both colors); validation blocks duplicates.
 - Lobby auto-expires after 15 minutes of inactivity.
 
 **Business Rules**: R1, R3, R7, R8, R9.
@@ -196,7 +196,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 **Story**: As a player, I want to change my initial deck so that I can play with different cards.
 
 **Flow**
-1. During setup, click “Change deck” (left-down corner) to reroll the deck.
+1. During setup, click “Change deck” (top-right corner) to reroll the deck.
 
 **Acceptance Criteria**
 - Deck follows composition limits (R8, R9); invalid decks are rejected with reasons.
@@ -225,11 +225,11 @@ Next, they are defined all user story to be implemented. Every story includes ac
 **Story**: As a player, I want to spend one energy point using “Speed Up” so that I can place three cards instead of two.
 
 **Flow**
-1. During turn (round ≥ 3), click “Speed Up” in the right panel.
+1. During turn (round ≥ 2), click “Speed Up” in the right panel.
 2. Place three cards this turn; energy card rotates clockwise.
 
 **Acceptance Criteria**
-- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Requires player turn, round ≥ 2, and ≥1 energy (R6).
 - Energy reduced by 1 and cannot drop below 0.
 - Effect applies only for the current turn.
 
@@ -239,11 +239,11 @@ Next, they are defined all user story to be implemented. Every story includes ac
 **Story**: As a player, I want to spend one energy point using “Reverse” so that I can branch from my second-to-last card.
 
 **Flow**
-1. During turn (round ≥ 3), click “Reverse”.
+1. During turn (round ≥ 2), click “Reverse”.
 2. Place the next card on any available exit of the second-to-last card; energy rotates.
 
 **Acceptance Criteria**
-- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Requires player turn, round ≥ 2, and ≥1 energy (R6).
 - Placement still must satisfy adjacency/connection rules (R5).
 - Energy reduced by 1; effect limited to next placement only.
 
@@ -253,11 +253,11 @@ Next, they are defined all user story to be implemented. Every story includes ac
 **Story**: As a player, I want to spend one energy point using “Brake” so that I can place one card instead of two.
 
 **Flow**
-1. During turn (round ≥ 3), click “Brake”.
+1. During turn (round ≥ 2), click “Brake”.
 2. Place only one card this turn; energy rotates.
 
 **Acceptance Criteria**
-- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Requires player turn, round ≥ 2, and ≥1 energy (R6).
 - Turn ends after one valid placement.
 - Energy reduced by 1; effect limited to current turn.
 
@@ -267,21 +267,21 @@ Next, they are defined all user story to be implemented. Every story includes ac
 **Story**: As a player, I want to spend one energy point using “Extra Gas” so that I can draw one more card.
 
 **Flow**
-1. During turn (round ≥ 3), click “Extra Gas”.
+1. During turn (round ≥ 2), click “Extra Gas”.
 2. Draw an additional card; energy rotates.
 
 **Acceptance Criteria**
-- Requires player turn, round ≥ 3, and ≥1 energy (R6).
+- Requires player turn, round ≥ 2, and ≥1 energy (R6).
 - Hand increases by one and respects max hand size (if any).
 - Energy reduced by 1; draw is immediate.
 
 **Business Rules**: R6, R8.
 
-### US#18-(ISSUE#52): Surrender ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/52))
+### US#18-(ISSUE#52): Give Up ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/52))
 **Story**: As a player, I want to end the game early so that I can surrender if I choose.
 
 **Flow**
-1. Click “Surrender” (top-right); a confirmation modal appears.
+1. Click "Give Up" (top-right); a confirmation modal appears.
 2. Confirm to end the game.
 
 **Acceptance Criteria**
@@ -299,24 +299,10 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Acceptance Criteria**
 - Rules open without leaving the match state.
-- Timer pauses/continues per design (specify: pauses during view).
-- Returning to game restores the same board state.
 
 **Business Rules**: R4, R5, R10.
 
-### US#20-(ISSUE#54): Return to the game after viewing rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/54))
-**Story**: As a player, I want to return to the game after viewing the rules so that I can continue playing.
-
-**Flow**
-1. On the “Rules” screen, click “Game” to return to the match.
-
-**Acceptance Criteria**
-- Player returns to the same turn, board, and timer state.
-- No extra actions are consumed while in the rules screen.
-
-**Business Rules**: R10.
-
-### US#21-(ISSUE#55): Chat with the opponent ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/55))
+### US#20-(ISSUE#55): Chat with the opponent ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/55))
 **Story**: As a player, I want to chat with my opponent so that I can communicate during the game.
 
 **Flow**
@@ -329,7 +315,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7.
 
-### US#22-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
+### US#21-(ISSUE#56): Notify the player when they win or lose ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/56))
 **Story**: As a player, I want to be notified when the game ends so that I know whether I won or lost.
 
 ![Game Ending](<Mockups/Mockup 6 Game Ending.png>)
@@ -338,13 +324,13 @@ Next, they are defined all user story to be implemented. Every story includes ac
 1. When the game ends, a popup shows the winner/loser.
 
 **Acceptance Criteria**
-- Popup shows winner, final state, and option to go to lobby or stats.
+- Popup shows winner or loser and a button to return to home.
 - Stats and achievements are updated before popup is shown (R11).
 - Popup appears to both players simultaneously.
 
 **Business Rules**: R2, R11.
 
-### US#23-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
+### US#22-(ISSUE#57): List player games history ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/57))
 **Story**: As a player, I want to view a list of my games so that I can see who I have played against.
 
 **Flow**
@@ -358,7 +344,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7, R11.
 
-### US#24-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
+### US#23-(ISSUE#58): View player achievements ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/58))
 **Story**: As a player, I want to view my achievements so that I can track my progress.
 
 **Flow**
@@ -372,7 +358,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R11.
 
-### US#25-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
+### US#24-(ISSUE#59): View player stats ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/59))
 **Story**: As a player, I want to view my personal game statistics so that I can understand my performance and progress over time.
 
 **Flow**
@@ -388,7 +374,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R2, R11.
 
-### US#26-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
+### US#25-(ISSUE#60): View current games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/60))
 **Story**: As an administrator, I want to see ongoing games so that I can manage them.
 
 ![Admin](<Mockups/Mockup 7 Admin.png>)
@@ -404,7 +390,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7, R1, R2.
 
-### US#27-(ISSUE#61): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
+### US#26-(ISSUE#61): View past games ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/61))
 **Story**: As an administrator, I want to see past games so that I can manage them.
 
 **Flow**
@@ -417,7 +403,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7, R2, R11.
 
-### US#28-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
+### US#27-(ISSUE#62): View all users ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/62))
 **Story**: As an administrator, I want to see all registered users so that I can manage them.
 
 **Flow**
@@ -430,7 +416,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7.
 
-### US#29-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
+### US#28-(ISSUE#63): Creation of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/63))
 **Story**: As an administrator, I want to create a user so that I can add a new profile.
 
 **Flow**
@@ -443,7 +429,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7.
 
-### US#30-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
+### US#29-(ISSUE#64): Deletion of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/64))
 **Story**: As an administrator, I want to delete a user so that I can remove a profile from the system.
 
 **Flow**
@@ -456,7 +442,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7, R2.
 
-### US#31-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
+### US#30-(ISSUE#65): Edition of user ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/65))
 **Story**: As an administrator, I want to edit a user so that I can update their information.
 
 **Flow**
@@ -470,7 +456,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R7.
 
-### US#32-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
+### US#31-(ISSUE#66): View rules ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/66))
 **Story**: As a player/administrator, I want to view the rules from home so that I can understand how to play.
 
 **Flow**
@@ -482,7 +468,7 @@ Next, they are defined all user story to be implemented. Every story includes ac
 
 **Business Rules**: R3, R4, R5.
 
-### US#33-(ISSUE#116): Global statistics aggregation ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/116))
+### US#32-(ISSUE#116): Global statistics aggregation ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/116))
 **Story**: As a player/administrator, I want to see global game statistics so that I can understand overall community activity.
 
 **Flow**
@@ -496,6 +482,18 @@ Next, they are defined all user story to be implemented. Every story includes ac
 - Total duration reflects all completed games.
 
 **Business Rules**: R11.
+
+### US#33: Player spectator mode ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/116))
+**Story**: As a player, I want to see other games that are being currently played by my friends.
+
+**Flow**
+1. Player opens “Friendships”.
+2. If a friend is currently playing a game, a button "Spectate" appears and player press it.
+3. The player is watching the game and can send messages.
+
+**Acceptance Criteria**
+- Player needs to have friends
+- At least one of his friends needs to be playing a game.
 
 
 ## Conceptual diagram of the system
