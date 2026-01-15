@@ -197,12 +197,11 @@ public class GameService {
     @Transactional
     public void startNextRound(Game game, List<GamePlayer> players) {
         game.setRound(game.getRound() + 1);
+        game.setSkill(null);
         players.forEach(p -> {
             gamePlayerService.resetCardsPlayedThisRound(p);
             cardService.refillDeck(p);
         });
-
-        game.setSkill(null);
 
         game.setTurn(game.getRound() > 1 ?
             determineNextTurnByInitiative(game) :
