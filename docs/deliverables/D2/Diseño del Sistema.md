@@ -405,4 +405,7 @@ We chose generalization because `InHand`, `InDeck`, and `OnBoard` all represent 
 
 ## Refactorizaciones aplicadas
 
-We have not performed any refactorizations yet as the project is still in an early development phase. As we advance in the development we will record any need of refactorizations that arise.
+
+We performed extensive refactoring on both the frontend and backend of the application. In the frontend, we extracted reusable components to improve modularity and maintainability. On the backend, we refactored by extracting functions and introducing Data Transfer Objects (DTOs), which resulted in shorter and more readable files. Additionally, we migrated the core game logic from the frontend to the backend to enhance both efficiency and security. All these refactorings can be reviewed in the "refactor-logic" branch.
+
+
