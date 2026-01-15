@@ -2,22 +2,17 @@ package es.us.dp1.lIng_04_25_26.endofline.user;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lIng_04_25_26.endofline.authority.Authority;
 import es.us.dp1.lIng_04_25_26.endofline.authority.AuthorityService;
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.ResourceNotFoundException;
 import es.us.dp1.lIng_04_25_26.endofline.exceptions.user.AuthorityNotFoundException;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -29,9 +24,6 @@ import io.qameta.allure.Owner;
 @SpringBootTest
 @AutoConfigureTestDatabase
 class AuthoritiesServiceTests {
-
-//	@Autowired
-//	private UserService userService;
 
 	@Autowired
 	private AuthorityService authorityService;

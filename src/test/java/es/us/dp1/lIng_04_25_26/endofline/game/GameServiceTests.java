@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockStatic;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import es.us.dp1.lIng_04_25_26.endofline.achievement.AchievementService;
+import es.us.dp1.lIng_04_25_26.endofline.board.BoardUtils;
 import es.us.dp1.lIng_04_25_26.endofline.card.CardService;
 import es.us.dp1.lIng_04_25_26.endofline.enums.Skill;
 import es.us.dp1.lIng_04_25_26.endofline.exceptions.game.GameBadRequestException;
@@ -348,6 +351,83 @@ public class GameServiceTests {
         assertEquals(deletedUser, game.getHost());
         assertEquals(deletedUser, gpHost.getUser());
         verify(userService).deleteUser(host);
+    }
+
+
+    @Test
+    void testGetGamesByWinner() {
+        when(gameRepository.findByWinner(host)).thenReturn(List.of(game));
+
+        List<Game> result = gameService.getGamesByWinner(host);
+
+        assertEquals(1, result.size());
+        assertEquals(game, result.get(0));
+        verify(gameRepository).findByWinner(host);
+    }
+
+
+    @Test
+    void testGetGamesByHost() {
+        when(gameRepository.findByHost(host)).thenReturn(List.of(game));
+
+        List<Game> result = gameService.getGamesByHost(host);
+
+        assertEquals(1, result.size());
+        assertEquals(game, result.get(0));
+        verify(gameRepository).findByHost(host);
+    }
+
+
+    @Test
+    void testAdvanceTurnWhenNotAllPlayersFinished() {
+        game.getGamePlayers().add(gpHost);
+        game.getGamePlayers().add(gpPlayer2);
+        game.setTurn(host.getId());
+
+        try (MockedStatic<BoardUtils> boardUtilsMock = mockStatic(BoardUtils.class)) {
+            boardUtilsMock.when(() -> BoardUtils.getIsTurnFinished(any(GamePlayer.class))).thenReturn(false);
+            
+            when(gamePlayerService.getNextPlayer(game)).thenReturn(gpPlayer2);
+
+            gameService.advanceTurn(game);
+
+            assertEquals(player2.getId(), game.getTurn());
+            assertNull(game.getSkill());
+            verify(gamePlayerService).getNextPlayer(game);
+        }
+    }
+
+
+    @Test
+    void testAdvanceTurnWhenAllPlayersFinished() {
+        game.setRound(1);
+        game.getGamePlayers().add(gpHost);
+        game.getGamePlayers().add(gpPlayer2);
+
+        try (MockedStatic<BoardUtils> boardUtilsMock = mockStatic(BoardUtils.class)) {
+            boardUtilsMock.when(() -> BoardUtils.getIsTurnFinished(any(GamePlayer.class))).thenReturn(true);
+            
+            when(gamePlayerCardService.getInitiatives(gpHost)).thenReturn(List.of(5));
+            when(gamePlayerCardService.getInitiatives(gpPlayer2)).thenReturn(List.of(3));
+
+            gameService.advanceTurn(game);
+
+            assertEquals(2, game.getRound());
+            assertNull(game.getSkill());
+            verify(cardService, times(2)).refillDeck(any(GamePlayer.class));
+            verify(gamePlayerService, times(2)).resetCardsPlayedThisRound(any(GamePlayer.class));
+        }
+    }
+
+
+    @Test
+    void testAdvanceTurnWithFewerThanTwoPlayers() {
+        game.getGamePlayers().add(gpHost);
+
+        gameService.advanceTurn(game);
+
+        verify(gamePlayerService, never()).getNextPlayer(any());
+        verify(cardService, never()).refillDeck(any());
     }
 
 }

@@ -260,4 +260,27 @@ class UserControllerTests {
                 .andExpect(jsonPath("$[0].type").value("ADMIN"));
     }
 
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testUpdateMyself() throws Exception {
+        when(userService.updateUser(any(User.class), any(UserDTO.class))).thenReturn(testUser);
+
+        mockMvc.perform(put(BASE_URL + "/myself").with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testUserDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("testuser"));
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    void testDeleteMyself() throws Exception {
+        doNothing().when(gameService).deleteUser(any(User.class));
+
+        mockMvc.perform(delete(BASE_URL + "/myself").with(csrf()))
+                .andExpect(status().isOk());
+    }
+
 }
