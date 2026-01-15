@@ -35,7 +35,7 @@ export default function useFetchState(initial, url, jwt, setMessage, setVisible,
                     .then(json => {
                         if (!ignore) {
                             if (json.message) {
-                                if(setMessage!==null){
+                                if(setMessage!=null){
                                     setMessage(json.message);
                                     setVisible(true);
                                 }else
@@ -47,8 +47,10 @@ export default function useFetchState(initial, url, jwt, setMessage, setVisible,
                         }
                     }).catch((message) => {
                         console.log(message);
-                        setMessage('Failed to fetch data');
-                        setVisible(true);
+                        if (setMessage != null) {
+                            setMessage('Failed to fetch data');
+                            setVisible(true);
+                        }
                     });
                 return () => {
                     ignore = true;
