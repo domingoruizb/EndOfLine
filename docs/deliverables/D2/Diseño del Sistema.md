@@ -1,12 +1,12 @@
 # Documento de diseño del sistema
-**Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** 2025/2026 <!-- p.ej., 2025/2026 -->  
-**Grupo/Equipo:** LI-04 <!-- p.ej., L4-03 Equipo 33 -->  
-**Nombre del proyecto:** EndOfLine <!-- p. ej. Petris -->  
-**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4/ <!-- URL del repo -->  
-**Integrantes (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
+**Subject:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
+**Academic year:** 2025/2026
+**Group/Team:** LI-04
+**Name of the project:** EndOfLine
+**Repository:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4/ 
+**Members (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
 
-## Introducción
+## Introduction
 
 The project focuses on the implementation of the board game End of Line which is a strategic card-based board game where the main objective is simple: cut your opponent’s line before they cut yours. Players build paths by placing Line Cards on a shared grid, managing both placement and limited Energy Points to alter the flow of the game.
 
@@ -18,18 +18,17 @@ Games usually last between 5 and 10 minutes, depending on their choices. The mat
 
 [Link to the video explaining the rules and playing a game](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/blob/main/docs/Video.mp4)
 
-## Diagrama(s) UML:
+## UML Diagram(s):
 
-### Diagrama de Dominio/Diseño
-
+### Domain/Design diagram
 ![Domain diagram](../../diagrams/domainDiagram_v4.png)
 
 ### Layers diagram
 ![Layers diagram](../../diagrams/layersDiagram_v4.png)
 
-## Descomposición del mockups del tablero de juego en componentes
+## Decomposition of the game board mockup into components
 
-In this section, we will process the game board mockup (or mockups, should the board change during different phases of the game). We will label the zones of each screen to identify the components to be implemented. For each mockup, we will specify the component hierarchy tree as well as, for each component, the state it needs to maintain, the API calls it must perform, and the global configuration parameters we consider necessary for each specific component.
+In this section, we will process the game board mockup (or mockups, if the board changes in different phases of the game). We will label the areas of each screen to identify components to be implemented. For each mockup, we will specify the component hierarchy tree, as well as, for each component, the state it needs to maintain, the API calls it must make, and the global configuration parameters we believe each specific component needs to use.
 
 ### Decomposition 1
 
@@ -107,7 +106,7 @@ In this section, we will process the game board mockup (or mockups, should the b
 In this section, specify the set of design and architectural patterns applied during the project. To specify the application of each pattern, you can use the following template:
 
 ### Pattern: Single Page Application
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -122,7 +121,7 @@ To implement the pattern, the code residing in the src/frontend directory was cr
 The pattern constitutes an advantage when building web applications, as it allows for more fluid response times, an overall better user experience and a cleaner separation of concerns between frontend (presentation/logic) and backend (API/data).
 
 ### Pattern: Model View Controller (MVC)
-*Tipo*: Architectural
+*Type*: Architectural
 
 *Application context*
 
@@ -147,7 +146,7 @@ The MVC pattern allows us to easily separate the implemented functionality, achi
 - User interface event handling (residing in the Controller).
 
 ### Pattern: Container/Presentational components
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -182,7 +181,7 @@ The pattern enforces Separation of Concerns by dividing component roles, resulti
 - Clarity: It clearly defines what the application does (Container) versus how it looks (Presentational).
 
 ### Pattern: Dependency Injection
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -205,7 +204,7 @@ The application of DI results in significant architectural benefits for the back
 - Easier Maintenance and Testing: It allows for easy substitution of mock components during unit testing.
 
 ### Pattern: Proxy pattern
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -223,25 +222,8 @@ The pattern allows the framework to create a placeholder that adds functionality
 
 - Separation of Concerns: Separates the infrastructure logic (Proxy) from the business logic (Service).
 
-### Pattern: Front Controller
-*Tipo*: Design
-
-*Application context*
-
-The pattern is used in the Backend (Spring Boot) to ensure all incoming web requests are handled by a single, central component.
-
-*Classes or packages created*
-
-No classes were manually created. The pattern is implemented automatically by the Spring component, the DispatcherServlet.
-
-*Advantages achieved by applying the pattern*
-
-- Centralization: All requests pass through one point, making it easy to apply cross-cutting logic like security or logging globally.
-
-- Simple Routing: Decouples request receiving from request processing.
-
 ### Pattern: Domain Model
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -258,7 +240,7 @@ The Entity classes (such as User.java and PlayerAchievement.java) and all domain
 - Separation from Persistence: It keeps business logic separate from the data access layer (Repository Pattern).
 
 ### Pattern: Service Layer
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -277,7 +259,7 @@ The pattern is implemented by the Service classes (e.g., UserService.java, Autho
 - Reusability: Business logic can be reused across different parts of the application.
 
 ### Pattern: Data Mapper
-*Tipo*: Architectural
+*Type*: Architectural
 
 *Application context*
 
@@ -294,7 +276,7 @@ It is implemented through the Repository interfaces (e.g., UserRepository.java),
 - Independence: Allows the database technology to be changed without affecting the application core.
 
 ### Pattern: Repository
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -311,7 +293,7 @@ It is implemented by the Repository interfaces (e.g., UserRepository.java). Thes
 - Decoupling: Clearly separates the business logic (Service Layer) from the data storage specifics.
 
 ### Pattern: Hooks
-*Tipo*: Design
+*Type*: Design
 
 *Application context*
 
@@ -327,8 +309,118 @@ It is implemented through core React functions like useState, useEffect, and use
 
 - Simplicity: Makes components shorter and easier to read and maintain.
 
-## Decisiones de diseño
-_En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
+### Pattern: Layered Architecture
+*Type*: Architectural
+
+*Application context*
+
+The project follows a strict layered architecture in the backend, separating responsibilities across presentation, application, domain, and infrastructure layers. This structure is consistently applied across all functional areas such as authentication, game logic, friendships, chat, and achievements.
+
+*Classes or packages created*
+
+- Controller layer (`controller` packages): e.g., `UserController`, `GameController`, `FriendshipController`.
+- Service layer (`service` packages): e.g., `UserService`, `GameService`, `FriendshipService`.
+- Persistence layer (`repository` packages): e.g., `UserRepository`, `GameRepository`.
+- Domain layer (`model` packages): e.g., `User`, `Game`, `GamePlayer`, `Card`.
+
+*Advantages achieved by applying the pattern*
+
+- Clear separation of responsibilities.
+- Easier maintenance and scalability.
+- Independent testing of layers.
+- Improved code readability.
+
+### Pattern: RESTful API
+*Type*: Architectural
+
+*Application context*
+
+The backend exposes all functionality through a RESTful API consumed by the React frontend, covering authentication, gameplay, social features, and administration.
+
+*Classes or packages created*
+
+- REST controllers annotated with `@RestController`.
+- Resource-oriented endpoints using HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`).
+
+*Advantages achieved by applying the pattern*
+
+- Stateless client–server communication.
+- Clear API contract.
+- Easy integration and testing.
+
+### Pattern: State
+*Type*: Design
+
+*Application context*
+
+Game execution depends on the current state of a game and its players, enforcing valid transitions such as waiting, ongoing, and finished games.
+
+*Classes or packages created*
+
+- State fields in `Game` entities.
+- State-based logic in service classes.
+
+*Advantages achieved by applying the pattern*
+
+- Prevents invalid actions.
+- Ensures consistent game flow.
+- Encodes rules directly in the domain.
+
+### Pattern: Strategy
+*Type*: Design
+
+*Application context*
+
+Different card effects implement different gameplay behaviors (e.g., Speed Up, Reverse, Brake, Extra Gas).
+
+*Classes or packages created*
+
+- Card-related domain logic.
+- Conditional behavior per card type in services.
+
+*Advantages achieved by applying the pattern*
+
+- Easier extension of new card effects.
+- Cleaner gameplay logic.
+- Reduced complexity.
+
+### Pattern: Polling
+*Type*: Architectural / Design
+
+*Application context*  
+Clients (React frontend) periodically request updates from the backend via REST endpoints to get the latest game state, chat messages, or social notifications.
+
+*Classes or packages created*  
+- REST endpoints for updates (e.g., `GameController`, `ChatController`).  
+- Service layer methods to fetch current state or new events.  
+- Client-side polling logic in the frontend to trigger requests at regular intervals.  
+
+*Advantages achieved by applying the pattern*  
+- Real-time-ish updates without WebSockets.  
+- Simple implementation using standard HTTP.  
+- Loose coupling between client and server.  
+- Works reliably across firewalls and proxies.  
+
+### Pattern: Security Filter Chain
+*Type*: Architectural
+
+*Application context*
+
+Authentication and authorization are enforced globally using Spring Security filters before requests reach controllers.
+
+*Classes or packages created*
+
+- Security configuration classes.
+- Authentication and authorization filters.
+
+*Advantages achieved by applying the pattern*
+
+- Centralized security logic.
+- Protection against unauthorized access.
+- Reduced duplication of security checks.
+
+## Design decision
+_In this section we will describe the design decisions that have been made throughout the development of the application that go beyond the mere application of design or architectural patterns_
 
 ### Decision 1: Use DTOs to transfer data
 #### Problem description:
