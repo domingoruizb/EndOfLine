@@ -43,9 +43,4 @@ public class AuthorityService {
             .orElseThrow(() -> new AuthorityNotFoundException(authorityType));
     }
 
-	public Authority findByAuthority(String string) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findByAuthority'");
-	}
-
 }
