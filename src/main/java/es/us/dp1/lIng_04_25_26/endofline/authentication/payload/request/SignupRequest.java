@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class SignupRequest {
 
-	// User
 	@NotBlank
 	private String username;
 
@@ -32,6 +31,4 @@ public class SignupRequest {
 	private String authority;
 
 	private String avatar;
-
-
 }
