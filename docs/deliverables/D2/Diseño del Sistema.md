@@ -34,10 +34,10 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 
 _Un ejemplo de diagrama para los ejercicios planteados en los boletines de laboratorio sería (hemos omitido las generalizaciones hacia BaseEntity para simplificar el diagrama):_
 
-![Domain diagram](../../diagrams/domainDiagram_v3.png)
+![Domain diagram](../../diagrams/domainDiagram_v4.png)
 
 ### Layers diagram
-![Layers diagram](../../diagrams/LayersDiagramv3.png)
+![Layers diagram](../../diagrams/layersDiagram_v4.png)
 
 ## Descomposición del mockups del tablero de juego en componentes
 
