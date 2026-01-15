@@ -1,10 +1,10 @@
 # Documento de análisis de requisitos del sistema
-**Asignatura:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
-**Curso académico:** 2025/2026 
-**Grupo/Equipo:** LI-04  
-**Nombre del proyecto:** End of Line  
-**Repositorio:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4
-Next, they are defined all user story to be implemented. Every story includes acceptance criteria and related business rules for testability and traceability.
+**Subject:** Diseño y Pruebas (Grado en Ingeniería del Software, Universidad de Sevilla)  
+**Academic year:** 2025/2026
+**Group/Team:** LI-04
+**Name of the project:** EndOfLine
+**Repository:** https://github.com/gii-is-DP1/dp1-2025-2026-li-4/ 
+**Members (máx. 6):** Fernando José Fernández Fernández (HNR0360  / ferferfer@alum.us.es), Angelo Sho Moraschi (FLX0814  / angmor@alum.us.es), Alejandro Urbina Tamayo (VMC1155 / aleurbtam@alum.us.es), Makar Lavrov (RRP9465 / maklav@alum.us.es), Domingo Ruiz Bellido (DYS4321 / domruibel@alum.us.es).
 
 ### US#1-(ISSUE#33): Login ([Issue](https://github.com/gii-is-DP1/dp1-2025-2026-li-4/issues/33))
 **Story**: As a guest, I want to sign in to my account so that I can view my information and start playing.
