@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -123,7 +122,7 @@ public class BoardServiceTests {
 
         Boolean result = boardService.isPlacementValid(validIndex, gamePlayer, null);
 
-        assertTrue(result, "El host debería poder colocar en la posición inicial (2,3) -> index 23");
+        assertTrue(result, "The host should be able to place at the initial position (2,3) -> index 23");
     }
 
 
@@ -153,7 +152,7 @@ public class BoardServiceTests {
 
             Boolean result = boardService.isPlacementValid(targetIndex, gamePlayer, referenceCard);
 
-            assertFalse(result, "Debe retornar false porque BoardUtils.getIsIndexEmpty devuelve false (casilla ocupada)");
+            assertFalse(result, "Should return false because BoardUtils.getIsIndexEmpty returns false (occupied cell)");
         }
     }
 
@@ -176,7 +175,7 @@ public class BoardServiceTests {
         verify(gamePlayerCardService).save(any(GamePlayerCard.class));
         verify(gamePlayerService).incrementCardsPlayedThisRound(gamePlayer);
 
-        gamePlayer.setCardsPlayedThisRound(1); 
+        gamePlayer.setCardsPlayedThisRound(1);
     }
 
 
@@ -219,7 +218,7 @@ public class BoardServiceTests {
         boardService.placeCard(gamePlayer, card, validIndex);
 
         verify(gamePlayerCardService).save(any(GamePlayerCard.class));
-        assertEquals(null, game.getSkill(), "La habilidad REVERSE debería consumirse tras usarla");
+        assertEquals(null, game.getSkill(), "The REVERSE skill should be consumed after using it");
     }
 
 
@@ -285,6 +284,71 @@ public class BoardServiceTests {
         
         assertTrue(result.getSpectating());
         assertTrue(result.getPlaceable().isEmpty());
+    }
+
+
+    @Test
+    void testGetReversiblePositionsWhenReverseCardIsNull() {
+        when(gamePlayerCardService.getLastPlacedCards(gamePlayer)).thenReturn(new ArrayList<>());
+
+        List<Integer> result = boardService.getReversiblePositions(gamePlayer);
+
+        assertTrue(result.isEmpty(), "Should return empty list when reverse card is null");
+    }
+
+
+    @Test
+    void testGetReversiblePositionsWhenCardsPlayedThisRoundGreaterThanZero() {
+        List<GamePlayerCard> lastPlacedCards = new ArrayList<>();
+        
+        GamePlayerCard lastCard = new GamePlayerCard();
+        lastCard.setId(1);
+        lastPlacedCards.add(lastCard);
+
+        GamePlayerCard connectedCard = new GamePlayerCard();
+        connectedCard.setId(2);
+        lastPlacedCards.add(connectedCard);
+
+        gamePlayer.setCardsPlayedThisRound(1);
+
+        when(gamePlayerCardService.getLastPlacedCards(gamePlayer)).thenReturn(lastPlacedCards);
+
+        try (MockedStatic<BoardUtils> boardUtilsMock = mockStatic(BoardUtils.class)) {
+            boardUtilsMock.when(() -> BoardUtils.getIsConnected(any(), any())).thenReturn(true);
+
+            List<Integer> result = boardService.getReversiblePositions(gamePlayer);
+
+            assertTrue(result.isEmpty(), "Should return empty list when cardsPlayedThisRound > 0");
+        }
+    }
+
+
+    @Test
+    void testGetReversiblePositionsWithEnergyZeroNoReverseSkill() {
+        game.setSkill(null);
+
+        List<GamePlayerCard> lastPlacedCards = new ArrayList<>();
+        
+        GamePlayerCard lastCard = new GamePlayerCard();
+        lastCard.setId(1);
+        lastPlacedCards.add(lastCard);
+
+        GamePlayerCard connectedCard = new GamePlayerCard();
+        connectedCard.setId(2);
+        lastPlacedCards.add(connectedCard);
+
+        gamePlayer.setEnergy(0);
+        gamePlayer.setCardsPlayedThisRound(0);
+
+        when(gamePlayerCardService.getLastPlacedCards(gamePlayer)).thenReturn(lastPlacedCards);
+
+        try (MockedStatic<BoardUtils> boardUtilsMock = mockStatic(BoardUtils.class)) {
+            boardUtilsMock.when(() -> BoardUtils.getIsConnected(any(), any())).thenReturn(true);
+
+            List<Integer> result = boardService.getReversiblePositions(gamePlayer);
+
+            assertTrue(result.isEmpty(), "Should return empty list when energy = 0 and no REVERSE skill");
+        }
     }
 
 }

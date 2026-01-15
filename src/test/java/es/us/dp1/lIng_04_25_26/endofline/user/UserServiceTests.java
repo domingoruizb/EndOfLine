@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -182,6 +185,36 @@ class UserServiceTests {
         int finalSize = ((Collection<User>) userService.findAll()).size();
         assertEquals(initialSize - 1, finalSize);
         assertThrows(UserNotFoundException.class, () -> userService.findUser("admin1"));
+    }
+
+
+    @Test
+    void testFindUserRegisteringWhenUserExists() {
+        User user = userService.findUserRegistering("player1");
+        assertNotNull(user);
+        assertEquals("player1", user.getUsername());
+    }
+
+
+    @Test
+    void testFindUserRegisteringWhenUserNotExists() {
+        User user = userService.findUserRegistering("nonexistentUser");
+        assertNull(user);
+    }
+
+
+    @Test
+    @WithMockUser(username = "admin1", password = "0wn3r")
+    void testFindAllExceptMyself() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> users = userService.findAllExceptMyself(pageable);
+        
+        assertNotNull(users);
+        assertFalse(users.isEmpty());
+        
+        boolean containsCurrentUser = users.getContent().stream()
+            .anyMatch(u -> u.getUsername().equals("admin1"));
+        assertFalse(containsCurrentUser);
     }
 
 }

@@ -71,9 +71,9 @@ class MessageControllerTests {
         testGame = new Game();
         testGame.setId(100);
 
-        validRequest = new MessageRequestDTO("Hello World");
+        validRequest = new MessageRequestDTO("Que pasa quillo");
 
-        responseDTO = new MessageResponseDTO(1, "player1", "Hello World", Instant.now().toEpochMilli());
+        responseDTO = new MessageResponseDTO(1, "player1", "Que pasa quillo", Instant.now().toEpochMilli());
     }
 
 
@@ -92,7 +92,7 @@ class MessageControllerTests {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.sender").value("player1"))
-            .andExpect(jsonPath("$.body").value("Hello World"));
+            .andExpect(jsonPath("$.body").value("Que pasa quillo"));
     }
 
 
@@ -134,7 +134,7 @@ class MessageControllerTests {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.size()").value(1))
-            .andExpect(jsonPath("$[0].body").value("Hello World"));
+            .andExpect(jsonPath("$[0].body").value("Que pasa quillo"));
     }
 
 

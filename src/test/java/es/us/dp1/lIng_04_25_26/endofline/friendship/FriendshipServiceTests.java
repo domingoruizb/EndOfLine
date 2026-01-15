@@ -128,7 +128,7 @@ public class FriendshipServiceTests {
 
         assertThrows(FriendshipBadRequestException.class, () -> {
             friendshipService.create(user1);
-        }, "You cannot be friends with yourself");
+        }, "You cannot be friend with yourself");
     }
 
 
