@@ -1,35 +1,27 @@
 package es.us.dp1.lIng_04_25_26.endofline.authentication;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import es.us.dp1.lIng_04_25_26.endofline.exceptions.authentication.AuthenticationBadRequestException;
-import jakarta.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.LoginRequest;
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.request.SignupRequest;
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.JwtResponse;
 import es.us.dp1.lIng_04_25_26.endofline.authentication.payload.response.MessageResponse;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.jwt.JwtUtils;
 import es.us.dp1.lIng_04_25_26.endofline.configuration.services.UserDetailsImpl;
+import es.us.dp1.lIng_04_25_26.endofline.exceptions.authentication.AuthenticationBadRequestException;
 import es.us.dp1.lIng_04_25_26.endofline.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -71,10 +63,15 @@ public class AuthController {
 	}
 
 	@GetMapping("/validate")
-public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
-    Boolean isValid = jwtUtils.validateJwtToken(token);
-    return ResponseEntity.ok(isValid);
-}
+    public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
+        Boolean isValid = jwtUtils.validateJwtToken(token);
+
+        if (!isValid) {
+            throw new AuthenticationBadRequestException();
+        }
+
+        return ResponseEntity.ok().build();
+    }
 
 	@PostMapping("/signup")
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {

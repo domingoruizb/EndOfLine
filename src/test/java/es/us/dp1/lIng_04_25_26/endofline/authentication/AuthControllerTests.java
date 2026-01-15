@@ -6,8 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
 
@@ -123,7 +122,7 @@ class AuthControllerTests {
 
 		mockMvc.perform(get(BASE_URL + "/validate").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.param("token", token)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").value(true));
+				.andExpect(content().string(""));
 	}
 
 	@Test
@@ -131,8 +130,7 @@ class AuthControllerTests {
 		when(this.jwtUtils.validateJwtToken(token)).thenReturn(false);
 
 		mockMvc.perform(get(BASE_URL + "/validate").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-				.param("token", token)).andExpect(status().isOk())
-				.andExpect(jsonPath("$").value(false));
+				.param("token", token)).andExpect(status().isBadRequest());
 	}
 
 	@Test
