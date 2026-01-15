@@ -79,7 +79,7 @@ Lessons Learned: AI is an extremely valuable tool for debugging complex errors a
 
 Sprint 2 AI Ethical Use Compliance Checklist:
 
-- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+- [] All significant interactions are in the Detailed Log with a link to the conversation. (Conversation links were not saved)
 
 - [✓] AI was not used for narrative purposes (or there is documented authorization).
 
@@ -127,7 +127,7 @@ Lessons Learned: AI is an exceptionally valuable tool for the generation and imp
 
 Sprint 3 AI Ethical Use Compliance Checklist:
 
-- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+- [] All significant interactions are in the Detailed Log with a link to the conversation. (Conversation links were not saved)
 
 - [✓] AI was not used for narrative purposes (or there is documented authorization).
 
@@ -166,7 +166,7 @@ Lessons Learned: AI is an exceptionally valuable tool for the generation and imp
 
 Sprint 4 AI Ethical Use Compliance Checklist:
 
-- [✓] All significant interactions are in the Detailed Log with a link to the conversation.
+- [] All significant interactions are in the Detailed Log with a link to the conversation. (Conversation links were not saved)
 
 - [✓] AI was not used for narrative purposes (or there is documented authorization).
 
