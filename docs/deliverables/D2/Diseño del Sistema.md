@@ -408,4 +408,6 @@ We chose generalization because `InHand`, `InDeck`, and `OnBoard` all represent 
 
 We performed extensive refactoring on both the frontend and backend of the application. In the frontend, we extracted reusable components to improve modularity and maintainability. On the backend, we refactored by extracting functions and introducing Data Transfer Objects (DTOs), which resulted in shorter and more readable files. Additionally, we migrated the core game logic from the frontend to the backend to enhance both efficiency and security. All these refactorings can be reviewed in the "refactor-logic" branch.
 
+Overall, these changes also led to a significant reduction in the total amount of code in the project.
+
 
