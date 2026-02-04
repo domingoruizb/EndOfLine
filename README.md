@@ -10,8 +10,6 @@ The application is built with a decoupled architecture, featuring a dedicated **
 ## ⚙️ Execution Rules
 
 To run the project locally, you must follow this specific order:
-
-### 1. Backend Startup
 1. Navigate to the backend directory:
    ```bash
    cd backend
